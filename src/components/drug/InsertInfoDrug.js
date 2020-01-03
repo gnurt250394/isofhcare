@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView } from 'react-native-gesture-handler';
 import NavigationService from "@navigators/NavigationService";
@@ -58,135 +58,178 @@ class InsertInfoDrug extends Component {
         NavigationService.pop();
     }
     addMenuDrug = (isFinding) => {
-        var imageUris = this.props.imageUris
-        console.log('imageUris: ', imageUris);
-        var dataDrug = this.props.dataSearchDrug
-        let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
-        let note = this.state.note
-        let id = this.props.userApp.currentUser.id
-        let name = this.state.name
-        if (!name) {
-            snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
-            return
-        }
-        if (isFinding && !addressId) {
-            snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
-            return
-        }
-        let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
-        if (imageUris) {
-            if (imageUris && imageUris.length == 0) {
-                snackbar.show('Bạn cần chọn ít nhất một ảnh!', 'danger')
+        this.setState({
+            isLoading: isFinding
+        }, () => {
+            var imageUris = this.props.imageUris
+            console.log('imageUris: ', imageUris);
+            var dataDrug = this.props.dataSearchDrug
+            let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
+            let note = this.state.note
+            let id = this.props.userApp.currentUser.id
+            let name = this.state.name
+
+            if (!name) {
+                snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
+                this.setState({
+                    isLoading: false
+                })
                 return
             }
-            for (var i = 0; i < imageUris.length; i++) {
-                if (imageUris[i].loading) {
-                    snackbar.show(constants.msg.booking.image_loading, 'danger');
-                    return;
-                }
-                if (imageUris[i].error) {
-                    snackbar.show(constants.msg.booking.image_load_err, 'danger');
-                    return;
-                }
+            if (isFinding && !addressId) {
+                snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
+                this.setState({
+                    isLoading: false
+                })
+                return
             }
-            var images = [];
-            imageUris.forEach((item) => {
-
-                if (images)
-                    images.push({
-                        id: item.id ? item.id : null,
-                        action: item.action ? item.action : 'CREATE_OR_UPDATE',
-                        pathOriginal: item.url,
-                        pathThumbnail: item.thumbnail
+            let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
+            if (imageUris) {
+                if (imageUris && imageUris.length == 0) {
+                    snackbar.show('Bạn cần chọn ít nhất một ảnh!', 'danger')
+                    this.setState({
+                        isLoading: false
                     })
-            });
-
-            let data = {
-                addressId: addressId,
-                images: images,
-                name: name,
-                note: note,
-                // ownerId: id,
-                "type": "IMAGE",
-                isFinding: isFinding,
-            }
-            drugProvider.createDrug(data, idDrug).then(res => {
-                console.log('resCreateDrug: ', res);
-
-                if (res && !this.props.dataEdit) {
-
-                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                } else {
-                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
+                    return
                 }
-            }).catch(err => {
-                if (err.response) {
-                    let status = err.response.data && err.response.data.status
-                    switch (status) {
-                        case 406:
-                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
-                            break
-                        default:
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            break
+                for (var i = 0; i < imageUris.length; i++) {
+                    if (imageUris[i].loading) {
+                        snackbar.show(constants.msg.booking.image_loading, 'danger');
+                        this.setState({
+                            isLoading: false
+                        })
+                        return;
                     }
-                } else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-
+                    if (imageUris[i].error) {
+                        this.setState({
+                            isLoading: false
+                        })
+                        snackbar.show(constants.msg.booking.image_load_err, 'danger');
+                        return;
+                    }
                 }
-            })
-            return
-        } if (dataDrug && !imageUris) {
-            if (dataDrug.length == 0) {
-                snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
+                var images = [];
+                imageUris.forEach((item) => {
+
+                    if (images)
+                        images.push({
+                            id: item.id ? item.id : null,
+                            action: item.action ? item.action : 'CREATE_OR_UPDATE',
+                            pathOriginal: item.url,
+                            pathThumbnail: item.thumbnail
+                        })
+                });
+
+                let data = {
+                    addressId: addressId,
+                    images: images,
+                    name: name,
+                    note: note,
+                    // ownerId: id,
+                    "type": "IMAGE",
+                    isFinding: isFinding,
+                }
+                drugProvider.createDrug(data, idDrug).then(res => {
+                    this.setState({
+                        isLoading: false
+                    })
+                    if (res && !this.props.dataEdit) {
+
+                        snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                        this.onCreateSuccess(res)
+                    } else {
+                        snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                        this.onCreateSuccess(res)
+                    }
+                }).catch(err => {
+                    if (err.response) {
+                        let status = err.response.data && err.response.data.status
+                        this.setState({
+                            isLoading: false
+                        })
+                        switch (status) {
+                            case 406:
+                                snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                                break
+                            default:
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                break
+                        }
+                    } else {
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        this.setState({
+                            isLoading: false
+                        })
+
+                    }
+                })
                 return
-            }
-            var medicines = []
-            for (let i = 0; i < dataDrug.length; i++) {
-                medicines.push({
-                    id: dataDrug[i].id ? dataDrug[i].id : null,
-                    name: `${dataDrug[i].name ? dataDrug[i].name : ''} ${dataDrug[i].packing ? dataDrug[i].packing : ''}`,
-                    // "unit": dataDrug[i].unit,
-                    medicineId: dataDrug[i].medicineId,
-                    action: dataDrug[i].action ? dataDrug[i].action : 'CREATE_OR_UPDATE'
+            } if (dataDrug && !imageUris) {
+                if (dataDrug.length == 0) {
+                    this.setState({
+                        isLoading: false
+                    })
+                    snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
+                    return
+                }
+                var medicines = []
+                for (let i = 0; i < dataDrug.length; i++) {
+                    medicines.push({
+                        id: dataDrug[i].id ? dataDrug[i].id : null,
+                        name: `${dataDrug[i].name ? dataDrug[i].name : ''} ${dataDrug[i].packing ? dataDrug[i].packing : ''}`,
+                        // "unit": dataDrug[i].unit,
+                        medicineId: dataDrug[i].medicineId,
+                        action: dataDrug[i].action ? dataDrug[i].action : 'CREATE_OR_UPDATE'
+                    })
+                }
+
+                let data2 = {
+                    addressId: addressId,
+                    medicines: medicines,
+                    name: name,
+                    note: note,
+                    // ownerId: id,
+                    isFinding: isFinding
+                }
+                drugProvider.createDrug(data2, idDrug).then(res => {
+                    if (res && !this.props.dataEdit) {
+                        snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                        this.setState({
+                            isLoading: false
+                        })
+                        this.onCreateSuccess(res)
+                    } else {
+                        snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                        this.setState({
+                            isLoading: false
+                        })
+                        this.onCreateSuccess(res)
+                    }
+                }).catch(err => {
+                    if (err.response) {
+                        this.setState({
+                            isLoading: false
+                        })
+                        let status = err.response.data && err.response.data.status
+                        switch (status) {
+                            case 406:
+                                snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                                break
+                            default:
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                break
+                        }
+                    } else {
+                        this.setState({
+                            isLoading: false
+                        })
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                    }
                 })
             }
+        })
 
-            let data2 = {
-                addressId: addressId,
-                medicines: medicines,
-                name: name,
-                note: note,
-                // ownerId: id,
-                isFinding: isFinding
-            }
-            drugProvider.createDrug(data2, idDrug).then(res => {
-                if (res && !this.props.dataEdit) {
-                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                } else {
-                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                }
-            }).catch(err => {
-                if (err.response) {
-                    let status = err.response.data && err.response.data.status
-                    switch (status) {
-                        case 406:
-                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
-                            break
-                        default:
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            break
-                    }
-                } else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-
-                }
-            })
-        }
     }
     render() {
         return (
@@ -209,7 +252,7 @@ class InsertInfoDrug extends Component {
                         <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => this.addMenuDrug(true)} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
+                <TouchableOpacity disabled={this.state.isLoading} onPress={() => this.addMenuDrug(true)} style={styles.btnFind}>{this.state.isLoading ? <ActivityIndicator color={'#fff'} size={"large"}></ActivityIndicator> : <Text style={styles.txFind}>Tìm nhà thuốc</Text>}</TouchableOpacity>
                 <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
                 <View style={styles.viewBottom}></View>
             </View>
