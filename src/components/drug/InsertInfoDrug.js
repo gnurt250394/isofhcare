@@ -247,9 +247,9 @@ class InsertInfoDrug extends Component {
                     <TouchableOpacity onPress={this.onSelectLocation} style={styles.btnLocation}>
                         <View style={styles.inputLocation}>
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
-                            <Text style={styles.txLabelLocation}>{this.state.location ? this.state.location.address : 'Nhập địa chỉ'}</Text>
+                            <Text style={styles.txLabelLocation}>{this.state.location ? this.state.location.address : 'Chọn địa chỉ'}</Text>
                         </View>
-                        <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
+                        {/* <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage> */}
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity disabled={this.state.isLoading} onPress={() => this.addMenuDrug(true)} style={styles.btnFind}>{this.state.isLoading ? <ActivityIndicator color={'#fff'} size={"large"}></ActivityIndicator> : <Text style={styles.txFind}>Tìm nhà thuốc</Text>}</TouchableOpacity>
@@ -315,19 +315,21 @@ const styles = StyleSheet.create({
     },
     btnLocation: {
         minHeight: 41,
-        width: '100%',
         borderRadius: 6,
         borderWidth: 1,
         borderColor: '#cccccc',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 10
+        padding: 10,
+        flex:1,
+        flexWrap:'wrap'
     },
     inputLocation: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 5
+        flex:1,
+        padding: 5,
     },
     txLabelLocation: {
         color: '#00A3FF',
