@@ -405,11 +405,12 @@ class AccountScreen extends Component {
         <View style={[styles.borderMenu, { width: '95%' }]}></View>
         <TouchableOpacity
           style={[styles.itemMenu]}
-          onPress={() => {
-            Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
-            );
-          }}
+          // onPress={() => {
+          //   Linking.openURL(
+          //     "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+          //   );
+          // }}
+          onPress={this.openLinkHotline}
         ><ScaledImage
             source={require("@images/new/account/ic_support.png")}
             width={24}
@@ -472,9 +473,9 @@ class AccountScreen extends Component {
         }}>
           <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
         </TouchableOpacity>
-        <View style={styles.viewSpaceBottom}>
+        {/* <View style={styles.viewSpaceBottom}>
           <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
-        </View>
+        </View> */}
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ScrollView>
     );
