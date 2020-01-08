@@ -34,7 +34,7 @@ class Kernel extends Component {
     this.state = {
 
     }
-    this.SetDefaultText()
+    // this.SetDefaultText()
   }
 
   componentDidMount() {

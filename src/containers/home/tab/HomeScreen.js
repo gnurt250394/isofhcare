@@ -394,7 +394,7 @@ class HomeScreen extends Component {
     if (Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS) {
       isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
     }
-    let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 44 : 28)
+    let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 18 : 40)
     let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
     if (height >= 0) {
       return height
