@@ -33,6 +33,7 @@ import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import fonts from '@resources/fonts';
+import homeProvider from '@data-access/home-provider'
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -199,8 +200,13 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    // this.onRefresh();
+    this.onRefresh();
     // this.onGetHospital()
+  }
+  onSelectDoctor = (item) => {
+    this.props.navigation.navigate('detailsDoctor', {
+      item: item
+    })
   }
   renderDoctor() {
     return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
@@ -220,13 +226,13 @@ class HomeScreen extends Component {
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
           return (
-            <View style={styles.cardViewDoctor}>
+            <TouchableOpacity onPress={() => this.onSelectDoctor(item)} style={styles.cardViewDoctor}>
               {/* <Card style={{ borderRadius: 5, }}> */}
               <View style={styles.containerImageDoctor}>
                 <Image
-                  // uri={item.advertise.images.absoluteUrl()}
+                  // uri={item && item.imagePath && item.imagePath.absoluteUrl()}
                   style={{ borderRadius: 5, width: '100%', height: '100%' }}
-                  source={item.image}
+                  source={{ uri: item && item.imagePath && item.imagePath.absoluteUrl() }}
                 // width={DEVICE_WIDTH / 3}
                 // height={137}
                 />
@@ -234,7 +240,7 @@ class HomeScreen extends Component {
               {/* </Card> */}
               <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
@@ -261,7 +267,7 @@ class HomeScreen extends Component {
             <View style={{ flex: 1 }}>
               <TouchableOpacity style={styles.cardView}>
                 <ScaledImage
-                  source={item.image}
+                  uri={item && item.imagePath && item.imagePath.absoluteUrl()}
                   height={134}
                   style={{ borderRadius: 6, resizeMode: 'cover' }}
                 />
@@ -315,43 +321,24 @@ class HomeScreen extends Component {
     this.props.dispatch(redux.userLogout());
   }
 
-  onRefresh(reload) {
-    this.setState({ refreshing: true }, () => {
-      advertiseProvider.getTop(100, (s, e) => {
+  onRefresh = () => {
+    console.log('ressssss')
+    this.setState({
+      refreshing: true
+    }, () => {
+      homeProvider.getListDoctor((s, e) => {
+        console.log(s, 'resposs')
         if (s) {
-          if (s.length == 0) {
-            if (!reload)
-              this.getTopAds(true);
-            this.setState({
-              refreshing: false,
-
-            })
-          }
           this.setState({
-            ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-            ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images),
-            refreshing: false,
-
-            // .filter(item => { return item.advertise && item.advertise.images })
-          });
-        }
-        else {
-          this.setState({
-            refreshing: false,
-
+            listDataDoctor: s
           })
-          if (!reload)
-            this.getTopAds(true);
+        } else {
+          console.log(e, 'eeeeeee')
         }
-        if (e) {
-          this.setState({
-            refreshing: false,
-
-          })
-          if (!reload)
-            this.getTopAds(true);
-        }
-      });
+      })
+      this.setState({
+        refreshing: false
+      })
     })
   }
   getMarginBooking() {
@@ -470,7 +457,7 @@ class HomeScreen extends Component {
     return (
       <RefreshControl
         refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh.bind(this)}
+        onRefresh={this.onRefresh}
       />
     )
   }
@@ -572,7 +559,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   containerImageDoctor: {
-    borderRadius: 5,
+    borderRadius: 6,
     elevation: 4,
     backgroundColor: '#FFF',
     margin: 1,

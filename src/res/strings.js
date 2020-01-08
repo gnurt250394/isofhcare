@@ -203,6 +203,7 @@ module.exports = {
       LASTEST_INFO: "LASTEST_INFO",
       LIST_BANNER: "LIST_BANNER",
       DATA_TOP_NEWS: 'DATA_TOP_NEWS',
+      DATA_TOP_DOCTOR:'DATA_TOP_DOCTOR',
       DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
       KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION",
       LOCATION_DEFAULT: 'LOCATION_DEFAULT'
@@ -1005,7 +1006,8 @@ module.exports = {
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
-      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
+      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate',
+      get_list_doctor:isofhcare_service + 'catalog/v1/doctor/3/rank?page=0&size=10&sort=desc&properties=created'
     },
     voucher: {
       get_voucher: isofhcare_service + 'voucher'
