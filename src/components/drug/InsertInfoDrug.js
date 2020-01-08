@@ -368,7 +368,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontStyle: 'italic',
         flexWrap: 'wrap',
-        paddingRight:10
+        paddingRight:10,
+        paddingLeft:10
 
     },
     inputLocation: {
