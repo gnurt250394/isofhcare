@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator,ScrollView } from 'react-native';
+import {
+    View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, Keyboard
+} from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import NavigationService from "@navigators/NavigationService";
 import snackbar from '@utils/snackbar-utils';
@@ -8,6 +10,9 @@ import constants from '@resources/strings';
 import drugProvider from '@data-access/drug-provider'
 import dataCacheProvider from '@data-access/datacache-provider';
 import redux from "@redux-store";
+import Form from "mainam-react-native-form-validate/Form";
+import Field from "mainam-react-native-form-validate/Field";
+import TextField from "mainam-react-native-form-validate/TextField";
 class InsertInfoDrug extends Component {
     constructor(props) {
         super(props);
@@ -57,6 +62,10 @@ class InsertInfoDrug extends Component {
         NavigationService.pop();
     }
     addMenuDrug = (isFinding) => {
+        Keyboard.dismiss();
+        if (!this.form.isValid()) {
+            return;
+        }
         this.setState({
             isLoading: isFinding
         }, () => {
@@ -67,21 +76,6 @@ class InsertInfoDrug extends Component {
             let note = this.state.note
             let id = this.props.userApp.currentUser.id
             let name = this.state.name
-
-            if (!name) {
-                snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
-                this.setState({
-                    isLoading: false
-                })
-                return
-            }
-            if (isFinding && !addressId) {
-                snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
-                this.setState({
-                    isLoading: false
-                })
-                return
-            }
             let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
             if (imageUris) {
                 if (imageUris && imageUris.length == 0) {
@@ -233,27 +227,74 @@ class InsertInfoDrug extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput value={this.state.name} placeholderTextColor="#000" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
-                </View>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput value={this.state.note} placeholderTextColor="#000" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
-                </View>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
-                    <TouchableOpacity onPress={this.onSelectLocation} style={styles.btnLocation}>
-                        <View style={styles.inputLocation}>
+                <Form ref={ref => (this.form = ref)}>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
+                        <TextField
+                            onChangeText={text => this.setState({ name: text })}
+                            value={this.state.name}
+                            placeholder={'Nhập tên đơn thuốc'}
+                            errorStyle={styles.errorStyle}
+                            inputStyle={styles.inputNameDrug}
+                            underlineColorAndroid={'#fff'}
+                            placeholderTextColor='#000'
+                            validate={{
+                                rules: {
+                                    required: true,
+                                },
+                                messages: {
+                                    required: "Tên đơn thuốc không được bỏ trống",
+                                }
+                            }}
+                            autoCapitalize={"none"}
+                        />
+                    </Field>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Ghi chú</Text>
+                        <TextField
+                            value={this.state.note}
+                            placeholderTextColor="#000" onChangeText={text => this.setState({ note: text })}
+                            errorStyle={styles.errorStyle}
+                            inputStyle={styles.inputNote}
+                            placeholder={'Viết ghi chú cho đơn thuốc'}
+                            underlineColorAndroid={'#fff'}
+                            placeholderTextColor='#000'
+                            multiline={true}
+                            autoCapitalize={"none"}
+                        />
+                    </Field>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
+                        <Field style={styles.locationBtn} >
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
-                            <Text style={styles.txLabelLocation}>{this.state.location ? this.state.location.address : 'Chọn địa chỉ'}</Text>
-                        </View>
-                        {/* <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage> */}
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity disabled={this.state.isLoading} onPress={() => this.addMenuDrug(true)} style={styles.btnFind}>{this.state.isLoading ? <ActivityIndicator color={'#fff'} size={"large"}></ActivityIndicator> : <Text style={styles.txFind}>Tìm nhà thuốc</Text>}</TouchableOpacity>
-                <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
-                <View style={styles.viewBottom}></View>
+                            <TextField
+                                value={this.state.location && this.state.location.address}
+                                onPress={this.onSelectLocation}
+                                placeholderTextColor="#000"
+                                errorStyle={styles.errorStyle}
+                                inputStyle={styles.btnLocation}
+                                placeholder={'Chọn địa chỉ'}
+                                underlineColorAndroid={'#fff'}
+                                validate={{
+                                    rules: {
+                                        required: true,
+                                    },
+                                    messages: {
+                                        required: "Địa chỉ không được bỏ trống",
+                                    }
+                                }}
+                                placeholderTextColor='#000'
+                                multiline={true}
+                                editable={false}
+                                autoCapitalize={"none"}
+                            />
+                        </Field>
+                    </Field>
+                    {/* <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage> */}
+                    <TouchableOpacity disabled={this.state.isLoading} onPress={() => this.addMenuDrug(true)} style={styles.btnFind}>{this.state.isLoading ? <ActivityIndicator color={'#fff'} size={"large"}></ActivityIndicator> : <Text style={styles.txFind}>Tìm nhà thuốc</Text>}</TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
+                    <View style={styles.viewBottom}></View>
+                </Form>
             </View>
         );
     }
@@ -264,6 +305,18 @@ const styles = StyleSheet.create({
     },
     btnSave: {
         padding: 5
+    },
+    locationBtn: {
+        minHeight: 41,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#cccccc',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 10,
+        flex: 1,
+
     },
     btnTabScan: {
         borderTopLeftRadius: 25,
@@ -313,21 +366,17 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     btnLocation: {
-        minHeight: 41,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: '#cccccc',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 10,
-        flex:1,
-        flexWrap:'wrap'
+        color: '#00A3FF',
+        textDecorationLine: 'underline',
+        fontSize: 14,
+        fontStyle: 'italic',
+        flexWrap: 'wrap',
+
     },
     inputLocation: {
         flexDirection: 'row',
         alignItems: 'center',
-        flex:1,
+        flex: 1,
         padding: 5,
     },
     txLabelLocation: {
@@ -363,7 +412,11 @@ const styles = StyleSheet.create({
     },
     viewBottom: {
         height: 50
-    }
+    },
+    errorStyle: {
+        color: "red",
+        marginTop: 10
+    },
 })
 function mapStateToProps(state) {
     return {
