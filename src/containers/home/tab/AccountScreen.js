@@ -204,7 +204,7 @@ class AccountScreen extends Component {
         style={{ flex: 1, }}
         hideActionbar={true}
         showFullScreen={true}
-        containerStyle = {{backgroundColor:'#F8F8F8'}}
+        containerStyle={{ backgroundColor: '#F8F8F8' }}
       >
         <ScrollView showsVerticalScrollIndicator={false} >
           {this.props.userApp.isLogin
@@ -472,7 +472,7 @@ class AccountScreen extends Component {
               <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', }, this.props.userApp.isLogin ? {} : { top: 10 }]} onPress={() => {
+          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', paddingTop: 10 }, this.props.userApp.isLogin ? {} : {}]} onPress={() => {
             snackbar.show("Đang kiểm tra cập nhật", "success");
             codePushUtils.checkupDate();
           }}>
