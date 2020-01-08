@@ -258,7 +258,6 @@ class InsertInfoDrug extends Component {
                             inputStyle={styles.inputNote}
                             placeholder={'Viết ghi chú cho đơn thuốc'}
                             underlineColorAndroid={'#fff'}
-                            placeholderTextColor='#000'
                             multiline={true}
                             autoCapitalize={"none"}
                         />
@@ -268,12 +267,11 @@ class InsertInfoDrug extends Component {
                         <Field style={styles.locationBtn} >
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
                             <TextField
-                                value={this.state.location && this.state.location.address}
+                                value={this.state.location && this.state.location.address ? this.state.location.address : 'Chọn địa chỉ'}
                                 onPress={this.onSelectLocation}
                                 placeholderTextColor="#000"
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.btnLocation}
-                                placeholder={'Chọn địa chỉ'}
                                 underlineColorAndroid={'#fff'}
                                 validate={{
                                     rules: {
@@ -283,7 +281,6 @@ class InsertInfoDrug extends Component {
                                         required: "Địa chỉ không được bỏ trống",
                                     }
                                 }}
-                                placeholderTextColor='#000'
                                 multiline={true}
                                 editable={false}
                                 autoCapitalize={"none"}
@@ -313,7 +310,7 @@ const styles = StyleSheet.create({
         borderColor: '#cccccc',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         padding: 10,
         flex: 1,
 
@@ -371,6 +368,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontStyle: 'italic',
         flexWrap: 'wrap',
+        paddingRight:10
 
     },
     inputLocation: {
