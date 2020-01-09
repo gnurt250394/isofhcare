@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* APPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* APPTests.m */; };
 		02E8450AAF8747A5BFF1DB9C /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C1813DB87BD4179BD4D4723 /* Feather.ttf */; };
@@ -65,6 +66,10 @@
 		F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE74A3067B053986DA0AD248 /* libPods-APP.a */; };
 		F5C94AA9ADC8437FAAF546A6 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */; };
 		7F53F40D556342C996C8F040 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB24FE7D309474089316B42 /* Fontisto.ttf */; };
+		2CEA2B1F7F75467BA5222F5B /* Muli-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E64325E5AECB4347850473DE /* Muli-Black.ttf */; };
+		BE3F97076E5C4000875B434A /* Muli-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F96EF609D2D34CEE9A325970 /* Muli-ExtraLight.ttf */; };
+		DEBB88B662EC410E814E3DBF /* Muli-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4745B0063A147B49D4A5940 /* Muli-Light.ttf */; };
+		4CBB53A96BAA4D4DAF087CD3 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CCE7653A089C46F5AA7D8AD6 /* Fontisto.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -289,6 +294,10 @@
 		F4FCC0C339A142B4ADFB71A7 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		FF6CB02E990B43128AC41F2F /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		2FB24FE7D309474089316B42 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E64325E5AECB4347850473DE /* Muli-Black.ttf */ = {isa = PBXFileReference; name = "Muli-Black.ttf"; path = "../src/res/fonts/Muli-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F96EF609D2D34CEE9A325970 /* Muli-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Muli-ExtraLight.ttf"; path = "../src/res/fonts/Muli-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C4745B0063A147B49D4A5940 /* Muli-Light.ttf */ = {isa = PBXFileReference; name = "Muli-Light.ttf"; path = "../src/res/fonts/Muli-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		CCE7653A089C46F5AA7D8AD6 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -499,6 +508,10 @@
 				F47CBB19F8B94A89892F82D5 /* Muli-Bold.ttf */,
 				61B2ADBB99CE46C49480FDFD /* Muli-ExtraBold.ttf */,
 				2FB24FE7D309474089316B42 /* Fontisto.ttf */,
+				E64325E5AECB4347850473DE /* Muli-Black.ttf */,
+				F96EF609D2D34CEE9A325970 /* Muli-ExtraLight.ttf */,
+				C4745B0063A147B49D4A5940 /* Muli-Light.ttf */,
+				CCE7653A089C46F5AA7D8AD6 /* Fontisto.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -835,6 +848,10 @@
 				DDB82CEF646146B4B70C4C9B /* Muli-Bold.ttf in Resources */,
 				5F4C25D77EDE4C029051249D /* Muli-ExtraBold.ttf in Resources */,
 				7F53F40D556342C996C8F040 /* Fontisto.ttf in Resources */,
+				2CEA2B1F7F75467BA5222F5B /* Muli-Black.ttf in Resources */,
+				BE3F97076E5C4000875B434A /* Muli-ExtraLight.ttf in Resources */,
+				DEBB88B662EC410E814E3DBF /* Muli-Light.ttf in Resources */,
+				4CBB53A96BAA4D4DAF087CD3 /* Fontisto.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

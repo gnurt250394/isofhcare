@@ -543,8 +543,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: '#000',
     marginLeft: 16,
-    // fontWeight: 'bold',
-    fontFamily: fonts.bold
+    fontWeight: 'bold',
   },
   padding21: {
     paddingHorizontal: 21,
@@ -590,7 +589,7 @@ const styles = StyleSheet.create({
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
   },
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
-  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontFamily: fonts.bold, flex: 1 },
+  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, },
   viewFooter: { width: 35 },
