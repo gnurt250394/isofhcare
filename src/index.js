@@ -17,7 +17,7 @@ import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
-import { Text, TextInput, Animated, StyleSheet } from 'react-native';
+import ReactNative, { Text, TextInput, Animated, StyleSheet } from 'react-native';
 import codePushUtils from '@utils/codepush-utils';
 import fonts from '@resources/fonts';
 Text.defaultProps = Text.defaultProps || {};
@@ -28,26 +28,33 @@ Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
 import FlashMessage from "react-native-flash-message";
 
+
 class Kernel extends Component {
   constructor(props) {
     super(props);
     this.state = {
 
     }
-    // this.SetDefaultText()
+    this.SetDefaultText()
   }
 
   componentDidMount() {
     codePushUtils.checkupDate(true);
   }
-   SetDefaultText = () => {
+  SetDefaultText = () => {
     let components = [Text, TextInput]
     for (let i = 0; i < components.length; i++) {
       const TextRender = components[i].render;
       components[i].render = function (...args) {
         let origin = TextRender.call(this, ...args);
+        if (origin.props && origin.props.style && origin.props.style.fontWeight) {
+          fontFamily = fonts[`${origin.props.style.fontWeight}`]
+          return React.cloneElement(origin, {
+            style: StyleSheet.flatten([origin.props.style, { fontFamily: fonts[`${origin.props.style.fontWeight}`], fontWeight: undefined }])
+          });
+        }
         return React.cloneElement(origin, {
-          style: StyleSheet.flatten([{ fontFamily: fonts.muli }, origin.props.style])
+          style: StyleSheet.flatten([origin.props.style, { fontFamily: fonts['500'] }])
         });
       };
     }

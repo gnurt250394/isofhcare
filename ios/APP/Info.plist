@@ -145,6 +145,9 @@
 		<string>Muli-Bold.ttf</string>
 		<string>Muli-ExtraBold.ttf</string>
 		<string>Fontisto.ttf</string>
+		<string>Muli-Black.ttf</string>
+		<string>Muli-ExtraLight.ttf</string>
+		<string>Muli-Light.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
