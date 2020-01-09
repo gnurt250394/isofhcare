@@ -263,52 +263,29 @@ class DetailHistoryBookingScreen extends Component {
                                 <Text>{this.state.booking.reference}</Text>
                             </TouchableOpacity>
                         </View>
-                        {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
-                            <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
-                                <ScaledImage
-                                    height={20}
-                                    width={20}
-                                    source={require("@images/ic_service.png")}
-                                />
-                                <Text style={styles.txService}>{constants.booking.services}</Text>
-                                <View>
-                                    {
-                                        this.state.booking.invoice.services.map((item, index) => {
-                                            return <View key={index}>
-                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
-                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
-                                            </View>
-                                        })
-                                    }
-                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
-                                        <View >
-                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
-                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
-                                        </View> : null
-                                    }
-                                </View>
-                            </View> : null
-                        }
 
 
-                        <View style={styles.between}></View>
+
                         {
                             this.state.booking.doctor && this.state.booking.doctor.name ?
-                                <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
-                                    <ScaledImage
-                                        height={20}
-                                        width={20}
-                                        source={require("@images/new/booking/ic_serviceType.png")}
-                                    />
-                                    <Text numberOfLines={5} style={styles.txLocation}>Bác sĩ</Text>
-                                    <View style={styles.viewInfoLocation}>
-                                        <Text style={styles.txClinic}>{this.state.booking.doctor.name}</Text>
+                                <View>
+
+                                    <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                                        <ScaledImage
+                                            height={20}
+                                            width={20}
+                                            source={require("@images/new/booking/ic_serviceType.png")}
+                                        />
+                                        <Text numberOfLines={5} style={styles.txLocation}>Bác sĩ</Text>
+                                        <View style={styles.viewInfoLocation}>
+                                            <Text style={styles.txClinic}>{this.state.booking.doctor.name}</Text>
+                                        </View>
                                     </View>
+                                    <View style={styles.between}></View>
                                 </View>
                                 : null
 
                         }
-                        <View style={styles.between}></View>
 
                         <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
                             <ScaledImage
@@ -355,6 +332,33 @@ class DetailHistoryBookingScreen extends Component {
                 /> */}
                             </View>
                         </View>
+                        {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
+                            <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
+                                <ScaledImage
+                                    height={20}
+                                    width={20}
+                                    source={require("@images/ic_service.png")}
+                                />
+                                <Text style={styles.txService}>{constants.booking.services}</Text>
+                                <View>
+                                    {
+                                        this.state.booking.invoice.services.map((item, index) => {
+                                            return <View key={index}>
+                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
+                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
+                                            </View>
+                                        })
+                                    }
+                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
+                                        <View >
+                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
+                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
+                                        </View> : null
+                                    }
+                                </View>
+                            </View> : null
+                        }
+
                         {
                             this.state.booking.invoice.services && this.state.booking.invoice.services.length ?
                                 <React.Fragment>
