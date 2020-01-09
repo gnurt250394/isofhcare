@@ -46,14 +46,7 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      listDataHospital: [{
-        name: 'Phòng khám Y khoa HN',
-        image: require('@images/new/homev2/csyt_demo.png')
-      },
-      {
-        name: 'Bệnh viện E',
-        image: require('@images/new/homev2/csyt_demo2.png')
-      }],
+      listDataHospital: [],
       listDataDoctor: [
         {
           name: 'BS Hoàng Thị Bạch Dương',
@@ -201,7 +194,7 @@ class HomeScreen extends Component {
       this.handleHardwareBack.bind(this)
     );
     this.onRefresh();
-    // this.onGetHospital()
+    this.onGetHospital()
   }
   onSelectDoctor = (item) => {
     this.props.navigation.navigate('detailsDoctor', {
@@ -246,6 +239,9 @@ class HomeScreen extends Component {
       />
     </View>)
   }
+  onDetailsHospital = (item) => {
+    this.props.navigation.navigate('profileHospital', { item: item })
+  }
   renderHospital() {
     let { listDataHospital } = this.state
     return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
@@ -265,9 +261,9 @@ class HomeScreen extends Component {
         renderItem={({ item, index }) => {
           return (
             <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.cardView}>
+              <TouchableOpacity onPress={() => this.onDetailsHospital(item)} style={styles.cardView}>
                 <ScaledImage
-                  uri={item && item.imagePath && item.imagePath.absoluteUrl()}
+                  uri={item && item.imageHome && item.imageHome.absoluteUrl()}
                   height={134}
                   style={{ borderRadius: 6, resizeMode: 'cover' }}
                 />
@@ -442,12 +438,15 @@ class HomeScreen extends Component {
     //   }
     //   
     // })
-    hospitalProvider.getListTopRateHospital().then(res => {
-      this.setState({
-        listDataHospital: res.slice(0, 10)
-      })
-    }).catch(err => {
-
+    homeProvider.getListHospital((s, e) => {
+      if (s.code == 0) {
+        console.log(s, 'data tra ve')
+        this.setState({
+          listDataHospital: s.data
+        })
+      } else {
+        console.log(e, 'eee')
+      }
     })
   }
   getAdjustedFontSize(size) {

@@ -44,8 +44,11 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi("get", urlDoctor + constants.api.home.get_list_doctor, {}, (s, e) => {
                 if (s) {
+                    // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
+                    //     console.log(s,'imagesUtils')
+                    // })
                     resolve(s);
-                }else{
+                } else {
                     reject(e)
                 }
             });
@@ -65,6 +68,45 @@ module.exports = {
             this.listDoctor().then(s => {
                 if (s) {
                     datacacheProvider.save("", constants.key.storage.DATA_TOP_DOCTOR, s);
+                    if (callback) {
+                        callback(s, e);
+                    }
+                }
+            }).catch(e => {
+                if (callback)
+                    callback(undefined, e);
+            });
+        }
+    },
+
+    listHospital() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.hospital.get_top_hospital, {}, (s, e) => {
+                if (s) {
+                    // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
+                    //     console.log(s,'imagesUtils')
+                    // })
+                    resolve(s);
+                } else {
+                    reject(e)
+                }
+            });
+        });
+    },
+    getListHospital(callback, requestApi) {
+        if (!requestApi) {
+            datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_HOSPITAL).then(s => {
+                if (callback)
+                    callback(s);
+                this.getListHospital(null, true);
+            }).catch(e => {
+                this.getListHospital(callback, true);
+            });
+        }
+        else {
+            this.listHospital().then(s => {
+                if (s) {
+                    datacacheProvider.save("", constants.key.storage.DATA_TOP_HOSPITAL, s);
                     if (callback) {
                         callback(s, e);
                     }
