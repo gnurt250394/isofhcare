@@ -65,7 +65,6 @@ import SelectSpecialistScreen from "@containers/booking/SelectSpecialistScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
-import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
 
 
@@ -127,7 +126,6 @@ import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
 import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
 import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
-import ListBookingScreen from '@containers/booking/ListBookingScreens'
 import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
 import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
 import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
@@ -377,7 +375,6 @@ const RootNavigator = createStackNavigator(
     listDoctor: { screen: ListDoctorScreen },
     addBookingDoctor: { screen: AddBookingDoctorScreen },
     selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
-    listBooking: { screen: ListBookingScreen },
     listHospital: { screen: ListHospitalScreen },
     listPaymentMethod: { screen: ListPaymentMethodScreen },
     createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
