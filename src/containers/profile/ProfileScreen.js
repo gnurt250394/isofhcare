@@ -16,7 +16,7 @@ import objectUtils from "@utils/object-utils";
 import redux from "@redux-store";
 import { connect } from "react-redux";
 import * as Animatable from 'react-native-animatable';
-import { Card, Icon } from 'native-base';
+import { Card } from 'native-base';
 import NavigationService from "@navigators/NavigationService";
 
 class ProfileScreen extends Component {
@@ -451,7 +451,7 @@ class ProfileScreen extends Component {
                 <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
-                            <Icon name="add" style={{ color: '#FFF' }}></Icon>
+                            <ScaledImage height={25} source={require('@images/new/profile/ic_add.png')}></ScaledImage>
                         </TouchableOpacity>
                     </Card>
                 </Animatable.View>

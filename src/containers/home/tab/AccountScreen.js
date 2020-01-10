@@ -266,10 +266,10 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_ehealth.png")}
-                  width={26}
-                  height={26}
+                  width={32}
+                  height={32}
                 />
-                <Text style={[styles.itemText, { marginLeft: 27 }]}>Y bạ điện tử</Text>
+                <Text style={styles.itemText}>Y bạ điện tử</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               <View style={styles.borderMenu}></View>
@@ -298,10 +298,10 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_tranfer.png")}
-                  width={24}
-                  height={24}
+                  width={26}
+                  height={26}
                 />
-                <Text style={[styles.itemText, { marginLeft: 22, }]}>Lịch sử giao dịch</Text>
+                <Text style={styles.itemText}>Lịch sử giao dịch</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               {/* <TouchableOpacity
@@ -347,8 +347,8 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_change_pass.png")}
-                  width={24}
-                  height={24}
+                  width={26}
+                  height={26}
                 />
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -449,8 +449,8 @@ class AccountScreen extends Component {
           >
             <ScaledImage
               source={require("@images/new/account/ic_rules.png")}
-              width={24}
-              height={24}
+              width={26}
+              height={26}
             />
             <Text style={styles.itemText}>Điều khoản sử dụng</Text>
             <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -502,13 +502,6 @@ const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   icon: {},
   btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
-  label: {
-    marginTop: 2,
-    color: "#4A4A4A",
-    fontSize: 15,
-    fontWeight: "600",
-    lineHeight: 23
-  },
   popup: {
     width: width * 0.8
   },
@@ -529,9 +522,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     flex: 1,
-    fontWeight: "400",
-    fontWeight: 'bold',
     fontSize: 15,
+    fontWeight:'bold',
     color: '#000000',
     marginLeft: 20
   },
