@@ -1,6 +1,5 @@
 package com.isofh.appisofhcaredev;
 
-import com.facebook.CallbackManager;
 import cl.json.ShareApplication;
 import android.app.Application;
 import android.content.Context;
@@ -19,10 +18,6 @@ import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
 // public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication {
   public class MainApplication extends Application implements ReactApplication, ShareApplication {
-    private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
-  protected static CallbackManager getCallbackManager() {
-    return mCallbackManager;
-  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
