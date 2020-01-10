@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Alert, Platform } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
@@ -18,6 +18,7 @@ import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import GetLocation from 'react-native-get-location'
 import RNLocation from 'react-native-location';
+import locationUtils from '@utils/location-utils';
 const { width, height } = Dimensions.get('window')
 const TYPE = {
     SEARCH: 'SEARCH',
@@ -79,112 +80,18 @@ class TabDoctorAndHospitalScreen extends Component {
     }
 
 
-    getCurrentLocation(callAgain) {
-        RNLocation.getLatestLocation().then(region => {
-            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+  
+    getListLocation = () => {
+        locationUtils.getLocation().then(region => {
+            console.log('region: ', region);
             this.setState({
                 latitude: region.latitude,
                 longitude: region.longitude
             }, this.onRefress);
-        }).catch(() => {
-            locationProvider.getCurrentLocationHasSave().then(s => {
-                if (s && s.latitude && s.longitude) {
-                    s.latitudeDelta = 0.1;
-                    s.longitudeDelta = 0.1;
-                    this.setState({
-                        latitude: region.latitude,
-                        longitude: region.longitude
-                    }, this.onRefress);
-                }
-            }).catch(e => {
-                if (!callAgain) {
-                    this.getCurrentLocation(true);
-                }
-            });
-        });
-    }
+        }).catch(err => {
+            console.log('err: ', err);
 
-    getLocation() {
-        let getLocation = () => {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: constants.booking.location_premmission,
-                        message: constants.booking.location_premission_content,
-                        buttonPositive: constants.actionSheet.accept,
-                        buttonNegative: constants.actionSheet.cancel
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-                    RNLocation.getLatestLocation().then(region => {
-                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                        this.setState({
-                            latitude: region.latitude,
-                            longitude: region.longitude
-                        }, this.onRefress);
-                    }).catch((e) => {
-                        locationProvider.getCurrentLocationHasSave().then(s => {
-                            if (s && s.latitude && s.longitude) {
-                                s.latitudeDelta = 0.1;
-                                s.longitudeDelta = 0.1;
-                                this.setState({
-                                    latitude: region.latitude,
-                                    longitude: region.longitude
-                                }, this.onRefress);
-                            }
-                        }).catch(e => {
-                            if (!callAgain) {
-                                console.log("callAgain");
-                                this.getCurrentLocation(true);
-                            }
-                        });
-                    });
-                }
-            });
-        }
-
-        if (Platform.OS == 'android') {
-            GetLocation.getCurrentPosition({
-                enableHighAccuracy: true,
-                timeout: 15000,
-            })
-                .then(region => {
-                    console.log('region: ', region);
-                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                    this.setState({
-                        latitude: region.latitude,
-                        longitude: region.longitude
-                    }, this.onRefress);
-                })
-                .catch((error) => {
-                    const { code, message } = error
-                    if (code == 'UNAVAILABLE') {
-                        this.requestPermission()
-                    }
-                });
-        }
-        else {
-            try {
-                LocationSwitch.isLocationEnabled(() => {
-                    getLocation();
-                }, this.requestPermission);
-            } catch (error) {
-            }
-        }
-
-    }
-    requestPermission = () => {
-        LocationSwitch.enableLocationService(1000, true, () => {
-            this.setState({ isLoading: true }, this.getLocation);
-        }, () => {
-            this.setState({ locationEnabled: false });
-        });
-    }
-    getListLocation = () => {
-        this.getLocation()
+        })
     }
     render() {
         const { refreshing, data } = this.state
