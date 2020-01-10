@@ -18,8 +18,6 @@ import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
 import redux from "@redux-store";
 import ScaleImage from "mainam-react-native-scaleimage";
-import SocialNetwork from "@components/LoginSocial";
-import RNAccountKit from "react-native-facebook-account-kit";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -43,13 +41,7 @@ class LoginScreen extends Component {
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
-		// Configures the SDK with some options
-		RNAccountKit.configure({
-			titleType: "login",
-			initialPhoneCountryPrefix: "+84", // autodetected if none is provided
-			countryWhitelist: ["VN"], // [] by default
-			defaultCountry: "VN"
-		});
+		
 	}
 	componentDidMount() {
 		firebase.messaging().getToken()
@@ -68,37 +60,7 @@ class LoginScreen extends Component {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
 		})
-		// return;
-		// let verify = async () => {
-		// 	RNAccountKit.loginWithPhone().then(async token => {
-		// 		console.log(token);
-		// 		if (!token) {
-		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 		} else {
-		// 			let account = await RNAccountKit.getCurrentAccount();
-		// 			if (account && account.phoneNumber) {
-		// 				this.props.navigation.navigate("register", {
-		// 					user: {
-		// 						phone: "0" + account.phoneNumber.number,
-		// 						token: token.token,
-		// 						socialType: 1,
-		// 						socialId: "0"
-		// 					},
-		// 					nextScreen: this.nextScreen
-		// 				});
-		// 			} else {
-		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 			}
-		// 		}
-		// 	});
-		// };
-		// RNAccountKit.logout()
-		// 	.then(() => {
-		// 		verify();
-		// 	})
-		// 	.catch(x => {
-		// 		verify();
-		// 	});
+		
 	}
 	getDetails = (token) => {
 		console.log(client.auth)
@@ -193,80 +155,7 @@ class LoginScreen extends Component {
 
 	forgotPassword() {
 		this.props.navigation.navigate('inputPhone')
-		// this.setState({
-		// 	requirePass: false
-		// }, () => {
-		// 	Keyboard.dismiss();
-		// 	if (!this.form.isValid()) {
-		// 		return;
-		// 	}
-		// 	connectionUtils.isConnected().then(s => {
-		// 		this.setState({
-		// 			isLoading: true
-		// 		}, () => {
-		// 			userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-		// 				switch (s.code) {
-		// 					case 0:
-		// 						this.props.navigation.navigate('verifyPhone', {
-		// 							phone: this.state.phone,
-		// 							verify: 2
-		// 						})
-		// 						break
-		// 					case 2:
-		// 						snackbar.show('Số điện thoại chưa được đăng ký', "danger");
-		// 						break
-		// 					case 6:
-		// 						this.props.navigation.navigate('verifyPhone', {
-		// 							phone: this.state.phone,
-		// 							verify: 2
-		// 						})
-		// 						break
-		// 				}
-
-
-		// 			})
-		// 			this.setState({
-		// 				isLoading: false,
-		// 				requirePass: true
-		// 			})
-		// 		})
-		// 	}).catch(e => {
-		// 		this.setState({
-		// 			isLoading: false,
-		// 			requirePass: true
-		// 		})
-		// 		snackbar.show(constants.msg.app.not_internet, "danger");
-		// 	})
-		// })
-
-		// let verify = async () => {
-		// 	RNAccountKit.loginWithPhone().then(async token => {
-		// 		console.log(token);
-		// 		if (!token) {
-		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 		} else {
-		// 			let account = await RNAccountKit.getCurrentAccount();
-		// 			if (account && account.phoneNumber) {
-		// 				this.props.navigation.replace("resetPassword", {
-		// 					user: {
-		// 						phone: "0" + account.phoneNumber.number,
-		// 						token: token.token,
-		// 						applicationId: constants.fbApplicationId,
-		// 					}
-		// 				});
-		// 			} else {
-		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 			}
-		// 		}
-		// 	});
-		// };
-		// RNAccountKit.logout()
-		// 	.then(() => {
-		// 		verify();
-		// 	})
-		// 	.catch(x => {
-		// 		verify();
-		// 	});
+		
 	}
 	onShowPass = () => {
 		this.setState({
