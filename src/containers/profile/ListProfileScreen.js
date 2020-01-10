@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from "@components/ActivityPanel";
-import { Card, Icon } from 'native-base';
+import { Card } from 'native-base';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import { connect } from "react-redux";
 import constants from '@resources/strings';
@@ -361,7 +361,7 @@ class ListProfileScreen extends Component {
                 <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerButtonAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
-                            <Icon name="add" style={styles.iconAdd}></Icon>
+                            <ScaledImage height={25} source={require('@images/new/profile/ic_add.png')}></ScaledImage>
                         </TouchableOpacity>
                     </Card>
                 </Animatable.View>

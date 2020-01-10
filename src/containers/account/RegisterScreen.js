@@ -3,7 +3,7 @@ import UserInput from "@components/UserInput";
 import ActivityPanel from "@components/ActivityPanel";
 import {
   View,
-  ScrollView,
+  ActivityIndicator,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -69,9 +69,9 @@ class RegisterScreen extends Component {
 
   changeEmail() {
     let verify = async () => {
-      
+
     };
-    
+
   }
 
   // register() {
@@ -134,21 +134,19 @@ class RegisterScreen extends Component {
             return
           }
           else {
-            this.setState({
-              isLoading: false,
-              disabled: false
-            })
             switch (res.code) {
               case 2: snackbar.show('Số điện thoại đã được đăng ký', 'danger')
                 break
               default: snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
             }
-
+            this.setState({
+              isLoading: false,
+              disabled: false
+            })
           }
 
         }).catch(e => {
-
           snackbar.show(constants.msg.app.not_internet, "danger");
         });
       })
@@ -333,7 +331,7 @@ class RegisterScreen extends Component {
               </Form>
               <View style={{ backgroundColor: '#fff' }}>
                 <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
-                  <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
+                  {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>}
                 </TouchableOpacity>
               </View>
               <View style={{ height: 50 }}></View>

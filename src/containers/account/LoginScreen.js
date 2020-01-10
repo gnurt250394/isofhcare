@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import ActivityPanel from "@components/ActivityPanel";
 import {
 	View,
-	ScrollView,
+	ActivityIndicator,
 	Linking,
 	StyleSheet,
 	Text,
@@ -41,7 +41,7 @@ class LoginScreen extends Component {
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
-		
+
 	}
 	componentDidMount() {
 		firebase.messaging().getToken()
@@ -60,7 +60,7 @@ class LoginScreen extends Component {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
 		})
-		
+
 	}
 	getDetails = (token) => {
 		console.log(client.auth)
@@ -105,9 +105,8 @@ class LoginScreen extends Component {
 		}
 
 		connectionUtils.isConnected().then(s => {
-			this.setState({ isLoading: true, disabled: false }, () => {
+			this.setState({ isLoading: true, disabled: true }, () => {
 				userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
-					this.setState({ isLoading: false, disabled: false });
 					switch (s.code) {
 						case 0:
 							var user = s.data.user;
@@ -125,20 +124,22 @@ class LoginScreen extends Component {
 							} else {
 								this.props.navigation.navigate("home", { showDraw: false });
 							}
-							return;
+							break;
 						case 4:
 							snackbar.show(constants.msg.user.this_account_not_active, "danger");
-							return;
+							break;
 						case 3:
 							snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
-							return;
+							break;
 						case 2:
 						case 1:
 							snackbar.show(constants.msg.user.account_blocked, "danger");
-							return;
+							break;
 						case 500:
 							snackbar.show(constants.msg.error_occur, "danger");
+							break
 					}
+					this.setState({ isLoading: false, disabled: false });
 				}).catch(e => {
 					this.setState({ isLoading: false, disabled: false });
 					snackbar.show(constants.msg.error_occur, "danger");
@@ -155,7 +156,7 @@ class LoginScreen extends Component {
 
 	forgotPassword() {
 		this.props.navigation.navigate('inputPhone')
-		
+
 	}
 	onShowPass = () => {
 		this.setState({
@@ -183,7 +184,7 @@ class LoginScreen extends Component {
 					style={styles.imgBg}
 					source={require('@images/new/account/img_bg_login.png')}
 					resizeMode={'cover'}
-					// resizeMethod="resize"
+				// resizeMethod="resize"
 				// image={require("@images/new/isofhcare.png")}
 				// imageStyle={{ marginRight: 50 }}
 				// showFullScreen={true}
@@ -279,7 +280,7 @@ class LoginScreen extends Component {
 										</View>
 									</Form>
 									<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
-										<Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>
+										{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
 									</TouchableOpacity>
 								</Card>
 								<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
