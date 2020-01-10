@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import Dimensions from 'Dimensions';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
@@ -46,8 +46,6 @@ class ResetPasswordScreen extends Component {
                 let phone = this.props.navigation.getParam('phone', null)
                 let otp = this.props.navigation.getParam('otp', null)
                 userProvider.resetPassword(passwordNew, phone, otp).then(s => {
-
-                    this.setState({ isLoading: false, disabled: false })
                     switch (s.code) {
                         case 0:
                             snackbar.show(
@@ -57,14 +55,17 @@ class ResetPasswordScreen extends Component {
                             this.props.navigation.replace("login", {
                                 nextScreen: this.nextScreen
                             });
-                            return;
+                            this.setState({ isLoading: false, disabled: false })
+                            break;
                         default:
                             snackbar.show(
                                 "Có lỗi xảy ra, xin vui lòng thử lại",
                                 "danger"
                             );
-                            return;
+                            this.setState({ isLoading: false, disabled: false })
+                            break;
                     }
+
                 }).catch(e => {
                     this.setState({ isLoading: false, disabled: false })
                     snackbar.show(constants.msg.user.change_password_not_success, "danger");
@@ -176,13 +177,13 @@ class ResetPasswordScreen extends Component {
                         </Form>
                     </View>
                     <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity
-                        disabled={this.state.disabled}
-                        onPress={this.changePassword.bind(this)}
-                        style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>
-                    </TouchableOpacity>
-                </View>
+                        <TouchableOpacity
+                            disabled={this.state.disabled}
+                            onPress={this.changePassword.bind(this)}
+                            style={styles.updatePass}>
+                            {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>}
+                        </TouchableOpacity>
+                    </View>
                 </KeyboardAwareScrollView>
                 <View style={{ height: 50 }}></View>
             </ActivityPanel>
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignSelf: 'stretch',
         justifyContent: 'center',
-        marginTop:10
+        marginTop: 10
     },
     input: {
         maxWidth: 300,
