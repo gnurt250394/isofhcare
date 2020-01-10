@@ -177,9 +177,9 @@ class HomeScreen extends Component {
   renderItemDoctor = ({ item, index }) => {
 
     return (
-      <TouchableOpacity onPress={() => this.onSelectDoctor(item)} style={styles.cardViewDoctor}>
+      <View style={styles.cardViewDoctor}>
         {/* <Card style={{ borderRadius: 5, }}> */}
-        <View style={styles.containerImageDoctor}>
+        <TouchableOpacity onPress={() => this.onSelectDoctor(item)} style={styles.containerImageDoctor}>
           <Image
             // uri={item.advertise.images.absoluteUrl()}
             style={{ borderRadius: 5, width: '100%', height: '100%' }}
@@ -187,11 +187,11 @@ class HomeScreen extends Component {
           // width={DEVICE_WIDTH / 3}
           // height={137}
           />
-        </View>
+        </TouchableOpacity>
         {/* </Card> */}
         <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
-      </TouchableOpacity>
+      </View>
     );
   }
   renderDoctor() {
@@ -215,7 +215,7 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('profileHospital', { item: item })
   }
   renderItemHospital = ({ item, index }) => {
-    console.log('item: ', item);
+
     return (
       <View style={{ flex: 1 }}>
         <TouchableOpacity onPress={() => this.getDetailsHospital(item)} style={styles.cardView}>
