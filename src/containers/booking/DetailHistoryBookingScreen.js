@@ -140,8 +140,9 @@ class DetailHistoryBookingScreen extends Component {
                 <Text style={styles.txStatus} />;
         }
     };
-    showImage = (image) => {
+    showImage = (image, index) => {
         this.props.navigation.navigate("photoViewer", {
+            index: index,
             urls: image.map(item => {
                 return item.absoluteUrl()
             }),
@@ -156,7 +157,7 @@ class DetailHistoryBookingScreen extends Component {
                         image.map((item, index) => {
                             console.log(item, 'ddjasjasjhas')
                             return (
-                                <TouchableOpacity onPress={() => this.showImage(image)}
+                                <TouchableOpacity onPress={() => this.showImage(image, index)}
                                     key={index} style={styles.buttonShowImage}>
                                     <ScaledImage
                                         width={70}
