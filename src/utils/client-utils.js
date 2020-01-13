@@ -35,7 +35,8 @@ String.prototype.absoluteUrl =
     if (
       _this2.endsWith(".jpg") ||
       _this2.endsWith(".png") ||
-      _this2.endsWith(".gif")
+      _this2.endsWith(".gif") ||
+      _this2.endsWith(".jpeg")
     ) {
       let image = resource_url + encodeURIComponent(_this + "") + "?alt=media";
       // console.log(image);
@@ -44,7 +45,8 @@ String.prototype.absoluteUrl =
     if (
       !_this2.endsWith(".jpg") ||
       !_this2.endsWith(".png") ||
-      !_this2.endsWith(".gif")
+      _this2.endsWith(".gif") ||
+      _this2.endsWith(".jpeg")
     ) {
       return defaultValue;
     }

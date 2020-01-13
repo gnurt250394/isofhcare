@@ -25,9 +25,12 @@ export default class DrugStoreScreen extends Component {
         };
     }
     openMap = () => {
-        var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
-        var url = scheme + `${this.state.address}`;
-        Linking.openURL(url);
+        // var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
+        // var url = scheme + `${this.state.address}`;
+        // Linking.openURL(url);
+        this.props.navigation.navigate("mapHospital", {
+            item: this.state.address
+        });
     }
     renderDrugItem = ({ item, index }) => {
         return (

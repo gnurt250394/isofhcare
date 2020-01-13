@@ -153,16 +153,23 @@ class DetailHistoryBookingScreen extends Component {
             return (<View>
                 <View style={styles.containerListImage}>
                     {
-                        image.map((item, index) => <TouchableOpacity onPress={() => this.showImage(image)}
-                            key={index} style={styles.buttonShowImage}>
-                            <Image
-                                style={styles.ImageViewer}
-                                source={{
-                                    uri: item ? item.absoluteUrl() : ''
-                                }}
-                                resizeMode={'cover'}
-                            />
-                        </TouchableOpacity>)
+                        image.map((item, index) => {
+                            console.log(item, 'ddjasjasjhas')
+                            return (
+                                <TouchableOpacity onPress={() => this.showImage(image)}
+                                    key={index} style={styles.buttonShowImage}>
+                                    <ScaledImage
+                                        width={70}
+                                        height={70}
+                                        style={styles.ImageViewer}
+                                        uri={
+                                            item ? item.absoluteUrl() : ''
+                                        }
+                                        resizeMode={'cover'}
+                                    />
+                                </TouchableOpacity>
+                            )
+                        })
                     }
 
                 </View>
