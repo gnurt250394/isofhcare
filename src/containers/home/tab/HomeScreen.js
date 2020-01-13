@@ -315,7 +315,7 @@ class HomeScreen extends Component {
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
                 </View>
-                  <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text></View>
+                  <Text style={[styles.label]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
@@ -361,7 +361,7 @@ class HomeScreen extends Component {
                 <View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
-                <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text>
+                <Text style={[styles.label, ]}>{item.text}</Text>
               </TouchableOpacity>
 
           }
@@ -603,7 +603,8 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
     fontWeight: '600',
     lineHeight: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize:12
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
