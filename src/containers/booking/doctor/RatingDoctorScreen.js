@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 20,
         height: 150,
-        textAlignVertical: 'top'
+        textAlignVertical: 'top',
+        color:'#000'
     },
     txtNameDoctor: {
         color: '#00CBA7',

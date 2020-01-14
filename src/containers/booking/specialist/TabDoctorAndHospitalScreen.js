@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
         marginLeft: -10,
         fontWeight: 'bold',
         paddingLeft: 9,
+        color:'#000'
     },
     groupSearch: {
         flexDirection: 'row',
