@@ -196,6 +196,7 @@ class MyVoucherScreen extends Component {
                         <TextInput style={styles.input}
                             placeholder="Nhập mã ưu đãi"
                             value={keyword}
+                            placeholderTextColor="#999"
                             onChangeText={this.onChangeText}
                         />
                         <TouchableOpacity
@@ -262,7 +263,8 @@ const styles = StyleSheet.create({
         borderColor: '#555',
         borderRadius: 7,
         paddingLeft: 8,
-        flex: 1
+        flex: 1,
+        color:'#000'
     },
     containerSearch: {
         flexDirection: 'row',
