@@ -237,7 +237,7 @@ class HomeScreen extends Component {
           <ScaledImage
             uri={item.imageHome.absoluteUrl()}
             height={134}
-            style={{ borderRadius: 6, resizeMode: 'cover' }}
+            style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
           />
         </TouchableOpacity>
         <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
@@ -629,7 +629,7 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, },
   viewFooter: { width: 35 },
-  cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
+  cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, width: 259 },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
