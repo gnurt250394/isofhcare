@@ -166,8 +166,8 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    this.onRefresh();
     this.onGetHospital()
+    this.onGetDoctor()
   }
   onSelectDoctor = (item) => {
     if (this.props.userApp.isLogin) {
@@ -292,19 +292,21 @@ class HomeScreen extends Component {
     this.setState({
       refreshing: true
     }, () => {
-      homeProvider.getListDoctor((s, e) => {
 
-        if (s) {
-          this.setState({
-            listDataDoctor: s
-          })
-        } else {
-
-        }
-      })
       this.setState({
         refreshing: false
       })
+    })
+  }
+  onGetDoctor = () => {
+    homeProvider.listDoctor().then(res => {
+      if (res) {
+        this.setState({
+          listDataDoctor: res
+        })
+      }
+    }).catch(err => {
+
     })
   }
   getMarginBooking() {
@@ -384,23 +386,14 @@ class HomeScreen extends Component {
     })
   }
   onGetHospital = () => {
-    // hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
-    //   if (res.code == 0) {
-    //     this.setState({
-    //       hospital: res.data.data
-    //     })
-    //   }
-    //   
-    // })
-    homeProvider.getListHospital((s, e) => {
-      if (s.code == 0) {
-
+    homeProvider.listHospital().then(res => {
+      if (res && res.code == 0) {
         this.setState({
-          listDataHospital: s.data
+          listDataHospital: res.data
         })
-      } else {
-
       }
+    }).catch(err => {
+      console.log(err)
     })
   }
   getAdjustedFontSize(size) {
