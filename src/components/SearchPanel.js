@@ -239,7 +239,8 @@ const styles = StyleSheet.create({
         padding: 8,
         fontSize: 14,
         overflow: 'hidden',
-        flexWrap: 'nowrap'
+        flexWrap: 'nowrap',
+        color:'#000'
     },
     containerSearch: {
         borderColor: 'rgba(151,151,151,0.55)',

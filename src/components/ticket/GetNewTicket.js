@@ -192,7 +192,7 @@ class GetNewTicket extends Component {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold', paddingLeft: 9 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold', paddingLeft: 9, color:'#000' }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     <TouchableOpacity style={{ marginRight: -2 }} onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (
