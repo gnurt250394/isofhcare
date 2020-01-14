@@ -122,7 +122,6 @@ class ListSpecialistScreen extends Component {
 
     onClose = () => {
         this.props.navigation.pop()
-        console.log('props: ', this.props);
     }
     render() {
         return (
@@ -196,7 +195,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         width: '45%',
         marginLeft: 13,
-        height: 50,
         marginTop: 10,
         borderRadius: 5,
         paddingHorizontal: 10,
