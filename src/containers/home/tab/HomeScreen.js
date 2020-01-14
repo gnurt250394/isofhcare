@@ -170,9 +170,14 @@ class HomeScreen extends Component {
     this.onGetHospital()
   }
   onSelectDoctor = (item) => {
-    this.props.navigation.navigate('detailsDoctor', {
-      item: item
-    })
+    if (this.props.userApp.isLogin) {
+      this.props.navigation.navigate('detailsDoctor', { item })
+    } else {
+      this.props.navigation.navigate("login", {
+        nextScreen: { screen: "detailsDoctor", param: { item } }
+      });
+    }
+
   }
   renderItemDoctor = ({ item, index }) => {
 
@@ -212,7 +217,17 @@ class HomeScreen extends Component {
     </View>)
   }
   getDetailsHospital = (item) => {
-    this.props.navigation.navigate('profileHospital', { item: item })
+    console.log('item: ', item);
+
+    if (this.props.userApp.isLogin) {
+      this.props.navigation.navigate('profileHospital', { item })
+    }
+    else {
+
+      this.props.navigation.navigate("login", {
+        nextScreen: { screen: 'profileHospital', param: { item } }
+      });
+    }
   }
   renderItemHospital = ({ item, index }) => {
 
@@ -315,7 +330,7 @@ class HomeScreen extends Component {
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
                 </View>
-                  <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text></View>
+                  <Text style={[styles.label]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
@@ -361,7 +376,7 @@ class HomeScreen extends Component {
                 <View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
-                <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text>
+                <Text style={[styles.label,]}>{item.text}</Text>
               </TouchableOpacity>
 
           }
@@ -603,7 +618,8 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
     fontWeight: '600',
     lineHeight: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 13
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
