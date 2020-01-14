@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
-    Clipboard
+    Clipboard,
+    Linking
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -226,6 +227,11 @@ class DetailHistoryBookingScreen extends Component {
         let price = this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0)
         return (price - voucherPrice).formatPrice()
     }
+    openLinkHotline = () => {
+        Linking.openURL(
+            'tel:1900299983'
+        );
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
@@ -340,6 +346,21 @@ class DetailHistoryBookingScreen extends Component {
                 /> */}
                             </View>
                         </View>
+                        <TouchableOpacity
+                            style={[styles.itemMenu]}
+                            onPress={this.openLinkHotline}>
+                            <ScaledImage
+                                source={require("@images/new/account/ic_support.png")}
+                                width={20}
+                                height={20}
+                                style={{ tintColor: '#00b392' }}
+                            />
+                            <Text style={styles.itemText}>Hỗ trợ</Text>
+                            <View style={{ alignItems: 'flex-end' }}>
+                                <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text>
+                                {/* <Text>Chọn phím 1</Text> */}
+                            </View>
+                        </TouchableOpacity>
                         {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
                             <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
                                 <ScaledImage
@@ -480,6 +501,19 @@ class DetailHistoryBookingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    itemMenu: {
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: 10,
+        paddingRight: 20,
+    },
+    itemText: {
+        flex: 1,
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginLeft: 10
+    },
     modal: {
         flex: 1,
         alignItems: 'center',

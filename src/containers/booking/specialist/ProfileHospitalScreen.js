@@ -104,7 +104,14 @@ class ProfileHospitalScreen extends Component {
     }
 
     addBooking = () => {
+        const item = this.props.navigation.getParam('item', {})
+        console.log('item: ', item);
+        if (item.availableBooking == 0) {
+            snackbar.show('Cơ sở y tế đang cập nhật đặt khám, mời bạn quay lại sau.')
+            return
+        }
         let hospital = { address: this.state.profileHospital.contact.address, ...this.state.profileHospital }
+        console.log('hospital: ', hospital);
         this.props.navigation.navigate('addBooking1', {
             hospital,
         })
@@ -181,6 +188,7 @@ class ProfileHospitalScreen extends Component {
     }
     render() {
         const icSupport = require("@images/new/user.png");
+        const item = this.props.navigation.getParam('item', {})
         const { profileHospital } = this.state
         const source = profileHospital && profileHospital.imagePath
             ? { uri: profileHospital.imagePath.absoluteUrl() }
@@ -225,7 +233,7 @@ class ProfileHospitalScreen extends Component {
                                     <Text style={styles.nameDoctor}>{profileHospital.name}</Text>
                                     <Text style={{ paddingBottom: 10 }}>{contact.address}</Text>
                                     <View style={styles.containerButton}>
-                                        <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                                        <Button label="Đặt khám" style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                                         <Button label="Xem bản đồ" style={styles.txtAdvisory} textStyle={{ color: '#00A3FF' }} onPress={this.goToMap} />
                                     </View>
                                 </View>
