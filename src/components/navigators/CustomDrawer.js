@@ -41,7 +41,7 @@ class CustomDrawer extends React.Component {
         <TouchableOpacity style={styles.viewDrawer}
           onPress={() => {
             Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+              "mailto:cskh@isofhcare.com?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
             );
           }}>
           <View style={{ width: 25, height: 25 }}>

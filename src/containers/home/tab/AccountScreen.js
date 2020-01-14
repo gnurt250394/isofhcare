@@ -411,7 +411,7 @@ class AccountScreen extends Component {
             style={[styles.itemMenu]}
             // onPress={() => {
             //   Linking.openURL(
-            //     "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+            //     "mailto:cskh@isofhcare.com?subject=Hỗ trợ sử dụng app ISofhCare&body="
             //   );
             // }}
             onPress={this.openLinkHotline}
@@ -429,7 +429,7 @@ class AccountScreen extends Component {
             style={[styles.itemMenu]}
             onPress={() => {
               Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+                "mailto:cskh@isofhcare.com?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
               );
             }}
           ><ScaledImage
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
   itemText: {
     flex: 1,
     fontSize: 15,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     color: '#000000',
     marginLeft: 20
   },
