@@ -627,7 +627,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingLeft: 7,
         padding: padding,
-        borderRadius: 6
+        borderRadius: 6,
+        color:'#000'
     },
     errorStyle: {
         color: 'red',
