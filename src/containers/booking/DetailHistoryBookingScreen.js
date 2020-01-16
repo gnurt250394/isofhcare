@@ -358,7 +358,10 @@ class DetailHistoryBookingScreen extends Component {
                             <Text style={styles.itemText}>Hỗ trợ</Text>
                             <View style={{ alignItems: 'flex-end' }}>
                                 <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text>
-                                {/* <Text>Chọn phím 1</Text> */}
+                                {this.state.booking.hotLine ?
+                                    <Text>{this.state.booking.hotLine}</Text>
+                                    : null
+                                }
                             </View>
                         </TouchableOpacity>
                         {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
