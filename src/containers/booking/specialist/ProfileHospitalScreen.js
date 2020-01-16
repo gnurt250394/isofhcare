@@ -23,8 +23,8 @@ import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
-import ItemDoctorOfHospital from "../../../components/booking/specialist/ItemDoctorOfHospital";
-
+import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
+import ImageUtils from 'mainam-react-native-image-utils';
 const dataRate = [
     { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
     { id: 2, name: 'Lê Hùng', rate: 4.5, message: 'Bác sĩ rất ...' },
@@ -81,7 +81,10 @@ class ProfileHospitalScreen extends Component {
             item: {},
             isVisible: false,
             showProfile: false,
-            showRating: false
+            showRating: false,
+            listDoctor: [],
+            page: 0,
+            size: 20
         };
     }
     componentDidMount() {
@@ -92,7 +95,7 @@ class ProfileHospitalScreen extends Component {
         let id = item && item.id
         bookingDoctorProvider.detailHospital(id).then(s => {
             if (s) {
-                this.setState({ profileHospital: s, isLoading: false })
+                this.setState({ profileHospital: s, isLoading: false }, this.getDoctor)
             }
         }).catch(e => {
             if (e) {
@@ -103,6 +106,34 @@ class ProfileHospitalScreen extends Component {
         })
     }
 
+    getDoctor = () => {
+        const { profileHospital, page, size } = this.state
+        bookingDoctorProvider.getListDoctorWithHospital(profileHospital.id, page, size).then(res => {
+            if (res && res.length) {
+                this.formatData(res)
+            } else {
+                this.formatData([])
+            }
+        }).catch((err) => {
+            this.formatData([])
+
+        })
+    }
+    formatData = (data) => {
+        if (data.length == 0) {
+            if (this.state.page == 0) {
+                this.setState({ listDoctor: [] })
+            }
+        } else {
+            if (this.state.page == 0) {
+                this.setState({ listDoctor: data })
+            } else {
+                this.setState(preState => {
+                    return { listDoctor: [...preState.listDoctor, ...data] }
+                })
+            }
+        }
+    }
     addBooking = () => {
         const item = this.props.navigation.getParam('item', {})
         console.log('item: ', item);
@@ -124,9 +155,8 @@ class ProfileHospitalScreen extends Component {
 
     addBookingDoctor = (item) => () => {
         this.props.navigation.navigate('selectTimeDoctor', {
-            item: this.state.profileHospital,
+            item,
             isNotHaveSchedule: true,
-            schedules: this.state.profileHospital.schedules
         })
     }
     _renderItemDoctor = ({ item, index }) => {
@@ -190,8 +220,12 @@ class ProfileHospitalScreen extends Component {
         const icSupport = require("@images/new/user.png");
         const item = this.props.navigation.getParam('item', {})
         const { profileHospital } = this.state
-        const source = profileHospital && profileHospital.imagePath
-            ? { uri: profileHospital.imagePath.absoluteUrl() }
+        let images = profileHospital && profileHospital.imagePath
+            && profileHospital.imagePath.startsWith('/')
+            ? profileHospital.imagePath.replace('/', '')
+            : profileHospital && profileHospital.imagePath ? profileHospital.imagePath : ''
+        const source = this.state.profileHospital && this.state.profileHospital.imagePath
+            ? { uri: images.absoluteUrl() }
             : icSupport;
         const contact = profileHospital && profileHospital.contact || {}
         return (
@@ -209,7 +243,7 @@ class ProfileHospitalScreen extends Component {
                         {/** profile doctor */}
                         <Card style={styles.viewImgUpload}>
                             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                <ImageLoad
+                                {/* <ImageLoad
                                     resizeMode="cover"
                                     imageStyle={styles.boderImage}
                                     borderRadius={45}
@@ -228,6 +262,12 @@ class ProfileHospitalScreen extends Component {
                                             />
                                         );
                                     }}
+                                /> */}
+                                <ScaleImage
+                                    resizeMode="cover"
+                                    source={source}
+                                    width={70}
+                                    style={styles.imgDefault}
                                 />
                                 <View style={{ paddingLeft: 10, flex: 1 }}>
                                     <Text style={styles.nameDoctor}>{profileHospital.name}</Text>
@@ -241,7 +281,7 @@ class ProfileHospitalScreen extends Component {
                             <View style={styles.row}>
                                 <View style={styles.groupQuantityBooking}>
                                     <Text>{constants.booking.quantity_booking}</Text>
-                                    <Text style={styles.rating}>{profileHospital.appointments}</Text>
+                                    <Text style={styles.rating}>{profileHospital.appointments ? profileHospital.appointments : 0}</Text>
                                 </View>
                                 <TouchableOpacity onPress={this.ratingDoctor} style={styles.groupRating}>
                                     <Text>{constants.booking.rating}</Text>
@@ -268,8 +308,8 @@ class ProfileHospitalScreen extends Component {
                                     <Text style={styles.colorBold}>Liên hệ</Text>
                                     <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>
                                     <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>
-                                    <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text>
+                                    {/* <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
+                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text> */}
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         {profileHospital.specializations && profileHospital.specializations.length > 0 ?
@@ -324,7 +364,7 @@ class ProfileHospitalScreen extends Component {
                                 <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
                             </View>
                             <FlatList
-                                data={listDoctor}
+                                data={this.state.listDoctor}
                                 renderItem={this._renderItemDoctor}
                                 keyExtractor={this._keyExtractor}
                             />
@@ -544,7 +584,13 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     nameDoctor: { fontSize: 16, color: '#000000', fontWeight: 'bold', paddingBottom: 5, },
-    imgDefault: { width: 90, height: 90, alignSelf: "center" },
+    imgDefault: {
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        borderColor: '#00CBA7',
+        borderWidth: 0.2
+    },
     boderImage: { borderRadius: 45, borderWidth: 2, borderColor: '#00CBA7' },
     avatar: { width: 90, height: 90, alignSelf: "flex-start", },
     imgPlaceHoder: {
