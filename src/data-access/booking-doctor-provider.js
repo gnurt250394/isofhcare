@@ -33,6 +33,21 @@ module.exports = {
             );
         });
     },
+    getListDoctorWithHospital(idHospital, page, size) {
+        return new Promise((resolve, reject) => {
+
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_doctor + `/hospital/${idHospital}/top/?page=${page}&size=${size}&sort=desc&properties=created`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    reject(e);
+                }
+            );
+        });
+    },
     getListHospitalWithSpecialist(idSpecialist, page, size) {
         return new Promise((resolve, reject) => {
 
