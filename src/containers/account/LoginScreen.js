@@ -46,7 +46,7 @@ class LoginScreen extends Component {
 	componentDidMount() {
 		firebase.messaging().getToken()
 			.then((token) => {
-				console.log('Device FCM Token: ', token);
+
 				userProvider.deviceId = DeviceInfo.getUniqueID();
 				userProvider.deviceToken = token;
 				firebase.messaging().subscribeToTopic("isofhcare_test");
@@ -55,7 +55,7 @@ class LoginScreen extends Component {
 
 
 	register() {
-		console.log(this.nextScreen)
+
 		this.props.navigation.replace("register", {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
@@ -63,9 +63,9 @@ class LoginScreen extends Component {
 
 	}
 	getDetails = (token) => {
-		console.log(client.auth)
+
 		userProvider.getDetailsUser().then(res => {
-			console.log(res, 'sssssss')
+
 			let user = res.details
 			user.loginToken = token
 			this.props.dispatch(redux.userLogin(user));
@@ -92,7 +92,7 @@ class LoginScreen extends Component {
 					snackbar.show(s.message, "danger");
 				}
 			}).catch(e => {
-				console.log(e)
+
 				this.setState({ isLoading: false });
 				snackbar.show(constants.msg.error_occur, "danger");
 			});
