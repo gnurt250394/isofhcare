@@ -7,10 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  StyleSheet
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import Dimensions from "Dimensions";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";

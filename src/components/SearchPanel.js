@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Dimensions from 'Dimensions';
-import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, View, StyleSheet } from 'react-native';
+import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, View, StyleSheet,Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import constants from '../res/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
