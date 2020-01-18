@@ -159,11 +159,17 @@ class ProfileHospitalScreen extends Component {
             isNotHaveSchedule: true,
         })
     }
+    detailDoctor = (item) => () => {
+        this.props.navigation.navigate('detailsDoctor', {
+            item
+        })
+    }
     _renderItemDoctor = ({ item, index }) => {
 
         return (
             <ItemDoctorOfHospital
                 item={item}
+                onPressDoctor={this.detailDoctor(item)}
                 onPress={this.addBookingDoctor(item)}
             />
         )

@@ -21,13 +21,15 @@ class ItemDoctorOfHospital extends Component {
         }
     }
     render() {
-        const { item, onPress } = this.props
+        const { item, onPress, onPressDoctor } = this.props
         const icSupport = require("@images/new/user.png");
         const source = item.imagePath
             ? { uri: item.imagePath.absoluteUrl() }
             : icSupport;
         return (
-            <View style={styles.containerItem}>
+            <TouchableOpacity
+                onPress={onPressDoctor}
+                style={styles.containerItem}>
                 <ImageLoad
                     resizeMode="cover"
                     imageStyle={styles.boderImage}
@@ -80,7 +82,7 @@ class ItemDoctorOfHospital extends Component {
 
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.7
     },
     imgDefault: { width: 70, height: 70, alignSelf: "center" },
-    boderImage: { borderRadius: 35},
+    boderImage: { borderRadius: 35 },
     avatar: { width: 70, height: 70, alignSelf: "flex-start", },
     imgPlaceHoder: {
         width: 70,
