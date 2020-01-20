@@ -194,7 +194,7 @@ class HomeScreen extends Component {
           />
         </TouchableOpacity>
         {/* </Card> */}
-        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
+        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensDoctor}>{item.name ? item.name : ""}</Text>
 
       </View>
     );
@@ -230,7 +230,6 @@ class HomeScreen extends Component {
     }
   }
   renderItemHospital = ({ item, index }) => {
-
     return (
       <View style={{ flex: 1 }}>
         <TouchableOpacity onPress={() => this.getDetailsHospital(item)} style={styles.cardView}>
@@ -240,7 +239,7 @@ class HomeScreen extends Component {
             style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
           />
         </TouchableOpacity>
-        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
+        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name : ""}</Text>
       </View>
     );
   }
@@ -626,7 +625,8 @@ const styles = StyleSheet.create({
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
-  txContensAds: { color: '#000', margin: 13, marginLeft: 5 },
+  txContensDoctor: { color: '#000', margin: 13, marginLeft: 5, },
+  txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {
