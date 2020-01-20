@@ -141,6 +141,7 @@ import ListSpecialistScreen from '@containers/booking/specialist/ListSpecialistS
 import TabDoctorAndHospitalScreen from '@containers/booking/specialist/TabDoctorAndHospitalScreen';
 import ProfileHospitalScreen from '@containers/booking/specialist/ProfileHospitalScreen';
 import MaphospitalScreen from '@containers/booking/specialist/MaphospitalScreen';
+import DetailServiceScreen from '@containers/booking/DetailServiceScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -254,7 +255,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       allowFontScaling: false,
       style: {
         backgroundColor: "#FFF",
-        paddingTop:5,
+        paddingTop: 5,
       },
     }
   }
@@ -391,6 +392,7 @@ const RootNavigator = createStackNavigator(
     tabDoctorAndHospital: { screen: TabDoctorAndHospitalScreen },
     profileHospital: { screen: ProfileHospitalScreen },
     mapHospital: { screen: MaphospitalScreen },
+    detalService: { screen: DetailServiceScreen },
   },
   {
     headerMode: "none",

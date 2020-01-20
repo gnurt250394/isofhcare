@@ -63,7 +63,7 @@ class ActivityPanel extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar translucent backgroundColor="transparent" />
-                <View style={{ position: 'relative', flex: 1, backgroundColor: '#f2f2f2'  }}>
+                <View style={{ position: 'relative', flex: 1, backgroundColor: '#f2f2f2' }}>
                     {
                         (this.props.showBackgroundHeader || this.props.showBackgroundHeader === undefined) ?
                             this.props.backgroundHeader ?
@@ -102,9 +102,9 @@ class ActivityPanel extends Component {
                                             </Card>
                                         </View>
                                         :
-                                            this.props.children
+                                        this.props.children
                                     :
-                                    <View style={[{ flex: 1, backgroundColor: '#FFF' }, this.props.containerStyle]}>
+                                    <View style={[{ flex: 1, backgroundColor: '#FFF', borderTopLeftRadius: 6, borderTopRightRadius: 6 }, this.props.containerStyle]}>
                                         {
                                             this.props.useCard ?
                                                 <Card style={[{ flex: 1, paddingBottom: 0, marginBottom: -10, borderRadius: 10 }, this.props.cardStyle]}>
