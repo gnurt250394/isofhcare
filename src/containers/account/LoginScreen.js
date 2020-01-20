@@ -222,7 +222,6 @@ class LoginScreen extends Component {
 														phone: "SĐT không hợp lệ"
 													}
 												}}
-												autoCapitalize={"none"}
 											/>
 											<Field style={styles.inputPass}>
 												<TextField
@@ -241,7 +240,6 @@ class LoginScreen extends Component {
 														}
 													}}
 													// inputStyle={styles.input}
-													autoCapitalize={"none"}
 												>
 
 												</TextField>

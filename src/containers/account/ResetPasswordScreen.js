@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import Dimensions from 'Dimensions';
-import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, StyleSheet,Dimensions, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';

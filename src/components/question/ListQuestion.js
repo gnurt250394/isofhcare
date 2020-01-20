@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, ActivityIndicator ,Dimensions} from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
@@ -8,7 +8,6 @@ import questionProvider from '@data-access/question-provider';
 import dateUtils from 'mainam-react-native-date-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
-import Dimensions from 'Dimensions';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import ItemQuestion from '@components/question/ItemQuestion';
