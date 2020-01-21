@@ -45,8 +45,9 @@ class ItemListVoucher extends Component {
         return (
             <TouchableOpacity
                 onPress={this.props.active ? onPress : this.onDisable}
+                disabled={!this.props.active}
                 style={styles.containerItem}>
-                <View style={[styles.groupItem, this.props.active ? { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', } : { backgroundColor: '#616161', }]}>
+                <View style={[styles.groupItem, this.props.active ? { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', } : { backgroundColor: item.type == 1 ? '#3161AD60' : '#F0730060' }]}>
                     <View style={[styles.viewOther, styles.topRight]} />
                     <View style={[styles.viewOther, styles.topLeft]} />
                     <View style={[styles.viewOther, styles.bottomRight]} />
@@ -60,11 +61,11 @@ class ItemListVoucher extends Component {
                         paddingLeft: 20,
                     }}>
                         <Text numberOfLines={2}
-                            style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
+                            style={[styles.containerText, styles.txtPriceVoucher, !this.props.active ? { color: '#EEEEEE' } : {}]}>GIẢM <Text style={{
                                 fontStyle: 'italic'
                             }}>{item.price.formatPrice()}đ </Text> KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`Hạn sử dụng: ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                        <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.type == 2 ? item.quantity : item.count} LẦN`}</Text>
+                        <Text style={[styles.containerText, !this.props.active ? { color: '#EEEEEE' } : {}]}>{`Hạn sử dụng: ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                        <Text numberOfLines={1} style={[styles.quality, !this.props.active ? { color: '#EEEEEE' } : {}]}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.type == 2 ? item.quantity : item.count} LẦN`}</Text>
                     </View>
                 </View>
                 {item.status ?

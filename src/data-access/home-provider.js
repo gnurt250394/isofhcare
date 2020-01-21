@@ -45,7 +45,7 @@ module.exports = {
             client.requestApi("get", urlDoctor + constants.api.home.get_list_doctor, {}, (s, e) => {
                 if (s) {
                     // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
-                    //     console.log(s,'imagesUtils')
+                    //     
                     // })
                     resolve(s);
                 } else {
@@ -84,7 +84,7 @@ module.exports = {
             client.requestApi("get", constants.api.hospital.get_top_hospital, {}, (s, e) => {
                 if (s) {
                     // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
-                    //     console.log(s,'imagesUtils')
+                    //     
                     // })
                     resolve(s);
                 } else {
