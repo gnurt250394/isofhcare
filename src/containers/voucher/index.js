@@ -94,7 +94,7 @@ class MyVoucherScreen extends Component {
 
                 if (res.code == 0 && res.data) {
                     let hospitalVoucher = res.data.hospitalId
-                    if (hospitalVoucher == idHospital) {
+                    if (hospitalVoucher == idHospital || hospitalVoucher == 0) {
                         if (this.state.voucherSelected && res.data.id == this.state.voucherSelected.id) {
 
                             let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
@@ -153,7 +153,7 @@ class MyVoucherScreen extends Component {
                     let data = res.data
                     let arr = this.duplicateArray(data)
                     arr.forEach(item => {
-                        if (item.hospitalId == idHospital) {
+                        if (item.hospitalId == idHospital || item.hospitalId == 0) {
                             item.active = true
                         }
                     })
