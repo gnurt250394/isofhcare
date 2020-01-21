@@ -6,6 +6,8 @@ import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import stringUtils from 'mainam-react-native-string-utils'
 import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
+
 const { width } = Dimensions.get('window')
 class ItemListVoucher extends Component {
     constructor(props) {
@@ -33,14 +35,18 @@ class ItemListVoucher extends Component {
             <ScaleImage source={icSupport} width={100} />
         );
     }
+    onDisable = () => {
+        snackbar.show(constants.voucher.voucher_not_avalrible, "danger")
+
+    }
     render() {
         const icSupport = require("@images/new/booking/ic_checked.png");
         const { item, onPress, onPressLater } = this.props
         return (
             <TouchableOpacity
-                onPress={onPress}
+                onPress={this.props.active ? onPress : this.onDisable}
                 style={styles.containerItem}>
-                <View style={[styles.groupItem, { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', }]}>
+                <View style={[styles.groupItem, this.props.active ? { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', } : { backgroundColor: '#616161', }]}>
                     <View style={[styles.viewOther, styles.topRight]} />
                     <View style={[styles.viewOther, styles.topLeft]} />
                     <View style={[styles.viewOther, styles.bottomRight]} />

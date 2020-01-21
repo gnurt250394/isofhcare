@@ -97,7 +97,7 @@ class ConfirmBookingScreen extends Component {
             let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
-            console.log('error: ', error);
+
             return false;
         }
     }
@@ -578,7 +578,7 @@ class ConfirmBookingScreen extends Component {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
-        console.log('booking: ', booking);
+
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
                 if (this.state.voucher && this.state.voucher.code) {
@@ -591,7 +591,7 @@ class ConfirmBookingScreen extends Component {
                     }
                 }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
-                    console.log('res: ', res);
+
                     this.setState({ isLoading: false })
                     if (res) {
                         snackbar.show('Đặt khám thành công', 'success')
@@ -626,7 +626,7 @@ class ConfirmBookingScreen extends Component {
 
                     }
                 }).catch(err => {
-                    console.log('err: ', err);
+
                     snackbar.show(constants.msg.booking.booking_err2, "danger");
                     this.setState({ isLoading: false })
                 });
@@ -654,7 +654,7 @@ class ConfirmBookingScreen extends Component {
 
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking: this.state.booking.book,
+            booking: this.state.booking,
             voucher: this.state.voucher
         })
     }
