@@ -103,6 +103,7 @@ class MyVoucherScreen extends Component {
                         } else {
                             let data = res.data
                             data.status = true
+                            data.active = true
                             let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
                             if (onSelected) onSelected(data)
                             this.props.navigation.pop()
@@ -150,6 +151,7 @@ class MyVoucherScreen extends Component {
                     let idHospital = booking.hospital.id
 
                     let { voucherSelected } = this.state
+                    console.log('voucherSelected: ', voucherSelected);
                     let data = res.data
                     let arr = this.duplicateArray(data)
                     arr.forEach(item => {
@@ -235,7 +237,7 @@ class MyVoucherScreen extends Component {
                         showsVerticalScrollIndicator={false}
                         nestedScrollEnabled={false}>
                         <View>
-                            {voucherSelected && voucherSelected.type == 2 && <ItemListVoucher item={this.state.voucherSelected} onPress={this.unSelectedVoucher} />}
+                            {voucherSelected && voucherSelected.type == 2 && <ItemListVoucher active={this.state.voucherSelected.active} item={this.state.voucherSelected} onPress={this.unSelectedVoucher} />}
 
                             <FlatList
                                 data={this.state.data}

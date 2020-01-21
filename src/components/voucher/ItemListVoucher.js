@@ -73,8 +73,6 @@ class ItemListVoucher extends Component {
                     :
                     <View style={styles.unChecked} />
                 }
-
-
             </TouchableOpacity>
         );
     }
