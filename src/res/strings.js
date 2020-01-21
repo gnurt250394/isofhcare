@@ -100,6 +100,7 @@ module.exports = {
     voucher_invalid: 'Mã ưu đãi không tồn tại',
     info_voucher: 'Thông tin mã ưu đãi',
     price_voucher: 'Giá ưu đãi',
+    voucher_not_avalrible:'Mã ưu đãi không áp dụng cho cơ sở y tế đã chọn',
     expired_voucher: 'Hạn sử dụng',
     quantity_voucher: 'Số lần sử dụng',
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?'

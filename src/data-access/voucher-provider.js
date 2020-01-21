@@ -10,7 +10,7 @@ module.exports = {
             })
         })
     },
-    fillInVoucher(voucher) {
+    fillInVoucher(voucher, ) {
         return new Promise((resolve, reject) => {
             client.requestApi("get", `${constants.api.voucher.get_voucher}/${voucher}`,
                 {}, (s, e) => {
