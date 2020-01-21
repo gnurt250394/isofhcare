@@ -161,7 +161,7 @@ class SelectServiceScreen extends Component {
     renderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={this.onPressItem1(item)}>
-                <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
+                <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.6)' } : { backgroundColor: '#FFF' }]}>
                     <View style={styles.groupContentItem}>
                         <Text style={styles.txtServices}>
                             {item.name}
