@@ -91,11 +91,13 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
-    confirmVoucher = async (voucher, idBooking) => {
+    confirmVoucher = async (voucher, idBooking, idHospital) => {
         try {
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking);
+            let idHospital = this.state.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
+            console.log('error: ', error);
             return false;
         }
     }
@@ -215,13 +217,12 @@ class ConfirmBookingScreen extends Component {
             price = this.state.service.reduce((total, item) => {
                 return total + parseInt((item && item.price ? item.price : 0));
             }, 0);
-            serviceText = this.state.service.map(item => (item  ? item.id + " - " + item.name : "")).join(', ');
+            serviceText = this.state.service.map(item => (item ? item.id + " - " + item.name : "")).join(', ');
         }
 
         this.setState({ isLoading: true }, async () => {
             // let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
             let memo = `Thanh toan ${price.formatPrice()} vnd cho dịch vụ dat kham tren ung dung iSofHcare thong qua ${this.getPaymentMethod()}`;
-
             let voucher = null
             if (this.state.voucher && this.state.voucher.code) {
                 voucher = {
@@ -620,7 +621,7 @@ class ConfirmBookingScreen extends Component {
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         snackbar.show(constants.msg.booking.booking_err2, "danger");
 
                     }

@@ -93,9 +93,11 @@ class ConfirmBookingDoctorScreen extends Component {
     }
     confirmVoucher = async (voucher, idBooking) => {
         try {
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking);
+            let idHospital = this.state.booking.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
+            console.log('error: ', error);
             return false;
         }
     }
