@@ -584,7 +584,7 @@ class ConfirmBookingScreen extends Component {
                 if (this.state.voucher && this.state.voucher.code) {
                     let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id)
                     if (!dataVoucher) {
-                        this.setState({ isLoading: false }, () => {
+                        this.setState({ isLoading: false,voucher:{} }, () => {
                             snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
                         })
                         return
