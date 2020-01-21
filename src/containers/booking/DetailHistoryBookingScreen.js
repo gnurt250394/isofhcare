@@ -225,7 +225,8 @@ class DetailHistoryBookingScreen extends Component {
             voucherPrice = this.state.booking.invoice.voucher.discount
         }
         let price = this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0)
-        return (price - voucherPrice).formatPrice()
+        let total = price - voucherPrice
+        return (total > 0 ? total : 0).formatPrice()
     }
     openLinkHotline = () => {
         Linking.openURL(
