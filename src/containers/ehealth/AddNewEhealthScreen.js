@@ -82,7 +82,7 @@ class AddNewEhealthScreen extends Component {
             isVisible: false,
 
         }, () => {
-            ehealthProvider.addEhealthWithCode(hospital.hospital.id, patientHistoryId).then(res => {
+            ehealthProvider.addEhealthWithCode(hospital.id, patientHistoryId).then(res => {
 
                 switch (res.code) {
                     case 2:
