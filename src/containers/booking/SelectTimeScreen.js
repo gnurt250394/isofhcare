@@ -54,7 +54,7 @@ class SelectTimeScreen extends Component {
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
         this.setState({
-            allowBooking:false
+            allowBooking: false
         })
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(new Date(day).format("yyyy-MM-dd"));
@@ -147,7 +147,9 @@ class SelectTimeScreen extends Component {
     }
 
     componentDidMount() {
-        this.selectMonth(new Date());
+        let dateNew = new Date()
+        dateNew.setDate(dateNew.getDate() + 1)
+        this.selectMonth(dateNew);
     }
     generateSchedule(month) {
         let firstDay = month.getFirstDateOfMonth();
@@ -351,6 +353,8 @@ class SelectTimeScreen extends Component {
         this.setState({ toggelMonthPicker: false });
     }
     render() {
+        let dateNew = new Date()
+        dateNew.setDate(dateNew.getDate() + 1)
         return (<ActivityPanel
             isLoading={this.state.isLoading}
             title={constants.title.select_time}>
@@ -361,7 +365,7 @@ class SelectTimeScreen extends Component {
                         <View style={styles.containerCalendar}>
                             <Calendar style={styles.calendar}
                                 markedDates={this.state.schedules}
-                                current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
+                                current={(this.state.latestTime || dateNew).format("yyyy-MM-dd")}
                                 onDayPress={this.onSelectDay}
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={this.onChangeMonth}
