@@ -483,12 +483,13 @@ class ViewInDateScreen extends Component {
     onEndLoading = () => this.setState({ isLoading: false })
     render() {
         return (
-            <ActivityPanel style={styles.container} title={constants.title.ehealth}
-
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
+            titleStyle = {{marginLeft:50}}
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
-                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><ScaledImage source = {require('@images/new/ehealth/ic_share.png')} height = {25} /></TouchableOpacity> :
                     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
+
             >
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>
