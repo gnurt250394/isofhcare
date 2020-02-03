@@ -23,7 +23,7 @@ class AddNewEhealthScreen extends Component {
             textHelp: constants.msg.ehealth.move_camera_to_file,
             onCheckData: data => {
                 return new Promise((resolve, reject) => {
-                    ehealthProvider.addEhealthWithCode(this.state.hospital.hospital.id, data).then(res => {
+                    ehealthProvider.addEhealthWithCode(this.state.hospital.id, data).then(res => {
                         switch (res.code) {
                             case 2:
                                 reject(2);
