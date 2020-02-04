@@ -599,6 +599,9 @@ class SelectDateTimeDoctorScreen extends Component {
                         backgroundColor: '#FFF',
                         borderWidth: 1,
                         borderColor: '#3161AD'
+                    },
+                    text: {
+                        color: '#000'
                     }
                 }
                 // delete schedules[this.state.dateString].selected;
