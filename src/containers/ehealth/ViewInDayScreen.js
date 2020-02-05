@@ -115,7 +115,9 @@ class ViewInDateScreen extends Component {
     }
     getDetailPatientHistory(patientHistoryId, id) {
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id, id).then(result => {
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital && this.props.ehealth.hospital.hospital.id ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+
+            resultUtils.getDetail(patientHistoryId,hospitalId, id).then(result => {
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -421,7 +423,7 @@ class ViewInDateScreen extends Component {
                 resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.id).then(result => {
                     if (result) {
                         result = result.result;
-                        result.hospital = this.props.ehealth.hospital.hospital;
+                        result.hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital;
                         this.exportPdfCom.exportPdf({
                             type: "all",
                             result: result,
