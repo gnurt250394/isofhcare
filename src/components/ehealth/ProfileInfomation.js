@@ -34,6 +34,7 @@ class ProfileInfomation extends Component {
         const source = this.props.ehealth.patient.avatar
             ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
             : icSupport;
+        const hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital
         return <View style={styles.viewInfoProfile}>
             <View style={styles.viewItem}></View>
             <View style={styles.viewLabel}>
@@ -47,7 +48,7 @@ class ProfileInfomation extends Component {
                     <View style={styles.round1}>
                         <View style={styles.round3} />
                     </View>
-                    <Text style={styles.itemlabel}>{this.props.hospitalName ? this.props.hospitalName : this.props.ehealth.hospital.hospital.name}</Text>
+                    <Text style={styles.itemlabel}>{this.props.hospitalName ? this.props.hospitalName : hospital.name}</Text>
                 </View>
                 <View style={styles.item}>
                     <View style={styles.round1}>
