@@ -97,7 +97,7 @@ class ConfirmBookingDoctorScreen extends Component {
             let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
-            console.log('error: ', error);
+
             return false;
         }
     }
@@ -169,7 +169,7 @@ class ConfirmBookingDoctorScreen extends Component {
     goVoucher = () => {
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            // booking: this.state.hospital,
+            booking: this.state.booking,
             voucher: this.state.voucher
         })
     }
