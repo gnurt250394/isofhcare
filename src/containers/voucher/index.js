@@ -62,7 +62,14 @@ class MyVoucherScreen extends Component {
     }
 
 
-    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>{constants.not_found}</Text>
+    listEmpty = () => {
+        console.log(this.state.refreshing, this.state.voucherSelected, this.state.data.length)
+        if (!this.state.refreshing && !Object.keys(this.state.voucherSelected).length && !this.state.data.length) {
+            return (
+                <Text style={styles.none_data}>{constants.not_found}</Text>
+            )
+        }
+    }
     comfirmVoucher = (item, index) => () => {
         const { voucherSelected, data } = this.state
         if (voucherSelected && voucherSelected.code && data[index].id == voucherSelected.id) {
@@ -80,6 +87,7 @@ class MyVoucherScreen extends Component {
     onSearchVoucher = () => {
         this.setState({ isLoading: true }, () => {
             let { booking } = this.state
+
 
             let voucher = this.state.keyword || ""
             let idHospital = booking.hospital.id
@@ -151,7 +159,7 @@ class MyVoucherScreen extends Component {
                     let idHospital = booking.hospital.id
 
                     let { voucherSelected } = this.state
-                    console.log('voucherSelected: ', voucherSelected);
+
                     let data = res.data
                     let arr = this.duplicateArray(data)
                     arr.forEach(item => {
@@ -244,9 +252,9 @@ class MyVoucherScreen extends Component {
                                 renderItem={this._renderItem}
                                 keyExtractor={this.keyExtractor}
                                 showsVerticalScrollIndicator={false}
-                                ListEmptyComponent={this.listEmpty}
+                            // ListEmptyComponent={this.listEmpty}
                             />
-
+                            {this.listEmpty()}
                         </View>
                     </ScrollView>
                 </View>
