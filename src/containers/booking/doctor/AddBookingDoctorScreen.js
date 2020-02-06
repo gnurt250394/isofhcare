@@ -370,6 +370,7 @@ class AddBookingDoctorScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
+                                this.isChecking = true
                                 s.payment = this.state.paymentMethod
                                 // snackbar.show('Đặt khám thành công', 'success')
                                 this.props.navigation.navigate("confirmBookingDoctor", {
