@@ -115,7 +115,7 @@ class ViewInDateScreen extends Component {
     }
     getDetailPatientHistory(patientHistoryId, id) {
         this.setState({ isLoading: true }, () => {
-            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital && this.props.ehealth.hospital.hospital.id ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
             resultUtils.getDetail(patientHistoryId,hospitalId, id).then(result => {
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
