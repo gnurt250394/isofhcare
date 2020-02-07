@@ -173,6 +173,7 @@ class InputOtp extends PureComponent {
                         style={styles.input}
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 1)}
                         underlineColorAndroid={'#fff'}
+                        placeholderTextColor={'#000'}
                     ></TextInput>
                 </View>
                 <View style={styles.viewComponents}>
@@ -183,6 +184,7 @@ class InputOtp extends PureComponent {
                         keyboardType={'numeric'}
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 2)}
                         style={styles.input}
+                        placeholderTextColor={'#000'}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
@@ -194,6 +196,7 @@ class InputOtp extends PureComponent {
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 3)}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        placeholderTextColor={'#000'}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
@@ -205,6 +208,7 @@ class InputOtp extends PureComponent {
                         keyboardType={'numeric'}
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 4)}
                         style={styles.input}
+                        placeholderTextColor={'#000'}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
@@ -215,6 +219,7 @@ class InputOtp extends PureComponent {
                         onChangeText={text => this.onChangeText(text, 5)}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        placeholderTextColor={'#000'}
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 5)}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
@@ -226,6 +231,7 @@ class InputOtp extends PureComponent {
                         maxLength={1}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        placeholderTextColor={'#000'}
                         onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 6)}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
@@ -250,7 +256,7 @@ const styles = StyleSheet.create({
         borderColor: '#3161AD',
         width: 38,
         textAlign: 'center',
-        paddingVertical:10
+        paddingVertical: 10
     },
     viewComponents: {
         marginLeft: 10
