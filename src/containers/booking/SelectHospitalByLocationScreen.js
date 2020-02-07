@@ -18,7 +18,7 @@ import clientUtils from '@utils/client-utils';
 class SelectHospitalScreenLocation extends Component {
     constructor(props) {
         super(props);
-        let location = this.props.navigation.state.params.region || {};
+        let location = {};
         this.state = {
             data: [],
             refreshing: false,
