@@ -128,7 +128,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
         try {
             let { page, size, keyword } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            let res = await bookingDoctorProvider.searchListDoctorWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -142,7 +142,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
         }
 
     }
-    
+
     onRefress = () => {
         this.setState({
             page: 0,

@@ -40,6 +40,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
     getData = () => {
         const { page, size } = this.state
         bookingDoctorProvider.getListHospitalWithSpecialist(this.props.item.id, page, size).then(res => {
+            this.setState({ refreshing: false })
             this.self.setState({ isLoading: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -48,7 +49,8 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             }
         }).catch(err => {
             this.formatData([])
-            this.self.setState({ isLoading: false })
+            this.setState({ refreshing: false })
+            this.self.setState({ isLoading: false, })
 
         })
     }
@@ -132,7 +134,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
         try {
             let { keyword, page, size } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            let res = await bookingDoctorProvider.searchListHospitalWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
