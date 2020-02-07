@@ -37,7 +37,7 @@ class HistoryEhealthScreen extends Component {
     viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital && this.props.ehealth.hospital.hospital.id ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
             resultUtils.getDetail(item.patientHistoryId, hospitalId, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
