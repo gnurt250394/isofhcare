@@ -66,6 +66,9 @@ class TabDoctorAndHospitalScreen extends Component {
 
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
+        if (!value) {
+            this.setState({ type: '' })
+        }
     }
 
     onSearch = () => {
@@ -80,7 +83,7 @@ class TabDoctorAndHospitalScreen extends Component {
     }
 
 
-  
+
     getListLocation = () => {
         locationUtils.getLocation().then(region => {
             console.log('region: ', region);
@@ -274,7 +277,7 @@ const styles = StyleSheet.create({
         marginLeft: -10,
         fontWeight: 'bold',
         paddingLeft: 9,
-        color:'#000'
+        color: '#000'
     },
     groupSearch: {
         flexDirection: 'row',

@@ -78,14 +78,14 @@ class ItemHospital extends Component {
                         </View>
                         <View style={styles.paddingLeft5}>
                             <Text style={styles.txtNameDoctor}>{item.academicDegree} {item.name}</Text>
-                            <Text numberOfLines={1} style={styles.txtHospitalName} >{item.hospital.contact.address}</Text>
+                            <Text numberOfLines={1} style={styles.txtHospitalName} >{item.contact.address}</Text>
                             <View style={styles.containerButton}>
                                 <View style={{
                                     flexDirection: 'row',
                                     alignItems: 'center'
                                 }}>
                                     <ScaleImage source={require('@images/ic_location.png')} height={18} style={styles.icLocation} />
-                                    <Text style={styles.txtLocation}>1.7km</Text>
+                                    <Text style={styles.txtLocation}>{item.checkInPlace}km</Text>
                                 </View>
                                 <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>

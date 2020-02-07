@@ -33,6 +33,21 @@ module.exports = {
             );
         });
     },
+    searchListDoctorWithSpecialist(idSpecialist, name, page, size) {
+        return new Promise((resolve, reject) => {
+
+            client.requestApi(
+                "put",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_doctor + `/${idSpecialist}/specialization?name=${name}&page=${page}&size=${size}&sort=desc&properties=created`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    reject(e);
+                }
+            );
+        });
+    },
     getListDoctorWithHospital(idHospital, page, size) {
         return new Promise((resolve, reject) => {
 
@@ -55,6 +70,21 @@ module.exports = {
                 "get",
                 client.serviceSchedule +
                 constants.api.booking.doctor.get_detail_hospital + `/${idSpecialist}/specialization?page=${page}&size=${size}&sort=desc&properties=created`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    reject(e);
+                }
+            );
+        });
+    },
+    searchListHospitalWithSpecialist(idSpecialist, name, page, size) {
+        return new Promise((resolve, reject) => {
+
+            client.requestApi(
+                "put",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_hospital + `/${idSpecialist}/specialization?name=${name}&page=${page}&size=${size}&sort=desc&properties=created`,
                 {},
                 (s, e) => {
                     if (s) resolve(s);
@@ -245,6 +275,19 @@ module.exports = {
                 "get",
                 client.serviceSchedule +
                 `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}&sort=desc&properties=created`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+    search_list_specialists(name) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                `${constants.api.booking.doctor.search_list_specialists}?name=${name}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
