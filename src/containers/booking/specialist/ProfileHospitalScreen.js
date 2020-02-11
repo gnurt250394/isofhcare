@@ -312,6 +312,7 @@ class ProfileHospitalScreen extends Component {
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
+                                    <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>
                                     <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>
                                     <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>
                                     {/* <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
