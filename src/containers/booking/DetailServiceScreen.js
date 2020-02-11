@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Image } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel'
 import ScaleImage from 'mainam-react-native-scaleimage';
 const { width, height } = Dimensions.get('window')
@@ -20,7 +20,7 @@ const DetailServiceScreen = (props) => {
             <View style={{ paddingLeft: 25, }}>
                 <Text style={styles.txtService}>{item.name}</Text>
                 <Text style={styles.txtPrice}>Chi phí: {item.monetaryAmount.value.formatPrice()} VNĐ/ lượt</Text>
-                <ScaleImage source={url} width={width - 50} />
+                <Image source={url} style={styles.imgService} />
             </View>
             <ScrollView>
                 <View style={styles.containerDetail}>
@@ -44,6 +44,11 @@ const DetailServiceScreen = (props) => {
 export default DetailServiceScreen
 
 const styles = StyleSheet.create({
+    imgService: {
+        height: 200,
+        width: width - 50,
+        resizeMode: 'contain',
+    },
     txtlabel: {
         color: '#000',
         paddingTop: 20,
