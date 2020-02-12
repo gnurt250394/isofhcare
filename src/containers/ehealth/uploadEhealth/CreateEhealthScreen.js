@@ -4,7 +4,7 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    ActivityIndicator,
+    Image,
     StyleSheet,
     ScrollView
 } from "react-native";
@@ -24,47 +24,105 @@ import connectionUtils from '@utils/connection-utils';
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
+import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
 
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
+        let location = {};
+
         this.state = {
             listHospital: [],
             isLongPress: false,
             index: '',
             refreshing: false,
-            isSearch: false
+            isSearch: false,
+            size: 10,
+            page: 1,
+            imageUris: [],
         }
     }
     componentDidMount() {
-        this.onRefresh()
+        // this.onRefresh()
     }
-    onGetHospital = () => {
-        hospitalProvider.getHistoryHospital2().then(res => {
-            if (res.code == 0) {
-                console.log(res.data, 'res.datares.datares.data')
-                this.setState({
-                    listHospital: res.data,
-                    refreshing: false
-                })
-            } else {
-                this.setState({
-                    refreshing: false
-                })
+    onLoadMore() {
+        if (!this.state.finish && !this.state.loading)
+            this.setState(
+                {
+                    loadMore: true,
+                    refreshing: false,
+                    loading: true,
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.onLoad()
+                }
+            );
+    }
+    onLoad() {
+        const { page, size } = this.state;
+        let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
+        this.setState({
+            loading: true,
+            refreshing: page == 1,
+            loadMore: page != 1
+        }, () => {
+            let promise = null;
+            if (this.state.region) {
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1, 1);
             }
-
-        }).catch(err => {
-            this.setState({
-                refreshing: false
+            else {
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1, 1);
+            };
+            promise.then(s => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false
+                }, () => {
+                    switch (s.code) {
+                        case 500:
+                            // alert(JSON.stringify(s));
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            break;
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
+                            }
+                            if (page != 1) {
+                                list = this.state.data;
+                                list.push.apply(list, s.data.data);
+                            }
+                            else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                data: [...list],
+                                finish: finish
+                            });
+                            break;
+                    }
+                });
+            }).catch(e => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false
+                });
             })
-        })
+        });
     }
     onRefresh = () => {
-        this.setState({
-            refreshing: true
-        }, () => {
-            this.onGetHospital()
-        })
+        if (!this.state.loading)
+            this.setState(
+                { refreshing: true, page: 1, finish: false, loading: true },
+                () => {
+                    this.onLoad();
+                }
+            );
     }
     onPress = (item) => {
         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
@@ -102,8 +160,14 @@ class CreateEhealthScreen extends Component {
     onChangeText = () => {
 
     }
+    onSelectHospital = (item) => {
+        this.setState({
+            nameHospital: item.name,
+            isSearch: false
+        })
+    }
     renderItem = ({ item, index }) => {
-        return <TouchableOpacity style={styles.details} >
+        return <TouchableOpacity onPress={() => this.onSelectHospital(item.hospital)} style={styles.details} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
@@ -112,13 +176,81 @@ class CreateEhealthScreen extends Component {
     }
     search = (text) => {
         this.setState({
-            isSearch: true
+            isSearch: true,
+            nameHospital: text,
+            keyword: text
+        }, () => {
+            this.onRefresh()
         })
     }
-    onFinish = () => {
-        this.setState({
-            isSearch: false
-        })
+    selectImage = () => {
+        if (this.state.imageUris && this.state.imageUris.length >= 5) {
+            snackbar.show(constants.msg.booking.image_without_five, "danger");
+            return;
+        }
+        connectionUtils.isConnected().then(s => {
+            if (this.imagePicker) {
+                this.imagePicker.show({
+                    multiple: true,
+                    mediaType: 'photo',
+                    maxFiles: 5,
+                    compressImageMaxWidth: 500,
+                    compressImageMaxHeight: 500
+                }).then(images => {
+                    let listImages = [];
+                    if (images.length)
+                        listImages = [...images];
+                    else
+                        listImages.push(images);
+                    let imageUris = this.state.imageUris;
+                    listImages.forEach(image => {
+                        if (imageUris.length >= 5)
+                            return;
+                        let temp = null;
+                        imageUris.forEach((item) => {
+                            if (item.uri == image.path)
+                                temp = item;
+                        })
+                        if (!temp) {
+                            imageUris.push({ uri: image.path, loading: true });
+                            imageProvider.upload(image.path, (s, e) => {
+                                if (s.success) {
+                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                        let imageUris = this.state.imageUris;
+                                        imageUris.forEach((item) => {
+                                            if (item.uri == s.uri) {
+                                                item.loading = false;
+                                                item.url = s.data.data.images[0].image;
+                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                            }
+                                        });
+                                        this.setState({
+                                            imageUris
+                                        });
+                                    }
+                                } else {
+                                    imageUris.forEach((item) => {
+                                        if (item.uri == s.uri) {
+                                            item.error = true;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    })
+                    this.setState({ imageUris: [...imageUris] });
+                    console.log('imageUris: ', [...imageUris]);
+                });
+
+            }
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+    }
+    removeImage(index) {
+        var imageUris = this.state.imageUris;
+        imageUris.splice(index, 1);
+        this.setState({ imageUris });
     }
     render() {
         return (
@@ -126,63 +258,62 @@ class CreateEhealthScreen extends Component {
                 title={constants.title.uploadEhealth}
                 style={styles.container}
             >
-                <ScrollView style={styles.viewContent} >
+                <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
+                    <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
                     <Form ref={ref => (this.form = ref)}>
                         <Field style={styles.viewInput}>
+
                             <Text style={styles.title}>CSYT đã khám (*)</Text>
-                            <Field style={styles.viewField}>
-                                <TextField
-                                    onChangeText={text => this.search(text)}
-                                    value={this.state.name}
-                                    placeholder={'Chọn hoặc nhập tên CSYT'}
-                                    errorStyle={styles.errorStyle}
-                                    inputStyle={styles.input}
-                                    underlineColorAndroid={'#fff'}
-                                    placeholderTextColor='#3b3b3b'
-                                    onSubmitEditing={this.onFinish}
-                                    returnKeyType={'search'}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                        },
-                                        messages: {
-                                            required: "Tên CSYT không được bỏ trống",
-                                        }
-                                    }}
-                                    autoCapitalize={"none"}
-                                />
-                                <ScaledImage style={styles.img} source={require('@images/new/ehealth/ic_down.png')} height={15}></ScaledImage>
-                            </Field>
+                            <TextField
+                                onChangeText={text => this.search(text)}
+                                value={this.state.nameHospital}
+                                placeholder={'Nhập CSYT đã khám'}
+                                errorStyle={styles.errorStyle}
+                                inputStyle={styles.inputStyle}
+                                underlineColorAndroid={'#fff'}
+                                returnKeyType='done'
+                                placeholderTextColor='#3b3b3b'
+                                validate={{
+                                    rules: {
+                                        required: true,
+                                    },
+                                    messages: {
+                                        required: "Tên CSYT không được bỏ trống",
+                                    }
+                                }}
+                                autoCapitalize={"none"}
+                            />
                             {this.state.isSearch ? <FlatList
-                                data={this.state.listHospital}
+                                data={this.state.data}
                                 extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={this.renderItem}
+                                onEndReached={this.onLoadMore.bind(this)}
+                                onEndReachedThreshold={1}
+                                onRefresh={this.onRefresh.bind(this)}
+                                refreshing={this.state.refreshing}
                             >
 
                             </FlatList> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
-                            <Field style={styles.viewField}>
-                                <TextField
-                                    onChangeText={text => this.setState({ name: text })}
-                                    value={this.state.name}
-                                    placeholder={'Nhập tên người được khám'}
-                                    errorStyle={styles.errorStyle}
-                                    inputStyle={styles.input}
-                                    underlineColorAndroid={'#fff'}
-                                    placeholderTextColor='#3b3b3b'
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                        },
-                                        messages: {
-                                            required: "Tên CSYT không được bỏ trống",
-                                        }
-                                    }}
-                                    autoCapitalize={"none"}
-                                />
-                                <ScaledImage style={styles.img} source={require('@images/new/ehealth/ic_down.png')} height={15}></ScaledImage>
-                            </Field>
+                            <TextField
+                                onChangeText={text => this.setState({ name: text })}
+                                value={this.state.name}
+                                placeholder={'Nhập tên người được khám'}
+                                errorStyle={styles.errorStyle}
+                                inputStyle={styles.inputStyle}
+                                underlineColorAndroid={'#fff'}
+                                placeholderTextColor='#3b3b3b'
+                                validate={{
+                                    rules: {
+                                        required: true,
+                                    },
+                                    messages: {
+                                        required: "Tên CSYT không được bỏ trống",
+                                    }
+                                }}
+                                autoCapitalize={"none"}
+                            />
                             <Text style={styles.title}>Dịch vụ khám (*)</Text>
                             <TextField
                                 onChangeText={text => this.setState({ name: text })}
@@ -244,8 +375,46 @@ class CreateEhealthScreen extends Component {
                             />
                         </Field>
                     </Form>
-                </ScrollView>
+                    <View style={styles.viewUploadImg}>
+                        <View>
+                            <Text style ={styles.title}>
+                                Hoặc tải lên hình ảnh
+                            </Text>
+                            <Text style = {[styles.title,{fontSize:14}]}>
+                                (.jpg, .png, gif)
+                            </Text>
+                        </View>
+                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/ehealth/ic_upload.png')} height={50}></ScaledImage></TouchableOpacity>
+                    </View>
 
+                    <View style={styles.list_image}>
+                        {
+                            this.state.imageUris && this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                                <View style={styles.groupImagePicker}>
+                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
+                                    {
+                                        item.error ?
+                                            <View style={styles.groupImageError} >
+                                                <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                            </View> :
+                                            item.loading ?
+                                                <View style={styles.groupImageLoading} >
+                                                    <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                                </View>
+                                                : null
+                                    }
+                                </View>
+                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
+                                    <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
+                                </TouchableOpacity>
+                            </View>)
+                        }
+                    </View>
+
+                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text></TouchableOpacity>
+                    <View style={{ height: 50 }}></View>
+                </ScrollView>
+                <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
     }
@@ -258,6 +427,53 @@ const styles = StyleSheet.create({
     },
     img: {
     },
+    buttonClose: {
+        position: 'absolute',
+        top: 0,
+        right: 0
+    },
+    viewUploadImg: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10 },
+    list_image: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, marginHorizontal: 20 },
+    txCamera: {
+        color: '#fff',
+        marginLeft: 10,
+        fontSize: 16,
+    },
+    groupImageLoading: {
+        position: 'absolute',
+        left: 20,
+        top: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 20
+    },
+    groupImageError: {
+        position: 'absolute',
+        left: 20,
+        top: 20
+    },
+    imagePicker: {
+        width: 80,
+        height: 80,
+        borderRadius: 5
+    },
+    groupImagePicker: {
+        marginTop: 8,
+        width: 80,
+        height: 80
+    },
+    containerImagePicker: {
+        margin: 2,
+        width: 88,
+        height: 88,
+        position: 'relative'
+    },
+    txTitle: {
+        fontWeight: '600',
+        fontSize: 18,
+        textAlign: 'center',
+        color: '#000',
+        marginTop: 20
+    },
     viewContent: {
         paddingHorizontal: 10,
     },
@@ -268,7 +484,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000',
         textAlign: 'left',
-        fontWeight: 'bold',
+        fontWeight: '600',
         marginTop: 10
 
     },
@@ -307,7 +523,6 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: "red",
-        marginVertical: 20
     },
     details: {
         flexDirection: 'row',
@@ -322,7 +537,7 @@ const styles = StyleSheet.create({
     },
     bv: {
         fontSize: 15,
-        fontWeight: "bold",
+        fontWeight: "600",
         letterSpacing: 0,
         color: "#000000",
     },
@@ -331,6 +546,21 @@ const styles = StyleSheet.create({
         color: "#00000050",
         marginTop: 9
     },
+    btnUploadEhealth: {
+        borderRadius: 5,
+        backgroundColor: '#3161AD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 58,
+        marginTop: 10,
+        marginHorizontal: 60,
+        borderRadius: 10
+    },
+    txAddEhealth: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold'
+    }
 });
 function mapStateToProps(state) {
     return {
