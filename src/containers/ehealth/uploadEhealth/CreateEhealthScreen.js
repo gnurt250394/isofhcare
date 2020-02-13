@@ -16,6 +16,7 @@ import ScaledImage from "mainam-react-native-scaleimage";
 import LinearGradient from 'react-native-linear-gradient'
 import dateUtils from 'mainam-react-native-date-utils';
 import hospitalProvider from '@data-access/hospital-provider';
+import ehealthProvider from '@data-access/ehealth-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
 import constants from '@resources/strings';
@@ -26,12 +27,14 @@ import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
+import profileProvider from '@data-access/profile-provider'
+import DateTimePicker from "mainam-react-native-date-picker";
 
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
         let location = {};
-
+        this.params = {}
         this.state = {
             listHospital: [],
             isLongPress: false,
@@ -44,7 +47,8 @@ class CreateEhealthScreen extends Component {
         }
     }
     componentDidMount() {
-        // this.onRefresh()
+        this.onRefresh()
+        // this.onLoadProfile()
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -60,9 +64,24 @@ class CreateEhealthScreen extends Component {
                 }
             );
     }
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+    onConfirmDate = newDate => {
+        this.setState(
+            {
+                dob: newDate,
+                date: newDate.format("dd/MM/yyyy"),
+                toggelDateTimePickerVisible: false
+            },
+            () => {
+            }
+        );
+    }
+    onCancelDate = () => {
+        this.setState({ toggelDateTimePickerVisible: false });
+    }
     onLoad() {
         const { page, size } = this.state;
-        let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
+        let stringQuyery = this.state.hospitalName ? this.state.hospitalName.trim() : ""
         this.setState({
             loading: true,
             refreshing: page == 1,
@@ -162,8 +181,9 @@ class CreateEhealthScreen extends Component {
     }
     onSelectHospital = (item) => {
         this.setState({
-            nameHospital: item.name,
-            isSearch: false
+            isSearch: false,
+            hospitalId: item.id,
+            hospitalName: item.name,
         })
     }
     renderItem = ({ item, index }) => {
@@ -174,13 +194,46 @@ class CreateEhealthScreen extends Component {
             </View>
         </TouchableOpacity>
     }
+    onSelectProfile = (value) => {
+        this.setState({
+            medicalRecordId: value.id,
+            name: value.name,
+            isProfile: false
+        })
+    }
+    renderItemProfile = ({ item, index }) => {
+        return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
+            <View style={styles.containerContent}>
+                <Text style={styles.bv} numberOfLines={1}>{item.medicalRecords.name}</Text>
+            </View>
+        </TouchableOpacity>
+    }
     search = (text) => {
+        console.log('text: ', text);
         this.setState({
             isSearch: true,
-            nameHospital: text,
-            keyword: text
+            hospitalName: text,
+        })
+    }
+    onLoadProfile = () => {
+        this.setState({
+            isProfile: !this.state.isProfile
         }, () => {
-            this.onRefresh()
+            if (this.state.isProfile) {
+                profileProvider.getListProfile().then(s => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data) {
+                                this.setState({
+                                    dataProfile: s.data,
+                                });
+                            }
+                            break;
+                    }
+                }).catch(e => {
+
+                })
+            }
         })
     }
     selectImage = () => {
@@ -252,6 +305,40 @@ class CreateEhealthScreen extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
+    onCreate = () => {
+        var images = []
+        console.log(this.state.imageUris, ' this.state.imageUris this.state.imageUris this.state.imageUris')
+        for (let i = 0; i < this.state.imageUris.length; i++) {
+            images.push(this.state.imageUris[i].url)
+        }
+        if (!this.form.isValid()) {
+            return
+        }
+        let params = {
+            "hospitalId": this.state.hospitalId,
+            "hospitalName": this.state.hospitalName,
+            "images": this.state.imageUris.length ? images : [],
+            "medicalRecordId": this.state.medicalRecordId,
+            "medicalServiceName": this.state.medicalServiceName,
+            "result": this.state.result ? this.state.result : '',
+            "timeGoIn": this.state.dob.format('yyyy-MM-dd')
+        }
+        ehealthProvider.uploadEhealth(params).then(res => {
+            console.log(res, 'rrsssss')
+            if (res && res.code == 200) {
+                this.props.navigation.replace('listEhealthUpload')
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    onFocus = () => {
+        this.setState({
+            isSearch: true,
+        }, () => {
+            this.onRefresh()
+        })
+    }
     render() {
         return (
             <ActivityPanel
@@ -265,8 +352,9 @@ class CreateEhealthScreen extends Component {
 
                             <Text style={styles.title}>CSYT đã khám (*)</Text>
                             <TextField
+                                onFocus={this.onFocus}
                                 onChangeText={text => this.search(text)}
-                                value={this.state.nameHospital}
+                                value={this.state.hospitalName}
                                 placeholder={'Nhập CSYT đã khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
@@ -299,25 +387,35 @@ class CreateEhealthScreen extends Component {
                             <TextField
                                 onChangeText={text => this.setState({ name: text })}
                                 value={this.state.name}
-                                placeholder={'Nhập tên người được khám'}
+                                placeholder={'Chọn tên người được khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
                                 placeholderTextColor='#3b3b3b'
+                                editable={false}
+                                onPress={this.onLoadProfile}
                                 validate={{
                                     rules: {
                                         required: true,
                                     },
                                     messages: {
-                                        required: "Tên CSYT không được bỏ trống",
+                                        required: "Chưa chọn người được khám",
                                     }
                                 }}
                                 autoCapitalize={"none"}
                             />
+                            {this.state.isProfile ? <FlatList
+                                data={this.state.dataProfile}
+                                extraData={this.state}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={this.renderItemProfile}
+                            >
+
+                            </FlatList> : <View></View>}
                             <Text style={styles.title}>Dịch vụ khám (*)</Text>
                             <TextField
-                                onChangeText={text => this.setState({ name: text })}
-                                value={this.state.name}
+                                onChangeText={text => this.setState({ medicalServiceName: text })}
+                                value={this.state.medicalServiceName}
                                 placeholder={'Nhập dịch vụ khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
@@ -328,16 +426,17 @@ class CreateEhealthScreen extends Component {
                                         required: true,
                                     },
                                     messages: {
-                                        required: "Tên CSYT không được bỏ trống",
+                                        required: "Dịch vụ khám không được bỏ trống",
                                     }
                                 }}
                                 autoCapitalize={"none"}
                             />
                             <Text style={styles.title}>Thời gian khám (*)</Text>
                             <TextField
-                                onChangeText={text => this.setState({ name: text })}
-                                value={this.state.name}
-                                placeholder={'Nhập thời gian khám'}
+                                value={this.state.date}
+                                editable={false}
+                                onPress={this.onSelectDate}
+                                placeholder={'Chọn thời gian khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
@@ -347,15 +446,15 @@ class CreateEhealthScreen extends Component {
                                         required: true,
                                     },
                                     messages: {
-                                        required: "Tên CSYT không được bỏ trống",
+                                        required: "Chưa chọn thời gian khám",
                                     }
                                 }}
                                 autoCapitalize={"none"}
                             />
                             <Text style={styles.title}>Kết quả khám</Text>
                             <TextField
-                                onChangeText={text => this.setState({ name: text })}
-                                value={this.state.name}
+                                onChangeText={text => this.setState({ result: text })}
+                                value={this.state.result}
                                 placeholder={'Nhập kết quả khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputResult}
@@ -363,24 +462,16 @@ class CreateEhealthScreen extends Component {
                                 multiline={true}
                                 numberOfLines={4}
                                 placeholderTextColor='#3b3b3b'
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Tên CSYT không được bỏ trống",
-                                    }
-                                }}
                                 autoCapitalize={"none"}
                             />
                         </Field>
                     </Form>
                     <View style={styles.viewUploadImg}>
                         <View>
-                            <Text style ={styles.title}>
+                            <Text style={styles.title}>
                                 Hoặc tải lên hình ảnh
                             </Text>
-                            <Text style = {[styles.title,{fontSize:14}]}>
+                            <Text style={[styles.title, { fontSize: 14 }]}>
                                 (.jpg, .png, gif)
                             </Text>
                         </View>
@@ -411,9 +502,19 @@ class CreateEhealthScreen extends Component {
                         }
                     </View>
 
-                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.onCreate} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text></TouchableOpacity>
                     <View style={{ height: 50 }}></View>
                 </ScrollView>
+                <DateTimePicker
+                    isVisible={this.state.toggelDateTimePickerVisible}
+                    onConfirm={this.onConfirmDate}
+                    onCancel={this.onCancelDate}
+                    date={new Date()}
+                    maximumDate={new Date()}
+                    cancelTextIOS={constants.actionSheet.cancel2}
+                    confirmTextIOS={constants.actionSheet.confirm}
+                    date={this.state.dob || new Date()}
+                />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
@@ -502,7 +603,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        color: '#000'
     },
     viewField: {
         flex: 1,
