@@ -1,10 +1,19 @@
 import client from '@utils/client-utils';
 import constants from '@resources/strings';
-let uploadService = "http://10.0.40.12:8080/"
 module.exports = {
     uploadEhealth(params, id) {
         return new Promise((resolve, reject) => {
-            client.requestApi(params ? "post" : "get", uploadService + `${constants.api.ehealth.upload_ehealth}${id ? `/${id}` : ''}`, params ? params : {}, (s, e) => {
+            client.requestApi(params ? "post" : "get", `${constants.api.ehealth.upload_ehealth}${id ? `/${id}` : ''}`, params ? params : {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        })
+    },
+    updateEhealth(params, id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", `${constants.api.ehealth.upload_ehealth}/` + Number(id), params, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -14,7 +23,7 @@ module.exports = {
     },
     getGroupPatient(hospitalId) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.ehealth.get_group_patient}?hospitalId=${hospitalId}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.ehealth.get_group_patient} ? hospitalId = ${hospitalId}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -27,7 +36,7 @@ module.exports = {
             "note": note, "suggestions": suggestions, "time": time, "medicineTime": medicineTime, "isMedicineTime": isMedicineTime ? isMedicineTime : 0
         }
         return new Promise((resolve, reject) => {
-            client.requestApi("put", `${constants.api.ehealth.update_data_user}/${id}`, body, (s, e) => {
+            client.requestApi("put", `${constants.api.ehealth.update_data_user} / ${id}`, body, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -42,7 +51,7 @@ module.exports = {
         let roleId = -1
         let style = -1
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.ehealth.search_profile_user}?page=${page}&size=${size}&queryString=${queryString}&active=${active}&specialistId=${specialistId}&type=${type}&roleId=${roleId}&style=${style}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.ehealth.search_profile_user} ? page = ${page} & size=${size} & queryString=${queryString} & active=${active} & specialistId=${specialistId} & type=${type} & roleId=${roleId} & style=${style}`, {}, (s, e) => {
                 if (s) {
                     resolve(s);
                 }
@@ -70,7 +79,7 @@ module.exports = {
     },
     getListShareUser(hospitalId) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', `${constants.api.booking.get_list_share_user}?hospitalId=${hospitalId}`, {}, (s, e) => {
+            client.requestApi('get', `${constants.api.booking.get_list_share_user} ? hospitalId = ${hospitalId}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else {
@@ -81,7 +90,7 @@ module.exports = {
     },
     addEhealthWithCode(hospitalId, patientHistoryId) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', `${constants.api.ehealth.add_ehealth_with_code}/${hospitalId}/${patientHistoryId}`, {}, (s, e) => {
+            client.requestApi('put', `${constants.api.ehealth.add_ehealth_with_code} / ${hospitalId} / ${patientHistoryId}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else

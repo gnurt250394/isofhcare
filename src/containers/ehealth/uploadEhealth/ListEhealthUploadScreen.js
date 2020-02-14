@@ -128,7 +128,7 @@ class ListEhealthUpload extends Component {
     render() {
         return (
             <ActivityPanel
-                title={constants.title.ehealth}
+                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
                 style={styles.container}
             >
                 <View style={styles.viewContent} >

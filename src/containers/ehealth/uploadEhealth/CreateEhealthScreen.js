@@ -33,8 +33,7 @@ import DateTimePicker from "mainam-react-native-date-picker";
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
-        let location = {};
-        this.params = {}
+        let dataOld = this.props.navigation.getParam('data')
         this.state = {
             listHospital: [],
             isLongPress: false,
@@ -43,7 +42,16 @@ class CreateEhealthScreen extends Component {
             isSearch: false,
             size: 10,
             page: 1,
-            imageUris: [],
+            "hospitalId": dataOld && dataOld.hospitalId ? dataOld.hospitalId : '',
+            "hospitalName": dataOld && dataOld.hospitalName ? dataOld.hospitalName : '',
+            imageUris: dataOld && dataOld.images ? dataOld.images : [],
+            "medicalRecordId": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.id : '',
+            "medicalRecordName": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.name : '',
+            "medicalServiceName": dataOld && dataOld.medicalServiceName ? dataOld.medicalServiceName : '',
+            "result": dataOld && dataOld.result ? dataOld.result : '',
+            "dob": dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-') : '',
+            date: dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-').format('dd-MM-yyyy') : '',
+            currentId: dataOld && dataOld.id ? dataOld.id : null,
         }
     }
     componentDidMount() {
@@ -197,7 +205,7 @@ class CreateEhealthScreen extends Component {
     onSelectProfile = (value) => {
         this.setState({
             medicalRecordId: value.id,
-            name: value.name,
+            medicalRecordName: value.name,
             isProfile: false
         })
     }
@@ -209,7 +217,7 @@ class CreateEhealthScreen extends Component {
         </TouchableOpacity>
     }
     search = (text) => {
-        console.log('text: ', text);
+
         this.setState({
             isSearch: true,
             hospitalName: text,
@@ -246,7 +254,7 @@ class CreateEhealthScreen extends Component {
                 this.imagePicker.show({
                     multiple: true,
                     mediaType: 'photo',
-                    maxFiles: 5,
+                    maxFiles: 10,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
                 }).then(images => {
@@ -273,7 +281,7 @@ class CreateEhealthScreen extends Component {
                                         imageUris.forEach((item) => {
                                             if (item.uri == s.uri) {
                                                 item.loading = false;
-                                                item.url = s.data.data.images[0].image;
+                                                item.url = s.data.data.images[0].imageLink;
                                                 item.thumbnail = s.data.data.images[0].thumbnail;
                                             }
                                         });
@@ -292,7 +300,8 @@ class CreateEhealthScreen extends Component {
                         }
                     })
                     this.setState({ imageUris: [...imageUris] });
-                    console.log('imageUris: ', [...imageUris]);
+
+
                 });
 
             }
@@ -307,13 +316,14 @@ class CreateEhealthScreen extends Component {
     }
     onCreate = () => {
         var images = []
-        console.log(this.state.imageUris, ' this.state.imageUris this.state.imageUris this.state.imageUris')
+
         for (let i = 0; i < this.state.imageUris.length; i++) {
             images.push(this.state.imageUris[i].url)
         }
         if (!this.form.isValid()) {
             return
         }
+
         let params = {
             "hospitalId": this.state.hospitalId,
             "hospitalName": this.state.hospitalName,
@@ -323,14 +333,27 @@ class CreateEhealthScreen extends Component {
             "result": this.state.result ? this.state.result : '',
             "timeGoIn": this.state.dob.format('yyyy-MM-dd')
         }
-        ehealthProvider.uploadEhealth(params).then(res => {
-            console.log(res, 'rrsssss')
-            if (res && res.code == 200) {
-                this.props.navigation.replace('listEhealthUpload')
-            }
-        }).catch(err => {
-            console.log(err)
-        })
+        if (this.state.currentId) {
+            ehealthProvider.updateEhealth(params, this.state.currentId).then(res => {
+
+                if (res && res.code == 200) {
+                    this.props.navigation.replace('listEhealthUpload')
+                }
+            }).catch(err => {
+
+
+            })
+        } else {
+            ehealthProvider.uploadEhealth(params).then(res => {
+
+                if (res && res.code == 200) {
+                    this.props.navigation.replace('listEhealthUpload')
+                }
+            }).catch(err => {
+
+
+            })
+        }
     }
     onFocus = () => {
         this.setState({
@@ -340,9 +363,10 @@ class CreateEhealthScreen extends Component {
         })
     }
     render() {
+
         return (
             <ActivityPanel
-                title={constants.title.uploadEhealth}
+                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
                 style={styles.container}
             >
                 <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
@@ -385,8 +409,7 @@ class CreateEhealthScreen extends Component {
                             </FlatList> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
                             <TextField
-                                onChangeText={text => this.setState({ name: text })}
-                                value={this.state.name}
+                                value={this.state.medicalRecordName}
                                 placeholder={'Chọn tên người được khám'}
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}

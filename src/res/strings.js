@@ -1009,7 +1009,7 @@ module.exports = {
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
       add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify',
-      upload_ehealth: 'patient-uploads'
+      upload_ehealth: isofhcare_service + 'patient-uploads'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',

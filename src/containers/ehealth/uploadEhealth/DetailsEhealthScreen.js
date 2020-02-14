@@ -37,8 +37,9 @@ class DetailsEhealthScreen extends Component {
             refreshing: true
         }, () => {
             ehealthProvider.uploadEhealth(null, this.state.id).then(res => {
-                console.log(res, 'rrsssss')
+
                 if (res && res.code == 200) {
+                    console.log('res: ', res);
                     // this.props.navigation.pop()
                     this.setState({
                         listEhealth: res.data,
@@ -54,16 +55,39 @@ class DetailsEhealthScreen extends Component {
         })
 
     }
+    showImage = (image, index) => {
+        this.props.navigation.navigate("photoViewer", {
+            index: index,
+            urls: image.map(item => {
+                return item.absoluteUrl()
+            }),
+        });
+    }
+    onEdit = () => {
+        var images = []
+        var dataOld = this.state.listEhealth
+        if (dataOld && dataOld.images && dataOld.images.length) {
+            for (let i = 0; i < dataOld.images.length; i++) {
+                images.push({ uri: this.state.listEhealth.images[i] })
+            }
+            dataOld.images = images
+        }
+        this.props.navigation.navigate('createEhealth', { data: dataOld })
+    }
     render() {
-        console.log(this.state.listEhealth, 'this.state.listEhealth')
+
         const icSupport = require("@images/new/user.png");
-        const source = this.state.listEhealth && this.state.listEhealth.medicalRecord
+        const source = this.state.listEhealth && this.state.listEhealth.medicalRecord && this.state.listEhealth.medicalRecord.avatar
             ? { uri: this.state.listEhealth.medicalRecord.avatar.absoluteUrl() }
             : icSupport;
         return (
             <ActivityPanel
-                title={constants.title.ehealth}
+                titleStyle={{ marginLeft: 50 }}
+                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
                 style={styles.container}
+                menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}>
+                    <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
+                </TouchableOpacity>}
             >
                 <View style={styles.viewInfoProfile}>
                     <View style={styles.viewItem}></View>
@@ -125,9 +149,9 @@ class DetailsEhealthScreen extends Component {
                         < View >
                             <View style={styles.list_image}>
                                 {
-                                    dataDetail.images.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                                    this.state.listEhealth.images.map((item, index) => <TouchableOpacity onPress={() => this.showImage(this.state.listEhealth.images, index)} key={index} style={styles.containerImagePicker}>
                                         <View style={styles.groupImagePicker}>
-                                            <Image source={{ uri: item.pathThumbnail.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
+                                            <Image source={{ uri: item.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
                                             {
                                                 item.error ?
                                                     <View style={styles.groupImageError} >
@@ -140,7 +164,7 @@ class DetailsEhealthScreen extends Component {
                                                         : null
                                             }
                                         </View>
-                                    </View>)
+                                    </TouchableOpacity>)
                                 }
                             </View>
                         </View> : null
@@ -198,7 +222,8 @@ const styles = StyleSheet.create({
     groupImagePicker: {
         marginTop: 8,
         width: 80,
-        height: 80
+        height: 80,
+        marginLeft: 10
     },
 
 })
