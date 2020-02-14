@@ -425,7 +425,7 @@ class CreateEhealthScreen extends Component {
                                 }}
                                 autoCapitalize={"none"}
                             />
-                            {this.state.isSearch ? <FlatList
+                            {this.state.isSearch ? <Card style={styles.card}><FlatList
                                 data={this.state.data}
                                 extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
@@ -437,7 +437,7 @@ class CreateEhealthScreen extends Component {
                                 refreshing={this.state.refreshing}
                             >
 
-                            </FlatList> : <View></View>}
+                            </FlatList></Card> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
                             <TextField
                                 value={this.state.medicalRecordName}
@@ -458,14 +458,14 @@ class CreateEhealthScreen extends Component {
                                 }}
                                 autoCapitalize={"none"}
                             />
-                            {this.state.isProfile ? <FlatList
+                            {this.state.isProfile ? <Card style={styles.card}><FlatList
                                 data={this.state.dataProfile}
                                 extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={this.renderItemProfile}
                             >
 
-                            </FlatList> : <View></View>}
+                            </FlatList></Card> : <View></View>}
                             <Text style={styles.title}>Dịch vụ khám (*)</Text>
                             <TextField
                                 onChangeText={text => this.setState({ medicalServiceName: text })}
@@ -581,6 +581,12 @@ const styles = StyleSheet.create({
         // flex: 1,
     },
     img: {
+    },
+    card: {
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#C4C4C4',
+        padding: 5
     },
     buttonClose: {
         position: 'absolute',
