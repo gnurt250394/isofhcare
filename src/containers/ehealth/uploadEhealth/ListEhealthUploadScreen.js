@@ -21,8 +21,9 @@ import { Card } from "native-base";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
+import ehealthProvider from '@data-access/ehealth-provider';
 
-class EhealthScreen extends Component {
+class ListEhealthUpload extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,19 +36,17 @@ class EhealthScreen extends Component {
     componentDidMount() {
         this.onRefresh()
     }
-    onGetHospital = () => {
-        hospitalProvider.getHistoryHospital2().then(res => {
-            if (res.code == 0) {
+    onGetEhealth = () => {
+        ehealthProvider.uploadEhealth().then(res => {
+            console.log(res, 'rrsssss')
+            if (res && res.code == 200) {
+                // this.props.navigation.pop()
                 this.setState({
-                    listHospital: res.data,
+                    listEhealth: res.data,
                     refreshing: false
-                })
-            } else {
-                this.setState({
-                    refreshing: false
+
                 })
             }
-
         }).catch(err => {
             this.setState({
                 refreshing: false
@@ -58,12 +57,12 @@ class EhealthScreen extends Component {
         this.setState({
             refreshing: true
         }, () => {
-            this.onGetHospital()
+            this.onGetEhealth()
         })
     }
     onPress = (item) => {
-        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
-        this.props.navigation.navigate('listProfile');
+        // this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
+        this.props.navigation.navigate('detailsEhealth', { id: item.id });
     }
     onDisable = () => {
         snackbar.show(constants.msg.ehealth.not_examination_at_hospital, 'danger')
@@ -88,7 +87,7 @@ class EhealthScreen extends Component {
 
         return (
             <Card style={styles.viewItem}>
-                <TouchableOpacity style={styles.btnItem} onPress={item.hospital.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
+                <TouchableOpacity style={styles.btnItem} onPress={item.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={styles.imageStyle}
@@ -104,8 +103,9 @@ class EhealthScreen extends Component {
                         }}
                     />
                     <View style={styles.viewTx}>
-                        <Text style={styles.txHospitalName}>{item.hospital.name}</Text>
-                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
+                        <Text style={styles.txHospitalName}>{item.hospitalName}</Text>
+                        <Text style={styles.txServiceName}>{item.medicalServiceName}</Text>
+                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.timeGoIn ? item.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
                 </TouchableOpacity>
             </Card>
@@ -116,7 +116,7 @@ class EhealthScreen extends Component {
     }
     keyExtractor = (item, index) => index.toString()
     headerComponent = () => {
-        return (!this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
+        return (!this.state.refreshing && (!this.state.listEhealth || this.state.listEhealth.length == 0) ?
             <View style={styles.viewTxNone}>
                 <Text style={styles.viewTxTime}>{constants.ehealth.not_result_ehealth_location}</Text>
             </View> : null
@@ -125,35 +125,28 @@ class EhealthScreen extends Component {
     onUploadEhealth = () => {
         this.props.navigation.navigate('createEhealth')
     }
-    listEhealthUpload = () => {
-        console.log('sad')
-        this.props.navigation.navigate('listEhealthUpload')
-    }
     render() {
         return (
             <ActivityPanel
-                title={constants.title.ehealth}
+                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
-                    <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity>
-                    <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
-                            data={this.state.listHospital}
+                            data={this.state.listEhealth}
                             extraData={this.state}
                             renderItem={this.renderItem}
                             refreshing={this.state.refreshing}
                             onRefresh={this.onRefresh}
+                            showsVerticalScrollIndicator={false}
                             keyExtractor={this.keyExtractor}
                             ListHeaderComponent={this.headerComponent}
                         > </FlatList>
-                        <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
                     </View>
 
                 </View>
-
+                <View style={{ height: 50 }}></View>
             </ActivityPanel>
         );
     }
@@ -190,6 +183,7 @@ const styles = StyleSheet.create({
     },
     viewTx: { marginLeft: 10 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
+    txServiceName: { color: '#5A5956', fontSize: 14 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 
     viewContent: {
@@ -234,4 +228,4 @@ function mapStateToProps(state) {
         booking: state.booking
     };
 }
-export default connect(mapStateToProps)(EhealthScreen);
+export default connect(mapStateToProps)(ListEhealthUpload);
