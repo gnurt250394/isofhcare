@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -188,10 +189,15 @@ class CreateEhealthScreen extends Component {
 
     }
     onSelectHospital = (item) => {
+
         this.setState({
             isSearch: false,
-            hospitalId: item.id,
-            hospitalName: item.name,
+
+        }, () => {
+            this.setState({
+                hospitalId: item.id,
+                hospitalName: item.name,
+            })
         })
     }
     renderItem = ({ item, index }) => {
@@ -219,9 +225,8 @@ class CreateEhealthScreen extends Component {
     search = (text) => {
 
         this.setState({
-            isSearch: true,
             hospitalName: text,
-        })
+        }, () => this.onRefresh())
     }
     onLoadProfile = () => {
         this.setState({
@@ -323,43 +328,68 @@ class CreateEhealthScreen extends Component {
         if (!this.form.isValid()) {
             return
         }
+        this.setState({
+            disabled: true
+        }, () => {
 
-        let params = {
-            "hospitalId": this.state.hospitalId,
-            "hospitalName": this.state.hospitalName,
-            "images": this.state.imageUris.length ? images : [],
-            "medicalRecordId": this.state.medicalRecordId,
-            "medicalServiceName": this.state.medicalServiceName,
-            "result": this.state.result ? this.state.result : '',
-            "timeGoIn": this.state.dob.format('yyyy-MM-dd')
-        }
-        if (this.state.currentId) {
-            ehealthProvider.updateEhealth(params, this.state.currentId).then(res => {
+            let params = {
+                "hospitalId": this.state.hospitalId,
+                "hospitalName": this.state.hospitalName,
+                "images": this.state.imageUris.length ? images : [],
+                "medicalRecordId": this.state.medicalRecordId,
+                "medicalServiceName": this.state.medicalServiceName,
+                "result": this.state.result ? this.state.result : '',
+                "timeGoIn": this.state.dob.format('yyyy-MM-dd')
+            }
+            if (this.state.currentId) {
+                ehealthProvider.updateEhealth(params, this.state.currentId).then(res => {
 
-                if (res && res.code == 200) {
-                    this.props.navigation.replace('listEhealthUpload')
-                }
-            }).catch(err => {
+                    if (res && res.code == 200) {
+                        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                        if (callback) {
+                            callback(res.data);
+                            this.props.navigation.pop();
+                        }
+                        this.setState({
+                            disabled: false
+                        })
+                    } else {
+                        this.setState({
+                            disabled: false
+                        })
+                    }
+                }).catch(err => {
+                    this.setState({
+                        disabled: false
+                    })
 
+                })
+            } else {
+                ehealthProvider.uploadEhealth(params).then(res => {
 
-            })
-        } else {
-            ehealthProvider.uploadEhealth(params).then(res => {
+                    if (res && res.code == 200) {
+                        this.props.navigation.replace('listEhealthUpload')
+                        this.setState({
+                            disabled: false
+                        })
+                    } else {
+                        this.setState({
+                            disabled: false
+                        })
+                    }
+                }).catch(err => {
+                    this.setState({
+                        disabled: false
+                    })
 
-                if (res && res.code == 200) {
-                    this.props.navigation.replace('listEhealthUpload')
-                }
-            }).catch(err => {
-
-
-            })
-        }
+                })
+            }
+        })
     }
     onFocus = () => {
+
         this.setState({
             isSearch: true,
-        }, () => {
-            this.onRefresh()
         })
     }
     render() {
@@ -403,6 +433,7 @@ class CreateEhealthScreen extends Component {
                                 onEndReached={this.onLoadMore.bind(this)}
                                 onEndReachedThreshold={1}
                                 onRefresh={this.onRefresh.bind(this)}
+                                keyboardShouldPersistTaps={'handled'}
                                 refreshing={this.state.refreshing}
                             >
 
@@ -525,7 +556,7 @@ class CreateEhealthScreen extends Component {
                         }
                     </View>
 
-                    <TouchableOpacity onPress={this.onCreate} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text></TouchableOpacity>
+                    <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
                     <View style={{ height: 50 }}></View>
                 </ScrollView>
                 <DateTimePicker
