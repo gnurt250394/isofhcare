@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions, } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -25,11 +25,12 @@ class DetailsEhealthScreen extends Component {
 
         this.state = {
             listTime: [],
-            id
+            id,
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
+
         this.onGetDetails()
     }
     onGetDetails = () => {
@@ -59,23 +60,32 @@ class DetailsEhealthScreen extends Component {
         this.props.navigation.navigate("photoViewer", {
             index: index,
             urls: image.map(item => {
-                return item.absoluteUrl()
+                return item
             }),
         });
+    }
+    edit = (data) => {
+        let dataError = data ? "" : this.state.dataError;
+        if (!data || !this.state.data || data.id != this.state.data.id) {
+            this.setState({ id: data.id, listEhealth: data, dataError }, () => {
+            })
+        } else {
+            this.setState({ id: data.id, listEhealth: data, dataError }, () => {
+            });
+        }
     }
     onEdit = () => {
         var images = []
         var dataOld = this.state.listEhealth
         if (dataOld && dataOld.images && dataOld.images.length) {
             for (let i = 0; i < dataOld.images.length; i++) {
-                images.push({ uri: this.state.listEhealth.images[i] })
+                images.push({ uri: this.state.listEhealth.images[i], url: this.state.listEhealth.images[i] })
             }
             dataOld.images = images
         }
-        this.props.navigation.navigate('createEhealth', { data: dataOld })
+        this.props.navigation.navigate('createEhealth', { data: dataOld, onSelected: this.edit.bind(this), })
     }
     render() {
-
         const icSupport = require("@images/new/user.png");
         const source = this.state.listEhealth && this.state.listEhealth.medicalRecord && this.state.listEhealth.medicalRecord.avatar
             ? { uri: this.state.listEhealth.medicalRecord.avatar.absoluteUrl() }
@@ -85,6 +95,7 @@ class DetailsEhealthScreen extends Component {
                 titleStyle={{ marginLeft: 50 }}
                 title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
                 style={styles.container}
+                isLoading={this.state.refreshing}
                 menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}>
                     <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
                 </TouchableOpacity>}
@@ -146,12 +157,12 @@ class DetailsEhealthScreen extends Component {
                     <Text style={{ textAlign: 'center', marginVertical: 20, color: '#000', fontSize: 16 }}>{this.state.listEhealth && this.state.listEhealth.result}</Text>
                     {this.state.listEhealth && this.state.listEhealth.images && this.state.listEhealth.images.length
                         ?
-                        < View >
+                        <View >
                             <View style={styles.list_image}>
                                 {
                                     this.state.listEhealth.images.map((item, index) => <TouchableOpacity onPress={() => this.showImage(this.state.listEhealth.images, index)} key={index} style={styles.containerImagePicker}>
                                         <View style={styles.groupImagePicker}>
-                                            <Image source={{ uri: item.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
+                                            {item ? <Image source={{ uri: item }} resizeMode="cover" style={styles.imagePicker} /> : null}
                                             {
                                                 item.error ?
                                                     <View style={styles.groupImageError} >
