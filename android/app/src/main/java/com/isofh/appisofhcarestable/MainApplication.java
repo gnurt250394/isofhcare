@@ -8,7 +8,7 @@ import com.facebook.react.ReactApplication;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 // import io.invertase.firebase.auth.RNFirebaseAuthPackage;
-
+import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
