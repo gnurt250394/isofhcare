@@ -135,12 +135,13 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_drug.png"),
           text: "Thuốc",
           onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("drugTab");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'drugTab' }
-              });
+            // if (this.props.userApp.isLogin)
+            //   this.props.navigation.navigate("drugTab");
+            // else
+            //   this.props.navigation.navigate("login", {
+            //     nextScreen: { screen: 'drugTab' }
+            //   });
+            snackbar.show('Tính năng đang phát triển')
           }
         },
         {
