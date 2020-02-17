@@ -45,7 +45,7 @@ class CreateEhealthScreen extends Component {
             page: 1,
             "hospitalId": dataOld && dataOld.hospitalId ? dataOld.hospitalId : '',
             "hospitalName": dataOld && dataOld.hospitalName ? dataOld.hospitalName : '',
-            imageUris: dataOld && dataOld.images ? dataOld.images : [],
+            imageUris: dataOld && dataOld.images && dataOld.images.length ? dataOld.images : [],
             "medicalRecordId": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.id : '',
             "medicalRecordName": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.name : '',
             "medicalServiceName": dataOld && dataOld.medicalServiceName ? dataOld.medicalServiceName : '',
@@ -186,7 +186,7 @@ class CreateEhealthScreen extends Component {
         return (!this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
             <View style={styles.viewTxNone}>
                 <Text style={styles.viewTxTime}>{constants.ehealth.not_result_ehealth_location}</Text>
-            </View> : null
+            </View> : <View></View>
         )
     }
     onChangeText = () => {
@@ -218,8 +218,8 @@ class CreateEhealthScreen extends Component {
             medicalRecordName: value.name,
             isProfile: false
         })
-      
-        
+
+
     }
     renderItemProfile = ({ item, index }) => {
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
@@ -235,26 +235,26 @@ class CreateEhealthScreen extends Component {
         }, () => this.onRefresh())
     }
     onLoadProfile = () => {
-                profileProvider.getListProfile().then(s => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data && s.data.length) {
-                                this.setState({
-                                    dataProfile: s.data,
-                                    medicalRecordId: s.data[0].medicalRecords.id,
-                                    medicalRecordName: s.data[0].medicalRecords.name,
+        profileProvider.getListProfile().then(s => {
+            switch (s.code) {
+                case 0:
+                    if (s.data && s.data.length) {
+                        this.setState({
+                            dataProfile: s.data,
+                            medicalRecordId: s.data[0].medicalRecords.id,
+                            medicalRecordName: s.data[0].medicalRecords.name,
 
-                                });
-                            }
-                            break;
+                        });
                     }
-                }).catch(e => {
+                    break;
+            }
+        }).catch(e => {
 
-                })
+        })
     }
-    onShowProfile  = () => {
+    onShowProfile = () => {
         this.setState({
-            isProfile:!this.state.isProfile
+            isProfile: !this.state.isProfile
         })
     }
     selectImage = () => {
@@ -400,11 +400,37 @@ class CreateEhealthScreen extends Component {
             isSearch: true,
         })
     }
+    renderImage = () => {
+        return (
+            <View style={styles.list_image}>
+                {this.state.imageUris && this.state.imageUris.length ? this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                    <View style={styles.groupImagePicker}>
+                        <Image source={{ uri: item && item.uri || null }} resizeMode="cover" style={styles.imagePicker} />
+                        {
+                            item.error ?
+                                <View style={styles.groupImageError} >
+                                    <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                </View> :
+                                item.loading ?
+                                    <View style={styles.groupImageLoading} >
+                                        <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                    </View>
+                                    : <View>
+                                    </View>
+                        }
+                    </View>
+                    <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
+                        <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
+                    </TouchableOpacity>
+                </View>) : null}
+            </View>
+        )
+    }
     render() {
-
+        console.log(this.state.imageUris,'this.state.imageUris')
         return (
             <ActivityPanel
-                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
+                title={'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
                 <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
@@ -521,7 +547,7 @@ class CreateEhealthScreen extends Component {
                                 value={this.state.result}
                                 placeholder={'Nhập kết quả khám'}
                                 errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputResult}
+                                inputStyle={[styles.inputResult, { minHeight: 51 }]}
                                 underlineColorAndroid={'#fff'}
                                 multiline={true}
                                 numberOfLines={4}
@@ -542,31 +568,7 @@ class CreateEhealthScreen extends Component {
                         </View>
                         <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/ehealth/ic_upload.png')} height={50}></ScaledImage></TouchableOpacity>
                     </View>
-
-                    <View style={styles.list_image}>
-                        {
-                            this.state.imageUris && this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
-                                <View style={styles.groupImagePicker}>
-                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
-                                    {
-                                        item.error ?
-                                            <View style={styles.groupImageError} >
-                                                <ScaledImage source={require("@images/ic_warning.png")} width={40} />
-                                            </View> :
-                                            item.loading ?
-                                                <View style={styles.groupImageLoading} >
-                                                    <ScaledImage source={require("@images/loading.gif")} width={40} />
-                                                </View>
-                                                : null
-                                    }
-                                </View>
-                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
-                                    <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
-                                </TouchableOpacity>
-                            </View>)
-                        }
-                    </View>
-
+                    {this.renderImage()}
                     <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
                     <View style={{ height: 50 }}></View>
                 </ScrollView>
@@ -581,7 +583,7 @@ class CreateEhealthScreen extends Component {
                     date={this.state.dob || new Date()}
                 />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 
