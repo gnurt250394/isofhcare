@@ -40,6 +40,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
     getData = () => {
         const { page, size } = this.state
         bookingDoctorProvider.getListHospitalWithSpecialist(this.props.item.id, page, size).then(res => {
+            this.setState({ refreshing: false })
             this.self.setState({ isLoading: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -48,7 +49,8 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             }
         }).catch(err => {
             this.formatData([])
-            this.self.setState({ isLoading: false })
+            this.setState({ refreshing: false })
+            this.self.setState({ isLoading: false, })
 
         })
     }
@@ -97,8 +99,20 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             isNotHaveSchedule: true
         })
     }
-    goToAdvisory = () => {
-        this.props.navigation.navigate("listQuestion");
+    componentWillReceiveProps = (props) => {
+        if (props.type != this.state.type) {
+            console.log('props: ', props);
+            this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
+                switch (this.state.type) {
+                    case TYPE.SEARCH:
+                        this.search()
+                        break;
+                    default:
+                        this.getData()
+                        break;
+                }
+            })
+        }
     }
     renderItem = ({ item }) => {
 
@@ -107,7 +121,6 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
                 item={item}
                 onPressDoctor={this.goDetailDoctor(item)}
                 onPressBooking={this.addBookingDoctor(item)}
-                onPressAdvisory={this.goToAdvisory}
             />
         )
     }
@@ -121,7 +134,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
         try {
             let { keyword, page, size } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            let res = await bookingDoctorProvider.searchListHospitalWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -135,24 +148,23 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
         }
 
     }
-    onSearch = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            type: TYPE.SEARCH
-        }, this.search)
-    }
     onRefress = () => {
         this.setState({
             page: 0,
             refreshing: true,
-            keyword: '',
-            item: {},
-            type: ''
-        }, this.getData)
+        }, () => {
+            switch (this.state.type) {
+                case TYPE.SEARCH:
+                    this.search()
+                    break;
+                default:
+                    this.getData()
+                    break;
+            }
+        })
     }
     keyExtractor = (item, index) => index.toString()
-    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
+    listEmpty = () => <Text style={styles.none_data}>Không có dữ liệu</Text>
 
     render() {
         const { refreshing, data } = this.state
@@ -252,7 +264,7 @@ const styles = StyleSheet.create({
     },
     none_data: {
         fontStyle: 'italic',
-        marginTop: '50%',
+        marginTop: '30%',
         alignSelf: 'center',
         fontSize: 17
     },

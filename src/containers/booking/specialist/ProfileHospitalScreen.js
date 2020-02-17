@@ -23,8 +23,8 @@ import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
-import ItemDoctorOfHospital from "../../../components/booking/specialist/ItemDoctorOfHospital";
-
+import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
+import ImageUtils from 'mainam-react-native-image-utils';
 const dataRate = [
     { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
     { id: 2, name: 'Lê Hùng', rate: 4.5, message: 'Bác sĩ rất ...' },
@@ -81,7 +81,10 @@ class ProfileHospitalScreen extends Component {
             item: {},
             isVisible: false,
             showProfile: false,
-            showRating: false
+            showRating: false,
+            listDoctor: [],
+            page: 0,
+            size: 20
         };
     }
     componentDidMount() {
@@ -90,9 +93,9 @@ class ProfileHospitalScreen extends Component {
     getDetails = () => {
         const item = this.props.navigation.getParam('item', {})
         let id = item && item.id
-        bookingDoctorProvider.detailDoctor(id).then(s => {
+        bookingDoctorProvider.detailHospital(id).then(s => {
             if (s) {
-                this.setState({ profileHospital: s, isLoading: false })
+                this.setState({ profileHospital: s, isLoading: false }, this.getDoctor)
             }
         }).catch(e => {
             if (e) {
@@ -103,11 +106,45 @@ class ProfileHospitalScreen extends Component {
         })
     }
 
+    getDoctor = () => {
+        const { profileHospital, page, size } = this.state
+        bookingDoctorProvider.getListDoctorWithHospital(profileHospital.id, page, size).then(res => {
+            if (res && res.length) {
+                this.formatData(res)
+            } else {
+                this.formatData([])
+            }
+        }).catch((err) => {
+            this.formatData([])
+
+        })
+    }
+    formatData = (data) => {
+        if (data.length == 0) {
+            if (this.state.page == 0) {
+                this.setState({ listDoctor: [] })
+            }
+        } else {
+            if (this.state.page == 0) {
+                this.setState({ listDoctor: data })
+            } else {
+                this.setState(preState => {
+                    return { listDoctor: [...preState.listDoctor, ...data] }
+                })
+            }
+        }
+    }
     addBooking = () => {
-        this.props.navigation.navigate('selectTimeDoctor', {
-            item: this.state.profileHospital,
-            isNotHaveSchedule: true,
-            schedules: this.state.profileHospital.schedules
+        const item = this.props.navigation.getParam('item', {})
+        console.log('item: ', item);
+        if (item.availableBooking == 0) {
+            snackbar.show('Cơ sở y tế đang cập nhật đặt khám, mời bạn quay lại sau.')
+            return
+        }
+        let hospital = { address: this.state.profileHospital.contact.address, ...this.state.profileHospital }
+        console.log('hospital: ', hospital);
+        this.props.navigation.navigate('addBooking1', {
+            hospital,
         })
     }
     goToMap = () => {
@@ -118,9 +155,13 @@ class ProfileHospitalScreen extends Component {
 
     addBookingDoctor = (item) => () => {
         this.props.navigation.navigate('selectTimeDoctor', {
-            item: this.state.profileHospital,
+            item,
             isNotHaveSchedule: true,
-            schedules: this.state.profileHospital.schedules
+        })
+    }
+    detailDoctor = (item) => () => {
+        this.props.navigation.navigate('detailsDoctor', {
+            item
         })
     }
     _renderItemDoctor = ({ item, index }) => {
@@ -128,6 +169,7 @@ class ProfileHospitalScreen extends Component {
         return (
             <ItemDoctorOfHospital
                 item={item}
+                onPressDoctor={this.detailDoctor(item)}
                 onPress={this.addBookingDoctor(item)}
             />
         )
@@ -177,16 +219,21 @@ class ProfileHospitalScreen extends Component {
     showProfile = (state) => () => {
         this.setState({ [state]: !this.state[state] })
     }
-    showMapHospital=()=>{
+    showMapHospital = () => {
         snackbar.show('Chức năng đang phát triển')
     }
     render() {
         const icSupport = require("@images/new/user.png");
+        const item = this.props.navigation.getParam('item', {})
         const { profileHospital } = this.state
-        const source = profileHospital && profileHospital.imagePath
-            ? { uri: profileHospital.imagePath.absoluteUrl() }
+        let images = profileHospital && profileHospital.imagePath
+            && profileHospital.imagePath.startsWith('/')
+            ? profileHospital.imagePath.replace('/', '')
+            : profileHospital && profileHospital.imagePath ? profileHospital.imagePath : ''
+        const source = this.state.profileHospital && this.state.profileHospital.imagePath
+            ? { uri: images.absoluteUrl() }
             : icSupport;
-
+        const contact = profileHospital && profileHospital.contact || {}
         return (
             <ActivityPanel
                 title={'Thông tin cơ sở y tế'}
@@ -202,7 +249,7 @@ class ProfileHospitalScreen extends Component {
                         {/** profile doctor */}
                         <Card style={styles.viewImgUpload}>
                             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                                <ImageLoad
+                                {/* <ImageLoad
                                     resizeMode="cover"
                                     imageStyle={styles.boderImage}
                                     borderRadius={45}
@@ -221,12 +268,18 @@ class ProfileHospitalScreen extends Component {
                                             />
                                         );
                                     }}
+                                /> */}
+                                <ScaleImage
+                                    resizeMode="cover"
+                                    source={source}
+                                    width={70}
+                                    style={styles.imgDefault}
                                 />
                                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                                    <Text style={styles.nameDoctor}>{profileHospital.academicDegree}.{profileHospital.name}</Text>
-                                    <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileHospital)}</Text>
+                                    <Text style={styles.nameDoctor}>{profileHospital.name}</Text>
+                                    <Text style={{ paddingBottom: 10 }}>{contact.address}</Text>
                                     <View style={styles.containerButton}>
-                                        <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                                        <Button label="Đặt khám" style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                                         <Button label="Xem bản đồ" style={styles.txtAdvisory} textStyle={{ color: '#00A3FF' }} onPress={this.goToMap} />
                                     </View>
                                 </View>
@@ -234,7 +287,7 @@ class ProfileHospitalScreen extends Component {
                             <View style={styles.row}>
                                 <View style={styles.groupQuantityBooking}>
                                     <Text>{constants.booking.quantity_booking}</Text>
-                                    <Text style={styles.rating}>{profileHospital.appointments}</Text>
+                                    <Text style={styles.rating}>{profileHospital.appointments ? profileHospital.appointments : 0}</Text>
                                 </View>
                                 <TouchableOpacity onPress={this.ratingDoctor} style={styles.groupRating}>
                                     <Text>{constants.booking.rating}</Text>
@@ -259,10 +312,11 @@ class ProfileHospitalScreen extends Component {
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
-                                    <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{'0987654321'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{'email@.com'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text>
+                                    <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>
+                                    <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>
+                                    <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>
+                                    {/* <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
+                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text> */}
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         {profileHospital.specializations && profileHospital.specializations.length > 0 ?
@@ -317,7 +371,7 @@ class ProfileHospitalScreen extends Component {
                                 <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
                             </View>
                             <FlatList
-                                data={listDoctor}
+                                data={this.state.listDoctor}
                                 renderItem={this._renderItemDoctor}
                                 keyExtractor={this._keyExtractor}
                             />
@@ -480,7 +534,7 @@ const styles = StyleSheet.create({
     containerInfo: {
         flex: 1,
         marginVertical: 20,
-        borderRadius: 10,
+        borderRadius: 5,
     },
     containerSeeDetails: {
         flexDirection: 'row',
@@ -537,7 +591,13 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     nameDoctor: { fontSize: 16, color: '#000000', fontWeight: 'bold', paddingBottom: 5, },
-    imgDefault: { width: 90, height: 90, alignSelf: "center" },
+    imgDefault: {
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        borderColor: '#00CBA7',
+        borderWidth: 0.2
+    },
     boderImage: { borderRadius: 45, borderWidth: 2, borderColor: '#00CBA7' },
     avatar: { width: 90, height: 90, alignSelf: "flex-start", },
     imgPlaceHoder: {
@@ -572,7 +632,7 @@ const styles = StyleSheet.create({
     },
     viewImgUpload: {
         padding: 10,
-        borderRadius: 10
+        borderRadius: 5
     },
 });
 function mapStateToProps(state) {

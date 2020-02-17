@@ -3,9 +3,14 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 target 'APP' do
   # # Pods for APP
+  pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
+  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
+  pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
+  pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
   pod 'React', :path => '../node_modules/react-native/'
-  pod 'React-Core', :path => '../node_modules/react-native/React'
-  pod 'React-DevSupport', :path => '../node_modules/react-native/React'
+  pod 'React-Core', :path => '../node_modules/react-native/'
+  pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
+  pod 'React-Core/DevSupport', :path => '../node_modules/react-native/'
   pod 'React-RCTActionSheet', :path => '../node_modules/react-native/Libraries/ActionSheetIOS'
   pod 'React-RCTAnimation', :path => '../node_modules/react-native/Libraries/NativeAnimation'
   pod 'React-RCTBlob', :path => '../node_modules/react-native/Libraries/Blob'
@@ -15,22 +20,24 @@ target 'APP' do
   pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
   pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
-  pod 'React-RCTWebSocket', :path => '../node_modules/react-native/Libraries/WebSocket'
+  pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
 
   pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
   pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
   pod 'React-jsiexecutor', :path => '../node_modules/react-native/ReactCommon/jsiexecutor'
   pod 'React-jsinspector', :path => '../node_modules/react-native/ReactCommon/jsinspector'
-  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+  pod 'ReactCommon/jscallinvoker', :path => "../node_modules/react-native/ReactCommon"
+  pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
+  pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   # appcenter
-  pod 'appcenter', :path => '../node_modules/appcenter'
-  pod 'appcenter-analytics', :path => '../node_modules/appcenter-analytics'
-  pod 'appcenter-crashes', :path => '../node_modules/appcenter-crashes'
+  # pod 'appcenter', :path => '../node_modules/appcenter'
+  # pod 'appcenter-analytics', :path => '../node_modules/appcenter-analytics'
+  # pod 'appcenter-crashes', :path => '../node_modules/appcenter-crashes'
   # pod 'AppCenter/Crashes', '~> 2.3.0'
   # pod 'AppCenter/Analytics', '~> 2.3.0'
   # pod 'AppCenterReactNativeShared', '~> 2.3.0'
@@ -39,32 +46,7 @@ target 'APP' do
   pod 'Firebase', '~> 6.2.0'
   pod 'Firebase/Messaging', '~> 6.2.0'
   pod 'Firebase/Core', '~> 6.2.0'
-  pod 'GoogleSignIn'
 
-  #fbsdk
-  pod 'FBSDKCoreKit', '~> 5.4.0'
-  pod 'FBSDKLoginKit', '~> 5.4.0'
-  pod 'FBSDKShareKit', '~> 5.4.0'
-  pod 'AccountKit', '~> 5.0.1'
-  pod 'RNAccountKit', :path => '../node_modules/react-native-facebook-account-kit/ios'
-
-  #   # this is very important to have!
-  #   rn_path = '../node_modules/react-native'
-  #   pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
-  #   pod 'React', path: rn_path, subspecs: [
-   
-  # 'Core',
-  #   # 'RCTActionSheet',
-  #   'RCTAnimation', 
-  #   'RCTGeolocation',
-  #   'RCTImage',
-  #   'RCTLinkingIOS',
-  #   'RCTNetwork',
-  #   'RCTSettings',
-  #   'RCTText',
-  #   'RCTVibration',
-  #   'RCTWebSocket'
-  #   ]
 
   # react-native-maps
   rn_maps_path = '../node_modules/react-native-maps'  
@@ -109,7 +91,6 @@ target 'APP' do
   pod 'react-native-google-places', :path => '../node_modules/react-native-google-places'
 
 
-  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 

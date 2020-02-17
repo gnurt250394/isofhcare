@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated, Easing } from 'react-native';
+import { Dimensions, View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated, Easing } from 'react-native';
 import { Fab, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import Dimensions from 'Dimensions';
 import ImageProgress from 'mainam-react-native-image-progress';
 import ImagePicker from 'mainam-react-native-select-image';
 import Progress from 'react-native-progress/Pie';

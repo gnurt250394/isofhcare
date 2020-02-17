@@ -122,6 +122,13 @@ class EhealthScreen extends Component {
             </View> : null
         )
     }
+    onUploadEhealth = () => {
+        this.props.navigation.navigate('createEhealth')
+    }
+    listEhealthUpload = () => {
+        console.log('sad')
+        this.props.navigation.navigate('listEhealthUpload')
+    }
     render() {
         return (
             <ActivityPanel
@@ -130,6 +137,7 @@ class EhealthScreen extends Component {
             >
                 <View style={styles.viewContent} >
                     <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -140,7 +148,10 @@ class EhealthScreen extends Component {
                             onRefresh={this.onRefresh}
                             keyExtractor={this.keyExtractor}
                             ListHeaderComponent={this.headerComponent}
-                        > </FlatList></View>
+                        > </FlatList>
+                        <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
+                    </View>
+
                 </View>
 
             </ActivityPanel>
@@ -155,8 +166,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     txHeader: {
-        marginTop: 10,
+        marginVertical: 20,
         fontSize: 16,
+        color: '#000',
+        fontWeight: 'bold'
+    },
+    txBottom: {
+        marginVertical: 20,
+        fontSize: 16,
+        color: '#3161AD',
         fontWeight: 'bold'
     },
     viewItem: { flexDirection: 'row', justifyContent: 'flex-start', padding: 10, borderRadius: 5 },
@@ -177,7 +195,7 @@ const styles = StyleSheet.create({
     viewContent: {
         paddingHorizontal: 10, flex: 1
     },
-    viewFlatList: { flex: 1 },
+    // viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },
     viewTxTime: { fontStyle: 'italic' },
     btnAddEhealth: {
@@ -185,9 +203,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#02C39A',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 41,
-        marginVertical: 10,
-        marginHorizontal: 5
+        height: 51,
+        marginTop: 30,
+        marginHorizontal: 25,
+        borderRadius: 10
+
+    },
+    btnUploadEhealth: {
+        borderRadius: 5,
+        backgroundColor: '#3161AD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 51,
+        marginTop: 10,
+        marginHorizontal: 25,
+        borderRadius: 10
     },
     txAddEhealth: {
         color: '#fff',

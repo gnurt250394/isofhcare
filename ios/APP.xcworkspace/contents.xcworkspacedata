@@ -2,9 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:APP.xcodeproj">
+      location = "group:/Users/macosx/Desktop/ISOFHCARE/project_react_native_isofh_care/ios/APP.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:APP.xcodeproj">
    </FileRef>
 </Workspace>

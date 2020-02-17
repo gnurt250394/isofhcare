@@ -93,9 +93,11 @@ class ConfirmBookingDoctorScreen extends Component {
     }
     confirmVoucher = async (voucher, idBooking) => {
         try {
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking);
+            let idHospital = this.state.booking.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
+
             return false;
         }
     }
@@ -167,7 +169,7 @@ class ConfirmBookingDoctorScreen extends Component {
     goVoucher = () => {
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            // booking: this.state.hospital,
+            booking: this.state.booking,
             voucher: this.state.voucher
         })
     }

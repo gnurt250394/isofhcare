@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import Dimensions from 'Dimensions';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import {Dimensions, View, Text, KeyboardAvoidingView, ActivityIndicator, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
@@ -41,7 +40,8 @@ class ResetPasswordScreen extends Component {
         }
         connectionUtils.isConnected().then(s => {
             this.setState({
-                isLoading: true
+                isLoading: true,
+                disabled: true
             }, () => {
                 userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
                     switch (s.code) {
@@ -66,11 +66,14 @@ class ResetPasswordScreen extends Component {
                 })
                 this.setState({
                     isLoading: false,
+                    disabled: false
                 })
             })
         }).catch(e => {
             this.setState({
                 isLoading: false,
+                disabled: false
+
             })
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
@@ -141,7 +144,7 @@ class ResetPasswordScreen extends Component {
                         <TouchableOpacity
                             onPress={this.changePassword.bind(this)}
                             style={styles.updatePass}>
-                            <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
+                            {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txbtnUpdate}>{constants.continue}</Text>}
                         </TouchableOpacity>
                     </View>
                     <View style={{ height: 50 }}></View>
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
     form: { marginTop: 50 },
     header: { paddingHorizontal: 0 },
     txbtnUpdate: { color: '#FFF', fontSize: 17 },
-    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20,marginTop:70 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 70 },
     container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
     btnEye: {
         position: 'absolute',

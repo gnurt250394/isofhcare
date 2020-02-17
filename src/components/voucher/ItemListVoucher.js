@@ -6,6 +6,8 @@ import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import stringUtils from 'mainam-react-native-string-utils'
 import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
+
 const { width } = Dimensions.get('window')
 class ItemListVoucher extends Component {
     constructor(props) {
@@ -33,14 +35,19 @@ class ItemListVoucher extends Component {
             <ScaleImage source={icSupport} width={100} />
         );
     }
+    onDisable = () => {
+        snackbar.show(constants.voucher.voucher_not_avalrible, "danger")
+
+    }
     render() {
         const icSupport = require("@images/new/booking/ic_checked.png");
         const { item, onPress, onPressLater } = this.props
         return (
             <TouchableOpacity
-                onPress={onPress}
+                onPress={this.props.active ? onPress : this.onDisable}
+                disabled={!this.props.active}
                 style={styles.containerItem}>
-                <View style={[styles.groupItem, { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', }]}>
+                <View style={[styles.groupItem, this.props.active ? { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', } : { backgroundColor: item.type == 1 ? '#3161AD60' : '#F0730060' }]}>
                     <View style={[styles.viewOther, styles.topRight]} />
                     <View style={[styles.viewOther, styles.topLeft]} />
                     <View style={[styles.viewOther, styles.bottomRight]} />
@@ -54,11 +61,11 @@ class ItemListVoucher extends Component {
                         paddingLeft: 20,
                     }}>
                         <Text numberOfLines={2}
-                            style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
+                            style={[styles.containerText, styles.txtPriceVoucher, !this.props.active ? { color: '#EEEEEE' } : {}]}>GIẢM <Text style={{
                                 fontStyle: 'italic'
                             }}>{item.price.formatPrice()}đ </Text> KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`Hạn sử dụng: ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                        <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.type == 2 ? item.quantity : item.count} LẦN`}</Text>
+                        <Text style={[styles.containerText, !this.props.active ? { color: '#EEEEEE' } : {}]}>{`Hạn sử dụng: ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                        <Text numberOfLines={1} style={[styles.quality, !this.props.active ? { color: '#EEEEEE' } : {}]}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.type == 2 ? item.quantity : item.count} LẦN`}</Text>
                     </View>
                 </View>
                 {item.status ?
@@ -66,8 +73,6 @@ class ItemListVoucher extends Component {
                     :
                     <View style={styles.unChecked} />
                 }
-
-
             </TouchableOpacity>
         );
     }

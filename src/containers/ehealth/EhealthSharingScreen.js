@@ -39,7 +39,9 @@ class EhealthSharingScreen extends Component {
     viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital && this.props.ehealth.hospital.hospital.id ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+
+            resultUtils.getDetail(item.patientHistoryId, hospitalId, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -120,7 +122,7 @@ class EhealthSharingScreen extends Component {
             return;
         }
         connectionUtils.isConnected().then(s => {
-            let hospitalId = this.props.ehealth.hospital.hospital.id
+            let hospitalId =  this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
             let patientHistoryId = this.state.history.patientHistoryId;
             this.setState({ isLoading: true }, () => {
                 ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd HH:mm:ss"), this.state.toDate.format("yyyy-MM-dd HH:mm:ss")).then(res => {

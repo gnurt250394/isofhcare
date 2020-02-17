@@ -152,14 +152,14 @@ module.exports = {
      * @param {array} images 
      */
 
-  createBooking(date, description, hospitals, items, patient, time, idUser,images) {
+  createBooking(date, description, hospitals, items, patientUser, time, idUser, images) {
     return new Promise((resolve, reject) => {
-      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
-      console.log('hospital: ', hospital);
+      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || hospitals.contact && hospitals.contact.address || '' }
+      console.log('hospital: ', patientUser.status);
       patient = {
         id: idUser,
-        name: patient.name,
-        phone: patient.phone
+        name: patientUser.name,
+        phone: patientUser.phone
       }
       client.requestApi(
         "post",
@@ -179,7 +179,7 @@ module.exports = {
           //giờ đặt khám
           time,
           //owner : true: đặt khám chính chủ, false: đặt khám hộ
-          owner: patient.status == 1 ? true : false,
+          owner: patientUser.status == 1 ? true : false,
           images
         }, (s, e) => {
           if (s) resolve(s);

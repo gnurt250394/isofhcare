@@ -91,11 +91,13 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
-    confirmVoucher = async (voucher, idBooking) => {
+    confirmVoucher = async (voucher, idBooking, idHospital) => {
         try {
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking);
+            let idHospital = this.state.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
+
             return false;
         }
     }
@@ -215,13 +217,12 @@ class ConfirmBookingScreen extends Component {
             price = this.state.service.reduce((total, item) => {
                 return total + parseInt((item && item.price ? item.price : 0));
             }, 0);
-            serviceText = this.state.service.map(item => (item  ? item.id + " - " + item.name : "")).join(', ');
+            serviceText = this.state.service.map(item => (item ? item.id + " - " + item.name : "")).join(', ');
         }
 
         this.setState({ isLoading: true }, async () => {
             // let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
             let memo = `Thanh toan ${price.formatPrice()} vnd cho dịch vụ dat kham tren ung dung iSofHcare thong qua ${this.getPaymentMethod()}`;
-
             let voucher = null
             if (this.state.voucher && this.state.voucher.code) {
                 voucher = {
@@ -241,7 +242,7 @@ class ConfirmBookingScreen extends Component {
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
-                this.state.hospital.hospital.id,
+                this.state.hospital.id,
                 booking.book.id,
                 this.getPaymentReturnUrl(),
                 price,
@@ -577,20 +578,20 @@ class ConfirmBookingScreen extends Component {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
-        console.log('booking: ', booking);
+
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
                 if (this.state.voucher && this.state.voucher.code) {
                     let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id)
                     if (!dataVoucher) {
-                        this.setState({ isLoading: false }, () => {
+                        this.setState({ isLoading: false, voucher: {} }, () => {
                             snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
                         })
                         return
                     }
                 }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
-                    console.log('res: ', res);
+
                     this.setState({ isLoading: false })
                     if (res) {
                         snackbar.show('Đặt khám thành công', 'success')
@@ -620,12 +621,12 @@ class ConfirmBookingScreen extends Component {
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         snackbar.show(constants.msg.booking.booking_err2, "danger");
 
                     }
                 }).catch(err => {
-                    console.log('err: ', err);
+
                     snackbar.show(constants.msg.booking.booking_err2, "danger");
                     this.setState({ isLoading: false })
                 });
@@ -653,7 +654,7 @@ class ConfirmBookingScreen extends Component {
 
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking: this.state.booking.book,
+            booking: this.state.booking,
             voucher: this.state.voucher
         })
     }
@@ -709,8 +710,8 @@ class ConfirmBookingScreen extends Component {
                             <View style={[styles.view2]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/hospital/ic_place.png")} />
                                 <View>
-                                    <Text style={[styles.text5, styles.fontBold]}>{this.state.hospital.hospital.name}</Text>
-                                    <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.hospital.address}</Text></Text>
+                                    <Text style={[styles.text5, styles.fontBold]}>{this.state.hospital.name}</Text>
+                                    <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.address}</Text></Text>
                                 </View>
                             </View>
 

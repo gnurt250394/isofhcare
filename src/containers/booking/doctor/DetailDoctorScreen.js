@@ -147,7 +147,6 @@ class DetailsDoctorScreen extends Component {
     const source = profileDoctor && profileDoctor.imagePath
       ? { uri: profileDoctor.imagePath.absoluteUrl() }
       : icSupport;
-
     return (
       <ActivityPanel
         title={constants.title.info_doctor}
@@ -165,7 +164,7 @@ class DetailsDoctorScreen extends Component {
             {/** profile doctor */}
             <Card style={styles.viewImgUpload}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                <ImageLoad
+                {/* <ImageLoad
                   resizeMode="cover"
                   imageStyle={styles.boderImage}
                   borderRadius={35}
@@ -184,6 +183,11 @@ class DetailsDoctorScreen extends Component {
                       />
                     );
                   }}
+                /> */}
+                <ScaleImage
+                  resizeMode="cover"
+                  source={source}
+                  style={styles.imgDefault}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
                   <Text style={styles.nameDoctor}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
@@ -450,7 +454,7 @@ const styles = StyleSheet.create({
   containerInfo: {
     flex: 1,
     marginVertical: 20,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingBottom: 10
   },
   containerSeeDetails: {
@@ -508,8 +512,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10
   },
   nameDoctor: { fontSize: 16, color: '#000000', fontWeight: 'bold', paddingBottom: 5, },
-  imgDefault: { width: 70, height: 70, alignSelf: "center" },
-  boderImage: { borderRadius: 35, borderWidth: 2, borderColor: '#00CBA7' },
+  imgDefault: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderColor: '#00CBA7',
+    borderWidth: 0.2
+  },
+  boderImage: { borderRadius: 35, },
   avatar: { width: 70, height: 70, alignSelf: "flex-start", },
   imgPlaceHoder: {
     width: 70,
@@ -543,7 +553,7 @@ const styles = StyleSheet.create({
   },
   viewImgUpload: {
     padding: 10,
-    borderRadius: 10
+    borderRadius: 5
   },
 });
 function mapStateToProps(state) {

@@ -66,15 +66,15 @@ class PhotoViewerScreen extends Component {
                 if (Platform.OS == "android") {
                     config.path = dirs.PictureDir + '/' + filename
                     config.addAndroidDownloads =
-                        {
-                            useDownloadManager: true,
-                            notification: true,
-                            description: 'File downloaded by download manager.'
-                        }
+                    {
+                        useDownloadManager: true,
+                        notification: true,
+                        description: 'File downloaded by download manager.'
+                    }
                 }
-                // else {
-                //     config.path = dirs.DocumentDir + '/' + filename
-                // }
+                else {
+                    config.path = dirs.DocumentDir + '/' + filename
+                }
                 RNFetchBlob
                     .config(config)
                     .fetch('GET', url)

@@ -101,6 +101,7 @@ module.exports = {
     voucher_invalid: 'Mã ưu đãi không tồn tại',
     info_voucher: 'Thông tin mã ưu đãi',
     price_voucher: 'Giá ưu đãi',
+    voucher_not_avalrible: 'Mã ưu đãi không áp dụng cho cơ sở y tế đã chọn',
     expired_voucher: 'Hạn sử dụng',
     quantity_voucher: 'Số lần sử dụng',
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?'
@@ -204,6 +205,7 @@ module.exports = {
       LASTEST_INFO: "LASTEST_INFO",
       LIST_BANNER: "LIST_BANNER",
       DATA_TOP_NEWS: 'DATA_TOP_NEWS',
+      DATA_TOP_DOCTOR: 'DATA_TOP_DOCTOR',
       DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
       KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION",
       LOCATION_DEFAULT: 'LOCATION_DEFAULT'
@@ -714,7 +716,9 @@ module.exports = {
     get_ticket_for_me: 'Lấy số cho tôi',
     get_ticket_other: 'Lấy số hộ',
     service_E_not_get_ticket: 'Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón',
-    add_new_result_examination: 'Thêm mới kết quả khám',
+    add_new_result_examination: 'Tra cứu kết quả khám',
+    ehealth_upload: 'Xem kết quả khám đã tải lên >>',
+    upload_new_result_examination: 'Tải lên kết quả khám đã có',
     scan_code: 'QUÉT MÃ',
     input_code: 'NHẬP MÃ',
     input_or_scan_code: 'NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI',
@@ -753,6 +757,7 @@ module.exports = {
   },
   title: {
     ehealth: 'Y BẠ ĐIỆN TỬ',
+    uploadEhealth: 'NHẬP KẾT QUẢ KHÁM',
     list_profile_ehealth: 'HỒ SƠ Y BẠ GIA ĐÌNH',
     search_profile: 'Chọn hồ sơ',
     ehealth_details: 'CHI TIẾT Y BẠ',
@@ -919,6 +924,7 @@ module.exports = {
         create_booking: isofhcare_service + 'appointment/v1/doctor',
         get_list_hospitals: isofhcare_service + 'catalog/v1/hospitals',
         get_list_specialists: isofhcare_service + 'catalog/v1/specializations',
+        search_list_specialists: isofhcare_service + 'catalog/v1/specialization/search',
         get_doctor_hospitals: isofhcare_service + 'catalog/v1/doctor/hospitalId/hospital',
         get_doctor_specialists: isofhcare_service + 'catalog/v1/doctor/specialistId/specialization',
         get_list_booking: isofhcare_service + 'appointment/v1/patientId/histories',
@@ -952,7 +958,8 @@ module.exports = {
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
       get_default_hospital: isofhcare_service + 'hospital/get-default-hospital',
       get_details_hospital: isofhcare_service + 'hospital/get-detail',
-      get_hospital_by_location: isofhcare_service + 'hospital/list-hospital-top-location'
+      get_hospital_by_location: isofhcare_service + 'hospital/list-hospital-top-location',
+      get_top_hospital: isofhcare_service + 'hospital/top'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
@@ -1002,12 +1009,14 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
-      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify'
+      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify',
+      upload_ehealth: isofhcare_service + 'patient-uploads'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
-      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
+      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate',
+      get_list_doctor: isofhcare_service + 'catalog/v1/doctor/3/rank?page=0&size=10&sort=desc&properties=created'
     },
     voucher: {
       get_voucher: isofhcare_service + 'voucher'

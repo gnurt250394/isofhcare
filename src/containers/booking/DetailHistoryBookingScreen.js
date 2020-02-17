@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
-    Clipboard
+    Clipboard,
+    Linking
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -140,8 +141,9 @@ class DetailHistoryBookingScreen extends Component {
                 <Text style={styles.txStatus} />;
         }
     };
-    showImage = (image) => {
+    showImage = (image, index) => {
         this.props.navigation.navigate("photoViewer", {
+            index: index,
             urls: image.map(item => {
                 return item.absoluteUrl()
             }),
@@ -153,16 +155,23 @@ class DetailHistoryBookingScreen extends Component {
             return (<View>
                 <View style={styles.containerListImage}>
                     {
-                        image.map((item, index) => <TouchableOpacity onPress={() => this.showImage(image)}
-                            key={index} style={styles.buttonShowImage}>
-                            <Image
-                                style={styles.ImageViewer}
-                                source={{
-                                    uri: item ? item.absoluteUrl() : ''
-                                }}
-                                resizeMode={'cover'}
-                            />
-                        </TouchableOpacity>)
+                        image.map((item, index) => {
+                            console.log(item, 'ddjasjasjhas')
+                            return (
+                                <TouchableOpacity onPress={() => this.showImage(image, index)}
+                                    key={index} style={styles.buttonShowImage}>
+                                    <ScaledImage
+                                        width={70}
+                                        height={70}
+                                        style={styles.ImageViewer}
+                                        uri={
+                                            item ? item.absoluteUrl() : ''
+                                        }
+                                        resizeMode={'cover'}
+                                    />
+                                </TouchableOpacity>
+                            )
+                        })
                     }
 
                 </View>
@@ -216,7 +225,13 @@ class DetailHistoryBookingScreen extends Component {
             voucherPrice = this.state.booking.invoice.voucher.discount
         }
         let price = this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0)
-        return (price - voucherPrice).formatPrice()
+        let total = price - voucherPrice
+        return (total > 0 ? total : 0).formatPrice()
+    }
+    openLinkHotline = () => {
+        Linking.openURL(
+            'tel:1900299983'
+        );
     }
     onBackdropPress = () => this.setState({ isVisible: false })
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
@@ -263,52 +278,29 @@ class DetailHistoryBookingScreen extends Component {
                                 <Text>{this.state.booking.reference}</Text>
                             </TouchableOpacity>
                         </View>
-                        {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
-                            <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
-                                <ScaledImage
-                                    height={20}
-                                    width={20}
-                                    source={require("@images/ic_service.png")}
-                                />
-                                <Text style={styles.txService}>{constants.booking.services}</Text>
-                                <View>
-                                    {
-                                        this.state.booking.invoice.services.map((item, index) => {
-                                            return <View key={index}>
-                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
-                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
-                                            </View>
-                                        })
-                                    }
-                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
-                                        <View >
-                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
-                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
-                                        </View> : null
-                                    }
-                                </View>
-                            </View> : null
-                        }
 
 
-                        <View style={styles.between}></View>
+
                         {
                             this.state.booking.doctor && this.state.booking.doctor.name ?
-                                <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
-                                    <ScaledImage
-                                        height={20}
-                                        width={20}
-                                        source={require("@images/new/booking/ic_serviceType.png")}
-                                    />
-                                    <Text numberOfLines={5} style={styles.txLocation}>Bác sĩ</Text>
-                                    <View style={styles.viewInfoLocation}>
-                                        <Text style={styles.txClinic}>{this.state.booking.doctor.name}</Text>
+                                <View>
+
+                                    <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                                        <ScaledImage
+                                            height={20}
+                                            width={20}
+                                            source={require("@images/new/booking/ic_serviceType.png")}
+                                        />
+                                        <Text numberOfLines={5} style={styles.txLocation}>Bác sĩ</Text>
+                                        <View style={styles.viewInfoLocation}>
+                                            <Text style={styles.txClinic}>{this.state.booking.doctor.name}</Text>
+                                        </View>
                                     </View>
+                                    <View style={styles.between}></View>
                                 </View>
                                 : null
 
                         }
-                        <View style={styles.between}></View>
 
                         <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
                             <ScaledImage
@@ -355,6 +347,51 @@ class DetailHistoryBookingScreen extends Component {
                 /> */}
                             </View>
                         </View>
+                        <TouchableOpacity
+                            style={[styles.itemMenu]}
+                            onPress={this.openLinkHotline}>
+                            <ScaledImage
+                                source={require("@images/new/account/ic_support.png")}
+                                width={20}
+                                height={20}
+                                style={{ tintColor: '#00b392' }}
+                            />
+                            <Text style={styles.itemText}>Hỗ trợ</Text>
+                            <View style={{ alignItems: 'flex-end' }}>
+                                <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text>
+                                {this.state.booking.hotLine ?
+                                    <Text>{this.state.booking.hotLine}</Text>
+                                    : null
+                                }
+                            </View>
+                        </TouchableOpacity>
+                        {this.state.booking.invoice.services && this.state.booking.invoice.services.length > 0 ?
+                            <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
+                                <ScaledImage
+                                    height={20}
+                                    width={20}
+                                    source={require("@images/ic_service.png")}
+                                />
+                                <Text style={styles.txService}>{constants.booking.services}</Text>
+                                <View>
+                                    {
+                                        this.state.booking.invoice.services.map((item, index) => {
+                                            return <View key={index}>
+                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
+                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
+                                            </View>
+                                        })
+                                    }
+                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
+                                        <View >
+                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
+                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
+                                        </View> : null
+                                    }
+                                </View>
+                            </View> : null
+                        }
+
                         {
                             this.state.booking.invoice.services && this.state.booking.invoice.services.length ?
                                 <React.Fragment>
@@ -468,6 +505,19 @@ class DetailHistoryBookingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    itemMenu: {
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: 10,
+        paddingRight: 20,
+    },
+    itemText: {
+        flex: 1,
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginLeft: 10
+    },
     modal: {
         flex: 1,
         alignItems: 'center',

@@ -113,7 +113,7 @@ class ViewEhealthDetailScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 isLoading={this.state.isLoading}
                 titleStyle={styles.titleStyle}
-                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#fff' }} /></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><ScaledImage source = {require('@images/new/ehealth/ic_print.png')} height = {25} /></TouchableOpacity>}
             >
                 {this.renderDetails()}
                 <ExportPDF endLoading={() => { this.setState({ isLoading: false }) }} ref={(element) => this.exportPdfCom = element} />
