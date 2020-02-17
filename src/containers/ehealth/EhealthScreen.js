@@ -137,7 +137,7 @@ class EhealthScreen extends Component {
             >
                 <View style={styles.viewContent} >
                     <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity>
+                    {/* <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity> */}
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -149,7 +149,7 @@ class EhealthScreen extends Component {
                             keyExtractor={this.keyExtractor}
                             ListHeaderComponent={this.headerComponent}
                         > </FlatList>
-                        <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
+                        {/* <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity> */}
                     </View>
 
                 </View>
