@@ -57,7 +57,7 @@ class CreateEhealthScreen extends Component {
     }
     componentDidMount() {
         this.onRefresh()
-        // this.onLoadProfile()
+        this.onLoadProfile()
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -119,6 +119,10 @@ class CreateEhealthScreen extends Component {
                             var finish = false;
                             if (s.data.data.length == 0) {
                                 finish = true;
+                                this.setState({
+                                    hospitalName: stringQuyery,
+                                    hospitalId: null
+                                })
                             }
                             if (page != 1) {
                                 list = this.state.data;
@@ -214,6 +218,8 @@ class CreateEhealthScreen extends Component {
             medicalRecordName: value.name,
             isProfile: false
         })
+      
+        
     }
     renderItemProfile = ({ item, index }) => {
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
@@ -229,16 +235,15 @@ class CreateEhealthScreen extends Component {
         }, () => this.onRefresh())
     }
     onLoadProfile = () => {
-        this.setState({
-            isProfile: !this.state.isProfile
-        }, () => {
-            if (this.state.isProfile) {
                 profileProvider.getListProfile().then(s => {
                     switch (s.code) {
                         case 0:
-                            if (s.data) {
+                            if (s.data && s.data.length) {
                                 this.setState({
                                     dataProfile: s.data,
+                                    medicalRecordId: s.data[0].medicalRecords.id,
+                                    medicalRecordName: s.data[0].medicalRecords.name,
+
                                 });
                             }
                             break;
@@ -246,7 +251,10 @@ class CreateEhealthScreen extends Component {
                 }).catch(e => {
 
                 })
-            }
+    }
+    onShowProfile  = () => {
+        this.setState({
+            isProfile:!this.state.isProfile
         })
     }
     selectImage = () => {
@@ -414,6 +422,7 @@ class CreateEhealthScreen extends Component {
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
                                 returnKeyType='done'
+                                maxLength={100}
                                 placeholderTextColor='#3b3b3b'
                                 validate={{
                                     rules: {
@@ -447,7 +456,7 @@ class CreateEhealthScreen extends Component {
                                 underlineColorAndroid={'#fff'}
                                 placeholderTextColor='#3b3b3b'
                                 editable={false}
-                                onPress={this.onLoadProfile}
+                                onPress={this.onShowProfile}
                                 validate={{
                                     rules: {
                                         required: true,
@@ -475,6 +484,7 @@ class CreateEhealthScreen extends Component {
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
                                 placeholderTextColor='#3b3b3b'
+                                maxLength={100}
                                 validate={{
                                     rules: {
                                         required: true,
@@ -515,6 +525,7 @@ class CreateEhealthScreen extends Component {
                                 underlineColorAndroid={'#fff'}
                                 multiline={true}
                                 numberOfLines={4}
+                                maxLength={2000}
                                 placeholderTextColor='#3b3b3b'
                                 autoCapitalize={"none"}
                             />
@@ -526,7 +537,7 @@ class CreateEhealthScreen extends Component {
                                 Hoặc tải lên hình ảnh
                             </Text>
                             <Text style={[styles.title, { fontSize: 14 }]}>
-                                (.jpg, .png, gif)
+                                (.jpg, .png, .gif)
                             </Text>
                         </View>
                         <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/ehealth/ic_upload.png')} height={50}></ScaledImage></TouchableOpacity>
