@@ -93,7 +93,7 @@ class DetailsEhealthScreen extends Component {
         return (
             <ActivityPanel
                 titleStyle={{ marginLeft: 50 }}
-                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
+                title={'CHI TIẾT Y BẠ'}
                 style={styles.container}
                 isLoading={this.state.refreshing}
                 menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}>
