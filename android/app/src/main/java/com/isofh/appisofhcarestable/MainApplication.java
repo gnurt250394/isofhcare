@@ -1,4 +1,5 @@
-package com.isofh.appisofhcaretest;
+package com.isofh.appisofhcarestable;
+
 
 import cl.json.ShareApplication;
 import android.app.Application;
