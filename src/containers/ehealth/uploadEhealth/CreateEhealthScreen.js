@@ -34,7 +34,7 @@ import DateTimePicker from "mainam-react-native-date-picker";
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
-        let dataOld = this.props.navigation.getParam('data')
+        let dataOld = this.props.navigation.getParam('data',null)
         this.state = {
             listHospital: [],
             isLongPress: false,
@@ -430,7 +430,7 @@ class CreateEhealthScreen extends Component {
         console.log(this.state.imageUris,'this.state.imageUris')
         return (
             <ActivityPanel
-                title={'NHẬP KẾT QUẢ KHÁM'}
+                title={this.props.navigation.getParam('data',null) ? 'SỬA KẾT QUẢ KHÁM' :'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
                 <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
