@@ -55,7 +55,8 @@ class CreateEhealthScreen extends Component {
             date: dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-').format('dd-MM-yyyy') : '',
             currentId: dataOld && dataOld.id ? dataOld.id : null,
             isProfile: false,
-            isSearch: false
+            isSearch: false,
+            // isSelect: true
         }
     }
     componentDidMount() {
@@ -112,7 +113,7 @@ class CreateEhealthScreen extends Component {
     }
     onSearch = () => {
         var s = this.state.hospitalName;
-        console.log(s.length)
+
         if (s.length) {
             var listSearch = this.state.data.filter(item => {
                 return s == null || item && item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
@@ -129,7 +130,7 @@ class CreateEhealthScreen extends Component {
             }
             this.setState({ data: listSearch });
         } else {
-            console.log('elsse')
+
             this.onRefresh()
         }
     }
@@ -232,8 +233,6 @@ class CreateEhealthScreen extends Component {
             medicalRecordName: value.name,
             isProfile: false
         })
-
-
     }
     renderItemProfile = ({ item, index }) => {
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
@@ -268,11 +267,11 @@ class CreateEhealthScreen extends Component {
     }
     onShowProfile = () => {
         this.setState({
-            isProfile: !this.state.isProfile
+            isProfile: !this.state.isProfile,
         })
     }
     selectImage = () => {
-        if (this.state.imageUris && this.state.imageUris.length >= 5) {
+        if (this.state.imageUris && this.state.imageUris.length >= 10) {
             snackbar.show(constants.msg.booking.image_without_five, "danger");
             return;
         }
@@ -292,7 +291,7 @@ class CreateEhealthScreen extends Component {
                         listImages.push(images);
                     let imageUris = this.state.imageUris;
                     listImages.forEach(image => {
-                        if (imageUris.length >= 5)
+                        if (imageUris.length >= 10)
                             return;
                         let temp = null;
                         imageUris.forEach((item) => {
@@ -441,17 +440,25 @@ class CreateEhealthScreen extends Component {
             </View>
         )
     }
-
+    // onTouchStart = () => {
+    //     if (this.state.isProfile && this.state.isSelect) {
+            
+    //         this.setState({
+    //             isProfile: false
+    //         })
+    //     }
+    // }
     render() {
-        console.log(this.state.imageUris, 'this.state.imageUris')
+
         return (
             <ActivityPanel
                 title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
                 <ScrollView
+                    // onTouchStart={this.onTouchStart}
                     nestedScrollEnabled
-                    style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
+                    style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='always' >
                     <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
                     <Form ref={ref => (this.form = ref)}>
                         <Field style={styles.viewInput}>
@@ -496,26 +503,26 @@ class CreateEhealthScreen extends Component {
                             </FlatList></Card> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
                             <Field style={styles.viewDrop}>
-                            <TextField
-                                value={this.state.medicalRecordName}
-                                placeholder={'Chọn tên người được khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyleDrop}
-                                underlineColorAndroid={'#fff'}
-                                editable={false}
-                                onPress={this.onShowProfile}
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Chưa chọn người được khám",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
+                                <TextField
+                                    value={this.state.medicalRecordName}
+                                    placeholder={'Chọn tên người được khám'}
+                                    errorStyle={styles.errorStyle}
+                                    inputStyle={styles.inputStyleDrop}
+                                    underlineColorAndroid={'#fff'}
+                                    editable={false}
+                                    onPress={this.onShowProfile}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                        },
+                                        messages: {
+                                            required: "Chưa chọn người được khám",
+                                        }
+                                    }}
+                                    autoCapitalize={"none"}
+                                />
                                 <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
-                                </Field>
+                            </Field>
 
                             {this.state.isProfile ? <Card style={styles.card}><FlatList
                                 data={this.state.dataProfile}
