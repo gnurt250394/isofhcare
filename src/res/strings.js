@@ -958,7 +958,9 @@ module.exports = {
       get_default_hospital: isofhcare_service + 'hospital/get-default-hospital',
       get_details_hospital: isofhcare_service + 'hospital/get-detail',
       get_hospital_by_location: isofhcare_service + 'hospital/list-hospital-top-location',
-      get_top_hospital: isofhcare_service + 'hospital/top'
+      get_top_hospital: isofhcare_service + 'hospital/top',
+      get_all_hospital: isofhcare_service + 'catalog/v1/hospitals'
+
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
@@ -1009,7 +1011,7 @@ module.exports = {
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
       add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify',
-      upload_ehealth: isofhcare_service + 'patient-uploads'
+      upload_ehealth: isofhcare_service + 'patient-uploads',
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
