@@ -7,7 +7,8 @@ import {
     Image,
     StyleSheet,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -34,7 +35,7 @@ import DateTimePicker from "mainam-react-native-date-picker";
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
-        let dataOld = this.props.navigation.getParam('data',null)
+        let dataOld = this.props.navigation.getParam('data', null)
         this.state = {
             listHospital: [],
             isLongPress: false,
@@ -53,12 +54,34 @@ class CreateEhealthScreen extends Component {
             "dob": dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-') : '',
             date: dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-').format('dd-MM-yyyy') : '',
             currentId: dataOld && dataOld.id ? dataOld.id : null,
+            isProfile:false,
+            isSearch:false
         }
     }
     componentDidMount() {
         this.onRefresh()
         this.onLoadProfile()
     }
+    componentWillMount () {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+      }
+    
+      componentWillUnmount () {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+      }
+    
+      _keyboardDidShow () {
+      }
+    
+      _keyboardDidHide = () => {
+        this.setState({
+            isProfile:false,
+            isSearch:false
+        })
+      }
+    
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
             this.setState(
@@ -120,7 +143,7 @@ class CreateEhealthScreen extends Component {
                             if (s.data.data.length == 0) {
                                 finish = true;
                                 this.setState({
-                                    hospitalName: stringQuyery,
+                                    hospitalName: this.state.hospitalName,
                                     hospitalId: null
                                 })
                             }
@@ -427,10 +450,10 @@ class CreateEhealthScreen extends Component {
         )
     }
     render() {
-        console.log(this.state.imageUris,'this.state.imageUris')
+        console.log(this.state.imageUris, 'this.state.imageUris')
         return (
             <ActivityPanel
-                title={this.props.navigation.getParam('data',null) ? 'SỬA KẾT QUẢ KHÁM' :'NHẬP KẾT QUẢ KHÁM'}
+                title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
                 <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
