@@ -86,7 +86,7 @@
     "react-native-snap-carousel": "^3.8.0",
     "react-native-star-rating": "^1.1.0",
     "react-native-svg": "^9.7.1",
-    "react-native-swiper": "^1.5.14",
+    "react-native-swiper": "1.6.0-rc.3",
     "react-native-table-component": "^1.2.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-webview": "^6.9.0",
