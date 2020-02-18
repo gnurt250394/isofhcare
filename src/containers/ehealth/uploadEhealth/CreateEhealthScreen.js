@@ -457,27 +457,29 @@ class CreateEhealthScreen extends Component {
                         <Field style={styles.viewInput}>
 
                             <Text style={styles.title}>CSYT đã khám (*)</Text>
-                            <TextField
-                                onFocus={this.onFocus}
-                                onChangeText={text => this.search(text)}
-                                value={this.state.hospitalName}
-                                placeholder={'Nhập CSYT đã khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
-                                underlineColorAndroid={'#fff'}
-                                returnKeyType='done'
-                                maxLength={100}
-                                placeholderTextColor='#3b3b3b'
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Tên CSYT không được bỏ trống",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
+                            <Field style={styles.viewDrop}>
+                                <TextField
+                                    onFocus={this.onFocus}
+                                    onChangeText={text => this.search(text)}
+                                    value={this.state.hospitalName}
+                                    placeholder={'Nhập CSYT đã khám'}
+                                    errorStyle={[styles.errorStyle]}
+                                    inputStyle={[styles.inputStyleDrop,]}
+                                    underlineColorAndroid={'#fff'}
+                                    returnKeyType='done'
+                                    maxLength={100}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                        },
+                                        messages: {
+                                            required: "Tên CSYT không được bỏ trống",
+                                        }
+                                    }}
+                                    autoCapitalize={"none"}
+                                />
+                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                            </Field>
                             {this.state.isSearch ? <Card style={styles.card}><FlatList
                                 data={this.state.data}
                                 extraData={this.state}
@@ -488,18 +490,18 @@ class CreateEhealthScreen extends Component {
                                 refreshing={this.state.refreshing}
                                 nestedScrollEnabled
                                 scrollEnabled
-                                style = {{height:250}}
+                                style={{ height: 250 }}
                             >
 
                             </FlatList></Card> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
+                            <Field style={styles.viewDrop}>
                             <TextField
                                 value={this.state.medicalRecordName}
                                 placeholder={'Chọn tên người được khám'}
                                 errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
+                                inputStyle={styles.inputStyleDrop}
                                 underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
                                 editable={false}
                                 onPress={this.onShowProfile}
                                 validate={{
@@ -512,6 +514,9 @@ class CreateEhealthScreen extends Component {
                                 }}
                                 autoCapitalize={"none"}
                             />
+                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                                </Field>
+
                             {this.state.isProfile ? <Card style={styles.card}><FlatList
                                 data={this.state.dataProfile}
                                 extraData={this.state}
@@ -530,7 +535,6 @@ class CreateEhealthScreen extends Component {
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
                                 maxLength={100}
                                 validate={{
                                     rules: {
@@ -551,7 +555,6 @@ class CreateEhealthScreen extends Component {
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
                                 validate={{
                                     rules: {
                                         required: true,
@@ -570,10 +573,7 @@ class CreateEhealthScreen extends Component {
                                 errorStyle={styles.errorStyle}
                                 inputStyle={[styles.inputResult, { minHeight: 51 }]}
                                 underlineColorAndroid={'#fff'}
-                                multiline={true}
-                                numberOfLines={4}
                                 maxLength={2000}
-                                placeholderTextColor='#3b3b3b'
                                 autoCapitalize={"none"}
                             />
                         </Field>
@@ -587,7 +587,7 @@ class CreateEhealthScreen extends Component {
                                 (.jpg, .png, .gif)
                             </Text>
                         </View>
-                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/ehealth/ic_upload.png')} height={50}></ScaledImage></TouchableOpacity>
+                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/booking/ic_image.png')} height={30}></ScaledImage></TouchableOpacity>
                     </View>
                     {this.renderImage()}
                     <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
@@ -604,7 +604,7 @@ class CreateEhealthScreen extends Component {
                     date={this.state.dob || new Date()}
                 />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 
@@ -700,6 +700,25 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         color: '#000'
     },
+    viewDrop: {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center', borderRadius: 6,
+    },
+    inputStyleDrop: {
+        color: "#000",
+        fontWeight: "300",
+        height: 51,
+        marginLeft: 0,
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 6,
+        fontSize: 14,
+        paddingLeft: 15,
+        paddingRight: 45,
+        backgroundColor: '#ededed'
+    },
+    iconDrop: { position: 'absolute', right: 10, top: 20, justifyContent: 'center', alignItems: 'center', },
     viewField: {
         flex: 1,
         flexDirection: 'row',
