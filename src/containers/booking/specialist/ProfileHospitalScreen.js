@@ -189,6 +189,7 @@ class ProfileHospitalScreen extends Component {
                     emptyStarColor={"#fbbd04"}
                     fullStar={require("@images/ic_star.png")}
                     emptyStar={require("@images/ic_empty_star.png")}
+                    halfStar={require("@images/half_star.png")}
                 />
                 {/* <Text numberOfLines={2}>{item.message}</Text> */}
             </View>
