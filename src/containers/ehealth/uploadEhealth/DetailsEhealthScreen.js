@@ -161,7 +161,7 @@ class DetailsEhealthScreen extends Component {
                     />
                 </View>
                 <Card style={{ borderRadius: 5, borderWidth: 1, alignItem: 'center', flex: 1, marginHorizontal: 10 }}>
-                    <Text style={{ textAlign: 'center', marginVertical: 20, color: '#000', fontSize: 16 }}>{this.state.listEhealth && this.state.listEhealth.result}</Text>
+                    <Text style={{ textAlign: 'left', marginVertical: 20, color: '#000', fontSize: 16 ,marginHorizontal:10}}>{this.state.listEhealth && this.state.listEhealth.result}</Text>
                     {this.state.listEhealth && this.state.listEhealth.images && this.state.listEhealth.images.length
                         ?
                         <View >
