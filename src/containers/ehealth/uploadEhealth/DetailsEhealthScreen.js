@@ -79,9 +79,15 @@ class DetailsEhealthScreen extends Component {
         var dataOld = this.state.listEhealth
         if (dataOld && dataOld.images && dataOld.images.length) {
             for (let i = 0; i < dataOld.images.length; i++) {
-                images.push({ uri: this.state.listEhealth.images[i], url: this.state.listEhealth.images[i] })
+                if (!dataOld.images[i].uri && !dataOld.images[i].url) {
+                    images.push({ uri: dataOld.images[i], url: dataOld.images[i] })
+                }
+
             }
-            dataOld.images = images
+            if (images && images.length) {
+                dataOld.images = images
+            }
+            console.log('images: ', images);
         }
         this.props.navigation.navigate('createEhealth', { data: dataOld, onSelected: this.edit.bind(this), })
     }

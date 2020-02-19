@@ -7,7 +7,8 @@ import {
     Image,
     StyleSheet,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -34,18 +35,18 @@ import DateTimePicker from "mainam-react-native-date-picker";
 class CreateEhealthScreen extends Component {
     constructor(props) {
         super(props);
-        let dataOld = this.props.navigation.getParam('data')
+        let dataOld = this.props.navigation.getParam('data', null)
         this.state = {
             listHospital: [],
             isLongPress: false,
             index: '',
             refreshing: false,
             isSearch: false,
-            size: 10,
+            size: 10000,
             page: 1,
             "hospitalId": dataOld && dataOld.hospitalId ? dataOld.hospitalId : '',
             "hospitalName": dataOld && dataOld.hospitalName ? dataOld.hospitalName : '',
-            imageUris: dataOld && dataOld.images ? dataOld.images : [],
+            imageUris: dataOld && dataOld.images && dataOld.images.length ? dataOld.images : [],
             "medicalRecordId": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.id : '',
             "medicalRecordName": dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.name : '',
             "medicalServiceName": dataOld && dataOld.medicalServiceName ? dataOld.medicalServiceName : '',
@@ -53,12 +54,34 @@ class CreateEhealthScreen extends Component {
             "dob": dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-') : '',
             date: dataOld && dataOld.timeGoIn ? dataOld.timeGoIn.toDateObject('-').format('dd-MM-yyyy') : '',
             currentId: dataOld && dataOld.id ? dataOld.id : null,
+            isProfile: false,
+            isSearch: false,
+            // isSelect: true
         }
     }
     componentDidMount() {
-        this.onRefresh()
         this.onLoadProfile()
     }
+    componentWillMount() {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    _keyboardDidShow() {
+    }
+
+    _keyboardDidHide = () => {
+        this.setState({
+            isProfile: false,
+            isSearch: false
+        })
+    }
+
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
             this.setState(
@@ -88,54 +111,46 @@ class CreateEhealthScreen extends Component {
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
     }
+    onSearch = () => {
+        var s = this.state.hospitalName;
+
+        if (s.length) {
+            var listSearch = this.state.data.filter(item => {
+                return s == null || item && item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
+            });
+            // listSearch = listSearch.map(item => {
+            //     item.checked = this.listServicesSelected.find(item2 => item2.id == item.id);
+            //     return item;
+            // })
+            if (!listSearch.length) {
+                this.setState({
+                    hospitalName: this.state.hospitalName,
+                    hospitalId: null
+                })
+            }
+            this.setState({ data: listSearch });
+        } else {
+
+            this.onRefresh()
+        }
+    }
     onLoad() {
-        const { page, size } = this.state;
-        let stringQuyery = this.state.hospitalName ? this.state.hospitalName.trim() : ""
         this.setState({
             loading: true,
-            refreshing: page == 1,
-            loadMore: page != 1
+            refreshing: true,
         }, () => {
             let promise = null;
-            if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1, 1);
-            }
-            else {
-                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1, 1);
-            };
+            promise = hospitalProvider.getAllHospital();
             promise.then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false,
                     loadMore: false
                 }, () => {
-                    switch (s.code) {
-                        case 500:
-                            // alert(JSON.stringify(s));
-                            snackbar.show(constants.msg.error_occur, "danger");
-                            break;
-                        case 0:
-                            var list = [];
-                            var finish = false;
-                            if (s.data.data.length == 0) {
-                                finish = true;
-                                this.setState({
-                                    hospitalName: stringQuyery,
-                                    hospitalId: null
-                                })
-                            }
-                            if (page != 1) {
-                                list = this.state.data;
-                                list.push.apply(list, s.data.data);
-                            }
-                            else {
-                                list = s.data.data;
-                            }
-                            this.setState({
-                                data: [...list],
-                                finish: finish
-                            });
-                            break;
+                    if (s) {
+                        this.setState({
+                            data: s,
+                        });
                     }
                 });
             }).catch(e => {
@@ -186,14 +201,14 @@ class CreateEhealthScreen extends Component {
         return (!this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
             <View style={styles.viewTxNone}>
                 <Text style={styles.viewTxTime}>{constants.ehealth.not_result_ehealth_location}</Text>
-            </View> : null
+            </View> : <View></View>
         )
     }
     onChangeText = () => {
 
     }
     onSelectHospital = (item) => {
-
+        Keyboard.dismiss()
         this.setState({
             isSearch: false,
 
@@ -205,10 +220,10 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItem = ({ item, index }) => {
-        return <TouchableOpacity onPress={() => this.onSelectHospital(item.hospital)} style={styles.details} >
+        return <TouchableOpacity onPress={() => this.onSelectHospital(item)} style={styles.details} >
             <View style={styles.containerContent}>
-                <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
-                <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
+                <Text style={styles.bv} numberOfLines={1}>{item.name}</Text>
+                <Text style={styles.bv1} numberOfLines={2}>{item.contact && item.contact.address}</Text>
             </View>
         </TouchableOpacity>
     }
@@ -218,8 +233,6 @@ class CreateEhealthScreen extends Component {
             medicalRecordName: value.name,
             isProfile: false
         })
-      
-        
     }
     renderItemProfile = ({ item, index }) => {
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
@@ -229,36 +242,36 @@ class CreateEhealthScreen extends Component {
         </TouchableOpacity>
     }
     search = (text) => {
-
         this.setState({
             hospitalName: text,
-        }, () => this.onRefresh())
+        }, () => this.onSearch())
+
     }
     onLoadProfile = () => {
-                profileProvider.getListProfile().then(s => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data && s.data.length) {
-                                this.setState({
-                                    dataProfile: s.data,
-                                    medicalRecordId: s.data[0].medicalRecords.id,
-                                    medicalRecordName: s.data[0].medicalRecords.name,
+        profileProvider.getListProfile().then(s => {
+            switch (s.code) {
+                case 0:
+                    if (s.data && s.data.length) {
+                        this.setState({
+                            dataProfile: s.data,
+                            medicalRecordId: s.data[0].medicalRecords.id,
+                            medicalRecordName: s.data[0].medicalRecords.name,
 
-                                });
-                            }
-                            break;
+                        });
                     }
-                }).catch(e => {
+                    break;
+            }
+        }).catch(e => {
 
-                })
+        })
     }
-    onShowProfile  = () => {
+    onShowProfile = () => {
         this.setState({
-            isProfile:!this.state.isProfile
+            isProfile: !this.state.isProfile,
         })
     }
     selectImage = () => {
-        if (this.state.imageUris && this.state.imageUris.length >= 5) {
+        if (this.state.imageUris && this.state.imageUris.length >= 10) {
             snackbar.show(constants.msg.booking.image_without_five, "danger");
             return;
         }
@@ -278,7 +291,7 @@ class CreateEhealthScreen extends Component {
                         listImages.push(images);
                     let imageUris = this.state.imageUris;
                     listImages.forEach(image => {
-                        if (imageUris.length >= 5)
+                        if (imageUris.length >= 10)
                             return;
                         let temp = null;
                         imageUris.forEach((item) => {
@@ -399,79 +412,125 @@ class CreateEhealthScreen extends Component {
         this.setState({
             isSearch: true,
         })
+        this.onRefresh()
     }
+    renderImage = () => {
+        return (
+            <View style={styles.list_image}>
+                {this.state.imageUris && this.state.imageUris.length ? this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                    <View style={styles.groupImagePicker}>
+                        <Image source={{ uri: item && item.uri || null }} resizeMode="cover" style={styles.imagePicker} />
+                        {
+                            item.error ?
+                                <View style={styles.groupImageError} >
+                                    <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                </View> :
+                                item.loading ?
+                                    <View style={styles.groupImageLoading} >
+                                        <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                    </View>
+                                    : <View>
+                                    </View>
+                        }
+                    </View>
+                    <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
+                        <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
+                    </TouchableOpacity>
+                </View>) : null}
+            </View>
+        )
+    }
+    // onTouchStart = () => {
+    //     if (this.state.isProfile && this.state.isSelect) {
+            
+    //         this.setState({
+    //             isProfile: false
+    //         })
+    //     }
+    // }
     render() {
 
         return (
             <ActivityPanel
-                title={'KẾT QUẢ KHÁM ĐÃ TẢI LÊN'}
+                title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
-                <ScrollView style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='handled' >
+                <ScrollView
+                    // onTouchStart={this.onTouchStart}
+                    nestedScrollEnabled
+                    style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='always' >
                     <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
                     <Form ref={ref => (this.form = ref)}>
                         <Field style={styles.viewInput}>
 
                             <Text style={styles.title}>CSYT đã khám (*)</Text>
-                            <TextField
-                                onFocus={this.onFocus}
-                                onChangeText={text => this.search(text)}
-                                value={this.state.hospitalName}
-                                placeholder={'Nhập CSYT đã khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
-                                underlineColorAndroid={'#fff'}
-                                returnKeyType='done'
-                                maxLength={100}
-                                placeholderTextColor='#3b3b3b'
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Tên CSYT không được bỏ trống",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
+                            <Field style={styles.viewDrop}>
+                                <TextField
+                                    onFocus={this.onFocus}
+                                    onChangeText={text => this.search(text)}
+                                    value={this.state.hospitalName}
+                                    placeholder={'Nhập CSYT đã khám'}
+                                    errorStyle={[styles.errorStyle]}
+                                    inputStyle={[styles.inputStyleDrop,]}
+                                    underlineColorAndroid={'#fff'}
+                                    returnKeyType='done'
+                                    maxLength={100}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                        },
+                                        messages: {
+                                            required: "Tên CSYT không được bỏ trống",
+                                        }
+                                    }}
+                                    autoCapitalize={"none"}
+                                />
+                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                            </Field>
                             {this.state.isSearch ? <Card style={styles.card}><FlatList
                                 data={this.state.data}
                                 extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={this.renderItem}
-                                onEndReached={this.onLoadMore.bind(this)}
-                                onEndReachedThreshold={1}
                                 onRefresh={this.onRefresh.bind(this)}
                                 keyboardShouldPersistTaps={'handled'}
                                 refreshing={this.state.refreshing}
+                                nestedScrollEnabled
+                                scrollEnabled
+                                style={{ height: 250 }}
                             >
 
                             </FlatList></Card> : <View></View>}
                             <Text style={styles.title}>Người được khám (*)</Text>
-                            <TextField
-                                value={this.state.medicalRecordName}
-                                placeholder={'Chọn tên người được khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
-                                underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
-                                editable={false}
-                                onPress={this.onShowProfile}
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Chưa chọn người được khám",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
+                            <Field style={styles.viewDrop}>
+                                <TextField
+                                    value={this.state.medicalRecordName}
+                                    placeholder={'Chọn tên người được khám'}
+                                    errorStyle={styles.errorStyle}
+                                    inputStyle={styles.inputStyleDrop}
+                                    underlineColorAndroid={'#fff'}
+                                    editable={false}
+                                    onPress={this.onShowProfile}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                        },
+                                        messages: {
+                                            required: "Chưa chọn người được khám",
+                                        }
+                                    }}
+                                    autoCapitalize={"none"}
+                                />
+                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                            </Field>
+
                             {this.state.isProfile ? <Card style={styles.card}><FlatList
                                 data={this.state.dataProfile}
                                 extraData={this.state}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={this.renderItemProfile}
+                                nestedScrollEnabled={true}
+
                             >
 
                             </FlatList></Card> : <View></View>}
@@ -483,7 +542,6 @@ class CreateEhealthScreen extends Component {
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
                                 maxLength={100}
                                 validate={{
                                     rules: {
@@ -504,7 +562,6 @@ class CreateEhealthScreen extends Component {
                                 errorStyle={styles.errorStyle}
                                 inputStyle={styles.inputStyle}
                                 underlineColorAndroid={'#fff'}
-                                placeholderTextColor='#3b3b3b'
                                 validate={{
                                     rules: {
                                         required: true,
@@ -521,12 +578,9 @@ class CreateEhealthScreen extends Component {
                                 value={this.state.result}
                                 placeholder={'Nhập kết quả khám'}
                                 errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputResult}
+                                inputStyle={[styles.inputResult, { minHeight: 51 }]}
                                 underlineColorAndroid={'#fff'}
-                                multiline={true}
-                                numberOfLines={4}
                                 maxLength={2000}
-                                placeholderTextColor='#3b3b3b'
                                 autoCapitalize={"none"}
                             />
                         </Field>
@@ -540,33 +594,9 @@ class CreateEhealthScreen extends Component {
                                 (.jpg, .png, .gif)
                             </Text>
                         </View>
-                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/ehealth/ic_upload.png')} height={50}></ScaledImage></TouchableOpacity>
+                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/booking/ic_image.png')} height={30}></ScaledImage></TouchableOpacity>
                     </View>
-
-                    <View style={styles.list_image}>
-                        {
-                            this.state.imageUris && this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
-                                <View style={styles.groupImagePicker}>
-                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
-                                    {
-                                        item.error ?
-                                            <View style={styles.groupImageError} >
-                                                <ScaledImage source={require("@images/ic_warning.png")} width={40} />
-                                            </View> :
-                                            item.loading ?
-                                                <View style={styles.groupImageLoading} >
-                                                    <ScaledImage source={require("@images/loading.gif")} width={40} />
-                                                </View>
-                                                : null
-                                    }
-                                </View>
-                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
-                                    <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
-                                </TouchableOpacity>
-                            </View>)
-                        }
-                    </View>
-
+                    {this.renderImage()}
                     <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
                     <View style={{ height: 50 }}></View>
                 </ScrollView>
@@ -677,6 +707,25 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         color: '#000'
     },
+    viewDrop: {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center', borderRadius: 6,
+    },
+    inputStyleDrop: {
+        color: "#000",
+        fontWeight: "300",
+        height: 51,
+        marginLeft: 0,
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 6,
+        fontSize: 14,
+        paddingLeft: 15,
+        paddingRight: 45,
+        backgroundColor: '#ededed'
+    },
+    iconDrop: { position: 'absolute', right: 10, top: 20, justifyContent: 'center', alignItems: 'center', },
     viewField: {
         flex: 1,
         flexDirection: 'row',
