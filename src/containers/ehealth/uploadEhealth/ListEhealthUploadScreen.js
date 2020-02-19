@@ -103,9 +103,9 @@ class ListEhealthUpload extends Component {
                         }}
                     />
                     <View style={styles.viewTx}>
-                        <Text style={styles.txHospitalName}>{item.hospitalName}</Text>
-                        <Text style={styles.txServiceName}>{item.medicalServiceName}</Text>
-                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.timeGoIn ? item.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
+                        <Text multiline style={styles.txHospitalName}>{item.hospitalName}</Text>
+                        <Text multiline style={styles.txServiceName}>{item.medicalServiceName}</Text>
+                        <Text multiline style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.timeGoIn ? item.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
                 </TouchableOpacity>
             </Card>
@@ -125,6 +125,11 @@ class ListEhealthUpload extends Component {
     onUploadEhealth = () => {
         this.props.navigation.navigate('createEhealth')
     }
+    renderFooter = () => {
+        return(
+            <View style={{ height: 50 }}></View>
+        )
+    }
     render() {
         return (
             <ActivityPanel
@@ -142,11 +147,11 @@ class ListEhealthUpload extends Component {
                             showsVerticalScrollIndicator={false}
                             keyExtractor={this.keyExtractor}
                             ListHeaderComponent={this.headerComponent}
+                            ListFooterComponent={this.renderFooter}
                         > </FlatList>
                     </View>
 
                 </View>
-                <View style={{ height: 50 }}></View>
             </ActivityPanel>
         );
     }
@@ -181,9 +186,9 @@ const styles = StyleSheet.create({
     imageStyle: {
         borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { marginLeft: 10 },
-    txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
-    txServiceName: { color: '#5A5956', fontSize: 14 },
+    viewTx: { marginLeft: 10, flex: 1 },
+    txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15, },
+    txServiceName: { color: '#5A5956', fontSize: 14,marginRight:5 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 
     viewContent: {
