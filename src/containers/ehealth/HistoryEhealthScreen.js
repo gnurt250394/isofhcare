@@ -46,6 +46,11 @@ class HistoryEhealthScreen extends Component {
                         this.props.navigation.navigate("viewDetailEhealth", { result: result.result, resultDetail: result.resultDetail })
                     }
                 });
+            }).catch(err => {
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', "danger");
+                this.setState({
+                    isLoading:false
+                })
             });
         });
     }
