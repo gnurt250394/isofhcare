@@ -99,7 +99,7 @@ class CreateEhealthScreen extends Component {
                 }
             );
     }
-    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true,isProfile:false,isSearch:false })
     onConfirmDate = newDate => {
         this.setState(
             {
@@ -110,6 +110,12 @@ class CreateEhealthScreen extends Component {
     }
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
+    }
+    hidenList = () => {
+        this.setState({
+            isProfile:false,
+            isSearch:false
+        })
     }
     onSearch = (s) => {
 
@@ -266,9 +272,14 @@ class CreateEhealthScreen extends Component {
     onShowProfile = () => {
         this.setState({
             isProfile: !this.state.isProfile,
+            isSearch:false
         })
     }
     selectImage = () => {
+        this.setState({
+            isSearch:false,
+            isProfile:false
+        })
         if (this.state.imageUris && this.state.imageUris.length >= 10) {
             snackbar.show(constants.msg.booking.image_without_ten, "danger");
             return;
@@ -413,6 +424,7 @@ class CreateEhealthScreen extends Component {
 
         this.setState({
             isSearch: true,
+            isProfile:false
         })
         this.onRefresh()
     }
@@ -550,6 +562,7 @@ class CreateEhealthScreen extends Component {
                                         onChangeText={text => this.setState({ medicalServiceName: text })}
                                         value={this.state.medicalServiceName}
                                         placeholder={'Nhập dịch vụ khám'}
+                                        onFocus = {this.onHidden}
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
@@ -589,7 +602,7 @@ class CreateEhealthScreen extends Component {
                                         onChangeText={text => this.setState({ result: text })}
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
-
+                                        onFocus = {this.onHidden}
                                         errorStyle={styles.errorStyle}
                                         inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
                                         underlineColorAndroid={'#fff'}
