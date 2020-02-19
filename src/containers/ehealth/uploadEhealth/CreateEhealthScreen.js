@@ -589,9 +589,10 @@ class CreateEhealthScreen extends Component {
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
                                         errorStyle={styles.errorStyle}
-                                        inputStyle={[styles.inputResult, { minHeight: 51 }]}
+                                        inputStyle={[styles.inputResult, { minHeight: 81 }]}
                                         underlineColorAndroid={'#fff'}
                                         maxLength={2000}
+                                        multiline={true}
                                         autoCapitalize={"none"}
                                     />
                                 </Field>
