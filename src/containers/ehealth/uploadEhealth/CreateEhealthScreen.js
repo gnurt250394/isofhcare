@@ -60,6 +60,7 @@ class CreateEhealthScreen extends Component {
             isSearch: false,
             // isSelect: true
         }
+        this.data = []
     }
     componentDidMount() {
         this.onLoadProfile()
@@ -105,36 +106,26 @@ class CreateEhealthScreen extends Component {
                 dob: newDate,
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
-            },
-            () => {
-                this.input2.focus()
-            }
-        );
+            });
     }
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
     }
-    onSearch = () => {
-        var s = this.state.hospitalName;
+    onSearch = (s) => {
 
-        if (s.length) {
-            var listSearch = this.state.data.filter(item => {
+        if (s) {
+            var listSearch = this.data.filter(item => {
                 return s == null || item && item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
             });
             // listSearch = listSearch.map(item => {
             //     item.checked = this.listServicesSelected.find(item2 => item2.id == item.id);
             //     return item;
             // })
-            if (!listSearch.length) {
-                this.setState({
-                    hospitalName: this.state.hospitalName,
-                    hospitalId: null
-                })
-            }
+           
             this.setState({ data: listSearch });
         } else {
 
-            this.onRefresh()
+            this.setState({ data: this.data });
         }
     }
     onLoad() {
@@ -151,6 +142,7 @@ class CreateEhealthScreen extends Component {
                     loadMore: false
                 }, () => {
                     if (s) {
+                        this.data = s
                         this.setState({
                             data: s,
                         });
@@ -235,12 +227,10 @@ class CreateEhealthScreen extends Component {
             medicalRecordId: value.id,
             medicalRecordName: value.name,
             isProfile: false
-        }, () => {
-            this.input1.focus()
         })
     }
     renderItemProfile = ({ item, index }) => {
-        console.log(this.state.dataProfile.length - 1, index)
+        
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.medicalRecords.name}</Text>
@@ -248,10 +238,12 @@ class CreateEhealthScreen extends Component {
         </TouchableOpacity>
     }
     search = (text) => {
+        
+        
         this.setState({
             hospitalName: text,
-        }, () => this.onSearch())
-
+        })
+        this.onSearch(text)
     }
     onLoadProfile = () => {
         profileProvider.getListProfile().then(s => {
@@ -475,7 +467,7 @@ class CreateEhealthScreen extends Component {
                     <TouchableWithoutFeedback onPress={this.onHidden}>
                         <View>
                             <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
-                            <Form ref={ref => {(this.form = ref);console.log(this.form,'this.form')}}>
+                            <Form ref={ref => { (this.form = ref);  }}>
                                 <Field style={styles.viewInput}>
                                     <Text style={styles.title}>CSYT đã khám (*)</Text>
                                     <Field style={styles.viewDrop}>
@@ -596,7 +588,7 @@ class CreateEhealthScreen extends Component {
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
                                         errorStyle={styles.errorStyle}
-                                        inputStyle={[styles.inputResult, { minHeight: 81,maxHeight : 300 }]}
+                                        inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300 }]}
                                         underlineColorAndroid={'#fff'}
                                         validate={{
                                             rules: {
