@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions, } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions, ScrollView} from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -106,6 +106,7 @@ class DetailsEhealthScreen extends Component {
                     <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
                 </TouchableOpacity>}
             >
+            <ScrollView>
                 <View style={styles.viewInfoProfile}>
                     <View style={styles.viewItem}></View>
                     <View style={styles.viewLabel}>
@@ -187,6 +188,8 @@ class DetailsEhealthScreen extends Component {
                         </View> : null
                     }
                 </Card>
+                </ScrollView>
+                <View style= {{height:50}}></View>
             </ActivityPanel >
         )
     }
