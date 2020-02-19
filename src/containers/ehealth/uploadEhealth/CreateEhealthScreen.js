@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
-    ScrollView,
+    KeyboardAvoidingView,
     ActivityIndicator,
     Keyboard,
     TouchableWithoutFeedback,
@@ -107,6 +107,7 @@ class CreateEhealthScreen extends Component {
                 toggelDateTimePickerVisible: false
             },
             () => {
+                this.input2.focus()
             }
         );
     }
@@ -234,6 +235,8 @@ class CreateEhealthScreen extends Component {
             medicalRecordId: value.id,
             medicalRecordName: value.name,
             isProfile: false
+        }, () => {
+            this.input1.focus()
         })
     }
     renderItemProfile = ({ item, index }) => {
@@ -275,7 +278,7 @@ class CreateEhealthScreen extends Component {
     }
     selectImage = () => {
         if (this.state.imageUris && this.state.imageUris.length >= 10) {
-            snackbar.show(constants.msg.booking.image_without_five, "danger");
+            snackbar.show(constants.msg.booking.image_without_ten, "danger");
             return;
         }
         connectionUtils.isConnected().then(s => {
@@ -472,7 +475,7 @@ class CreateEhealthScreen extends Component {
                     <TouchableWithoutFeedback onPress={this.onHidden}>
                         <View>
                             <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
-                            <Form ref={ref => (this.form = ref)}>
+                            <Form ref={ref => {(this.form = ref);console.log(this.form,'this.form')}}>
                                 <Field style={styles.viewInput}>
                                     <Text style={styles.title}>CSYT đã khám (*)</Text>
                                     <Field style={styles.viewDrop}>
@@ -593,7 +596,7 @@ class CreateEhealthScreen extends Component {
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
                                         errorStyle={styles.errorStyle}
-                                        inputStyle={[styles.inputResult, { minHeight: 81 }]}
+                                        inputStyle={[styles.inputResult, { minHeight: 81,maxHeight : 300 }]}
                                         underlineColorAndroid={'#fff'}
                                         validate={{
                                             rules: {
