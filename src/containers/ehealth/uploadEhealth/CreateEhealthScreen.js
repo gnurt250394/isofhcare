@@ -222,7 +222,7 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItem = ({ item, index }) => {
-        return <TouchableOpacity onPress={() => this.onSelectHospital(item)} style={styles.details} >
+        return <TouchableOpacity onPress={() => this.onSelectHospital(item)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.contact && item.contact.address}</Text>
@@ -237,7 +237,8 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItemProfile = ({ item, index }) => {
-        return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
+        console.log(this.state.dataProfile.length - 1, index)
+        return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.medicalRecords.name}</Text>
             </View>
@@ -487,9 +488,11 @@ class CreateEhealthScreen extends Component {
                                             maxLength={100}
                                             validate={{
                                                 rules: {
+                                                    maxlength: 100,
                                                     required: true,
                                                 },
                                                 messages: {
+                                                    maxlength: "Không được nhập quá 100 ký tự",
                                                     required: "Tên CSYT không được bỏ trống",
                                                 }
                                             }}
@@ -553,13 +556,14 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
-                                        maxLength={100}
                                         validate={{
                                             rules: {
                                                 required: true,
+                                                maxlength: 100
                                             },
                                             messages: {
                                                 required: "Dịch vụ khám không được bỏ trống",
+                                                maxlength: "Không được nhập quá 100 ký tự"
                                             }
                                         }}
                                         autoCapitalize={"none"}
@@ -591,7 +595,16 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={[styles.inputResult, { minHeight: 81 }]}
                                         underlineColorAndroid={'#fff'}
-                                        maxLength={2000}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                                maxlength: 2000
+                                            },
+                                            messages: {
+                                                required: "Chưa chọn thời gian khám",
+                                                maxlength: "Không được nhập quá 2000 ký tự"
+                                            }
+                                        }}
                                         multiline={true}
                                         autoCapitalize={"none"}
                                     />
@@ -725,6 +738,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignSelf: 'stretch',
         justifyContent: 'center', borderRadius: 6,
+        marginTop: 10
     },
     inputStyleDrop: {
         color: "#000",
@@ -764,8 +778,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 20,
         backgroundColor: '#ffffff',
-        borderBottomWidth: 0.7,
-        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+        borderTopWidth: 0.7,
+        borderTopColor: 'rgba(0, 0, 0, 0.06)'
     },
     containerContent: {
         flex: 1,
