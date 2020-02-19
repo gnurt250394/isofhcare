@@ -121,7 +121,7 @@ class CreateEhealthScreen extends Component {
             //     item.checked = this.listServicesSelected.find(item2 => item2.id == item.id);
             //     return item;
             // })
-           
+
             this.setState({ data: listSearch });
         } else {
 
@@ -230,7 +230,7 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItemProfile = ({ item, index }) => {
-        
+
         return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.medicalRecords.name}</Text>
@@ -238,8 +238,8 @@ class CreateEhealthScreen extends Component {
         </TouchableOpacity>
     }
     search = (text) => {
-        
-        
+
+
         this.setState({
             hospitalName: text,
         })
@@ -289,8 +289,10 @@ class CreateEhealthScreen extends Component {
                         listImages.push(images);
                     let imageUris = this.state.imageUris;
                     listImages.forEach(image => {
-                        if (imageUris.length >= 10)
+                        if (imageUris.length >= 10) {
+                            snackbar.show('Chỉ được chọn tối đa 10 ảnh', 'danger')
                             return;
+                        }
                         let temp = null;
                         imageUris.forEach((item) => {
                             if (item.uri == image.path)
@@ -467,7 +469,7 @@ class CreateEhealthScreen extends Component {
                     <TouchableWithoutFeedback onPress={this.onHidden}>
                         <View>
                             <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
-                            <Form ref={ref => { (this.form = ref);  }}>
+                            <Form ref={ref => { (this.form = ref); }}>
                                 <Field style={styles.viewInput}>
                                     <Text style={styles.title}>CSYT đã khám (*)</Text>
                                     <Field style={styles.viewDrop}>
@@ -587,8 +589,9 @@ class CreateEhealthScreen extends Component {
                                         onChangeText={text => this.setState({ result: text })}
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
+
                                         errorStyle={styles.errorStyle}
-                                        inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300 }]}
+                                        inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
                                         underlineColorAndroid={'#fff'}
                                         validate={{
                                             rules: {
