@@ -32,6 +32,7 @@ import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import profileProvider from '@data-access/profile-provider'
 import DateTimePicker from "mainam-react-native-date-picker";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class CreateEhealthScreen extends Component {
     constructor(props) {
@@ -463,7 +464,7 @@ class CreateEhealthScreen extends Component {
                 style={styles.container}
             >
 
-                <ScrollView
+                <KeyboardAwareScrollView
                     // onTouchStart={this.onTouchStart}
                     nestedScrollEnabled
                     style={styles.viewContent} bounces={false} keyboardShouldPersistTaps={'always'} >
@@ -611,7 +612,7 @@ class CreateEhealthScreen extends Component {
                             <View style={{ height: 50 }}></View>
                         </View>
                     </TouchableWithoutFeedback>
-                </ScrollView>
+                </KeyboardAwareScrollView>
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={this.onConfirmDate}
