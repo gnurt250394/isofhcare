@@ -96,7 +96,7 @@ class PhotoViewerScreen extends Component {
             return null;
         return (
             <ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={(this.state.index + 1) + "/" + (this.state.urls.length)}>
-                <PhotoViewer urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
+                <PhotoViewer androidScaleType = {'fitCenter'} urls={this.state.urls} index={this.state.index} style={{flex:1}} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
             </ActivityPanel>
         );
     }
