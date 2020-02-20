@@ -106,6 +106,9 @@ class CreateEhealthScreen extends Component {
                 dob: newDate,
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
+            }, () => {
+                debugger;
+                this.txtResult.focus();
             });
     }
     onCancelDate = () => {
@@ -462,8 +465,9 @@ class CreateEhealthScreen extends Component {
         this.setState({ isProfile: false, isSearch: false })
 
     }
+
     render() {
-        
+        console.log(this.form, 'áđáaaaaâ')
         return (
             <ActivityPanel
                 title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
@@ -483,6 +487,7 @@ class CreateEhealthScreen extends Component {
                                     <Field style={styles.viewDrop}>
                                         <TextField
                                             onFocus={this.onFocus}
+                                            placeHolderTextColor={'#00000060'}
                                             onChangeText={text => this.search(text)}
                                             value={this.state.hospitalName}
                                             placeholder={'Nhập CSYT đã khám'}
@@ -530,6 +535,8 @@ class CreateEhealthScreen extends Component {
                                             underlineColorAndroid={'#fff'}
                                             editable={false}
                                             onPress={this.onShowProfile}
+                                            placeHolderTextColor={'#00000060'}
+
                                             validate={{
                                                 rules: {
                                                     required: true,
@@ -561,8 +568,10 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
+                                        placeHolderTextColor={'#00000060'}
+
                                         onFocus={this.hiddenList}
-                                        autoFocus = {false}
+                                        autoFocus={false}
                                         validate={{
                                             rules: {
                                                 required: true,
@@ -584,6 +593,7 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
+                                        placeHolderTextColor={'#00000060'}
                                         validate={{
                                             rules: {
                                                 required: true,
@@ -596,10 +606,14 @@ class CreateEhealthScreen extends Component {
                                     />
                                     <Text style={styles.title}>Kết quả khám</Text>
                                     <TextField
+                                        onRef={ref => this.txtResult = ref}
                                         onChangeText={text => this.setState({ result: text })}
                                         value={this.state.result}
+                                        // autoFocus={true}
                                         placeholder={'Nhập kết quả khám'}
                                         errorStyle={styles.errorStyle}
+                                        placeHolderTextColor={'#00000060'}
+
                                         inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
                                         underlineColorAndroid={'#fff'}
                                         onFocus={this.hiddenList}
