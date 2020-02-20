@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet,
-    Dimensions
+    ScrollView
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -134,8 +134,9 @@ class EhealthScreen extends Component {
             <ActivityPanel
                 title={constants.title.ehealth}
                 style={styles.container}
+                isLoading = {this.state.refreshing}
             >
-                <View style={styles.viewContent} >
+                <ScrollView style={styles.viewContent} >
                     <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
                     <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
@@ -149,10 +150,10 @@ class EhealthScreen extends Component {
                             keyExtractor={this.keyExtractor}
                             ListHeaderComponent={this.headerComponent}
                         > </FlatList>
-                        <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
                     </View>
+                    <TouchableOpacity onPress={this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
 
-                </View>
+                </ScrollView>
 
             </ActivityPanel>
         );
