@@ -803,7 +803,7 @@ class ExportPDF extends Component {
                 html = this.renderResult(result, hospital)
         }
 
-        console.log(html);
+        
 
 
         let options = {
@@ -844,7 +844,7 @@ class ExportPDF extends Component {
                             });
                         }
                     } catch (error) {
-                        console.log(error);
+                        
                     }
                 });
             } else {

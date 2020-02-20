@@ -33,7 +33,7 @@ class DiagnosticResult extends Component {
                 </View>
             }
             {
-                resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} />)
+                resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} {...this.props}/>)
             }
         </View>)
     }

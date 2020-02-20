@@ -15,6 +15,15 @@ class CheckupResult extends Component {
     }
     renderItemCheckup(item) {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
+        if (!item.First_Diagnostic &&
+            !item.DiseaseDiagnostic
+            && !item.Diagnostic
+            && !item.Other_DiseaseDiagnostic
+            && !item.DoctorAdviceTxt
+            && !item.DoctorAdvice
+            && !item.Note) {
+            return null
+        }
         return <View style={{ flex: 1 }}>
             <View style={styles.viewItemCheckUp}>
                 <Text style={styles.txServiceName}>{item.ServiceName}</Text>
@@ -25,13 +34,15 @@ class CheckupResult extends Component {
             <View style={styles.viewItem}>
                 {
                     [
-                        this.renderItem("Chẩn đoán", item.First_Diagnostic),
-                        this.renderItem("Chẩn đoán bệnh", item.DiseaseDiagnostic, item.Diagnostic),
-                        this.renderItem("Chẩn đoán khác", item.Other_DiseaseDiagnostic),
-                        this.renderItem("Lời dặn", item.DoctorAdviceTxt, item.DoctorAdvice),
-                        this.renderItem("Ghi chú", item.Note)].map((item, key) => <View key={key}>{item}</View>)
+                        this.renderItem(item, "Chẩn đoán", item.First_Diagnostic),
+                        this.renderItem(item, "Chẩn đoán bệnh", item.DiseaseDiagnostic, item.Diagnostic),
+                        this.renderItem(item, "Chẩn đoán khác", item.Other_DiseaseDiagnostic),
+                        this.renderItem(item, "Lời dặn", item.DoctorAdviceTxt, item.DoctorAdvice),
+                        this.renderItem(item, "Ghi chú", item.Note)].map((item, key) => <View key={key}>{item}</View>)
+
                 }
             </View>
+
         </View>
     }
     renderListMedicine(value) {
@@ -48,7 +59,7 @@ class CheckupResult extends Component {
         )
     }
 
-    renderItem(lable, value, value2) {
+    renderItem(item, lable, value, value2) {
         if (value || value2)
             return (<View><Text style={styles.diagnosticLabel}>{lable}</Text>
                 {
@@ -65,6 +76,8 @@ class CheckupResult extends Component {
                             <Text style={styles.txValue}>{value2}</Text>
                         </View> : null
                 }
+
+                {this.renderImages(item.Image)}
             </View>)
         return null;
     }
@@ -89,7 +102,31 @@ class CheckupResult extends Component {
         var data = [index + 1, serviceName, item.Quantity, item.Unit]
         return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 1]} />);
     }
+    showImage = (image, index) => () => {
+        this.props.navigation.navigate("photoViewer", {
+            index: index,
+            urls: image.map(item => {
+                return item.absoluteUrl()
+            }),
+        });
+    }
+    renderImages = (images) => {
+        if (images?.length) {
+            return <View style={styles.containerListImage}>
+                {images.map((e, i) => {
+                    return (
+                        <TouchableOpacity onPress={this.showImage(images, i)} style={styles.buttonImage} key={i}>
+                            <Image source={{ uri: e }} style={styles.imageResult} />
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
+        } else {
+            return null
+        }
+    }
     renderItemCheckupContract(item, index) {
+
 
         return <View style={{ flex: 1 }} key={index}>
             <ScrollView
@@ -188,7 +225,8 @@ class CheckupResult extends Component {
                                 this.renderItem("Hô hấp", item.CheckUpRespiration + (item.RespirationClassify ? " (Phân loại: " + item.RespirationClassify + ")" : "")),
                                 this.renderItem("Thận tiết niệu", item.CheckUpUrination + (item.UrinationClassify ? " (Phân loại: " + item.UrinationClassify + ")" : "")),
                                 this.renderItem("Nội tiết", item.Content + (item.ContentClassify ? " (Phân loại: " + item.ContentClassify + ")" : "")),
-                                this.renderListMedicine(item.ListMedicine)
+                                this.renderListMedicine(item.ListMedicine),
+                                this.renderImages(item.Image)
                             ].map((item, index) => <View key={index}>{item}</View>)
                         }
                     </View>
@@ -214,7 +252,25 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
-    container:{ flex: 1, marginTop: 20 },
+    imageResult: {
+        height: 100,
+        width: 100,
+        resizeMode: 'cover'
+    },
+    buttonImage: {
+        marginHorizontal: 5,
+        borderColor: '#000',
+        borderWidth: 0.1,
+        marginBottom: 5
+    },
+    containerListImage: {
+        flexDirection: 'row',
+        alignItems: "center",
+        paddingHorizontal: 5,
+        paddingBottom: 20,
+        flexWrap: 'wrap'
+    },
+    container: { flex: 1, marginBottom: 20 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
@@ -239,9 +295,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
     },
-    viewItemCheckUp:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    txServiceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
-    viewItem:{
+    viewItemCheckUp: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txServiceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewItem: {
         backgroundColor: "#ffffff",
         shadowColor: "rgba(0, 0, 0, 0.05)",
         shadowOffset: {
@@ -254,11 +310,11 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10
     },
-    borderStyle:{ borderWidth: 0.5, borderColor: '#c8e1ff' },
-    viewListItem:{ flexDirection: 'row' },
-    txValue:{ marginLeft: 10, marginBottom: 10 },
-    viewServiceName:{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 },
-    viewSpaceBottom:{ height: 50 },
+    borderStyle: { borderWidth: 0.5, borderColor: '#c8e1ff' },
+    viewListItem: { flexDirection: 'row' },
+    txValue: { marginLeft: 10, marginBottom: 10 },
+    viewServiceName: { flexDirection: 'row', alignItems: 'center', marginBottom: 30 },
+    viewSpaceBottom: { height: 50 },
 
 })
 export default connect(mapStateToProps)(CheckupResult);

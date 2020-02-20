@@ -117,7 +117,8 @@ class ViewInDateScreen extends Component {
         this.setState({ isLoading: true }, () => {
             let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
-            resultUtils.getDetail(patientHistoryId,hospitalId, id).then(result => {
+            resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
+                console.log('result: ', result);
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -131,12 +132,12 @@ class ViewInDateScreen extends Component {
     dayPress(item) {
         let patient = this.props.ehealth.patient;
         let day2 = item.ddmmyyyy()
-        let id 
+        let id
         patient.history.forEach(item2 => {
             console.log('item2: ', item2);
             console.log('patient: ', patient);
             let day = item2.timeGoIn.toDateObject('-').ddmmyyyy();
-            if(day == day2){
+            if (day == day2) {
                 id = item2.id
             }
         });
@@ -147,7 +148,7 @@ class ViewInDateScreen extends Component {
             return;
         };
         this.setState({ dateSelected: item }, () => {
-            this.getDetailPatientHistory(item.patientHistory.patientHistoryId,id)
+            this.getDetailPatientHistory(item.patientHistory.patientHistoryId, id)
         })
     }
     viewCheckupResult() {
@@ -327,22 +328,38 @@ class ViewInDateScreen extends Component {
             if (!item)
                 return null;
 
-            let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
-            if (note)
-                return (
+            let note = (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "");
+            if(item.SummaryResult){
+                return(
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
-                        <Card style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
-                                <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
-                                <View style={styles.viewDrug}>
-                                    <Text style={styles.txMedicine}>{note}</Text>
-                                </View>
-                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                            </TouchableOpacity>
-                        </Card>
-                    </View>
+                    <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
+                    <Card style={styles.card}>
+                        <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                            <View style={styles.viewDrug}>
+                                <Text style={styles.txMedicine}>{item.SummaryResult}</Text>
+                            </View>
+                            <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
+                    </Card>
+                </View>
                 )
+            }
+            if (note)
+            return (
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
+                    <Card style={styles.card}>
+                        <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                            <View style={styles.viewDrug}>
+                                <Text style={styles.txMedicine}>{note}</Text>
+                            </View>
+                            <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
+                    </Card>
+                </View>
+            )
         }
         return null;
     }
@@ -486,10 +503,10 @@ class ViewInDateScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
-            titleStyle = {{marginLeft:50}}
+                titleStyle={{ marginLeft: 50 }}
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
-                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><ScaledImage source = {require('@images/new/ehealth/ic_share.png')} height = {25} /></TouchableOpacity> :
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><ScaledImage source={require('@images/new/ehealth/ic_share.png')} height={25} /></TouchableOpacity> :
                     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
 
             >

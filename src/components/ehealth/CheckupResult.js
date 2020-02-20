@@ -20,6 +20,7 @@ class CheckupResult extends Component {
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
         let resultCheckup = result.ListResultCheckup || [];
+        
         return (<View style={styles.container}>
             {
                 (this.props.showTitle == true || this.props.showTitle == undefined) &&
@@ -33,7 +34,7 @@ class CheckupResult extends Component {
                 </View>
             }
             {
-                resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} />)
+                resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} {...this.props}/>)
             }
         </View>)
     }

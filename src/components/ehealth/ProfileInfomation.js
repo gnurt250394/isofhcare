@@ -27,6 +27,7 @@ class ProfileInfomation extends Component {
 
     render() {
         let { resultDetail } = this.props;
+        console.log('resultDetail: ', resultDetail);
         if (!resultDetail)
             return null;
         let serviceCheckup = (resultDetail.ListService || []).find(item => item.ServiceType == "CheckUp");
@@ -35,6 +36,7 @@ class ProfileInfomation extends Component {
             ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
             : icSupport;
         const hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital
+        console.log('hospital: ', hospital);
         return <View style={styles.viewInfoProfile}>
             <View style={styles.viewItem}></View>
             <View style={styles.viewLabel}>
@@ -54,7 +56,7 @@ class ProfileInfomation extends Component {
                     <View style={styles.round1}>
                         <View style={styles.round2} />
                     </View>
-                    <Text style={styles.itemlabel}>Mã: <Text style={styles.itemcontent}>{resultDetail.Profile.Value}</Text></Text>
+                    <Text style={styles.itemlabel}>Mã: <Text style={styles.itemcontent}>{resultDetail?.Profile?.Value || resultDetail?.Profile?.PatientDocument}</Text></Text>
                 </View>
                 {
                     serviceCheckup &&
@@ -75,7 +77,7 @@ class ProfileInfomation extends Component {
                             <View style={styles.round1}>
                                 <View style={styles.round3} />
                             </View>
-                            <Text style={styles.itemlabel}>Nơi khám: <Text style={styles.itemcontent}>{serviceCheckup.RoomName} - {serviceCheckup.Location}</Text></Text>
+                            <Text style={styles.itemlabel}>Nơi khám: {serviceCheckup.RoomName && serviceCheckup.Location ? <Text style={styles.itemcontent}>{serviceCheckup.RoomName} - {serviceCheckup.Location}</Text> : ''}</Text>
                         </View>
                         <View style={styles.item}>
                             <View style={styles.round1}>
