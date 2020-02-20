@@ -238,8 +238,6 @@ class CreateEhealthScreen extends Component {
         </TouchableOpacity>
     }
     search = (text) => {
-
-
         this.setState({
             hospitalName: text,
         })
@@ -465,7 +463,7 @@ class CreateEhealthScreen extends Component {
 
     }
     render() {
-
+        
         return (
             <ActivityPanel
                 title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
@@ -479,7 +477,7 @@ class CreateEhealthScreen extends Component {
                     <TouchableWithoutFeedback onPress={this.onHidden}>
                         <View>
                             <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
-                            <Form ref={ref => { (this.form = ref); }}>
+                            <Form ref={ref => { this.form = ref; }}>
                                 <Field style={styles.viewInput}>
                                     <Text style={styles.title}>CSYT đã khám (*)</Text>
                                     <Field style={styles.viewDrop}>
@@ -563,7 +561,8 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
-                                        onFocus = {this.hiddenList}
+                                        onFocus={this.hiddenList}
+                                        autoFocus = {false}
                                         validate={{
                                             rules: {
                                                 required: true,
@@ -603,7 +602,7 @@ class CreateEhealthScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
                                         underlineColorAndroid={'#fff'}
-                                        onFocus = {this.hiddenList}
+                                        onFocus={this.hiddenList}
                                         validate={{
                                             rules: {
                                                 maxlength: 2000
