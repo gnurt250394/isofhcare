@@ -20,7 +20,31 @@ class CheckupResult extends Component {
         // }
         return <Text style={styles.txItem}>{text}</Text>
     }
-
+    showImage = (image, index) => () => {
+        this.props.navigation.navigate("photoViewer", {
+            index: index,
+            urls: image.map(item => {
+                return item.absoluteUrl()
+            }),
+        });
+    }
+    renderImages = (images) => {
+        if (images?.length) {
+            return <View style={styles.containerListImage}>
+                {images.map((e, i) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={this.showImage(images, i)}
+                            style={styles.buttonImage} key={i}>
+                            <Image source={{ uri: e }} style={styles.imageResult} />
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
+        } else {
+            return null
+        }
+    }
     render() {
         let { item } = this.props;
         return <View style={styles.container} key={this.props.key}>
@@ -76,6 +100,7 @@ class CheckupResult extends Component {
                                 <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Result + item.Discussion + item.SummaryResult)}
                             </View>
+                            {this.renderImages(item.Image)}
                         </View> : null
                 }
 
@@ -126,6 +151,24 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    imageResult: {
+        height: 100,
+        width: 100,
+        resizeMode: 'cover'
+    },
+    buttonImage: {
+        marginHorizontal: 5,
+        borderColor: '#000',
+        borderWidth: 0.1,
+        marginBottom: 5
+    },
+    containerListImage: {
+        flexDirection: 'row',
+        alignItems: "center",
+        paddingHorizontal: 5,
+        paddingBottom: 20,
+        flexWrap: 'wrap'
+    },
     diagnosticLabel1:
     {
         color: constants.colors.primary_bold,
@@ -138,11 +181,11 @@ const styles = StyleSheet.create({
     },
     breakline: {
     },
-    txItem:{ marginLeft: 10, marginBottom: 10 },
-    container:{ flex: 1, marginTop: 20 },
-    viewCheckup:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    txServiceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
-    viewList:{
+    txItem: { marginLeft: 10, marginBottom: 10 },
+    container: { flex: 1, marginBottom: 20 },
+    viewCheckup: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txServiceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewList: {
         backgroundColor: "#ffffff",
         shadowColor: "rgba(0, 0, 0, 0.05)",
         shadowOffset: {
@@ -155,8 +198,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10
     },
-    viewItem:{ flexDirection: 'row' },
-    viewImg:{ flexDirection: 'row', marginTop: 10 },
-    scaleImg:{ marginTop: 4, marginRight: 7 }
+    viewItem: { flexDirection: 'row' },
+    viewImg: { flexDirection: 'row', marginTop: 10 },
+    scaleImg: { marginTop: 4, marginRight: 7 }
 })
 export default connect(mapStateToProps)(CheckupResult);

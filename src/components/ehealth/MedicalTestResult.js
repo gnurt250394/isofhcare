@@ -16,24 +16,24 @@ class MedicalTestResult extends Component {
     }
     componentDidMount() {
         let result1 = this.props.result;
+
         let hasResult = false;
         if (result1) {
-            if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length) {
+            if (result1?.ListResulHuyetHoc?.length && result1?.ListResulHuyetHoc[0]?.ListMedical?.length) {
                 hasResult = true;
             }
-            if (result1.ListResulHoaSinh && result1.ListResulHoaSinh.length) {
+            if (result1?.ListResulHoaSinh?.length && result1?.ListResulHoaSinh[0]?.ListMedical?.length) {
                 hasResult = true;
             }
-            if (result1.ListResulOther && result1.ListResulOther.length) {
+            if (result1?.ListResulOther?.length && result1?.ListResulOther[0]?.ListMedical?.length) {
                 hasResult = true;
             }
-            if (result1.ListResulViSinh && result1.ListResulViSinh.length) {
+            if (result1?.ListResulViSinh?.length && result1?.ListResulViSinh[0]?.ListMedical?.length) {
                 hasResult = true;
             }
         }
         if (!hasResult) {
-
-            this.state = { hasResult: false }
+            this.setState({ hasResult: false, medicalTestResult: result1?.ListResulHoaSinh || [] })
             return null;
         }
 
@@ -93,6 +93,7 @@ class MedicalTestResult extends Component {
                 item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
+
 
         this.setState({
             hasResult: true,
@@ -190,9 +191,61 @@ class MedicalTestResult extends Component {
             this.renderMedical(data, i)
         ))
     }
+    showImage = (image, index) => () => {
+        this.props.navigation.navigate("photoViewer", {
+            index: index,
+            urls: image.map(item => {
+                return item.absoluteUrl()
+            }),
+        });
+    }
+    renderImages = (images) => {
+        if (images?.length) {
+            return <View style={styles.containerListImage}>
+                {images.map((e, i) => {
+                    return (
+                        <TouchableOpacity onPress={this.showImage(images, i)} style={styles.buttonImage} key={i}>
+                            <Image source={{ uri: e }} style={styles.imageResult} />
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
+        } else {
+            return null
+        }
+    }
     render() {
-        if (!this.state.currentGroup || !this.state.hasResult)
+        if (!this.state.currentGroup || !this.state.hasResult) {
+            if (this.state?.medicalTestResult?.length) {
+                return this.state.medicalTestResult.map((e, i) => {
+                    return (
+                        <View style={{
+                            flex: 1,
+                            padding: 10
+                        }}>
+                            <View style={[styles.item, { marginTop: 0 }]}>
+                                <View style={styles.round1}>
+                                    <View style={styles.round2} />
+                                </View>
+                                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
+                                </View>
+                            </View>
+                            <View style={styles.containerDescription}>
+                                <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
+                                <View style={styles.containerTitle}>
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
+                                    <Text>{e.SummaryResult}</Text>
+                                </View>
+                                {this.renderImages(e.Image)}
+                            </View>
+                        </View>
+                    )
+                })
+            }
             return null;
+
+        }
 
         const tableHead = this.state.currentGroup && this.state.currentGroup.type == 'Vi Sinh' ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'] : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BÌNH THƯỜNG', 'ĐƠN VỊ'];
         let actions = this.state.medicalTestResult.map(item => item.type);
@@ -210,6 +263,7 @@ class MedicalTestResult extends Component {
                     </View>
                 </View>
             }
+
             {
                 this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
                     this.actionSheetChooseType.show();
@@ -249,6 +303,42 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    containerTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingBottom: 10
+    },
+    imageResult: {
+        height: 100,
+        width: 100,
+        resizeMode: 'cover'
+    },
+    buttonImage: {
+        marginHorizontal: 5,
+        borderColor: '#000',
+        borderWidth: 0.1,
+        marginBottom: 5
+    },
+    containerListImage: {
+        flexDirection: 'row',
+        alignItems: "center",
+        paddingHorizontal: 5,
+        paddingBottom: 20,
+        flexWrap: 'wrap'
+    },
+    containerDescription: {
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        borderRadius: 5,
+        padding: 10
+    },
     containerValue: {
         backgroundColor: '#DFF5F2',
         borderLeftWidth: 0.6,

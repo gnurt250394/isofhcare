@@ -61,26 +61,26 @@ class ViewEhealthDetailScreen extends Component {
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <ProfileInfomation hospitalName={this.state.hospitalName} avatar={this.state.user.avatar} patientName={this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
                     <View style={styles.lineHeader} />
-                    <CheckupResult result={this.state.result} />
-                    <MedicalTestResult result={this.state.result} />
-                    <DiagnosticResult result={this.state.result} />
-                    <SurgeryResult result={this.state.result} />
-                    <Medicine result={this.state.result} />
-                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <CheckupResult result={this.state.result}{...this.props} />
+                    <MedicalTestResult result={this.state.result}{...this.props} />
+                    <DiagnosticResult result={this.state.result}{...this.props} />
+                    <SurgeryResult result={this.state.result}{...this.props} />
+                    <Medicine result={this.state.result}{...this.props} />
+                    <TotalMoney result={this.state.result}{...this.props} resultDetail={this.state.resultDetail} />
                     <View style={styles.end} />
                 </ScrollView>
             )
         } else {
             return (
                 <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <ProfileInfomation resultDetail={this.state.resultDetail} />
-                    <View style={styles.lineHeader} />
-                    <CheckupResult result={this.state.result} />
-                    <MedicalTestResult result={this.state.result} />
-                    <DiagnosticResult result={this.state.result} />
-                    <SurgeryResult result={this.state.result} />
-                    <Medicine result={this.state.result} />
-                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <ProfileInfomation resultDetail={this.state.resultDetail} {...this.props} />
+                    <View style={styles.lineHeader}  />
+                    <CheckupResult result={this.state.result} {...this.props} />
+                    <MedicalTestResult result={this.state.result} {...this.props} />
+                    <DiagnosticResult result={this.state.result} {...this.props} />
+                    <SurgeryResult result={this.state.result} {...this.props} />
+                    <Medicine result={this.state.result} {...this.props} />
+                    <TotalMoney result={this.state.result}{...this.props} resultDetail={this.state.resultDetail} />
                     <View style={styles.end} />
                 </ScrollView>
             )
@@ -113,7 +113,7 @@ class ViewEhealthDetailScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 isLoading={this.state.isLoading}
                 titleStyle={styles.titleStyle}
-                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><ScaledImage source = {require('@images/new/ehealth/ic_print.png')} height = {25} /></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><ScaledImage source={require('@images/new/ehealth/ic_print.png')} height={25} /></TouchableOpacity>}
             >
                 {this.renderDetails()}
                 <ExportPDF endLoading={() => { this.setState({ isLoading: false }) }} ref={(element) => this.exportPdfCom = element} />
