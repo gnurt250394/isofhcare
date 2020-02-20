@@ -31,7 +31,7 @@ class SurgeryResult extends Component {
                 </View>
             }
             {
-                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} />)
+                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} {...this.props}/>)
             }
         </View>)
     }
