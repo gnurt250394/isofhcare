@@ -99,7 +99,7 @@ class CreateEhealthScreen extends Component {
                 }
             );
     }
-    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true,isProfile:false,isSearch:false })
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true, isProfile: false, isSearch: false })
     onConfirmDate = newDate => {
         this.setState(
             {
@@ -110,12 +110,6 @@ class CreateEhealthScreen extends Component {
     }
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
-    }
-    hidenList = () => {
-        this.setState({
-            isProfile:false,
-            isSearch:false
-        })
     }
     onSearch = (s) => {
 
@@ -272,13 +266,13 @@ class CreateEhealthScreen extends Component {
     onShowProfile = () => {
         this.setState({
             isProfile: !this.state.isProfile,
-            isSearch:false
+            isSearch: false
         })
     }
     selectImage = () => {
         this.setState({
-            isSearch:false,
-            isProfile:false
+            isSearch: false,
+            isProfile: false
         })
         if (this.state.imageUris && this.state.imageUris.length >= 10) {
             snackbar.show(constants.msg.booking.image_without_ten, "danger");
@@ -424,7 +418,7 @@ class CreateEhealthScreen extends Component {
 
         this.setState({
             isSearch: true,
-            isProfile:false
+            isProfile: false
         })
         this.onRefresh()
     }
@@ -465,6 +459,10 @@ class CreateEhealthScreen extends Component {
     onHidden = () => {
         Keyboard.dismiss()
         this.setState({ isProfile: false, isSearch: false })
+    }
+    hiddenList = () => {
+        this.setState({ isProfile: false, isSearch: false })
+
     }
     render() {
 
@@ -562,10 +560,10 @@ class CreateEhealthScreen extends Component {
                                         onChangeText={text => this.setState({ medicalServiceName: text })}
                                         value={this.state.medicalServiceName}
                                         placeholder={'Nhập dịch vụ khám'}
-                                        onFocus = {this.onHidden}
                                         errorStyle={styles.errorStyle}
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
+                                        onFocus = {this.hiddenList}
                                         validate={{
                                             rules: {
                                                 required: true,
@@ -602,17 +600,15 @@ class CreateEhealthScreen extends Component {
                                         onChangeText={text => this.setState({ result: text })}
                                         value={this.state.result}
                                         placeholder={'Nhập kết quả khám'}
-                                        onFocus = {this.onHidden}
                                         errorStyle={styles.errorStyle}
                                         inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
                                         underlineColorAndroid={'#fff'}
+                                        onFocus = {this.hiddenList}
                                         validate={{
                                             rules: {
-                                                required: true,
                                                 maxlength: 2000
                                             },
                                             messages: {
-                                                required: "Chưa chọn thời gian khám",
                                                 maxlength: "Không được nhập quá 2000 ký tự"
                                             }
                                         }}

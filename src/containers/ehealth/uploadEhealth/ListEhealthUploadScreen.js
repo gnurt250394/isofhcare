@@ -83,7 +83,7 @@ class ListEhealthUpload extends Component {
         });
     }
     renderItem = ({ item, index }) => {
-        const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.hospitalImage ? { uri:  item.hospitalImage.absoluteUrl() } : require("@images/new/user.png");
 
         return (
             <Card style={styles.viewItem}>
