@@ -17,9 +17,10 @@ class CheckupResult extends Component {
 
     render() {
         let { result } = this.props;
+        console.log('result: ', result);
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
-        if (!result?.ListResultCheckup[0]?.SummaryResult && result?.ListResultCheckup[0]?.ServiceName && result?.ListResultCheckup[0]?.Image?.length == 0) {
+        if (!result?.ListResultCheckup[0]?.SummaryResult && result?.ListResultCheckup[0]?.ServiceName && !result?.ListResultCheckup[0]?.Image) {
             return null
         }
         let resultCheckup = result.ListResultCheckup || [];
