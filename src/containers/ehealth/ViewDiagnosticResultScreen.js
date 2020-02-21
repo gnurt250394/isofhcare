@@ -27,15 +27,15 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewCheckupResultScreen extends Component {
     constructor(props) {
         super(props)
-        console.log(this.props, 'view in ViewEhealthDetailScreen')
 
         let result = this.props.navigation.state.params.result;
         let resultDetail = this.props.navigation.state.params.resultDetail;
-        console.log(result);
+        let data = this.props.navigation.state.params.data;
         this.state = {
             result,
             resultDetail,
             detailsHospital: '',
+            data
         }
     }
     goBack = () => {
@@ -44,7 +44,7 @@ class ViewCheckupResultScreen extends Component {
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title={constants.title.result_ehealth_image} resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 data={this.state.data} title={constants.title.result_ehealth_image} resultDetail={this.state.resultDetail} />
                 <DiagnosticResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnFinish} onPress={this.goBack}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>

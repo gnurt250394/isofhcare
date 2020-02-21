@@ -31,11 +31,12 @@ class ViewCheckupResultScreen extends Component {
 
         let result = this.props.navigation.state.params.result;
         let resultDetail = this.props.navigation.state.params.resultDetail;
-        console.log(result);
+        let data = this.props.navigation.state.params.data;
         this.state = {
             result,
             resultDetail,
             detailsHospital: '',
+            data
         }
     }
     goBack = () => {
@@ -44,7 +45,7 @@ class ViewCheckupResultScreen extends Component {
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title={constants.title.result_ehealth} resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 title={constants.title.result_ehealth} resultDetail={this.state.resultDetail} data={this.state.data} />
                 <CheckupResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnFinish} onPress={this.goBack}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>

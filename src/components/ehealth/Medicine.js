@@ -76,7 +76,11 @@ class Medicine extends Component {
         if (result.ListMedicine && result.ListMedicine.length) {
             medinine = medinine.concat(result.ListMedicine);
         }
+        console.log('medinine: ', medinine);
         if (medinine && medinine.length) {
+            if (!medinine[0]?.SummaryResult && !medinine[0]?.ServiceName && medinine[0]?.Image?.length == 0) {
+                return null
+            }
             return ((<View style={styles.viewMedinine}>
                 {
                     (this.props.showTitle == true || this.props.showTitle == undefined) &&
