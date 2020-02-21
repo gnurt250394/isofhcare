@@ -217,7 +217,8 @@ class MedicalTestResult extends Component {
     }
     render() {
         if (!this.state.currentGroup || !this.state.hasResult) {
-            if (this.state?.medicalTestResult?.length) {
+            if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.SummaryResult || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
+                console.log('this.state?.medicalTestResult?.length: ', this.state?.medicalTestResult);
                 return this.state.medicalTestResult.map((e, i) => {
                     return (
                         <View style={{
@@ -233,11 +234,16 @@ class MedicalTestResult extends Component {
                                 </View>
                             </View>
                             <View style={styles.containerDescription}>
-                                <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
-                                <View style={styles.containerTitle}>
-                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
-                                    <Text>{e.SummaryResult}</Text>
-                                </View>
+                                {e?.SummaryResult ?
+                                    <View>
+                                        <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
+                                        <View style={styles.containerTitle}>
+                                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
+                                            <Text>{e.SummaryResult}</Text>
+                                        </View>
+                                    </View> : null
+                                }
+
                                 {this.renderImages(e.Image)}
                             </View>
                         </View>

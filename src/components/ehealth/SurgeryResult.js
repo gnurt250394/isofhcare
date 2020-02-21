@@ -17,6 +17,9 @@ class SurgeryResult extends Component {
         let { result } = this.props;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
             return null;
+        if (!result.ListResulGiaiPhau[0].SummaryResult && !result.ListResulGiaiPhau[0].ServiceName && result.ListResulGiaiPhau[0].Image.length == 0) {
+            return null
+        }
         let resultSurgery = result.ListResulGiaiPhau || [];
         return (<View style={styles.container}>
             {
@@ -31,7 +34,7 @@ class SurgeryResult extends Component {
                 </View>
             }
             {
-                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} {...this.props}/>)
+                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} {...this.props} />)
             }
         </View>)
     }
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
     item: { marginTop: 10, flexDirection: 'row' },
-    container:{ flex: 1, padding: 10 },
-    txResult:{ fontWeight: 'bold', fontSize: 18 }
+    container: { flex: 1, padding: 10 },
+    txResult: { fontWeight: 'bold', fontSize: 18 }
 })
 export default connect(mapStateToProps)(SurgeryResult);

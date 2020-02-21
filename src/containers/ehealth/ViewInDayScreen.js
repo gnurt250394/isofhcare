@@ -69,7 +69,7 @@ class ViewInDateScreen extends Component {
         let patient = this.props.ehealth.patient;
         let obj2 = {};
         patient.history.forEach(item => {
-            console.log('patient: ', patient);
+            
 
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
             if (!obj2[key])
@@ -118,8 +118,8 @@ class ViewInDateScreen extends Component {
             let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
             resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
-                console.log('result: ', result);
-                this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
+                
+                this.setState({ result: result.result, resultDetail: result.resultDetail, data: result.data, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                 })
@@ -134,8 +134,8 @@ class ViewInDateScreen extends Component {
         let day2 = item.ddmmyyyy()
         let id
         patient.history.forEach(item2 => {
-            console.log('item2: ', item2);
-            console.log('patient: ', patient);
+            
+            
             let day = item2.timeGoIn.toDateObject('-').ddmmyyyy();
             if (day == day2) {
                 id = item2.id
@@ -152,22 +152,22 @@ class ViewInDateScreen extends Component {
         })
     }
     viewCheckupResult() {
-        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMedicalTestResult() {
-        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewDiagnosticResult() {
-        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewSurgeryResult() {
-        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMoney() {
-        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMedicine() {
-        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
@@ -307,6 +307,7 @@ class ViewInDateScreen extends Component {
         if (this.state.result) {
             let item = null;
             if (this.state.result.ListMedicine && this.state.result.ListMedicine.length) {
+                
                 item = this.state.result.ListMedicine[this.state.result.ListMedicine.length - 1];
             }
             if (!item) {
@@ -328,38 +329,42 @@ class ViewInDateScreen extends Component {
             if (!item)
                 return null;
 
-            let note = (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "");
-            if(item.SummaryResult){
-                return(
+            let note = !item?.ServiceName
+                && !item?.Measure
+                && !item?.Quantity
+                && !item?.Unit ? ''
+                : (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "")
+            if (item.SummaryResult) {
+                return (
                     <View style={{ marginTop: 10 }}>
-                    <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
-                    <Card style={styles.card}>
-                        <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
-                            <View style={styles.viewDrug}>
-                                <Text style={styles.txMedicine}>{item.SummaryResult}</Text>
-                            </View>
-                            <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
-                    </Card>
-                </View>
+                        <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                                <View style={styles.viewDrug}>
+                                    <Text style={styles.txMedicine}>{item.SummaryResult}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>
                 )
             }
             if (note)
-            return (
-                <View style={{ marginTop: 10 }}>
-                    <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
-                    <Card style={styles.card}>
-                        <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
-                            <View style={styles.viewDrug}>
-                                <Text style={styles.txMedicine}>{note}</Text>
-                            </View>
-                            <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
-                    </Card>
-                </View>
-            )
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                                <View style={styles.viewDrug}>
+                                    <Text style={styles.txMedicine}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>
+                )
         }
         return null;
     }

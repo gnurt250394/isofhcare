@@ -61,26 +61,26 @@ class ViewEhealthDetailScreen extends Component {
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <ProfileInfomation hospitalName={this.state.hospitalName} avatar={this.state.user.avatar} patientName={this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
                     <View style={styles.lineHeader} />
-                    <CheckupResult result={this.state.result}{...this.props} />
-                    <MedicalTestResult result={this.state.result}{...this.props} />
-                    <DiagnosticResult result={this.state.result}{...this.props} />
-                    <SurgeryResult result={this.state.result}{...this.props} />
-                    <Medicine result={this.state.result}{...this.props} />
-                    <TotalMoney result={this.state.result}{...this.props} resultDetail={this.state.resultDetail} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
                     <View style={styles.end} />
                 </ScrollView>
             )
         } else {
             return (
                 <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <ProfileInfomation resultDetail={this.state.resultDetail} {...this.props} />
+                    <ProfileInfomation resultDetail={this.state.resultDetail}  />
                     <View style={styles.lineHeader}  />
-                    <CheckupResult result={this.state.result} {...this.props} />
-                    <MedicalTestResult result={this.state.result} {...this.props} />
-                    <DiagnosticResult result={this.state.result} {...this.props} />
-                    <SurgeryResult result={this.state.result} {...this.props} />
-                    <Medicine result={this.state.result} {...this.props} />
-                    <TotalMoney result={this.state.result}{...this.props} resultDetail={this.state.resultDetail} />
+                    <CheckupResult result={this.state.result}  />
+                    <MedicalTestResult result={this.state.result}  />
+                    <DiagnosticResult result={this.state.result}  />
+                    <SurgeryResult result={this.state.result}  />
+                    <Medicine result={this.state.result}  />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
                     <View style={styles.end} />
                 </ScrollView>
             )

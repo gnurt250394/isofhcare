@@ -17,6 +17,7 @@ class CheckupResult extends Component {
 
     render() {
         let { result } = this.props;
+        console.log('result: ', result);
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
         let resultCheckup = result.ListResultCheckup || [];
