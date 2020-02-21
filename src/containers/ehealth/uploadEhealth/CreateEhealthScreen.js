@@ -101,13 +101,15 @@ class CreateEhealthScreen extends Component {
     }
     onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true, isProfile: false, isSearch: false })
     onConfirmDate = newDate => {
-        this.txtResult.focus();
         this.setState(
             {
                 dob: newDate,
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
             }, () => {
+                setTimeout(() => {
+                    this.txtResult.focus();
+                }, 500)
             });
 
     }
