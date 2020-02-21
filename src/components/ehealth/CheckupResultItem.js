@@ -41,6 +41,8 @@ class CheckupResult extends Component {
                         this.renderItem(item, "Ghi chú", item.Note)].map((item, key) => <View key={key}>{item}</View>)
 
                 }
+                        
+                {this.renderImages(item.Image)}
             </View>
 
         </View>
@@ -77,7 +79,6 @@ class CheckupResult extends Component {
                         </View> : null
                 }
 
-                {this.renderImages(item.Image)}
             </View>)
         return null;
     }
@@ -226,7 +227,6 @@ class CheckupResult extends Component {
                                 this.renderItem("Thận tiết niệu", item.CheckUpUrination + (item.UrinationClassify ? " (Phân loại: " + item.UrinationClassify + ")" : "")),
                                 this.renderItem("Nội tiết", item.Content + (item.ContentClassify ? " (Phân loại: " + item.ContentClassify + ")" : "")),
                                 this.renderListMedicine(item.ListMedicine),
-                                this.renderImages(item.Image)
                             ].map((item, index) => <View key={index}>{item}</View>)
                         }
                     </View>
