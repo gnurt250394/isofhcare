@@ -13,6 +13,10 @@ class CheckupResult extends Component {
         }
     }
     renderItem(text) {
+        console.log('text: ', text);
+        if(!text){
+            return null
+        }
         // if (!text) {
         //     while (text.indexOf('\n') != -1) {
         //         text = text.replace("\n", "");
@@ -48,6 +52,7 @@ class CheckupResult extends Component {
     }
     render() {
         let { item } = this.props;
+        console.log('item: ', item);
         return <View style={styles.container} key={this.props.key}>
             <View style={styles.viewCheckup}>
                 <Text style={styles.txServiceName}>{item.ServiceName}</Text>
@@ -99,7 +104,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
                             <View style={styles.viewItem}>
                                 <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                {this.renderItem(item.Result + item.Discussion + item.SummaryResult)}
+                                {this.renderItem((item.Result || '') + (item.Discussion || '') + item.SummaryResult || '')}
                             </View>
                             {this.renderImages(item.Image)}
                         </View> : null

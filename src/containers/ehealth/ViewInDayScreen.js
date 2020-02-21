@@ -69,7 +69,7 @@ class ViewInDateScreen extends Component {
         let patient = this.props.ehealth.patient;
         let obj2 = {};
         patient.history.forEach(item => {
-            
+
 
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
             if (!obj2[key])
@@ -118,7 +118,7 @@ class ViewInDateScreen extends Component {
             let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
             resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
-                
+
                 this.setState({ result: result.result, resultDetail: result.resultDetail, data: result.data, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -134,8 +134,8 @@ class ViewInDateScreen extends Component {
         let day2 = item.ddmmyyyy()
         let id
         patient.history.forEach(item2 => {
-            
-            
+
+
             let day = item2.timeGoIn.toDateObject('-').ddmmyyyy();
             if (day == day2) {
                 id = item2.id
@@ -172,7 +172,10 @@ class ViewInDateScreen extends Component {
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
             let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
+
+
             let note = item.Diagnostic;
+
             if (!note)
                 note = item.DiseaseDiagnostic;
             if (!note)
@@ -186,7 +189,7 @@ class ViewInDateScreen extends Component {
                                 {/* <View style={styles.viewCheckupResult}></View> */}
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                                 <View style={styles.viewNote}>
-                                    <Text style={styles.txNote}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -234,7 +237,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewDiagnosticResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_ct_catlop.png')}></ScaledImage>
                                 <View style={styles.viewTx}>
-                                    <Text style={styles.txNoteBlue}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txNoteBlue}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -260,7 +263,7 @@ class ViewInDateScreen extends Component {
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                 <View style={styles.viewTxMoney}>
-                    <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
+                    <Text numberOfLines={2} style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
                     <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
                 </View>
                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
@@ -292,7 +295,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewSurgeryResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_giaiphau.png')}></ScaledImage>
                                 <View style={styles.viewTxSurgery}>
-                                    <Text style={styles.txSurgery}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txSurgery}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -307,7 +310,7 @@ class ViewInDateScreen extends Component {
         if (this.state.result) {
             let item = null;
             if (this.state.result.ListMedicine && this.state.result.ListMedicine.length) {
-                
+
                 item = this.state.result.ListMedicine[this.state.result.ListMedicine.length - 1];
             }
             if (!item) {
@@ -342,7 +345,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
                                 <View style={styles.viewDrug}>
-                                    <Text style={styles.txMedicine}>{item.SummaryResult}</Text>
+                                    <Text numberOfLines={2} style={styles.txMedicine}>{item.SummaryResult}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -358,7 +361,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
                                 <View style={styles.viewDrug}>
-                                    <Text style={styles.txMedicine}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txMedicine}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -390,6 +393,7 @@ class ViewInDateScreen extends Component {
             if (!arr.length)
                 return null;
             arr = arr[arr.length - 1];
+            console.log('arr: ', arr);
             let note;
             if (arr.ListMedical && arr.ListMedical.length) {
                 let item = arr.ListMedical[arr.ListMedical.length - 1]
@@ -399,8 +403,9 @@ class ViewInDateScreen extends Component {
                 }
                 else
                     note = item.ServiceName + ": " + item.Result;
-            } else {
-                return null;
+            }
+            if (arr?.SummaryResult || arr?.Image) {
+                note = arr?.SummaryResult || ''
             }
 
             if (note)
@@ -411,7 +416,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicalTestResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_xet_nghiem.png')}></ScaledImage>
                                 <View style={styles.viewTxMedical}>
-                                    <Text style={styles.txMedical}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txMedical}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
