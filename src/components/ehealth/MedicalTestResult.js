@@ -6,6 +6,7 @@ import constants from '@resources/strings';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import resultUtils from '@ehealth/utils/result-utils';
 import ActionSheet from 'react-native-actionsheet'
+import { withNavigation } from 'react-navigation'
 
 
 class MedicalTestResult extends Component {
@@ -389,4 +390,4 @@ const styles = StyleSheet.create({
     btnCurrentGroup: { flexDirection: 'row', alignItems: 'center' },
     txCurrent: { marginRight: 10 }
 })
-export default connect(mapStateToProps)(MedicalTestResult);
+export default connect(mapStateToProps)(withNavigation(MedicalTestResult));

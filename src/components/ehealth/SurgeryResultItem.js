@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboa
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
+import { withNavigation } from 'react-navigation'
 
 class CheckupResult extends Component {
     constructor(props) {
@@ -202,4 +203,4 @@ const styles = StyleSheet.create({
     viewImg: { flexDirection: 'row', marginTop: 10 },
     scaleImg: { marginTop: 4, marginRight: 7 }
 })
-export default connect(mapStateToProps)(CheckupResult);
+export default connect(mapStateToProps)(withNavigation(CheckupResult));

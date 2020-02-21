@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboa
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
+import { withNavigation } from 'react-navigation'
 
 class DiagnosticResultItem extends Component {
     constructor(props) {
@@ -157,4 +158,4 @@ const styles = StyleSheet.create({
     txConclusion: { marginLeft: 10 }
 
 })
-export default connect(mapStateToProps)(DiagnosticResultItem);
+export default connect(mapStateToProps)(withNavigation(DiagnosticResultItem));
