@@ -48,7 +48,7 @@ class AccountScreen extends Component {
       this.imagePicker.open(true, 200, 200, image => {
         this.showLoading(true, () => {
           imageProvider
-            .upload(image.path)
+            .upload(image.path,image.mime)
             .then(s => {
               this.showLoading(false, () => {
                 if (s && s.data.code == 0) {

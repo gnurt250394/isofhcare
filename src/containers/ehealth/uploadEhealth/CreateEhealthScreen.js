@@ -288,6 +288,7 @@ class CreateEhealthScreen extends Component {
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
                 }).then(images => {
+
                     let listImages = [];
                     if (images.length)
                         listImages = [...images];
@@ -306,7 +307,8 @@ class CreateEhealthScreen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path, (s, e) => {
+                            imageProvider.upload(image.path, image.mime, (s, e) => {
+ 
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
@@ -467,7 +469,7 @@ class CreateEhealthScreen extends Component {
     }
 
     render() {
-        console.log(this.form, 'áđáaaaaâ')
+
         return (
             <ActivityPanel
                 title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}

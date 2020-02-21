@@ -220,7 +220,7 @@ class EditProfileScreen extends Component {
 
                 this.setState({ isLoading: true }, () => {
                     imageProvider
-                        .upload(image.path)
+                        .upload(image.path,image.mime)
                         .then(s => {
                             this.setState({ avatar: { uri: s.data.data.images[0].thumbnail.absoluteUrl(), isLoading: false } })
                             // this.setState({ isLoading: false }, () => {

@@ -150,7 +150,7 @@ class ChatScreen extends React.Component {
 
     selectImageCallback(image) {
         this.setState({ isLoading: true }, () => {
-            imageProvider.upload(image.path, (s, e) => {
+            imageProvider.upload(image.path,image.mime, (s, e) => {
                 this.setState({ isLoading: false });
                 if (s.success) {
                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
