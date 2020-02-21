@@ -5,7 +5,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from '@resources/strings';
 import { Table, Row } from 'react-native-table-component';
-
+import { withNavigation } from 'react-navigation'
 class CheckupResult extends Component {
     constructor(props) {
         super(props);
@@ -317,4 +317,4 @@ const styles = StyleSheet.create({
     viewSpaceBottom: { height: 50 },
 
 })
-export default connect(mapStateToProps)(CheckupResult);
+export default connect(mapStateToProps)(withNavigation(CheckupResult));
