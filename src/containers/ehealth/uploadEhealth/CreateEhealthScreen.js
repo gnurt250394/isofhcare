@@ -285,6 +285,8 @@ class CreateEhealthScreen extends Component {
                     multiple: true,
                     mediaType: 'photo',
                     maxFiles: 10,
+                    compressImageMaxWidth: 1500,
+                    compressImageMaxHeight: 1500
                 }).then(images => {
 
                     let listImages = [];
