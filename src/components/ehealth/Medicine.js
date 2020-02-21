@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import dateUtils from "mainam-react-native-date-utils";
 import constants from '@resources/strings';
 import { Table, Row } from 'react-native-table-component';
+import { withNavigation } from 'react-navigation'
 
 
 class Medicine extends Component {
@@ -160,4 +161,4 @@ const styles = StyleSheet.create({
     borderStyle: { borderWidth: 0.5, borderColor: '#c8e1ff' },
 
 })
-export default connect(mapStateToProps)(Medicine);
+export default connect(mapStateToProps)(withNavigation(Medicine));
