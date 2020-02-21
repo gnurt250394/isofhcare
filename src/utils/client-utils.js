@@ -90,12 +90,12 @@ module.exports = {
       };
     }
   },
-  uploadFile(url, uri, funRes) {
+  uploadFile(url, uri, type, funRes) {
     const data = new FormData();
     data.append("file", {
       uri: uri,
-      type: "image/jpeg", // or photo.type
-      name: "test.png"
+      type: type ? type : "image/jpeg", // or photo.type
+      name: url ? url.replace(/^.*[\\\/]/, '') : 'test.png'
     });
 
     this.requestFetch(
