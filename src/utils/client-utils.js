@@ -95,7 +95,7 @@ module.exports = {
     data.append("file", {
       uri: uri,
       type: type ? type : "image/jpeg", // or photo.type
-      name: url ? url.replace(/^.*[\\\/]/, '') : 'test.png'
+      name: uri ? uri.replace(/^.*[\\\/]/, '') : 'test.png'
     });
 
     this.requestFetch(

@@ -101,15 +101,15 @@ class CreateEhealthScreen extends Component {
     }
     onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true, isProfile: false, isSearch: false })
     onConfirmDate = newDate => {
+        this.txtResult.focus();
         this.setState(
             {
                 dob: newDate,
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
             }, () => {
-                debugger;
-                this.txtResult.focus();
             });
+
     }
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
@@ -285,8 +285,6 @@ class CreateEhealthScreen extends Component {
                     multiple: true,
                     mediaType: 'photo',
                     maxFiles: 10,
-                    compressImageMaxWidth: 500,
-                    compressImageMaxHeight: 500
                 }).then(images => {
 
                     let listImages = [];
@@ -308,7 +306,7 @@ class CreateEhealthScreen extends Component {
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
                             imageProvider.upload(image.path, image.mime, (s, e) => {
- 
+
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
@@ -571,9 +569,7 @@ class CreateEhealthScreen extends Component {
                                         inputStyle={styles.inputStyle}
                                         underlineColorAndroid={'#fff'}
                                         placeHolderTextColor={'#00000060'}
-
                                         onFocus={this.hiddenList}
-                                        autoFocus={false}
                                         validate={{
                                             rules: {
                                                 required: true,
