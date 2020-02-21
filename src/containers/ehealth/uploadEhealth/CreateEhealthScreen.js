@@ -107,8 +107,9 @@ class CreateEhealthScreen extends Component {
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
             }, () => {
-                debugger;
-                this.txtResult.focus();
+                setTimeout(() => {
+                    this.txtResult.focus();
+                }, 500)
             });
     }
     onCancelDate = () => {
