@@ -3,6 +3,7 @@ module.exports = {
     getDetail(patientHistoryId, hospitalId, id, shareId) {
         return new Promise((resolve, reject) => {
             bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, id, shareId).then(s => {
+                console.log('s: ', s);
                 let resultDetail = null;
                 let result = null;
                 switch (s.code) {
@@ -12,6 +13,7 @@ module.exports = {
                                 try {
                                     resultDetail = JSON.parse(s.data.data.resultDetail);
                                 } catch (error) {
+                                    console.log('error: ', error);
 
                                 }
                             }
@@ -31,29 +33,20 @@ module.exports = {
 
                                         )
                                     ) {
-                                        
-                                        
                                         resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                     } else {
-                                        
-                                        
                                         resolve({ data: s.data.data, result, resultDetail, hasResult: true });
                                     }
                                 } catch (error) {
-                                    
-                                    
                                     resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                 }
                             } else {
-                                
-                                
+
                                 resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                             }
                         }
                         break;
                 }
-                
-                
                 resolve({ result, resultDetail, hasResult: false });
             }).catch(e => {
                 reject(e);
@@ -61,8 +54,8 @@ module.exports = {
         })
     },
     checkHighlight(result, min, max) {
-        
-        
+
+
         try {
             if (result && result.toLowerCase() == "dương tính")
                 return true;
@@ -77,8 +70,8 @@ module.exports = {
         }
     },
     showHighlight(item) {
-        if(this.checkHighlight(this.getResult(item), item.LowerIndicator, item.HigherIndicator)) {
-            return this.checkHighlight(this.getResult(item),  item.LowerIndicator, item.HigherIndicator)
+        if (this.checkHighlight(this.getResult(item), item.LowerIndicator, item.HigherIndicator)) {
+            return this.checkHighlight(this.getResult(item), item.LowerIndicator, item.HigherIndicator)
         }
         if (item.NormalRange) {
             if (!item.ResultState)
