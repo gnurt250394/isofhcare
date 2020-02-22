@@ -73,13 +73,13 @@ class ViewEhealthDetailScreen extends Component {
         } else {
             return (
                 <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <ProfileInfomation resultDetail={this.state.resultDetail}  />
-                    <View style={styles.lineHeader}  />
-                    <CheckupResult result={this.state.result}  />
-                    <MedicalTestResult result={this.state.result}  />
-                    <DiagnosticResult result={this.state.result}  />
-                    <SurgeryResult result={this.state.result}  />
-                    <Medicine result={this.state.result}  />
+                    <ProfileInfomation resultDetail={this.state.resultDetail} />
+                    <View style={styles.lineHeader} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
                     <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
                     <View style={styles.end} />
                 </ScrollView>
@@ -88,6 +88,7 @@ class ViewEhealthDetailScreen extends Component {
     }
     print = () => {
         let result = this.state.result;
+        result.Profile = this.state.resultDetail.Profile
         result.hospital = this.props.ehealth.hospital.hospital;
         let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
         this.setState({ isLoading: true }, () => {

@@ -447,7 +447,6 @@ class ViewInDateScreen extends Component {
     }
 
     exportPdf() {
-        console.log(1111)
         this.setState({
             isLoading: true
         }, () => {
@@ -456,11 +455,14 @@ class ViewInDateScreen extends Component {
                 let hospitalId = this.props.ehealth.patient.hospitalEntity.id;
                 resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.id).then(result => {
                     if (result) {
-                        result = result.result;
-                        result.hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital;
+                        let result1 = result.result;
+                        if (!result1?.Profile) {
+                            result1.Profile = result.resultDetail.Profile
+                        }
+                        result1.hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital;
                         this.exportPdfCom.exportPdf({
                             type: "all",
-                            result: result,
+                            result: result1,
                             fileName: constants.filenamePDF + patientHistoryId
                         }, () => {
                             this.setState({ isLoading: false });
@@ -503,7 +505,6 @@ class ViewInDateScreen extends Component {
         this.setState({ toggelMonthPicker: false });
     }
     onSelectAction = (index) => {
-        console.log('index: ', index);
         switch (index) {
             case 0:
                 this.onShareEhealth();
