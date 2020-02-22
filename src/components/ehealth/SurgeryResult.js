@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import SurgeryResultItem from '@components/ehealth/SurgeryResultItem';
-import { withNavigation } from 'react-navigation'
+import ImageEhealth from './ImageEhealth';
 
 
 class SurgeryResult extends Component {
@@ -13,31 +13,7 @@ class SurgeryResult extends Component {
         }
     }
 
-    showImage = (image, index) => () => {
-        this.props.navigation.navigate("photoViewer", {
-            index: index,
-            urls: image.map(item => {
-                return item.absoluteUrl()
-            }),
-        });
-    }
-    renderImages = (images) => {
-        if (images?.length) {
-            return <View style={styles.containerListImage}>
-                {images.map((e, i) => {
-                    return (
-                        <TouchableOpacity
-                            onPress={this.showImage(images, i)}
-                            style={styles.buttonImage} key={i}>
-                            <Image source={{ uri: e }} style={styles.imageResult} />
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
-        } else {
-            return null
-        }
-    }
+    
     render() {
         let { result } = this.props;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
@@ -75,7 +51,7 @@ class SurgeryResult extends Component {
                             padding: 10
                         }}>
                             <SurgeryResultItem item={item} key={index} {...this.props} />
-                            {this.renderImages(item.Image)}
+                            <ImageEhealth images={item.Image} />
                         </View>
                     )
                 })
@@ -91,24 +67,6 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
-    imageResult: {
-        height: 100,
-        width: 100,
-        resizeMode: 'cover'
-    },
-    buttonImage: {
-        marginHorizontal: 5,
-        borderColor: '#000',
-        borderWidth: 0.1,
-        marginBottom: 5
-    },
-    containerListImage: {
-        flexDirection: 'row',
-        alignItems: "center",
-        paddingHorizontal: 5,
-        paddingBottom: 20,
-        flexWrap: 'wrap'
-    },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
@@ -118,4 +76,4 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding: 10 },
     txResult: { fontWeight: 'bold', fontSize: 18 }
 })
-export default connect(mapStateToProps)(withNavigation(SurgeryResult));
+export default connect(mapStateToProps)(SurgeryResult);
