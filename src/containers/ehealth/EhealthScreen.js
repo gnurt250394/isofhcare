@@ -104,7 +104,7 @@ class EhealthScreen extends Component {
                         }}
                     />
                     <View style={styles.viewTx}>
-                        <Text style={styles.txHospitalName}>{item.hospital.name}</Text>
+                        <Text multiline style={styles.txHospitalName}>{item.hospital.name}</Text>
                         <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
                 </TouchableOpacity>
@@ -134,7 +134,7 @@ class EhealthScreen extends Component {
             <ActivityPanel
                 title={constants.title.ehealth}
                 style={styles.container}
-                isLoading = {this.state.refreshing}
+                isLoading={this.state.refreshing}
             >
                 <ScrollView style={styles.viewContent} >
                     <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
@@ -160,7 +160,7 @@ class EhealthScreen extends Component {
     }
 
 
-}
+} 
 const styles = StyleSheet.create({
     image: { width: 60, height: 60 },
     container: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     imageStyle: {
         borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { marginLeft: 10 },
+    viewTx: { marginLeft: 10,flex:1 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 
