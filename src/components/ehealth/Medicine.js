@@ -93,7 +93,7 @@ class Medicine extends Component {
                         </View>
                     </View>
                 }
-                {medinine[0].SummaryResult ?
+                {medinine[0].SummaryResult || medinine[0].Image ?
                     <View style={{ flex: 1, padding: 10 }}>
                         <Text style={{ paddingBottom: 10 }}>{medinine[0].SummaryResult}</Text>
                         {this.renderImages(medinine[0].Image)}

@@ -223,6 +223,9 @@ class ViewInDateScreen extends Component {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
             let note = item.SummaryResult;
+            if (item.SummaryResult || item.Image) {
+                note = item?.SummaryResult || " "
+            }
             if (!note)
                 note = item.Result;
             if (!note)
@@ -287,6 +290,9 @@ class ViewInDateScreen extends Component {
                 note = item.Microsome;
             if (!note)
                 note = item.BiopsyLocation;
+            if (item.SummaryResult || item.Image) {
+                note = item?.SummaryResult || ' '
+            }
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -337,7 +343,7 @@ class ViewInDateScreen extends Component {
                 && !item?.Quantity
                 && !item?.Unit ? ''
                 : (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "")
-            if (item.SummaryResult) {
+            if (item.SummaryResult || item.Image) {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
@@ -405,7 +411,7 @@ class ViewInDateScreen extends Component {
                     note = item.ServiceName + ": " + item.Result;
             }
             if (arr?.SummaryResult || arr?.Image) {
-                note = arr?.SummaryResult || ''
+                note = arr?.SummaryResult || ' '
             }
 
             if (note)
@@ -441,6 +447,7 @@ class ViewInDateScreen extends Component {
     }
 
     exportPdf() {
+        console.log(1111)
         this.setState({
             isLoading: true
         }, () => {
@@ -496,6 +503,7 @@ class ViewInDateScreen extends Component {
         this.setState({ toggelMonthPicker: false });
     }
     onSelectAction = (index) => {
+        console.log('index: ', index);
         switch (index) {
             case 0:
                 this.onShareEhealth();

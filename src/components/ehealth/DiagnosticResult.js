@@ -5,6 +5,7 @@ import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 import constants from '@resources/strings';
 import DiagnosticResultItem from '@components/ehealth/DiagnosticResultItem';
+import { withNavigation } from 'react-navigation'
 
 
 class DiagnosticResult extends Component {
@@ -14,7 +15,29 @@ class DiagnosticResult extends Component {
             listTime: []
         }
     }
-
+    showImage = (image, index) => () => {
+        this.props.navigation.navigate("photoViewer", {
+            index: index,
+            urls: image.map(item => {
+                return item.absoluteUrl()
+            }),
+        });
+    }
+    renderImages = (images) => {
+        if (images?.length) {
+            return <View style={styles.containerListImage}>
+                {images.map((e, i) => {
+                    return (
+                        <TouchableOpacity onPress={this.showImage(images, i)} style={styles.buttonImage} key={i}>
+                            <Image source={{ uri: e }} style={styles.imageResult} />
+                        </TouchableOpacity>
+                    )
+                })}
+            </View>
+        } else {
+            return null
+        }
+    }
     render() {
         let { result } = this.props;
         if (!result || !result.ListDiagnostic || !result.ListDiagnostic.length)
@@ -36,8 +59,17 @@ class DiagnosticResult extends Component {
                 </View>
             }
             {
-                resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} {...this.props} />)
+                resultDiagnostic.map((item, index) => {
+                    return (
+                        <View style={styles.containerItem}>
+                            <DiagnosticResultItem item={item} key={index} {...this.props} />
+                            {this.renderImages(item.Image)}
+
+                        </View>
+                    )
+                })
             }
+
         </View>)
     }
 }
@@ -49,6 +81,37 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    containerItem: {
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        borderRadius: 5,
+        padding: 10
+    },
+    imageResult: {
+        height: 100,
+        width: 100,
+        resizeMode: 'cover'
+    },
+    buttonImage: {
+        marginHorizontal: 5,
+        borderColor: '#000',
+        borderWidth: 0.1,
+        marginBottom: 5
+    },
+    containerListImage: {
+        flexDirection: 'row',
+        alignItems: "center",
+        paddingHorizontal: 5,
+        paddingBottom: 20,
+        flexWrap: 'wrap'
+    },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
@@ -59,4 +122,4 @@ const styles = StyleSheet.create({
     txDiagnostiResult: { fontWeight: 'bold', fontSize: 18 },
 
 })
-export default connect(mapStateToProps)(DiagnosticResult);
+export default connect(mapStateToProps)(withNavigation(DiagnosticResult));

@@ -33,16 +33,16 @@ class ListProfileScreen extends Component {
 
     constructor(props) {
         super(props)
-        console.log(this.props, 'view in month')
+        
         let patient = this.props.ehealth.patient;
-        console.log('patient: ', patient);
+        
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
 
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
-        console.log('histories: ', histories);
+        
         let dateSelected = "";
         if (latestTime) {
             dateSelected = latestTime.format("yyyy-MM-dd");
@@ -109,7 +109,7 @@ class ListProfileScreen extends Component {
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
         if (fire_date < new Date().getTime())
             return;
-        console.log('runnnnnn')
+        
         const notification = new firebase.notifications.Notification().setNotificationId('alarm_id')
             .setBody('Đã đến giờ uống thuốc')
             .setTitle('Isofh-Care')
@@ -143,12 +143,12 @@ class ListProfileScreen extends Component {
     onGetDetails = () => {
         let patientHistoryId = this.state.patient.patientHistoryId;
         let hospitalId = this.state.patient.hospitalEntity.id;
-        console.log('hospitalId: ', hospitalId);
+        
 
         bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             if (res.data) {
                 let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
-                console.log(medicineTime, 'medicineTime')
+                
                 let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
                 this.setState({
                     note: res.data.data.note,
@@ -170,7 +170,7 @@ class ListProfileScreen extends Component {
 
             }
         }).catch(err => {
-            console.log(err);
+            
         })
     }
     setDate(newDate) {
@@ -211,7 +211,7 @@ class ListProfileScreen extends Component {
                 res.data.data.isMedicineTime &&
                     this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
             }).catch(err => {
-                console.log(err);
+                
             })
 
             this.setState({
@@ -235,7 +235,7 @@ class ListProfileScreen extends Component {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
     }
     onConfirm = (newDate) => {
-        console.log(newDate, 'newDate')
+        
 
         !this.state.isTimeAlarm ? this.setState(
             {
@@ -252,7 +252,7 @@ class ListProfileScreen extends Component {
                 let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
-                    console.log(err);
+                    
                 })
             }
         ) : this.setState(
@@ -272,7 +272,7 @@ class ListProfileScreen extends Component {
                 let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
-                    console.log(err);
+                    
                 })
             }
         );
@@ -322,7 +322,7 @@ class ListProfileScreen extends Component {
                             dataAlarm.setMinutes(dataAlarm.getMinutes());
                         this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
                     }).catch(err => {
-                        console.log(err);
+                        
                     })
                 })
 
@@ -342,7 +342,7 @@ class ListProfileScreen extends Component {
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
-            console.log(err);
+            
         })
     }
     onPressAppointment = () => {
@@ -426,10 +426,13 @@ class ListProfileScreen extends Component {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                 let hospitalId = this.state.patient.hospitalEntity.id;
+                console.log(1111)
                 resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
                     if (result) {
                         result = result.result;
+                        console.log('result: ', result);
                         result.hospital = this.props.ehealth.hospital.hospital;
+                        console.log('this.exportPdfCom: ', this.exportPdfCom);
                         this.exportPdfCom.exportPdf({
                             type: "all",
                             result: result,
@@ -442,9 +445,11 @@ class ListProfileScreen extends Component {
                         this.setState({ isLoading: false });
                     }
                 }).catch(err => {
+                    console.log('err: ', err);
                     this.setState({ isLoading: false });
                 })
             } catch (error) {
+                console.log('error: ', error);
                 this.setState({ isLoading: false });
             }
         });
@@ -535,8 +540,8 @@ class ListProfileScreen extends Component {
                             <Calendar style={styles.calendarStyle}
                                 // markedDates={this.state.listSchedule}
                                 current={this.state.latestTime.format("yyyy-MM-dd")}
-                                // onDayPress={(day) => { console.log('selected day', day) }}
-                                onDayLongPress={(day) => { console.log('selected day', day) }}
+                                // onDayPress={(day) => {  }}
+                                onDayLongPress={(day) => {  }}
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={this.onMonthChange}
                                 // hideArrows={true}
