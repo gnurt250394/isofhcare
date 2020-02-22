@@ -182,21 +182,24 @@ class ViewInDateScreen extends Component {
                 note = item.DiseaseDiagnostic;
             else if (item?.First_Diagnostic)
                 note = item.First_Diagnostic;
-            if (note)
-                return (
-                    <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
-                        <Card style={styles.card}>
-                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewCheckupResult}>
-                                {/* <View style={styles.viewCheckupResult}></View> */}
-                                <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
-                                <View style={styles.viewNote}>
-                                    <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
-                                </View>
-                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                            </TouchableOpacity>
-                        </Card>
-                    </View>)
+            else if (item?.Image.length != 0){
+                note =' '
+            }
+                if (note)
+                    return (
+                        <View style={{ marginTop: 10 }}>
+                            <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
+                            <Card style={styles.card}>
+                                <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewCheckupResult}>
+                                    {/* <View style={styles.viewCheckupResult}></View> */}
+                                    <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
+                                    <View style={styles.viewNote}>
+                                        <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
+                                    </View>
+                                    <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                                </TouchableOpacity>
+                            </Card>
+                        </View>)
         }
         return null;
     }
