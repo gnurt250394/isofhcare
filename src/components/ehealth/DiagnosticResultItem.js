@@ -21,29 +21,7 @@ class DiagnosticResultItem extends Component {
         // }
         return <Text style={styles.txItem}>{text}</Text>
     }
-    showImage = (image, index) => () => {
-        this.props.navigation.navigate("photoViewer", {
-            index: index,
-            urls: image.map(item => {
-                return item.absoluteUrl()
-            }),
-        });
-    }
-    renderImages = (images) => {
-        if (images?.length) {
-            return <View style={styles.containerListImage}>
-                {images.map((e, i) => {
-                    return (
-                        <TouchableOpacity onPress={this.showImage(images, i)} style={styles.buttonImage} key={i}>
-                            <Image source={{ uri: e }} style={styles.imageResult} />
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
-        } else {
-            return null
-        }
-    }
+    
     render() {
         let { item } = this.props;
         return <View style={styles.container} key={this.props.key}>
@@ -80,7 +58,6 @@ class DiagnosticResultItem extends Component {
                                         this.renderItem(item.Discussion)
                                     }
                                 </View> : null}
-                            {this.renderImages(item.Image)}
                         </View> : null}
 
                 {
@@ -106,24 +83,7 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
-    imageResult: {
-        height: 100,
-        width: 100,
-        resizeMode: 'cover'
-    },
-    buttonImage: {
-        marginHorizontal: 5,
-        borderColor: '#000',
-        borderWidth: 0.1,
-        marginBottom: 5
-    },
-    containerListImage: {
-        flexDirection: 'row',
-        alignItems: "center",
-        paddingHorizontal: 5,
-        paddingBottom: 20,
-        flexWrap: 'wrap'
-    },
+  
     container: { flex: 1, marginBottom: 20 },
     diagnosticLabel1:
     {
@@ -141,21 +101,11 @@ const styles = StyleSheet.create({
     viewService: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
     txSerivceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
     viewItem: {
-        backgroundColor: "#ffffff",
-        shadowColor: "rgba(0, 0, 0, 0.05)",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowRadius: 10,
-        shadowOpacity: 1,
-        elevation: 3,
-        borderRadius: 5,
-        padding: 10
+        
     },
     viewList: { flexDirection: 'row' },
     imgList: { marginTop: 7 },
     txConclusion: { marginLeft: 10 }
 
 })
-export default connect(mapStateToProps)(withNavigation(DiagnosticResultItem));
+export default connect(mapStateToProps)(DiagnosticResultItem);

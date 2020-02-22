@@ -24,10 +24,16 @@ class ProfileInfomation extends Component {
         }
     }
 
+    formatDate = (date) => {
+        let dateFormat = date.substring(0, 10).split('-')
+        let dd = dateFormat[2];
+        let mm = dateFormat[1];
+        let yy = dateFormat[0]
+        return `${dd}/${mm}/${yy}`
+    }
 
     render() {
         let { resultDetail, data } = this.props;
-        console.log('data: ', data);
         if (!resultDetail)
             return null;
         let serviceCheckup = (resultDetail.ListService || []).find(item => item.ServiceType == "CheckUp");
@@ -40,7 +46,11 @@ class ProfileInfomation extends Component {
                 <Text style={[styles.itemlabel, styles.txTitle]}>{this.props.title}</Text>
                 <View style={styles.viewDate}>
                     <View style={styles.item}>
-                        <Text style={[styles.itemlabel, { color: '#626263' }]}>Ngày Khám: <Text style={[styles.itemcontent, { color: '#626263' }]}>{resultDetail?.Profile?.TimeGoIn ? resultDetail?.Profile?.TimeGoIn?.toDateObject()?.format("dd/MM/yyyy") : data?.timeGoIn?.toDateObject()?.format("dd/MM/yyyy")}</Text></Text>
+                        <Text
+                            style={[styles.itemlabel, { color: '#626263' }]}
+                        >Ngày Khám: <Text style={[styles.itemcontent, { color: '#626263' }]}
+                        >{resultDetail?.Profile?.TimeGoIn ? resultDetail?.Profile?.TimeGoIn?.toDateObject()?.format("dd/MM/yyyy") : this.formatDate(data?.timeGoIn)}</Text></Text>
+
                     </View>
                     <View style={[styles.item, { marginTop: 10 }]}>
                         <Text style={[styles.itemlabel, styles.txName]}>{this.props.patientName ? this.props.patientName : this.props.ehealth.patient.patientName}</Text>
