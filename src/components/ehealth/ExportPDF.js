@@ -61,7 +61,7 @@ class ExportPDF extends Component {
     }
 
     renderHeader(booking, hospital) {
-        console.log('booking: ', booking);
+        
         var date = hospital.timeGoIn.toDateObject().format("dd/MM/yyyy");
         var div = "<div style='height:50px'> </div>";
         div += "<div style='width: 100%;'><strong >" + hospital.name + "</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
@@ -241,6 +241,7 @@ class ExportPDF extends Component {
         return this.renderTr(result);
     }
     renderMedItem(booking, profile, result, hospital) {
+        
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả " + (result.type == "Xét Nghiệm Khác" ? "xét nghiệm khác" : result.type) + "</div>"
@@ -319,6 +320,7 @@ class ExportPDF extends Component {
         return div;
     }
     renderResultCheckup(booking, profile, item, hospital) {
+        
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
@@ -752,7 +754,6 @@ class ExportPDF extends Component {
 
 
     async exportPdf(option, finish) {
-        console.log('option: ', option);
         if (!option)
             if (finish)
                 setTimeout(function () {
