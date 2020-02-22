@@ -118,6 +118,7 @@ class ViewInDateScreen extends Component {
             let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
             resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
+                console.log('result: ', result);
 
                 this.setState({ result: result.result, resultDetail: result.resultDetail, data: result.data, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
@@ -171,14 +172,15 @@ class ViewInDateScreen extends Component {
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-            let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
+            let item = this.state.result?.ListResultCheckup?.find(e => e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic)
 
 
-            let note = item.Diagnostic;
-
-            if (!note)
+            let note
+            if (item?.Diagnostic)
+                note = item.Diagnostic;
+            else if (item?.DiseaseDiagnostic)
                 note = item.DiseaseDiagnostic;
-            if (!note)
+            else if (item?.First_Diagnostic)
                 note = item.First_Diagnostic;
             if (note)
                 return (
@@ -223,7 +225,7 @@ class ViewInDateScreen extends Component {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
             let note = item.SummaryResult;
-            if (item.SummaryResult || item.Image) {
+            if (item.SummaryResult || item?.Image?.length != 0) {
                 note = item?.SummaryResult || " "
             }
             if (!note)
@@ -290,7 +292,7 @@ class ViewInDateScreen extends Component {
                 note = item.Microsome;
             if (!note)
                 note = item.BiopsyLocation;
-            if (item.SummaryResult || item.Image) {
+            if (item.SummaryResult || item?.Image?.length != 0) {
                 note = item?.SummaryResult || ' '
             }
             if (note)
@@ -343,7 +345,7 @@ class ViewInDateScreen extends Component {
                 && !item?.Quantity
                 && !item?.Unit ? ''
                 : (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "")
-            if (item.SummaryResult || item.Image) {
+            if (item.SummaryResult || item?.Image?.length != 0) {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
@@ -410,7 +412,7 @@ class ViewInDateScreen extends Component {
                 else
                     note = item.ServiceName + ": " + item.Result;
             }
-            if (arr?.SummaryResult || arr?.Image) {
+            if (arr?.SummaryResult || arr?.Image?.length != 0) {
                 note = arr?.SummaryResult || ' '
             }
 

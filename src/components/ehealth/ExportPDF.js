@@ -13,26 +13,26 @@ class ExportPDF extends Component {
 
         }
 
-        var resultSurgery = result.ListResulGiaiPhau;
-        var resultCheckup = result.ListResultCheckup;
-        var resultDiagnostic = result.ListDiagnostic;
+        var resultSurgery = result?.ListResulGiaiPhau;
+        var resultCheckup = result?.ListResultCheckup;
+        var resultDiagnostic = result?.ListDiagnostic;
 
         var resultMedicalTest;
-        if ((result.ListResulViSinh && result.ListResulViSinh.length > 0)
-            || (result.ListResulHoaSinh && result.ListResulHoaSinh.length > 0)
-            || (result.ListResulHuyetHoc && result.ListResulHuyetHoc.length > 0)
-            || (result.ListResulOther && result.ListResulOther.length > 0)
+        if ((result?.ListResulViSinh && result?.ListResulViSinh?.length > 0)
+            || (result?.ListResulHoaSinh && result?.ListResulHoaSinh?.length > 0)
+            || (result?.ListResulHuyetHoc && result?.ListResulHuyetHoc?.length > 0)
+            || (result?.ListResulOther && result?.ListResulOther?.length > 0)
         )
             resultMedicalTest = {
-                resultViSinh: result.ListResulViSinh,
-                resultHoaSinh: result.ListResulHoaSinh,
-                resultHuyetHoc: result.ListResulHuyetHoc,
-                resultKhac: result.ListResulOther
+                resultViSinh: result?.ListResulViSinh,
+                resultHoaSinh: result?.ListResulHoaSinh,
+                resultHuyetHoc: result?.ListResulHuyetHoc,
+                resultKhac: result?.ListResulOther
             }
-        var profile = result.Profile;
+        var profile = result?.Profile;
         var div = "";
-        if (resultCheckup && resultCheckup.length > 0) {
-            for (var i = 0; i < resultCheckup.length; i++) {
+        if (resultCheckup && resultCheckup?.length > 0) {
+            for (var i = 0; i < resultCheckup?.length; i++) {
                 var item = resultCheckup[i];
                 div += this.renderResultCheckup(result, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
@@ -62,9 +62,9 @@ class ExportPDF extends Component {
 
     renderHeader(booking, hospital) {
         
-        var date = hospital.timeGoIn.toDateObject().format("dd/MM/yyyy");
+        var date = hospital?.timeGoIn?.toDateObject()?.format("dd/MM/yyyy");
         var div = "<div style='height:50px'> </div>";
-        div += "<div style='width: 100%;'><strong >" + hospital.name + "</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
+        div += "<div style='width: 100%;'><strong >" + hospital?.name + "</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
         return div;
     }
     renderResultSurgery(booking, profile, item, hospital) {
@@ -74,38 +74,38 @@ class ExportPDF extends Component {
         div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả giải phẫu</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + (profile?.PatientName||'') + "</span> <br />"
-        div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ:" + item.ServiceName + "</p>";
-        if (item.BiopsyLocation) {
+        div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ:" + (item?.ServiceName||'') + "</p>";
+        if (item?.BiopsyLocation) {
             div += "<p> <strong>Vị trí sinh thiết</strong> </p>";
-            div += "<p>" + item.BiopsyLocation + "</p>";
+            div += "<p>" + (item?.BiopsyLocation ||'')+ "</p>";
         }
-        if (item.Microsome) {
+        if (item?.Microsome) {
             div += "<p> <strong>Vi thể</strong> </p>";
-            div += "<p>" + item.Microsome + "</p>";
+            div += "<p>" + (item?.Microsome||'') + "</p>";
         }
-        if (item.Macrosome) {
+        if (item?.Macrosome) {
             div += "<p> <strong>Đại thể</strong> </p>";
-            div += "<p>" + item.Macrosome + "</p>";
+            div += "<p>" + (item?.Macrosome||'') + "</p>";
         }
-        if (item.Result || item.Discussion) {
+        if (item?.Result || item?.Discussion) {
             div += "<p> <strong>Kết quả</strong> </p>";
-            div += "<p>" + item.Result + item.Discussion + "</p>";
+            div += "<p>" + (item?.Result||'') + (item?.Discussion||'') + "</p>";
         }
-        if (item.ReportTemplate == "Tebaoamdao" || item.ReportTemplate == "Thinprep") {
-            if (item.ServiceMedicTestLine.length > 0) {
-                for (var i = 0; i < item.ServiceMedicTestLine.length; i++) {
+        if (item?.ReportTemplate == "Tebaoamdao" || item?.ReportTemplate == "Thinprep") {
+            if (item?.ServiceMedicTestLine?.length > 0) {
+                for (var i = 0; i < item?.ServiceMedicTestLine?.length; i++) {
                     if (item.ServiceMedicTestLine[i].IsVerified) {
-                        div += "<p>" + checked + "<strong>" + item.ServiceMedicTestLine[i].NameLine + "</strong> </p>";
+                        div += "<p>" + checked + "<strong>" + item?.ServiceMedicTestLine[i]?.NameLine + "</strong> </p>";
                     } else {
-                        div += "<p>" + unCheck + "<strong>" + item.ServiceMedicTestLine[i].NameLine + "</strong> </p>";
+                        div += "<p>" + unCheck + "<strong>" + item?.ServiceMedicTestLine[i]?.NameLine + "</strong> </p>";
                     }
-                    div += "<p style='margin-left: 15px'>" + item.ServiceMedicTestLine[i].Result2 + "</p>";
+                    div += "<p style='margin-left: 15px'>" + item?.ServiceMedicTestLine[i]?.Result2 + "</p>";
                 }
             }
         }
-        if (item.Conclusion) {
+        if (item?.Conclusion) {
             div += "<p> <strong>Kết luận</strong> </p>";
-            div += "<p>" + item.Conclusion + "</p>";
+            div += "<p>" + (item?.Conclusion||'') + "</p>";
         }
         div += " </div>"
         div += " </div>"
@@ -115,7 +115,7 @@ class ExportPDF extends Component {
 
     renderResultMedicalTest(booking, profile, resultMedical, hospital) {
         var result = [];
-        if (resultMedical.resultKhac) {
+        if (resultMedical?.resultKhac) {
             var item = {
                 type: 'Xét Nghiệm Khác',
                 value: {
@@ -125,10 +125,10 @@ class ExportPDF extends Component {
             }
             result.push(item);
             resultMedical.resultKhac.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+                item.value.ListMedical.push.apply(item?.value?.ListMedical, entry?.ListMedical);
             });
         }
-        if (resultMedical.resultViSinh) {
+        if (resultMedical?.resultViSinh) {
             var item = {
                 type: 'Vi Sinh',
                 value: {
@@ -138,11 +138,11 @@ class ExportPDF extends Component {
             }
             result.push(item);
 
-            resultMedical.resultViSinh.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+            resultMedical?.resultViSinh?.forEach(function (entry) {
+                item.value.ListMedical.push.apply(item?.value?.ListMedical, entry?.ListMedical);
             });
         }
-        if (resultMedical.resultHoaSinh) {
+        if (resultMedical?.resultHoaSinh) {
             var item = {
                 type: 'Hóa Sinh',
                 value: {
@@ -151,11 +151,11 @@ class ExportPDF extends Component {
                 }
             }
             result.push(item);
-            resultMedical.resultHoaSinh.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+            resultMedical?.resultHoaSinh.forEach(function (entry) {
+                item?.value?.ListMedical?.push?.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
-        if (resultMedical.resultHuyetHoc) {
+        if (resultMedical?.resultHuyetHoc) {
             var item = {
                 type: 'Huyết Học',
                 value: {
@@ -164,14 +164,14 @@ class ExportPDF extends Component {
                 }
             }
             result.push(item);
-            resultMedical.resultHuyetHoc.forEach(function (entry) {
+            resultMedical?.resultHuyetHoc?.forEach(function (entry) {
                 item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
         var div = "";
         for (var i = 0; i < result.length; i++) {
             var item = result[i];
-            if (item.value.ListMedical && item.value.ListMedical.length > 0) {
+            if (item?.value?.ListMedical && item?.value?.ListMedical?.length > 0) {
                 div += this.renderMedItem(booking, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }.bold{font-weight:bold; color: red}</style><div class='pagebreak'></div>";
             }
@@ -192,8 +192,8 @@ class ExportPDF extends Component {
     }
     renderMedicalTestLine(type, item) {
         var result2 = "";
-        result2 += this.renderTr(this.renderTd(item.ServiceName, "serviceName", type == "Vi Sinh" ? 2 : 4));
-        item.ServiceMedicTestLine.map((item2, i) => {
+        result2 += this.renderTr(this.renderTd((item?.ServiceName||''), "serviceName", type == "Vi Sinh" ? 2 : 4));
+        item?.ServiceMedicTestLine?.map((item2, i) => {
             var range = resultUtils.getRangeMedicalTest(item2);
             var isHighlight = resultUtils.showHighlight(item2);
             result2 += this.renderTr((type == 'Vi Sinh' ?
@@ -209,19 +209,19 @@ class ExportPDF extends Component {
     }
     renderItemTest(type, item) {
         var result = "";
-        if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
+        if ( item?.ServiceMedicTestLine?.length > 0 && item?.ServiceMedicTestLine[0]?.NameLine != 0) {
             return (this.renderMedicalTestLine(type, item));
         }
 
-        if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) {
+        if (item?.ServiceMedicTestLine?.length > 0) {
             var range = resultUtils.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
             var isHighlight = resultUtils.showHighlight(item.ServiceMedicTestLine[0]);
 
             type == 'Vi Sinh' ?
-                result += this.renderTd(item.ServiceName, "serviceName") +
+                result += this.renderTd((item?.ServiceName||''), "serviceName") +
                 this.renderTd(resultUtils.getResult(item.ServiceMedicTestLine[0]), isHighlight ? "bold" : "")
                 :
-                result += this.renderTd(item.ServiceName, "serviceName") +
+                result += this.renderTd((item?.ServiceName||''), "serviceName") +
                 this.renderTd(resultUtils.getResult(item.ServiceMedicTestLine[0]), isHighlight ? "bold" : "") +
                 this.renderTd(range) +
                 this.renderTd(item.ServiceMedicTestLine[0].Unit);
@@ -230,10 +230,10 @@ class ExportPDF extends Component {
             var isHighlight = resultUtils.showHighlight(item);
 
             type == 'Vi Sinh' ?
-                result += this.renderTd(item.ServiceName, "serviceName") +
+                result += this.renderTd((item?.ServiceName||''), "serviceName") +
                 this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "")
                 :
-                result += this.renderTd(item.ServiceName, "serviceName") +
+                result += this.renderTd((item?.ServiceName||''), "serviceName") +
                 this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") +
                 this.renderTd(range) +
                 this.renderTd(item.Unit);
@@ -325,7 +325,7 @@ class ExportPDF extends Component {
         div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + (profile?.PatientName||'') + "</span> <br />"
-        div += "<br /> </p> <p class=\"yc-kt\">" + (item.ServiceName == "Đơn thuốc" ? "" : item.ServiceName) + "</p>";
+        div += "<br /> </p> <p class=\"yc-kt\">" + ((item?.ServiceName||'') == "Đơn thuốc" ? "" : (item?.ServiceName||'')) + "</p>";
 
         if (booking?.Profile?.IsContract) {
 
@@ -730,7 +730,7 @@ class ExportPDF extends Component {
         div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả cận lâm sàng</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" +( profile?.PatientName||'' )+ "</span> <br />"
-        div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ: " + item.ServiceName + "</p>";
+        div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ: " + (item?.ServiceName||'') + "</p>";
         if (item.Result || item.SummaryResult || item.Discussion) {
             div += "<p> <strong>Kết quả</strong> </p>";
             if (item.Result)
