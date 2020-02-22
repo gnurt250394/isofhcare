@@ -6,7 +6,7 @@ import constants from '@resources/strings';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import resultUtils from '@ehealth/utils/result-utils';
 import ActionSheet from 'react-native-actionsheet'
-import { withNavigation } from 'react-navigation'
+import ImageEhealth from './ImageEhealth';
 
 
 class MedicalTestResult extends Component {
@@ -192,29 +192,7 @@ class MedicalTestResult extends Component {
             this.renderMedical(data, i)
         ))
     }
-    showImage = (image, index) => () => {
-        this.props.navigation.navigate("photoViewer", {
-            index: index,
-            urls: image.map(item => {
-                return item.absoluteUrl()
-            }),
-        });
-    }
-    renderImages = (images) => {
-        if (images?.length) {
-            return <View style={styles.containerListImage}>
-                {images.map((e, i) => {
-                    return (
-                        <TouchableOpacity onPress={this.showImage(images, i)} style={styles.buttonImage} key={i}>
-                            <Image source={{ uri: e }} style={styles.imageResult} />
-                        </TouchableOpacity>
-                    )
-                })}
-            </View>
-        } else {
-            return null
-        }
-    }
+    
     render() {
         if (!this.state.currentGroup || !this.state.hasResult) {
             if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.SummaryResult || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
@@ -244,7 +222,7 @@ class MedicalTestResult extends Component {
                                     </View> : null
                                 }
 
-                                {this.renderImages(e.Image)}
+                                <ImageEhealth images={e.Image} />
                             </View>
                         </View>
                     )
@@ -315,24 +293,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingBottom: 10
     },
-    imageResult: {
-        height: 100,
-        width: 100,
-        resizeMode: 'cover'
-    },
-    buttonImage: {
-        marginHorizontal: 5,
-        borderColor: '#000',
-        borderWidth: 0.1,
-        marginBottom: 5
-    },
-    containerListImage: {
-        flexDirection: 'row',
-        alignItems: "center",
-        paddingHorizontal: 5,
-        paddingBottom: 20,
-        flexWrap: 'wrap'
-    },
     containerDescription: {
         backgroundColor: "#ffffff",
         shadowColor: "rgba(0, 0, 0, 0.05)",
@@ -396,4 +356,4 @@ const styles = StyleSheet.create({
     btnCurrentGroup: { flexDirection: 'row', alignItems: 'center' },
     txCurrent: { marginRight: 10 }
 })
-export default connect(mapStateToProps)(withNavigation(MedicalTestResult));
+export default connect(mapStateToProps)(MedicalTestResult);
