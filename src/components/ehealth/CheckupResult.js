@@ -20,11 +20,17 @@ class CheckupResult extends Component {
         console.log('result: ', result);
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
-        if (!result?.ListResultCheckup[0]?.SummaryResult && result?.ListResultCheckup[0]?.ServiceName && !result?.ListResultCheckup[0]?.Image) {
-            return null
-        }
+        // if (!result?.ListResultCheckup[0]?.SummaryResult && result?.ListResultCheckup[0]?.ServiceName && !result?.ListResultCheckup[0]?.Image) {
+        //     return null
+        // }
+        let arr = result?.ListResultCheckup.every(e =>!e.DoctorAdviceTxt&& !e.DiseaseDiagnostic && (e?.Image?.length == 0))
+        console.log('result?.ListResultCheckup: ', result?.ListResultCheckup);
+        console.log('arr: ', arr);
         let resultCheckup = result.ListResultCheckup || [];
 
+        if (arr) {
+            return null
+        }
         return (<View style={styles.container}>
             {
                 (this.props.showTitle == true || this.props.showTitle == undefined) &&
