@@ -192,14 +192,14 @@ class MedicalTestResult extends Component {
             this.renderMedical(data, i)
         ))
     }
-    
+
     render() {
         if (!this.state.currentGroup || !this.state.hasResult) {
             if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.SummaryResult || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
                 console.log('this.state?.medicalTestResult?.length: ', this.state?.medicalTestResult);
                 return this.state.medicalTestResult.map((e, i) => {
                     return (
-                        <View style={{
+                        <View key={i} style={{
                             flex: 1,
                             padding: 10
                         }}>
