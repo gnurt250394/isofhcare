@@ -8,7 +8,7 @@ const server_url = "http://10.0.0.88:9769"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
-const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
+const resource_url = "https://storage.googleapis.com/isofh-care-stable/"; //stable
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
 
 
