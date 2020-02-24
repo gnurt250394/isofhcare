@@ -39,7 +39,7 @@ class DiagnosticResult extends Component {
             {
                 resultDiagnostic.map((item, index) => {
                     return (
-                        <View style={styles.containerItem}>
+                        <View key={index} style={styles.containerItem}>
                             <DiagnosticResultItem item={item} key={index} {...this.props} />
                             <ImageEhealth images={item.Image} />
                         </View>

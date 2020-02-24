@@ -13,7 +13,7 @@ class SurgeryResult extends Component {
         }
     }
 
-    
+
     render() {
         let { result } = this.props;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
@@ -37,7 +37,7 @@ class SurgeryResult extends Component {
             {
                 resultSurgery.map((item, index) => {
                     return (
-                        <View style={{
+                        <View key={index} style={{
                             backgroundColor: "#ffffff",
                             shadowColor: "rgba(0, 0, 0, 0.05)",
                             shadowOffset: {

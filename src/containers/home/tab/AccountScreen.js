@@ -53,7 +53,7 @@ class AccountScreen extends Component {
               this.showLoading(false, () => {
                 if (s && s.data.code == 0) {
                   let user = objectUtils.clone(this.props.userApp.currentUser);
-                  user.avatar = s.data.data.images[0].thumbnail;
+                  user.avatar = s.data.data.images[0].imageLink;
                   this.showLoading(true, () => {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
@@ -64,7 +64,7 @@ class AccountScreen extends Component {
                           let current = this.props.userApp.currentUser;
                           user.bookingNumberHospital = current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
-                          user.avatar = s.data.user.avatar.absoluteUrl()
+                          user.avatar = s.data.user.avatar
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
