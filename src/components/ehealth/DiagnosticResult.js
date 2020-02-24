@@ -15,12 +15,12 @@ class DiagnosticResult extends Component {
             listTime: []
         }
     }
-   
+
     render() {
         let { result } = this.props;
         if (!result || !result.ListDiagnostic || !result.ListDiagnostic.length)
             return null;
-        if (!result.ListDiagnostic[0].SummaryResult && !result.ListDiagnostic[0].ServiceName && result.ListDiagnostic[0].Image.length == 0) {
+        if (!result.ListDiagnostic[0]?.SummaryResult && !result.ListDiagnostic[0]?.ServiceName && (result?.ListDiagnostic[0]?.Image?.length == 0 || !result?.ListDiagnostic[0]?.Image)) {
             return null
         }
         let resultDiagnostic = result.ListDiagnostic || [];
