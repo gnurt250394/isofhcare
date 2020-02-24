@@ -96,6 +96,7 @@ class DetailsEhealthScreen extends Component {
         const source = this.state.listEhealth && this.state.listEhealth.medicalRecord && this.state.listEhealth.medicalRecord.avatar
             ? { uri: this.state.listEhealth.medicalRecord.avatar.absoluteUrl() }
             : icSupport;
+            console.log('source: ', source);
         return (
             <ActivityPanel
                 titleStyle={{ marginLeft: 50 }}
@@ -148,16 +149,16 @@ class DetailsEhealthScreen extends Component {
                         resizeMode="cover"
                         loadingStyle={{ size: "small", color: "gray" }}
                         source={source}
-                        defaultImage={() => {
-                            return (
-                                <ScaledImage
-                                    resizeMode="cover"
-                                    source={icSupport}
-                                    width={70}
-                                    style={styles.imgLoad}
-                                />
-                            );
-                        }}
+                        // defaultImage={() => {
+                        //     return (
+                        //         <ScaledImage
+                        //             resizeMode="cover"
+                        //             source={icSupport}
+                        //             width={70}
+                        //             style={styles.imgLoad}
+                        //         />
+                        //     );
+                        // }}
                     />
                 </View>
                 <Card style={{ borderRadius: 5, borderWidth: 1, alignItem: 'center', flex: 1, marginHorizontal: 10 }}>
