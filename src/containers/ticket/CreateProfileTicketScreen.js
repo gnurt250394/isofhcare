@@ -115,7 +115,7 @@ class CreateProfileTicketScreen extends Component {
             this.setState({
               image
             });
-            imageProvider.upload(this.state.image.path, (s, e) => {
+            imageProvider.upload(this.state.image.path,this.state.image.mime, (s, e) => {
               if (s.success && s.data.code == 0) {
                 let images = s.data.data.images[0].thumbnail;
                 this.setState({
@@ -197,7 +197,7 @@ class CreateProfileTicketScreen extends Component {
     }
     if (this.state.image)
       this.setState({ isLoading: true }, () => {
-        imageProvider.upload(this.state.image.path, (s, e) => {
+        imageProvider.upload(this.state.image.path,this.state.image.mime, (s, e) => {
           if (s.success && s.data.code == 0) {
             let image = s.data.data.images[0].thumbnail;
             this.onUpdate2(image);

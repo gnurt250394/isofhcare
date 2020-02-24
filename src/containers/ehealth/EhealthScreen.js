@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet,
-    Dimensions
+    ScrollView
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -104,7 +104,7 @@ class EhealthScreen extends Component {
                         }}
                     />
                     <View style={styles.viewTx}>
-                        <Text style={styles.txHospitalName}>{item.hospital.name}</Text>
+                        <Text multiline style={styles.txHospitalName}>{item.hospital.name}</Text>
                         <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
                 </TouchableOpacity>
@@ -134,10 +134,11 @@ class EhealthScreen extends Component {
             <ActivityPanel
                 title={constants.title.ehealth}
                 style={styles.container}
+                isLoading={this.state.refreshing}
             >
-                <View style={styles.viewContent} >
+                <ScrollView style={styles.viewContent} >
                     <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
-                    {/* <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity> */}
+                    <TouchableOpacity onPress={this.onUploadEhealth} style={styles.btnUploadEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.upload_new_result_examination}</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -151,15 +152,16 @@ class EhealthScreen extends Component {
                         > </FlatList>
                         {/* <TouchableOpacity onPress = {this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity> */}
                     </View>
+                    <TouchableOpacity onPress={this.listEhealthUpload}><Text style={styles.txBottom}>{constants.ehealth.ehealth_upload}</Text></TouchableOpacity>
 
-                </View>
+                </ScrollView>
 
             </ActivityPanel>
         );
     }
 
 
-}
+} 
 const styles = StyleSheet.create({
     image: { width: 60, height: 60 },
     container: {
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
     imageStyle: {
         borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { marginLeft: 10 },
+    viewTx: { marginLeft: 10,flex:1 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 

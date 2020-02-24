@@ -88,6 +88,7 @@ class ViewEhealthDetailScreen extends Component {
     }
     print = () => {
         let result = this.state.result;
+        result.Profile = this.state.resultDetail.Profile
         result.hospital = this.props.ehealth.hospital.hospital;
         let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
         this.setState({ isLoading: true }, () => {
@@ -113,7 +114,7 @@ class ViewEhealthDetailScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 isLoading={this.state.isLoading}
                 titleStyle={styles.titleStyle}
-                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><ScaledImage source = {require('@images/new/ehealth/ic_print.png')} height = {25} /></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><ScaledImage source={require('@images/new/ehealth/ic_print.png')} height={25} /></TouchableOpacity>}
             >
                 {this.renderDetails()}
                 <ExportPDF endLoading={() => { this.setState({ isLoading: false }) }} ref={(element) => this.exportPdfCom = element} />

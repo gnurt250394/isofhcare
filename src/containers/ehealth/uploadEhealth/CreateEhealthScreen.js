@@ -6,9 +6,10 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
-    ScrollView,
+    KeyboardAvoidingView,
     ActivityIndicator,
-    Keyboard
+    Keyboard,
+    TouchableWithoutFeedback,
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -31,6 +32,7 @@ import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import profileProvider from '@data-access/profile-provider'
 import DateTimePicker from "mainam-react-native-date-picker";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class CreateEhealthScreen extends Component {
     constructor(props) {
@@ -58,6 +60,7 @@ class CreateEhealthScreen extends Component {
             isSearch: false,
             // isSelect: true
         }
+        this.data = []
     }
     componentDidMount() {
         this.onLoadProfile()
@@ -96,42 +99,38 @@ class CreateEhealthScreen extends Component {
                 }
             );
     }
-    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true, isProfile: false, isSearch: false })
     onConfirmDate = newDate => {
         this.setState(
             {
                 dob: newDate,
                 date: newDate.format("dd/MM/yyyy"),
                 toggelDateTimePickerVisible: false
-            },
-            () => {
-            }
-        );
+            }, () => {
+                setTimeout(() => {
+                    this.txtResult.focus();
+                }, 500)
+            });
+
     }
     onCancelDate = () => {
         this.setState({ toggelDateTimePickerVisible: false });
     }
-    onSearch = () => {
-        var s = this.state.hospitalName;
+    onSearch = (s) => {
 
-        if (s.length) {
-            var listSearch = this.state.data.filter(item => {
+        if (s) {
+            var listSearch = this.data.filter(item => {
                 return s == null || item && item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
             });
             // listSearch = listSearch.map(item => {
             //     item.checked = this.listServicesSelected.find(item2 => item2.id == item.id);
             //     return item;
             // })
-            if (!listSearch.length) {
-                this.setState({
-                    hospitalName: this.state.hospitalName,
-                    hospitalId: null
-                })
-            }
+
             this.setState({ data: listSearch });
         } else {
 
-            this.onRefresh()
+            this.setState({ data: this.data });
         }
     }
     onLoad() {
@@ -148,6 +147,7 @@ class CreateEhealthScreen extends Component {
                     loadMore: false
                 }, () => {
                     if (s) {
+                        this.data = s
                         this.setState({
                             data: s,
                         });
@@ -220,7 +220,7 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItem = ({ item, index }) => {
-        return <TouchableOpacity onPress={() => this.onSelectHospital(item)} style={styles.details} >
+        return <TouchableOpacity onPress={() => this.onSelectHospital(item)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.contact && item.contact.address}</Text>
@@ -235,7 +235,8 @@ class CreateEhealthScreen extends Component {
         })
     }
     renderItemProfile = ({ item, index }) => {
-        return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={styles.details} >
+
+        return <TouchableOpacity onPress={() => this.onSelectProfile(item.medicalRecords)} style={[styles.details, index == 0 ? { borderTopColor: '#fff' } : {}]} >
             <View style={styles.containerContent}>
                 <Text style={styles.bv} numberOfLines={1}>{item.medicalRecords.name}</Text>
             </View>
@@ -244,8 +245,8 @@ class CreateEhealthScreen extends Component {
     search = (text) => {
         this.setState({
             hospitalName: text,
-        }, () => this.onSearch())
-
+        })
+        this.onSearch(text)
     }
     onLoadProfile = () => {
         profileProvider.getListProfile().then(s => {
@@ -268,11 +269,16 @@ class CreateEhealthScreen extends Component {
     onShowProfile = () => {
         this.setState({
             isProfile: !this.state.isProfile,
+            isSearch: false
         })
     }
     selectImage = () => {
+        this.setState({
+            isSearch: false,
+            isProfile: false
+        })
         if (this.state.imageUris && this.state.imageUris.length >= 10) {
-            snackbar.show(constants.msg.booking.image_without_five, "danger");
+            snackbar.show(constants.msg.booking.image_without_ten, "danger");
             return;
         }
         connectionUtils.isConnected().then(s => {
@@ -281,9 +287,10 @@ class CreateEhealthScreen extends Component {
                     multiple: true,
                     mediaType: 'photo',
                     maxFiles: 10,
-                    compressImageMaxWidth: 500,
-                    compressImageMaxHeight: 500
+                    compressImageMaxWidth: 1500,
+                    compressImageMaxHeight: 1500
                 }).then(images => {
+
                     let listImages = [];
                     if (images.length)
                         listImages = [...images];
@@ -291,8 +298,10 @@ class CreateEhealthScreen extends Component {
                         listImages.push(images);
                     let imageUris = this.state.imageUris;
                     listImages.forEach(image => {
-                        if (imageUris.length >= 10)
+                        if (imageUris.length >= 10) {
+                            snackbar.show('Chỉ được chọn tối đa 10 ảnh', 'danger')
                             return;
+                        }
                         let temp = null;
                         imageUris.forEach((item) => {
                             if (item.uri == image.path)
@@ -300,7 +309,8 @@ class CreateEhealthScreen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path, (s, e) => {
+                            imageProvider.upload(image.path, image.mime, (s, e) => {
+
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
@@ -365,7 +375,7 @@ class CreateEhealthScreen extends Component {
             if (this.state.currentId) {
                 ehealthProvider.updateEhealth(params, this.state.currentId).then(res => {
 
-                    if (res && res.code == 200) {
+                    if (res && (res.code == 200 || res.code == 204)) {
                         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
                         if (callback) {
                             callback(res.data);
@@ -375,6 +385,7 @@ class CreateEhealthScreen extends Component {
                             disabled: false
                         })
                     } else {
+                        snackbar.show(res.message, 'danger')
                         this.setState({
                             disabled: false
                         })
@@ -388,12 +399,13 @@ class CreateEhealthScreen extends Component {
             } else {
                 ehealthProvider.uploadEhealth(params).then(res => {
 
-                    if (res && res.code == 200) {
+                    if (res && (res.code == 200 || res.code == 204)) {
                         this.props.navigation.replace('listEhealthUpload')
                         this.setState({
                             disabled: false
                         })
                     } else {
+                        snackbar.show(res.message, 'danger')
                         this.setState({
                             disabled: false
                         })
@@ -411,6 +423,7 @@ class CreateEhealthScreen extends Component {
 
         this.setState({
             isSearch: true,
+            isProfile: false
         })
         this.onRefresh()
     }
@@ -442,12 +455,21 @@ class CreateEhealthScreen extends Component {
     }
     // onTouchStart = () => {
     //     if (this.state.isProfile && this.state.isSelect) {
-            
+
     //         this.setState({
     //             isProfile: false
     //         })
     //     }
     // }
+    onHidden = () => {
+        Keyboard.dismiss()
+        this.setState({ isProfile: false, isSearch: false })
+    }
+    hiddenList = () => {
+        this.setState({ isProfile: false, isSearch: false })
+
+    }
+
     render() {
 
         return (
@@ -455,151 +477,178 @@ class CreateEhealthScreen extends Component {
                 title={this.props.navigation.getParam('data', null) ? 'SỬA KẾT QUẢ KHÁM' : 'NHẬP KẾT QUẢ KHÁM'}
                 style={styles.container}
             >
-                <ScrollView
+
+                <KeyboardAwareScrollView
                     // onTouchStart={this.onTouchStart}
                     nestedScrollEnabled
-                    style={styles.viewContent} bounces={false} keyboardShouldPersistTaps='always' >
-                    <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
-                    <Form ref={ref => (this.form = ref)}>
-                        <Field style={styles.viewInput}>
-
-                            <Text style={styles.title}>CSYT đã khám (*)</Text>
-                            <Field style={styles.viewDrop}>
-                                <TextField
-                                    onFocus={this.onFocus}
-                                    onChangeText={text => this.search(text)}
-                                    value={this.state.hospitalName}
-                                    placeholder={'Nhập CSYT đã khám'}
-                                    errorStyle={[styles.errorStyle]}
-                                    inputStyle={[styles.inputStyleDrop,]}
-                                    underlineColorAndroid={'#fff'}
-                                    returnKeyType='done'
-                                    maxLength={100}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                        },
-                                        messages: {
-                                            required: "Tên CSYT không được bỏ trống",
-                                        }
-                                    }}
-                                    autoCapitalize={"none"}
-                                />
-                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
-                            </Field>
-                            {this.state.isSearch ? <Card style={styles.card}><FlatList
-                                data={this.state.data}
-                                extraData={this.state}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={this.renderItem}
-                                onRefresh={this.onRefresh.bind(this)}
-                                keyboardShouldPersistTaps={'handled'}
-                                refreshing={this.state.refreshing}
-                                nestedScrollEnabled
-                                scrollEnabled
-                                style={{ height: 250 }}
-                            >
-
-                            </FlatList></Card> : <View></View>}
-                            <Text style={styles.title}>Người được khám (*)</Text>
-                            <Field style={styles.viewDrop}>
-                                <TextField
-                                    value={this.state.medicalRecordName}
-                                    placeholder={'Chọn tên người được khám'}
-                                    errorStyle={styles.errorStyle}
-                                    inputStyle={styles.inputStyleDrop}
-                                    underlineColorAndroid={'#fff'}
-                                    editable={false}
-                                    onPress={this.onShowProfile}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                        },
-                                        messages: {
-                                            required: "Chưa chọn người được khám",
-                                        }
-                                    }}
-                                    autoCapitalize={"none"}
-                                />
-                                <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
-                            </Field>
-
-                            {this.state.isProfile ? <Card style={styles.card}><FlatList
-                                data={this.state.dataProfile}
-                                extraData={this.state}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={this.renderItemProfile}
-                                nestedScrollEnabled={true}
-
-                            >
-
-                            </FlatList></Card> : <View></View>}
-                            <Text style={styles.title}>Dịch vụ khám (*)</Text>
-                            <TextField
-                                onChangeText={text => this.setState({ medicalServiceName: text })}
-                                value={this.state.medicalServiceName}
-                                placeholder={'Nhập dịch vụ khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
-                                underlineColorAndroid={'#fff'}
-                                maxLength={100}
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Dịch vụ khám không được bỏ trống",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
-                            <Text style={styles.title}>Thời gian khám (*)</Text>
-                            <TextField
-                                value={this.state.date}
-                                editable={false}
-                                onPress={this.onSelectDate}
-                                placeholder={'Chọn thời gian khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={styles.inputStyle}
-                                underlineColorAndroid={'#fff'}
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                    },
-                                    messages: {
-                                        required: "Chưa chọn thời gian khám",
-                                    }
-                                }}
-                                autoCapitalize={"none"}
-                            />
-                            <Text style={styles.title}>Kết quả khám</Text>
-                            <TextField
-                                onChangeText={text => this.setState({ result: text })}
-                                value={this.state.result}
-                                placeholder={'Nhập kết quả khám'}
-                                errorStyle={styles.errorStyle}
-                                inputStyle={[styles.inputResult, { minHeight: 51 }]}
-                                underlineColorAndroid={'#fff'}
-                                maxLength={2000}
-                                autoCapitalize={"none"}
-                            />
-                        </Field>
-                    </Form>
-                    <View style={styles.viewUploadImg}>
+                    style={styles.viewContent} bounces={false} keyboardShouldPersistTaps={'always'} >
+                    <TouchableWithoutFeedback onPress={this.onHidden}>
                         <View>
-                            <Text style={styles.title}>
-                                Hoặc tải lên hình ảnh
+                            <Text style={styles.txTitle}>Vui lòng nhập các thông tin sau</Text>
+                            <Form ref={ref => { this.form = ref; }}>
+                                <Field style={styles.viewInput}>
+                                    <Text style={styles.title}>CSYT đã khám (*)</Text>
+                                    <Field style={styles.viewDrop}>
+                                        <TextField
+                                            onFocus={this.onFocus}
+                                            placeHolderTextColor={'#00000060'}
+                                            onChangeText={text => this.search(text)}
+                                            value={this.state.hospitalName}
+                                            placeholder={'Nhập CSYT đã khám'}
+                                            errorStyle={[styles.errorStyle]}
+                                            inputStyle={[styles.inputStyleDrop,]}
+                                            underlineColorAndroid={'#fff'}
+                                            returnKeyType='done'
+                                            maxLength={100}
+                                            validate={{
+                                                rules: {
+                                                    maxlength: 100,
+                                                    required: true,
+                                                },
+                                                messages: {
+                                                    maxlength: "Không được nhập quá 100 ký tự",
+                                                    required: "Tên CSYT không được bỏ trống",
+                                                }
+                                            }}
+                                            autoCapitalize={"none"}
+                                        />
+
+                                        <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                                    </Field>
+                                    {this.state.isSearch ? <Card style={styles.card}><FlatList
+                                        data={this.state.data}
+                                        extraData={this.state}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        renderItem={this.renderItem}
+                                        onRefresh={this.onRefresh.bind(this)}
+                                        keyboardShouldPersistTaps={'handled'}
+                                        refreshing={this.state.refreshing}
+                                        nestedScrollEnabled
+                                        scrollEnabled
+                                        style={{ height: 250 }}
+                                    >
+
+                                    </FlatList></Card> : <View></View>}
+                                    <Text style={styles.title}>Người được khám (*)</Text>
+                                    <Field style={styles.viewDrop}>
+                                        <TextField
+                                            value={this.state.medicalRecordName}
+                                            placeholder={'Chọn tên người được khám'}
+                                            errorStyle={styles.errorStyle}
+                                            inputStyle={styles.inputStyleDrop}
+                                            underlineColorAndroid={'#fff'}
+                                            editable={false}
+                                            onPress={this.onShowProfile}
+                                            placeHolderTextColor={'#00000060'}
+
+                                            validate={{
+                                                rules: {
+                                                    required: true,
+                                                },
+                                                messages: {
+                                                    required: "Chưa chọn người được khám",
+                                                }
+                                            }}
+                                            autoCapitalize={"none"}
+                                        />
+                                        <Field style={styles.iconDrop}><ScaledImage source={require('@images/new/ehealth/ic_down.png')} height={12}></ScaledImage></Field>
+                                    </Field>
+
+                                    {this.state.isProfile ? <Card style={styles.card}><FlatList
+                                        data={this.state.dataProfile}
+                                        extraData={this.state}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        renderItem={this.renderItemProfile}
+                                        nestedScrollEnabled={true}
+
+                                    >
+
+                                    </FlatList></Card> : <View></View>}
+                                    <Text style={styles.title}>Dịch vụ khám (*)</Text>
+                                    <TextField
+                                        onChangeText={text => this.setState({ medicalServiceName: text })}
+                                        value={this.state.medicalServiceName}
+                                        placeholder={'Nhập dịch vụ khám'}
+                                        errorStyle={styles.errorStyle}
+                                        inputStyle={styles.inputStyle}
+                                        underlineColorAndroid={'#fff'}
+                                        placeHolderTextColor={'#00000060'}
+                                        onFocus={this.hiddenList}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                                maxlength: 100
+                                            },
+                                            messages: {
+                                                required: "Dịch vụ khám không được bỏ trống",
+                                                maxlength: "Không được nhập quá 100 ký tự"
+                                            }
+                                        }}
+                                        autoCapitalize={"none"}
+                                    />
+                                    <Text style={styles.title}>Thời gian khám (*)</Text>
+                                    <TextField
+                                        value={this.state.date}
+                                        editable={false}
+                                        onPress={this.onSelectDate}
+                                        placeholder={'Chọn thời gian khám'}
+                                        errorStyle={styles.errorStyle}
+                                        inputStyle={styles.inputStyle}
+                                        underlineColorAndroid={'#fff'}
+                                        placeHolderTextColor={'#00000060'}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Chưa chọn thời gian khám",
+                                            }
+                                        }}
+                                        autoCapitalize={"none"}
+                                    />
+                                    <Text style={styles.title}>Kết quả khám</Text>
+                                    <TextField
+                                        onRef={ref => this.txtResult = ref}
+                                        onChangeText={text => this.setState({ result: text })}
+                                        value={this.state.result}
+                                        // autoFocus={true}
+                                        placeholder={'Nhập kết quả khám'}
+                                        errorStyle={styles.errorStyle}
+                                        placeHolderTextColor={'#00000060'}
+
+                                        inputStyle={[styles.inputResult, { minHeight: 81, maxHeight: 300, textAlignVertical: "top" }]}
+                                        underlineColorAndroid={'#fff'}
+                                        onFocus={this.hiddenList}
+                                        validate={{
+                                            rules: {
+                                                maxlength: 2000
+                                            },
+                                            messages: {
+                                                maxlength: "Không được nhập quá 2000 ký tự"
+                                            }
+                                        }}
+                                        multiline={true}
+                                        autoCapitalize={"none"}
+                                    />
+                                </Field>
+                            </Form>
+                            <View style={styles.viewUploadImg}>
+                                <View>
+                                    <Text style={styles.title}>
+                                        Hoặc tải lên hình ảnh
                             </Text>
-                            <Text style={[styles.title, { fontSize: 14 }]}>
-                                (.jpg, .png, .gif)
+                                    <Text style={[styles.title, { fontSize: 14 }]}>
+                                        (.jpg, .png, .gif)
                             </Text>
+                                </View>
+                                <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/booking/ic_image.png')} height={30}></ScaledImage></TouchableOpacity>
+                            </View>
+                            {this.renderImage()}
+                            <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
+                            <View style={{ height: 50 }}></View>
                         </View>
-                        <TouchableOpacity onPress={this.selectImage} style={{ alignSelf: 'flex-end' }}><ScaledImage source={require('@images/new/booking/ic_image.png')} height={30}></ScaledImage></TouchableOpacity>
-                    </View>
-                    {this.renderImage()}
-                    <TouchableOpacity disabled={this.state.disabled} onPress={this.onCreate} style={styles.btnUploadEhealth}>{this.state.disabled ? <ActivityIndicator size={'small'} color={'#fff'}></ActivityIndicator> : <Text style={styles.txAddEhealth}>{'Hoàn thành'}</Text>}</TouchableOpacity>
-                    <View style={{ height: 50 }}></View>
-                </ScrollView>
+                    </TouchableWithoutFeedback>
+                </KeyboardAwareScrollView>
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={this.onConfirmDate}
@@ -711,6 +760,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignSelf: 'stretch',
         justifyContent: 'center', borderRadius: 6,
+        marginTop: 10
     },
     inputStyleDrop: {
         color: "#000",
@@ -750,8 +800,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 20,
         backgroundColor: '#ffffff',
-        borderBottomWidth: 0.7,
-        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+        borderTopWidth: 0.7,
+        borderTopColor: 'rgba(0, 0, 0, 0.06)'
     },
     containerContent: {
         flex: 1,

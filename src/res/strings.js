@@ -507,6 +507,7 @@ module.exports = {
       booking_err: 'Đặt khám không thành công',
       booking_note: "Ghi chú và mô tả triệu chứng",
       image_without_five: 'Chỉ được chọn tối đa 5 ảnh',
+      image_without_ten: 'Chỉ được chọn tối đa 10 ảnh',
       not_booking_macth_require_date: 'Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác',
       contact_not_null: "Liên lạc với tôi không được bỏ trống",
       profile_not_null: "Hồ sơ không được bỏ trống",

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import dateUtils from "mainam-react-native-date-utils";
 import constants from '@resources/strings';
 import { Table, Row } from 'react-native-table-component';
+import ImageEhealth from './ImageEhealth';
 
 
 class Medicine extends Component {
@@ -35,8 +36,7 @@ class Medicine extends Component {
         var data = [index + 1, serviceName, item.Quantity, item.Unit]
         return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 1]} />);
     }
-
-
+    
     render() {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
 
@@ -52,9 +52,13 @@ class Medicine extends Component {
                 medinine = medinine.concat(item.ListExternalMedicine);
         })
         if (result.ListMedicine && result.ListMedicine.length) {
-            medinine = medinine.constants(result.ListMedicine);
+            medinine = medinine.concat(result.ListMedicine);
         }
-        if (medinine && medinine.length)
+        console.log('medinine: ', medinine);
+        if (medinine && medinine.length) {
+            if (!medinine[0]?.SummaryResult && !medinine[0]?.ServiceName && medinine[0]?.Image?.length == 0) {
+                return null
+            }
             return ((<View style={styles.viewMedinine}>
                 {
                     (this.props.showTitle == true || this.props.showTitle == undefined) &&
@@ -67,12 +71,20 @@ class Medicine extends Component {
                         </View>
                     </View>
                 }
-                <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
-                    <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
-                    {this.renderMedicine(medinine)}
-                </Table>
+                {medinine[0].SummaryResult || medinine[0].Image ?
+                    <View style={{ flex: 1, padding: 10 }}>
+                        <Text style={{ paddingBottom: 10 }}>{medinine[0].SummaryResult}</Text>
+                        <ImageEhealth images={medinine[0].Image} />
+                    </View>
+                    :
+                    <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
+                        <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
+                        {this.renderMedicine(medinine)}
+                    </Table>
+                }
+
             </View>))
-        else
+        } else
             return null;
     }
 }
@@ -108,9 +120,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
     },
-    viewMedinine:{ flex: 1, padding: 10 },
-    txDrug:{ fontWeight: 'bold', fontSize: 18 },
-    borderStyle:{ borderWidth: 0.5, borderColor: '#c8e1ff' },
-    
+    viewMedinine: { flex: 1, padding: 10 },
+    txDrug: { fontWeight: 'bold', fontSize: 18 },
+    borderStyle: { borderWidth: 0.5, borderColor: '#c8e1ff' },
+
 })
 export default connect(mapStateToProps)(Medicine);

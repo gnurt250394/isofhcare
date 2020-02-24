@@ -56,7 +56,7 @@ export default class EditDrugScanScreen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path, (s, e) => {
+                            imageProvider.upload(image.path,image.mime, (s, e) => {
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;

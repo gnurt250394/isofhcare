@@ -20,6 +20,7 @@ class DiagnosticResultItem extends Component {
         // }
         return <Text style={styles.txItem}>{text}</Text>
     }
+    
     render() {
         let { item } = this.props;
         return <View style={styles.container} key={this.props.key}>
@@ -81,7 +82,8 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
-    container:{ flex: 1, marginTop: 20 },
+  
+    container: { flex: 1, marginBottom: 20 },
     diagnosticLabel1:
     {
         color: constants.colors.primary_bold,
@@ -94,25 +96,15 @@ const styles = StyleSheet.create({
     },
     breakline: {
     },
-    txItem:{ marginLeft: 10, marginBottom: 10 },
-    viewService:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    txSerivceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
-    viewItem:{
-        backgroundColor: "#ffffff",
-        shadowColor: "rgba(0, 0, 0, 0.05)",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowRadius: 10,
-        shadowOpacity: 1,
-        elevation: 3,
-        borderRadius: 5,
-        padding: 10
+    txItem: { marginLeft: 10, marginBottom: 10 },
+    viewService: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txSerivceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewItem: {
+        
     },
-    viewList:{ flexDirection: 'row' },
-    imgList:{ marginTop: 7 },
-    txConclusion:{ marginLeft: 10 }
+    viewList: { flexDirection: 'row' },
+    imgList: { marginTop: 7 },
+    txConclusion: { marginLeft: 10 }
 
 })
 export default connect(mapStateToProps)(DiagnosticResultItem);
