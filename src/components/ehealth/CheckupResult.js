@@ -23,7 +23,8 @@ class CheckupResult extends Component {
         // if (!result?.ListResultCheckup[0]?.SummaryResult && result?.ListResultCheckup[0]?.ServiceName && !result?.ListResultCheckup[0]?.Image) {
         //     return null
         // }
-        let arr = result?.ListResultCheckup.some(e =>!e.DoctorAdviceTxt && !e.DiseaseDiagnostic && (e?.Image?.length == 0))
+        let arr = result?.ListResultCheckup.every(e => !e.DoctorAdviceTxt && !e.DiseaseDiagnostic && (!e?.Image || e?.Image?.length == 0))
+        console.log('arr: ', arr);
         let resultCheckup = result.ListResultCheckup || [];
 
         if (arr) {
