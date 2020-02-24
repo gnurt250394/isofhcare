@@ -172,7 +172,9 @@ class ViewInDateScreen extends Component {
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-            let item = this.state.result?.ListResultCheckup?.find(e => e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic)
+            let item = this.state.result?.ListResultCheckup?.find(e => e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic || (e.Image && e.Image.length))
+            console.log('this.state.result?.ListResultCheckup: ', this.state.result?.ListResultCheckup);
+            console.log('item: 111', item);
 
 
             let note = null
@@ -185,6 +187,7 @@ class ViewInDateScreen extends Component {
             else if (item?.Image.length) {
                 note = ' '
             }
+            console.log('note: ', note);
             if (note) {
                 return (
                     <View style={{ marginTop: 10 }}>
