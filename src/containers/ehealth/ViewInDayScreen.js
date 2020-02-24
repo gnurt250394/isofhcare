@@ -175,33 +175,34 @@ class ViewInDateScreen extends Component {
             let item = this.state.result?.ListResultCheckup?.find(e => e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic)
 
 
-            let note
+            let note = null
             if (item?.Diagnostic)
                 note = item.Diagnostic;
             else if (item?.DiseaseDiagnostic)
                 note = item.DiseaseDiagnostic;
             else if (item?.First_Diagnostic)
                 note = item.First_Diagnostic;
-            else if (item?.Image.length != 0){
-                note =' '
+            else if (item?.Image.length) {
+                note = ' '
             }
-                if (note)
-                    return (
-                        <View style={{ marginTop: 10 }}>
-                            <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
-                            <Card style={styles.card}>
-                                <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewCheckupResult}>
-                                    {/* <View style={styles.viewCheckupResult}></View> */}
-                                    <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
-                                    <View style={styles.viewNote}>
-                                        <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
-                                    </View>
-                                    <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                                </TouchableOpacity>
-                            </Card>
-                        </View>)
+            if (note) {
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewCheckupResult}>
+                                {/* <View style={styles.viewCheckupResult}></View> */}
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
+                                <View style={styles.viewNote}>
+                                    <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>)
+            }
+            return null;
         }
-        return null;
     }
     // renderDoctorAdviceTxt() {
     //     if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
