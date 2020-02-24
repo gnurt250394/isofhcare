@@ -9,7 +9,9 @@ const server_url = "https://api.produce.isofhcare.com"; //release
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
-const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
+
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
+const resource_url = "https://storage.googleapis.com/isofh-care/"; //release
 
 
 const httpClient = axios.create();
