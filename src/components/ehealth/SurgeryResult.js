@@ -18,7 +18,7 @@ class SurgeryResult extends Component {
         let { result } = this.props;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
             return null;
-        if (!result.ListResulGiaiPhau[0].SummaryResult && !result.ListResulGiaiPhau[0].ServiceName && result.ListResulGiaiPhau[0].Image.length == 0) {
+        if (!result?.ListResulGiaiPhau[0]?.SummaryResult && !result?.ListResulGiaiPhau[0]?.ServiceName && (result?.ListResulGiaiPhau[0]?.Image?.length == 0 || !result?.ListResulGiaiPhau[0]?.Image)) {
             return null
         }
         let resultSurgery = result.ListResulGiaiPhau || [];
