@@ -93,10 +93,9 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             item
         })
     }
-    addBookingDoctor = (item) => () => {
-        this.props.navigation.navigate('selectTimeDoctor', {
-            item,
-            isNotHaveSchedule: true
+    addBookingDoctor = (hospital) => () => {
+        this.props.navigation.navigate('addBooking1', {
+            hospital,
         })
     }
     componentWillReceiveProps = (props) => {
@@ -173,6 +172,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             <FlatList
                 data={data}
                 renderItem={this.renderItem}
+                
                 // style={{paddingTop:height/4}}
                 keyExtractor={this.keyExtractor}
                 ListEmptyComponent={this.listEmpty}
