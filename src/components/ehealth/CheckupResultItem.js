@@ -15,13 +15,13 @@ class CheckupResult extends Component {
     }
     renderItemCheckup(item) {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
-        if (!item.First_Diagnostic &&
+        if (item.ServiceName && !item.First_Diagnostic &&
             !item.DiseaseDiagnostic
             && !item.Diagnostic
             && !item.Other_DiseaseDiagnostic
             && !item.DoctorAdviceTxt
             && !item.DoctorAdvice
-            && !item.Note && item?.Image?.length == 0) {
+            && !item.Note && (!item?.Image || item?.Image?.length ==0)) {
             return null
         }
         return <View style={{ flex: 1 }}>
