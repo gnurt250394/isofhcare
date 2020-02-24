@@ -228,16 +228,19 @@ class ViewInDateScreen extends Component {
     renderDiagnosticResult() {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
+            console.log('item: ', item);
             let note = item.SummaryResult;
-            if (item.SummaryResult || item?.Image?.length != 0) {
+            if (item.SummaryResult || (item.Image && item?.Image?.length != 0)) {
                 note = item?.SummaryResult || " "
+            } else {
+                if (!note)
+                    note = item.Result;
+                if (!note)
+                    note = item.Discussion;
+                if (!note)
+                    note = item.Conclusion;
             }
-            if (!note)
-                note = item.Result;
-            if (!note)
-                note = item.Discussion;
-            if (!note)
-                note = item.Conclusion;
+
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -349,7 +352,7 @@ class ViewInDateScreen extends Component {
                 && !item?.Quantity
                 && !item?.Unit ? ''
                 : (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "")
-            if (item.SummaryResult || item?.Image?.length != 0) {
+            if (item.SummaryResult || (item.Image && item?.Image?.length != 0)) {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
@@ -405,7 +408,6 @@ class ViewInDateScreen extends Component {
             if (!arr.length)
                 return null;
             arr = arr[arr.length - 1];
-            console.log('arr: ', arr);
             let note;
             if (arr.ListMedical && arr.ListMedical.length) {
                 let item = arr.ListMedical[arr.ListMedical.length - 1]
@@ -416,7 +418,7 @@ class ViewInDateScreen extends Component {
                 else
                     note = item.ServiceName + ": " + item.Result;
             }
-            if (arr?.SummaryResult || arr?.Image?.length != 0) {
+            else if (arr?.SummaryResult || arr?.Image?.length != 0) {
                 note = arr?.SummaryResult || ' '
             }
 
