@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Image, StyleSheet ,Dimensions} from 'react-native'
+import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native'
 import { withNavigation } from 'react-navigation'
 const { width, height } = Dimensions.get('window')
 const ImageEhealth = (props) => {
@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
     imageResult: {
         height: width / 4,
         width: width / 4,
-        resizeMode: 'cover'
+        resizeMode: 'contain',
+        borderColor: '#006852',
+        borderWidth: 0.2
     },
     buttonImage: {
         marginHorizontal: 5,
