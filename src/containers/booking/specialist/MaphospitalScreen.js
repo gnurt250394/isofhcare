@@ -37,6 +37,7 @@ class MaphospitalScreen extends Component {
             imageloaded: false,
             isLoading: true,
             appState: AppState.currentState,
+            detailRouters: null
         };
     }
 
@@ -75,7 +76,8 @@ class MaphospitalScreen extends Component {
                         MARKERS: tempMARKERS,
                         destMarker: cortemp[length],
                         startMarker: cortemp[0],
-                        isLoading: false
+                        isLoading: false,
+                        detailRouters: res.routes[0].legs[0]
                     });
 
                 }
@@ -148,7 +150,7 @@ class MaphospitalScreen extends Component {
                                     <Marker
                                         key={1}
                                         coordinate={this.state.startMarker}
-                                        image={require('@images/ic_maker.png')}
+                                    // image={require('@images/ic_maker.png')}
                                     >
                                     </Marker> : null
                                 }
@@ -156,7 +158,7 @@ class MaphospitalScreen extends Component {
                                     <Marker
                                         key={2}
                                         title="aaa"
-                                        image={require('@images/ic_maker.png')}
+                                        // image={require('@images/ic_maker.png')}
                                         coordinate={this.state.destMarker}
                                     >
                                         <Callout >
@@ -185,7 +187,21 @@ class MaphospitalScreen extends Component {
                                 </TouchableOpacity>
                             </View>
                     }
-
+                    {this.state.detailRouters ?
+                        <View style={{
+                            backgroundColor: '#FFF',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            padding: 10
+                        }}>
+                            <Text><Text style={{ color: 'red' }}>{this.state.detailRouters?.duration?.text}</Text> ({this.state.detailRouters?.distance?.text})</Text>
+                            <Text style={{ color: '#bbb', paddingVertical: 10 }}>Điểm bắt đầu: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.start_address}</Text></Text>
+                            <Text style={{ color: '#bbb', }}>Điểm cuối: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.end_address}</Text></Text>
+                        </View>
+                        : null
+                    }
                     {/* <TouchableOpacity style={[styles.buttonLocation, {
                         bottom: 80,
                     }]}>

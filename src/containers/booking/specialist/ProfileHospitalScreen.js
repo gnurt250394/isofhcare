@@ -211,8 +211,8 @@ class ProfileHospitalScreen extends Component {
         }
     }
     ratingDoctor = () => {
-        // snackbar.show('Chức năng đang phát triển')
-        // return
+        snackbar.show('Chức năng đang phát triển')
+        return
         this.props.navigation.navigate('ratingDoctor')
     }
     _keyExtractor = (item, index) => `${item.id || index}`
@@ -313,9 +313,9 @@ class ProfileHospitalScreen extends Component {
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
-                                    <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>
-                                    <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>
-                                    <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>
+                                    {contact?.hotLine && <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>}
+                                    {contact?.telephone && <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>}
+                                    {contact?.email && <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>}
                                     {/* <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
                                     <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text> */}
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
@@ -344,7 +344,7 @@ class ProfileHospitalScreen extends Component {
                         </Card>
                         {/** */}
 
-                        <Card style={styles.containerInfo}>
+                        {/* <Card style={styles.containerInfo}>
                             <TouchableOpacity
                                 onPress={this.showProfile('showRating')}
                                 style={[styles.buttonProfile]}>
@@ -363,7 +363,7 @@ class ProfileHospitalScreen extends Component {
                                     keyExtractor={this._keyExtractor}
                                 /> : null
                             }
-                        </Card>
+                        </Card> */}
 
                         {/** */}
                         <Card style={styles.containerInfo}>
