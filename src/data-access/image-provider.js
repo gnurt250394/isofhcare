@@ -6,7 +6,7 @@ module.exports = {
     upload(uri,type, callback) {
         if (!callback) {
             return new Promise((resolve, reject) => {
-                client.uploadFile(constants.api.upload.image, uri, (s, e) => {
+                client.uploadFile(constants.api.upload.image, uri,type, (s, e) => {
                     if (s)
                         resolve({ data: s, uri, success: true });
                     resolve({ uri, success: false });
