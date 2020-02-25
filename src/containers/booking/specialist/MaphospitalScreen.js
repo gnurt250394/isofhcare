@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet, Platform, AppState, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Platform, AppState, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import ActivityPanel from "@components/ActivityPanel";
 import MapView, { Marker, Polyline, LocalTile, Callout } from 'react-native-maps';
 import locationProvider from '@data-access/location-provider';
@@ -10,6 +10,7 @@ import constants from '@resources/strings';
 import bookingSpecialistProvider from '@data-access/booking-specialist-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import locationUtils from '@utils/location-utils';
+import WebView from 'react-native-webview'
 const { width, height } = Dimensions.get('window');
 const mode = 'driving'; // 'walking';
 const LATITUDE_DELTA = 0.0922;
@@ -105,7 +106,22 @@ class MaphospitalScreen extends Component {
     }
 
 
-
+    renderItem = ({ item, index }) => {
+        return (
+            <WebView
+                key={index}
+                source={{ html: '<!DOCTYPE html><html><body> <div style="font-size:40px">' + item.html_instructions + '</div><script>window.location.hash="1";document.title = document.height;</script></body></html>' }}
+                startInLoadingState={true}
+                automaticallyAdjustContentInsets={false}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+                style={{
+                    padding: 40
+                }}
+            />
+        )
+    }
+    keyExtractor = (item, index) => `${index}`
     fitAllMarkers() {
         const temMark = this.state.MARKERS;
         this.setState({ isLoading: false });
@@ -136,6 +152,7 @@ class MaphospitalScreen extends Component {
                             <MapView
                                 ref={ref => { this.mapRef = ref; }}
                                 style={styles.map}
+                                loadingEnabled
                                 onLayout={() => this.fitAllMarkers()}
                             >
                                 {
@@ -188,18 +205,17 @@ class MaphospitalScreen extends Component {
                             </View>
                     }
                     {this.state.detailRouters ?
-                        <View style={{
-                            backgroundColor: '#FFF',
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            padding: 10
-                        }}>
+                        // <ScrollView >
+                        <View style={styles.containerMaptext}>
                             <Text><Text style={{ color: 'red' }}>{this.state.detailRouters?.duration?.text}</Text> ({this.state.detailRouters?.distance?.text})</Text>
-                            <Text style={{ color: '#bbb', paddingVertical: 10 }}>Điểm bắt đầu: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.start_address}</Text></Text>
-                            <Text style={{ color: '#bbb', }}>Điểm cuối: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.end_address}</Text></Text>
+                            <Text style={{ color: '#bbb', paddingVertical: 10 }}>Điểm bắt đầu: <Text style={{ color: '#3161AD' }}>{this.state.detailRouters.start_address}</Text></Text>
+                            <Text style={{ color: '#bbb', }}>Điểm cuối: <Text style={{ color: '#3161AD' }}>{this.state.detailRouters.end_address}</Text></Text>
+
+                            {/* {this.state.detailRouters.steps.map((item, index) => {
+                                    return this.renderItem({ item, index })
+                                })} */}
                         </View>
+                        // </ScrollView>
                         : null
                     }
                     {/* <TouchableOpacity style={[styles.buttonLocation, {
@@ -218,6 +234,23 @@ export default MaphospitalScreen;
 
 
 const styles = StyleSheet.create({
+    containerMaptext: {
+        padding: 10,
+        backgroundColor: '#FFF',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowOpacity: 0.6,
+        margin: 10,
+        elevation:2,
+        borderRadius: 5
+    },
     buttonLocation: {
         backgroundColor: '#00CBA7',
         padding: 10,
