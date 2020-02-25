@@ -33,13 +33,37 @@ import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import fonts from '@resources/fonts';
-import homeProvider from '@data-access/home-provider'
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
 const XSMAX_WIDTH = 414;
 const XSMAX_HEIGHT = 896;
-
+const listDataHospital = [{
+  name: 'Phòng khám Y khoa HN',
+  image: require('@images/new/homev2/csyt_demo.png')
+},
+{
+  name: 'Bệnh viện E',
+  image: require('@images/new/homev2/csyt_demo2.png')
+}]
+const listDataDoctor = [
+  {
+    name: 'ThS Hoàng Lan Hiệp',
+    image: require('@images/new/homev2/doctor_demo4.jpg')
+  },
+  {
+    name: 'BS Hoàng Thị Bạch Dương',
+    image: require('@images/new/homev2/doctor_demo1.jpg')
+  },
+  {
+    name: 'GS TS Phạm Minh Thông',
+    image: require('@images/new/homev2/doctor_demo2.jpg')
+  },
+  // {
+  //   name: 'PGS BS Trương Hồng Sơn',
+  //   image: require('@images/new/homev2/doctor_demo3.png')
+  // }
+]
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -47,8 +71,6 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      listDataHospital: [],
-      listDataDoctor: [],
       featuresBooking: [
         {
           icon: require("@images/new/homev2/ic_doctor.png"),
@@ -142,6 +164,7 @@ class HomeScreen extends Component {
             //     nextScreen: { screen: 'drugTab' }
             //   });
             snackbar.show('Tính năng đang phát triển')
+
           }
         },
         {
@@ -167,35 +190,23 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    this.onGetHospital()
-    this.onGetDoctor()
-  }
-  onSelectDoctor = (item) => {
-    if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('detailsDoctor', { item })
-    } else {
-      this.props.navigation.navigate("login", {
-        nextScreen: { screen: "detailsDoctor", param: { item } }
-      });
-    }
-
+    // this.onGetHospital()
   }
   renderItemDoctor = ({ item, index }) => {
-
     return (
       <View style={styles.cardViewDoctor}>
         {/* <Card style={{ borderRadius: 5, }}> */}
-        <TouchableOpacity onPress={() => this.onSelectDoctor(item)} style={styles.containerImageDoctor}>
+        <View style={styles.containerImageDoctor}>
           <Image
             // uri={item.advertise.images.absoluteUrl()}
             style={{ borderRadius: 5, width: '100%', height: '100%' }}
-            source={{ uri: item.imagePath.absoluteUrl() }}
+            source={item.image}
           // width={DEVICE_WIDTH / 3}
           // height={137}
           />
-        </TouchableOpacity>
+        </View>
         {/* </Card> */}
-        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensDoctor}>{item.name ? item.name : ""}</Text>
+        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
       </View>
     );
@@ -211,36 +222,23 @@ class HomeScreen extends Component {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         // extraData={this.state}
-        data={this.state.listDataDoctor}
+        data={listDataDoctor}
         // ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={this.renderItemDoctor}
       />
     </View>)
   }
-  getDetailsHospital = (item) => {
-    console.log('item: ', item);
-
-    if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('profileHospital', { item })
-    }
-    else {
-
-      this.props.navigation.navigate("login", {
-        nextScreen: { screen: 'profileHospital', param: { item } }
-      });
-    }
-  }
   renderItemHospital = ({ item, index }) => {
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity onPress={() => this.getDetailsHospital(item)} style={styles.cardView}>
+        <TouchableOpacity style={styles.cardView}>
           <ScaledImage
-            uri={item.imageHome.absoluteUrl()}
+            source={item.image}
             height={134}
-            style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+            style={{ borderRadius: 6, resizeMode: 'cover' }}
           />
         </TouchableOpacity>
-        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name : ""}</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
       </View>
     );
   }
@@ -257,7 +255,7 @@ class HomeScreen extends Component {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        data={this.state.listDataHospital}
+        data={listDataHospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={this.renderItemHospital}
       />
@@ -287,28 +285,6 @@ class HomeScreen extends Component {
     this.props.dispatch(redux.userLogout());
   }
 
-  onRefresh = () => {
-
-    this.setState({
-      refreshing: true
-    }, () => {
-
-      this.setState({
-        refreshing: false
-      })
-    })
-  }
-  onGetDoctor = () => {
-    homeProvider.listDoctor().then(res => {
-      if (res) {
-        this.setState({
-          listDataDoctor: res
-        })
-      }
-    }).catch(err => {
-
-    })
-  }
   getMarginBooking() {
     const pixel = PixelRatio.get()
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
@@ -332,7 +308,7 @@ class HomeScreen extends Component {
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
                 </View>
-                  <Text style={[styles.label, { fontSize: 14 }]}>{item.text}</Text></View>
+                  <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
@@ -378,7 +354,7 @@ class HomeScreen extends Component {
                 <View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
-                <Text style={[styles.label, { fontSize: 14 }]}>{item.text}</Text>
+                <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text>
               </TouchableOpacity>
 
           }
@@ -386,26 +362,24 @@ class HomeScreen extends Component {
     })
   }
   onGetHospital = () => {
-    homeProvider.listHospital().then(res => {
-      if (res && res.code == 0) {
-        this.setState({
-          listDataHospital: res.data
-        })
-      }
+    // hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
+    //   if (res.code == 0) {
+    //     this.setState({
+    //       hospital: res.data.data
+    //     })
+    //   }
+    //   
+    // })
+    hospitalProvider.getListTopRateHospital().then(res => {
+      this.setState({
+        listDataHospital: res.slice(0, 10)
+      })
     }).catch(err => {
-      console.log(err)
+
     })
   }
   getAdjustedFontSize(size) {
     return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
-  }
-  refreshControl = () => {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh}
-      />
-    )
   }
   getUserName = (name) => {
     if (!name) return "";
@@ -497,7 +471,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   containerImageDoctor: {
-    borderRadius: 6,
+    borderRadius: 5,
     elevation: 4,
     backgroundColor: '#FFF',
     margin: 1,
@@ -611,8 +585,7 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
     fontWeight: '600',
     lineHeight: 20,
-    textAlign: 'center',
-    fontSize: 13
+    textAlign: 'center'
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
@@ -622,12 +595,11 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, },
   viewFooter: { width: 35 },
-  cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, width: 259 },
+  cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
-  txContensDoctor: { color: '#000', margin: 13, marginLeft: 5, },
-  txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
+  txContensAds: { color: '#000', margin: 13, marginLeft: 5 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {
