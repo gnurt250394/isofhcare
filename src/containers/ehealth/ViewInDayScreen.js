@@ -118,7 +118,7 @@ class ViewInDateScreen extends Component {
             let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
 
             resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
-                console.log('result: ', result);
+
 
                 this.setState({ result: result.result, resultDetail: result.resultDetail, data: result.data, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
@@ -172,22 +172,21 @@ class ViewInDateScreen extends Component {
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-            let item = this.state.result?.ListResultCheckup?.find(e => e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic || (e.Image && e.Image.length))
-            console.log('this.state.result?.ListResultCheckup: ', this.state.result?.ListResultCheckup);
-            console.log('item: 111', item);
-
+            let item = this.state.result?.ListResultCheckup?.find(e => e.DoctorAdviceTxt || e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic || (e.Image && e.Image.length))
 
             let note = null
             if (item?.Diagnostic)
                 note = item.Diagnostic;
             else if (item?.DiseaseDiagnostic)
                 note = item.DiseaseDiagnostic;
+            else if (item?.DoctorAdviceTxt)
+                note = item.DoctorAdviceTxt;
             else if (item?.First_Diagnostic)
                 note = item.First_Diagnostic;
             else if (item?.Image.length) {
                 note = ' '
             }
-            console.log('note: ', note);
+
             if (note) {
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -231,7 +230,7 @@ class ViewInDateScreen extends Component {
     renderDiagnosticResult() {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
-            console.log('item: ', item);
+
             let note = item.SummaryResult;
             if (item.SummaryResult || (item.Image && item?.Image?.length != 0)) {
                 note = item?.SummaryResult || " "
