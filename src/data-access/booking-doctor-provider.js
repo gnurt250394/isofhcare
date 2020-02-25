@@ -171,7 +171,7 @@ module.exports = {
      * @param {string} time 
      * @param {object} room 
      */
-    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room, idUser, images) {
+    create(date, description, doctor, hospitals, items, patients, scheduleId, time, room, idUser, images) {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
@@ -181,10 +181,10 @@ module.exports = {
                 "id": room.id,
                 "name": room.name
             }
-            patient = {
+           let patient = {
                 id: idUser,
-                name: patient.name,
-                phone: patient.phone
+                name: patients.name,
+                phone: patients.phone
             }
             //     console.log('room: ', room);
             client.requestApi(
@@ -215,7 +215,7 @@ module.exports = {
                     //giờ đặt khám
                     time,
                     //owner : true: đặt khám chính chủ, false: đặt khám hộ
-                    owner: patient.status == 1 ? true : false,
+                    owner: patients.status == 1 ? true : false,
                     images
                 }, (s, e) => {
                     if (s) resolve(s);
