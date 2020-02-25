@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Alert, Platform } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
@@ -18,6 +18,7 @@ import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import GetLocation from 'react-native-get-location'
 import RNLocation from 'react-native-location';
+import locationUtils from '@utils/location-utils';
 const { width, height } = Dimensions.get('window')
 const TYPE = {
     SEARCH: 'SEARCH',
@@ -32,7 +33,6 @@ class TabDoctorAndHospitalScreen extends Component {
             isLoading: true,
             data: [],
             keyword: '',
-            infoDoctor: {},
             page: 0,
             size: 20,
             refreshing: false,
@@ -46,8 +46,6 @@ class TabDoctorAndHospitalScreen extends Component {
         };
     }
     onSetPage = (page) => () => {
-
-
         if (this.viewPager) this.viewPager.setPage(page);
     }
 
@@ -68,61 +66,43 @@ class TabDoctorAndHospitalScreen extends Component {
 
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
-        if (value.length == 0) {
-            this.getData()
+        if (!value) {
+            this.setState({ type: '' })
         }
     }
-    search = async () => {
-        try {
-            let { keyword, page, size } = this.state
 
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
-            this.setState({ refreshing: false })
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        } catch (error) {
-            this.formatData([])
-            this.setState({ refreshing: false })
-
-        }
-
-    }
     onSearch = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            type: TYPE.SEARCH
-        }, this.search)
+        console.log(this.lisDoctor)
+        if (!this.state.keyword) {
+            return
+        }
+        this.setState({ type: TYPE.SEARCH })
     }
     onRefress = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            keyword: '',
-            item: {},
-            type: ''
-        }, this.getData)
+        this.setState({ type: '', keyword: '' })
     }
-    keyExtractor = (item, index) => index.toString()
-    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
 
 
-    backPress = () => this.props.navigation && this.props.navigation.pop()
-    renderHeader = () => {
+
+    getListLocation = () => {
+        locationUtils.getLocation().then(region => {
+            console.log('region: ', region);
+            this.setState({
+                latitude: region.latitude,
+                longitude: region.longitude
+            }, this.onRefress);
+        }).catch(err => {
+            console.log('err: ', err);
+
+        })
+    }
+    render() {
+        const { refreshing, data } = this.state
         return (
-            <View style={[styles.containerHeader,]}
-            >
-                <ActionBar
-                    actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
-                    backButtonClick={this.backPress}
-                    title={constants.title.select_doctor}
-                    icBack={require('@images/new/left_arrow_white.png')}
-                    titleStyle={[styles.titleStyle]}
-                    actionbarStyle={[{ backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle]}
-                />
+            <ActivityPanel
+                transparent={true}
+                title={constants.title.select_doctor}
+                isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
                         value={this.state.keyword}
@@ -145,124 +125,6 @@ class TabDoctorAndHospitalScreen extends Component {
                     }
 
                 </View>
-            </View>
-        )
-    }
-    getCurrentLocation(callAgain) {
-        RNLocation.getLatestLocation().then(region => {
-            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-            this.setState({
-                latitude: region.latitude,
-                longitude: region.longitude
-            }, this.onRefress);
-        }).catch(() => {
-            locationProvider.getCurrentLocationHasSave().then(s => {
-                if (s && s.latitude && s.longitude) {
-                    s.latitudeDelta = 0.1;
-                    s.longitudeDelta = 0.1;
-                    this.setState({
-                        latitude: region.latitude,
-                        longitude: region.longitude
-                    }, this.onRefress);
-                }
-            }).catch(e => {
-                if (!callAgain) {
-                    this.getCurrentLocation(true);
-                }
-            });
-        });
-    }
-
-    getLocation() {
-        let getLocation = () => {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: constants.booking.location_premmission,
-                        message: constants.booking.location_premission_content,
-                        buttonPositive: constants.actionSheet.accept,
-                        buttonNegative: constants.actionSheet.cancel
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-                    RNLocation.getLatestLocation().then(region => {
-                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                        this.setState({
-                            latitude: region.latitude,
-                            longitude: region.longitude
-                        }, this.onRefress);
-                    }).catch((e) => {
-                        locationProvider.getCurrentLocationHasSave().then(s => {
-                            if (s && s.latitude && s.longitude) {
-                                s.latitudeDelta = 0.1;
-                                s.longitudeDelta = 0.1;
-                                this.setState({
-                                    latitude: region.latitude,
-                                    longitude: region.longitude
-                                }, this.onRefress);
-                            }
-                        }).catch(e => {
-                            if (!callAgain) {
-                                console.log("callAgain");
-                                this.getCurrentLocation(true);
-                            }
-                        });
-                    });
-                }
-            });
-        }
-
-        if (Platform.OS == 'android') {
-            GetLocation.getCurrentPosition({
-                enableHighAccuracy: true,
-                timeout: 15000,
-            })
-                .then(region => {
-                    console.log('region: ', region);
-                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                    this.setState({
-                        latitude: region.latitude,
-                        longitude: region.longitude
-                    }, this.onRefress);
-                })
-                .catch((error) => {
-                    const { code, message } = error
-                    if (code == 'UNAVAILABLE') {
-                        this.requestPermission()
-                    }
-                });
-        }
-        else {
-            try {
-                LocationSwitch.isLocationEnabled(() => {
-                    getLocation();
-                }, this.requestPermission);
-            } catch (error) {
-            }
-        }
-
-    }
-    requestPermission = () => {
-        LocationSwitch.enableLocationService(1000, true, () => {
-            this.setState({ isLoading: true }, this.getLocation);
-        }, () => {
-            this.setState({ locationEnabled: false });
-        });
-    }
-    getListLocation = () => {
-        this.getLocation()
-    }
-    render() {
-        const { refreshing, data } = this.state
-        return (
-            <ActivityPanel
-                actionbar={this.renderHeader}
-                transparent={true}
-                isLoading={this.state.isLoading}>
-
                 <View style={styles.container}>
                     <View style={styles.containerTab}>
                         <View style={styles.groupTab}>
@@ -288,10 +150,20 @@ class TabDoctorAndHospitalScreen extends Component {
                         ref={viewPager => this.viewPager = viewPager}
                         onPageScroll={this.onPageScroll}>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListDoctorOfSpecialistScreen item={this.state.item} self={this} />
+                            <ListDoctorOfSpecialistScreen
+                                item={this.state.item}
+                                onRef={ref => this.lisDoctor = ref}
+                                type={this.state.type}
+                                keyword={this.state.keyword}
+                                self={this} />
                         </View>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListHospitalOfSpecialistScreen item={this.state.item} self={this} />
+                            <ListHospitalOfSpecialistScreen
+                                onRef={ref => this.listHospital = ref}
+                                type={this.state.type}
+                                keyword={this.state.keyword}
+                                item={this.state.item}
+                                self={this} />
                         </View>
                     </IndicatorViewPager>
 
@@ -405,6 +277,7 @@ const styles = StyleSheet.create({
         marginLeft: -10,
         fontWeight: 'bold',
         paddingLeft: 9,
+        color: '#000'
     },
     groupSearch: {
         flexDirection: 'row',

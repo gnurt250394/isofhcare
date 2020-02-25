@@ -62,7 +62,14 @@ class MyVoucherScreen extends Component {
     }
 
 
-    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>{constants.not_found}</Text>
+    listEmpty = () => {
+        console.log(this.state.refreshing, this.state.voucherSelected, this.state.data.length)
+        if (!this.state.refreshing && !Object.keys(this.state.voucherSelected).length && !this.state.data.length) {
+            return (
+                <Text style={styles.none_data}>{constants.not_found}</Text>
+            )
+        }
+    }
     comfirmVoucher = (item, index) => () => {
         const { voucherSelected, data } = this.state
         if (voucherSelected && voucherSelected.code && data[index].id == voucherSelected.id) {
@@ -80,7 +87,10 @@ class MyVoucherScreen extends Component {
     onSearchVoucher = () => {
         this.setState({ isLoading: true }, () => {
             let { booking } = this.state
+
+
             let voucher = this.state.keyword || ""
+            let idHospital = booking.hospital.id
 
             if (voucher == "") {
                 this.setState({ isLoading: false })
@@ -91,17 +101,23 @@ class MyVoucherScreen extends Component {
                 this.setState({ isLoading: false });
 
                 if (res.code == 0 && res.data) {
-                    if (this.state.voucherSelected && res.data.id == this.state.voucherSelected.id) {
+                    let hospitalVoucher = res.data.hospitalId
+                    if (hospitalVoucher == idHospital || hospitalVoucher == 0) {
+                        if (this.state.voucherSelected && res.data.id == this.state.voucherSelected.id) {
 
-                        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
-                        if (onSelected) onSelected({})
-                        this.props.navigation.pop()
+                            let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+                            if (onSelected) onSelected({})
+                            this.props.navigation.pop()
+                        } else {
+                            let data = res.data
+                            data.status = true
+                            data.active = true
+                            let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+                            if (onSelected) onSelected(data)
+                            this.props.navigation.pop()
+                        }
                     } else {
-                        let data = res.data
-                        data.status = true
-                        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
-                        if (onSelected) onSelected(data)
-                        this.props.navigation.pop()
+                        snackbar.show(constants.voucher.voucher_not_avalrible, "danger")
                     }
                 } else {
                     snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
@@ -138,15 +154,25 @@ class MyVoucherScreen extends Component {
 
             switch (res.code) {
                 case 0:
+                    let { booking } = this.state
+
+                    let idHospital = booking.hospital.id
+
                     let { voucherSelected } = this.state
+
                     let data = res.data
                     let arr = this.duplicateArray(data)
-
+                    arr.forEach(item => {
+                        if (item.hospitalId == idHospital || item.hospitalId == 0) {
+                            item.active = true
+                        }
+                    })
                     if (voucherSelected && voucherSelected.code) {
                         arr.forEach(e => {
                             if (e.id == voucherSelected.id) {
                                 e.status = voucherSelected.status
                             }
+
                         })
                     }
 
@@ -169,6 +195,7 @@ class MyVoucherScreen extends Component {
     _renderItem = ({ item, index }) => {
         return (
             <ItemListVoucher
+                active={item.active}
                 item={item}
                 onPress={this.comfirmVoucher(item, index)}
                 onPressLater={this.onPressLater}
@@ -197,6 +224,7 @@ class MyVoucherScreen extends Component {
                         <TextInput style={styles.input}
                             placeholder="Nhập mã ưu đãi"
                             value={keyword}
+                            placeholderTextColor="#999"
                             onChangeText={this.onChangeText}
                         />
                         <TouchableOpacity
@@ -217,16 +245,16 @@ class MyVoucherScreen extends Component {
                         showsVerticalScrollIndicator={false}
                         nestedScrollEnabled={false}>
                         <View>
-                            {voucherSelected && voucherSelected.type == 2 && <ItemListVoucher item={this.state.voucherSelected} onPress={this.unSelectedVoucher} />}
+                            {voucherSelected && voucherSelected.type == 2 && <ItemListVoucher active={this.state.voucherSelected.active} item={this.state.voucherSelected} onPress={this.unSelectedVoucher} />}
 
                             <FlatList
                                 data={this.state.data}
                                 renderItem={this._renderItem}
                                 keyExtractor={this.keyExtractor}
                                 showsVerticalScrollIndicator={false}
-                                ListEmptyComponent={this.listEmpty}
+                            // ListEmptyComponent={this.listEmpty}
                             />
-
+                            {this.listEmpty()}
                         </View>
                     </ScrollView>
                 </View>
@@ -263,7 +291,8 @@ const styles = StyleSheet.create({
         borderColor: '#555',
         borderRadius: 7,
         paddingLeft: 8,
-        flex: 1
+        flex: 1,
+        color: '#000'
     },
     containerSearch: {
         flexDirection: 'row',

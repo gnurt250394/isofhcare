@@ -65,7 +65,6 @@ import SelectSpecialistScreen from "@containers/booking/SelectSpecialistScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
-import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
 
 
@@ -127,7 +126,6 @@ import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
 import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
 import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
-import ListBookingScreen from '@containers/booking/ListBookingScreens'
 import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
 import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
 import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
@@ -143,6 +141,7 @@ import ListSpecialistScreen from '@containers/booking/specialist/ListSpecialistS
 import TabDoctorAndHospitalScreen from '@containers/booking/specialist/TabDoctorAndHospitalScreen';
 import ProfileHospitalScreen from '@containers/booking/specialist/ProfileHospitalScreen';
 import MaphospitalScreen from '@containers/booking/specialist/MaphospitalScreen';
+import DetailServiceScreen from '@containers/booking/DetailServiceScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -255,8 +254,10 @@ const TabNavigatorComponent = createBottomTabNavigator(
       showLabel: true,
       activeTintColor: '#00CBA7',
       inactiveTintColor: '#b3b3b3',
+      allowFontScaling: false,
       style: {
-        backgroundColor: "#fff",
+        backgroundColor: "#FFF",
+        paddingTop: 5,
       },
     }
   }
@@ -379,7 +380,6 @@ const RootNavigator = createStackNavigator(
     listDoctor: { screen: ListDoctorScreen },
     addBookingDoctor: { screen: AddBookingDoctorScreen },
     selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
-    listBooking: { screen: ListBookingScreen },
     listHospital: { screen: ListHospitalScreen },
     listPaymentMethod: { screen: ListPaymentMethodScreen },
     createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
@@ -394,6 +394,7 @@ const RootNavigator = createStackNavigator(
     tabDoctorAndHospital: { screen: TabDoctorAndHospitalScreen },
     profileHospital: { screen: ProfileHospitalScreen },
     mapHospital: { screen: MaphospitalScreen },
+    detalService: { screen: DetailServiceScreen },
   },
   {
     headerMode: "none",

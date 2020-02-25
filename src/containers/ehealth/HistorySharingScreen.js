@@ -36,7 +36,9 @@ class HistorySharingScreen extends Component {
     viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+            
+            resultUtils.getDetail(item.patientHistoryId, hospitalId, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");

@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  Keyboard
+  Keyboard,
+  Dimensions
 } from "react-native";
-import Dimensions from "Dimensions";
 import { connect } from "react-redux";
 import eyeImg from "@images/eye_black.png";
 import snackbar from "@utils/snackbar-utils";

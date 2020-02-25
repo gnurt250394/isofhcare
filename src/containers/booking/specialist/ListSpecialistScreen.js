@@ -37,17 +37,37 @@ class ListSpecialistScreen extends Component {
 
     getData = () => {
         const { page, size } = this.state
-        bookingDoctorProvider.get_list_specialists(page, size).then(res => {
-            this.setState({ isLoading: false })
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
+        this.setState({ isLoading: true }, () => {
+            bookingDoctorProvider.get_list_specialists(page, size).then(res => {
+                this.setState({ isLoading: false })
+                if (res && res.length > 0) {
+                    this.formatData(res)
+                } else {
+                    this.formatData([])
+                }
+            }).catch(err => {
+                this.setState({ isLoading: false })
                 this.formatData([])
-            }
-        }).catch(err => {
-            this.setState({ isLoading: false })
-            this.formatData([])
+            })
         })
+
+    }
+    searchData = () => {
+        const { page, size, keyword } = this.state
+        this.setState({ isLoading: true }, () => {
+            bookingDoctorProvider.search_list_specialists(keyword.toLowerCase()).then(res => {
+                this.setState({ isLoading: false })
+                if (res && res.length > 0) {
+                    this.formatData(res)
+                } else {
+                    this.formatData([])
+                }
+            }).catch(err => {
+                this.setState({ isLoading: false })
+                this.formatData([])
+            })
+        })
+
     }
 
     formatData = (data) => {
@@ -122,7 +142,12 @@ class ListSpecialistScreen extends Component {
 
     onClose = () => {
         this.props.navigation.pop()
-        console.log('props: ', this.props);
+    }
+    onChangeText = (keyword) => {
+        this.setState({ keyword })
+        if (!keyword) {
+            this.getData()
+        }
     }
     render() {
         return (
@@ -145,8 +170,10 @@ class ListSpecialistScreen extends Component {
                         </TouchableOpacity>
                         <Text style={styles.txtHeader}>Chuyên khoa</Text>
                         <View style={styles.containerInput}>
-                            <TextInput style={styles.inputSearch} placeholder="Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế" />
-                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
+                            <TextInput style={styles.inputSearch}
+                                onSubmitEditing={this.searchData}
+                                value={this.state.keyword} placeholder="Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế" onChangeText={this.onChangeText} />
+                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.searchData}>
                                 <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
                             </TouchableOpacity>
                         </View>
@@ -186,6 +213,7 @@ const styles = StyleSheet.create({
     txtItem: {
         color: '#FFF',
         paddingHorizontal: 7,
+        paddingRight: 10,
         fontWeight: 'bold'
     },
     containerItem: {
@@ -195,7 +223,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         width: '45%',
         marginLeft: 13,
-        height: 50,
         marginTop: 10,
         borderRadius: 5,
         paddingHorizontal: 10,
@@ -236,6 +263,7 @@ const styles = StyleSheet.create({
         marginLeft: -10,
         fontWeight: 'bold',
         paddingLeft: 9,
+        color: '#000'
     },
 });
 export default ListSpecialistScreen;

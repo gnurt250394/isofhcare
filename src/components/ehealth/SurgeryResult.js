@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import SurgeryResultItem from '@components/ehealth/SurgeryResultItem';
+import ImageEhealth from './ImageEhealth';
 
 
 class SurgeryResult extends Component {
@@ -17,6 +18,9 @@ class SurgeryResult extends Component {
         let { result } = this.props;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
             return null;
+        if (!result?.ListResulGiaiPhau[0]?.SummaryResult && !result?.ListResulGiaiPhau[0]?.ServiceName && (result?.ListResulGiaiPhau[0]?.Image?.length == 0 || !result?.ListResulGiaiPhau[0]?.Image)) {
+            return null
+        }
         let resultSurgery = result.ListResulGiaiPhau || [];
         return (<View style={styles.container}>
             {
@@ -31,7 +35,26 @@ class SurgeryResult extends Component {
                 </View>
             }
             {
-                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} />)
+                resultSurgery.map((item, index) => {
+                    return (
+                        <View key={index} style={{
+                            backgroundColor: "#ffffff",
+                            shadowColor: "rgba(0, 0, 0, 0.05)",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2
+                            },
+                            shadowRadius: 10,
+                            shadowOpacity: 1,
+                            elevation: 3,
+                            borderRadius: 5,
+                            padding: 10
+                        }}>
+                            <SurgeryResultItem item={item} key={index} {...this.props} />
+                            <ImageEhealth images={item.Image} />
+                        </View>
+                    )
+                })
             }
         </View>)
     }
@@ -50,7 +73,7 @@ const styles = StyleSheet.create({
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
     item: { marginTop: 10, flexDirection: 'row' },
-    container:{ flex: 1, padding: 10 },
-    txResult:{ fontWeight: 'bold', fontSize: 18 }
+    container: { flex: 1, padding: 10 },
+    txResult: { fontWeight: 'bold', fontSize: 18 }
 })
 export default connect(mapStateToProps)(SurgeryResult);

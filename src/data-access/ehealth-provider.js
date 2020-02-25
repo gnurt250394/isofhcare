@@ -1,7 +1,26 @@
 import client from '@utils/client-utils';
 import constants from '@resources/strings';
-
 module.exports = {
+    uploadEhealth(params, id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(params ? "post" : "get", `${constants.api.ehealth.upload_ehealth}${id ? `/${id}` : ''}`, params ? params : {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        })
+    },
+    updateEhealth(params, id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", `${constants.api.ehealth.upload_ehealth}/` + Number(id), params, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        })
+    },
     getGroupPatient(hospitalId) {
         return new Promise((resolve, reject) => {
             client.requestApi("get", `${constants.api.ehealth.get_group_patient}?hospitalId=${hospitalId}`, {}, (s, e) => {

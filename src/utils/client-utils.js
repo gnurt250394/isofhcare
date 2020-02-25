@@ -9,7 +9,7 @@ const server_url = "https://api.produce.isofhcare.com"; //release
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
-const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
+const resource_url = "https://storage.googleapis.com/isofh-care/"; //release
 
 
 const httpClient = axios.create();
@@ -32,7 +32,8 @@ String.prototype.absoluteUrl =
     if (
       _this2.endsWith(".jpg") ||
       _this2.endsWith(".png") ||
-      _this2.endsWith(".gif")
+      _this2.endsWith(".gif") ||
+      _this2.endsWith(".jpeg")
     ) {
       let image = resource_url + encodeURIComponent(_this + "") + "?alt=media";
       // console.log(image);
@@ -41,7 +42,8 @@ String.prototype.absoluteUrl =
     if (
       !_this2.endsWith(".jpg") ||
       !_this2.endsWith(".png") ||
-      !_this2.endsWith(".gif")
+      _this2.endsWith(".gif") ||
+      _this2.endsWith(".jpeg")
     ) {
       return defaultValue;
     }
@@ -88,12 +90,12 @@ module.exports = {
       };
     }
   },
-  uploadFile(url, uri, funRes) {
+  uploadFile(url, uri, type, funRes) {
     const data = new FormData();
     data.append("file", {
       uri: uri,
-      type: "image/jpeg", // or photo.type
-      name: "test.png"
+      type: type ? type : "image/jpeg", // or photo.type
+      name: uri ? uri.replace(/^.*[\\\/]/, '') : 'test.png'
     });
 
     this.requestFetch(

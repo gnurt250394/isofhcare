@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList, ActivityIndicator,ScrollView } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import { ScrollView, } from 'react-native-gesture-handler';
 import InsertInfoDrug from './InsertInfoDrug'
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import drugProvider from '@data-access/drug-provider'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Modal from "@components/modal";
+import constants from "@resources/strings";
 
 export default class DrugInput extends Component {
     constructor(props) {
@@ -24,6 +24,7 @@ export default class DrugInput extends Component {
     }
 
     onSearch = () => {
+        let { text } = this.state
         this.setState({
             isSearch: true,
         }, () => {
@@ -44,27 +45,38 @@ export default class DrugInput extends Component {
         })
     }
     onChangeText(text) {
-        if (this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-            this.setState({
-                isSearch: true,
-            }, () => {
-                drugProvider.searchDrug(text, 0, 5).then(res => {
-                    if (res && res.length) {
-                        this.setState({
-                            itemsDrug: res,
-                            isSearch: false,
-                            isShowList: true,
-                        })
-                    }
+        this.setState({
+            text
+        }, () => {
+            if (this.timeout) clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                this.setState({
+                    isSearch: true,
+                }, () => {
+                    drugProvider.searchDrug(text, 0, 5).then(res => {
+                        if (res && res.length) {
+                            this.setState({
+                                itemsDrug: res,
+                                isSearch: false,
+                                isShowList: true,
+                            })
+                        } else {
+                            this.setState({
+                                itemsDrug: [],
+                                isSearch: false,
+                                isShowList: true,
+                            })
+                        }
 
-                }).catch(err => {
-                    this.setState({
-                        isSearch: false,
+                    }).catch(err => {
+                        this.setState({
+                            isSearch: false,
+                        })
                     })
                 })
-            })
-        }, 500);
+            }, 500);
+        })
+
     }
     renderItem = ({ item, index }) => {
         return (
@@ -77,7 +89,8 @@ export default class DrugInput extends Component {
     onGetItem = (item) => {
         this.setState({
             itemsDrug: [],
-            isShowList: false
+            isShowList: false,
+            text: ''
         }, () => {
             this.setState(prev => ({
                 selectedItems: prev.selectedItems.concat(item)
@@ -88,6 +101,7 @@ export default class DrugInput extends Component {
         const items = this.state.selectedItems.filter((sitem) => sitem.medicineId !== item.medicineId);
         this.setState({ selectedItems: items });
     }
+    listEmpty = () => !this.state.isSearch && <Text style={styles.none_data}>Không tìm thấy tên thuốc đã nhập</Text>
 
     render() {
 
@@ -95,11 +109,11 @@ export default class DrugInput extends Component {
             <View style={styles.container}>
                 <View>
                     <View style={styles.viewInputDrug}>
-                        <TextInput onChangeText={text => this.onChangeText(text)} placeholderTextColor={'#000'} placeholder={'Nhập tên thuốc, vd (Paracetamol 500mg)'} style={styles.inpuNameDrug}></TextInput>
+                        <TextInput value={this.state.text} onChangeText={text => this.onChangeText(text)} placeholderTextColor={'#000'} placeholder={'Nhập tên thuốc, vd (Paracetamol 500mg)'} style={styles.inpuNameDrug}></TextInput>
                         {this.state.isSearch ? <ActivityIndicator size={'small'}></ActivityIndicator> : null}
                     </View>
                     {this.state.isShowList ?
-                        <ScrollView keyboardShouldPersistTaps="handled">
+                        <ScrollView keyboardShouldPersistTaps="handled" >
                             {this.state.itemsDrug.map((item, index) => {
                                 return (
                                     <TouchableOpacity style={styles.itemDrug} onPress={() => this.onGetItem(item)} key={index}>
@@ -107,6 +121,7 @@ export default class DrugInput extends Component {
                                     </TouchableOpacity>
                                 )
                             })}
+                            {!this.state.isSearch && !this.state.itemsDrug.length && this.listEmpty()}
                             <KeyboardSpacer></KeyboardSpacer>
                         </ScrollView> : <View></View>
                     }
@@ -140,6 +155,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#00ba99',
         alignItems: 'center'
+    },
+    none_data: {
+        fontStyle: 'italic',
+        alignSelf: 'center',
+        fontSize: 14,
+        color: '#00ba99',
     },
     inpuNameDrug: {
         width: '92%',

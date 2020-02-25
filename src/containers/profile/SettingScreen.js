@@ -38,7 +38,7 @@ class SettingScreen extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {
                             Linking.openURL(
-                                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+                                "mailto:cskh@isofhcare.com?subject=Hỗ trợ sử dụng app ISofhCare&body="
                             );
                         }} style={styles.viewDrawer}>
                             <ScaledImage height={15} source={require('@images/new/profile/ic_help.png')} />
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff',
     },
-    
+
     txVersion: {
         fontWeight: 'bold',
         fontSize: 14

@@ -86,7 +86,8 @@ class ListProfileScreen extends PureComponent {
             );
     }
     onLoad() {
-        ehealthProvider.getGroupPatient(this.props.ehealth.hospital.hospital.id).then(res => {
+        let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital  ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+        ehealthProvider.getGroupPatient(hospitalId).then(res => {
             this.setState({
                 loading: false,
                 refreshing: false,

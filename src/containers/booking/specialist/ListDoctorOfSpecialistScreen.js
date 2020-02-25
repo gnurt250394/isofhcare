@@ -25,7 +25,6 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
             isLoading: true,
             data: [],
             keyword: '',
-            infoDoctor: {},
             page: 0,
             size: 20,
             refreshing: false,
@@ -70,6 +69,21 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
             }
         }
     }
+    componentWillReceiveProps = (props) => {
+        if (props.type != this.state.type) {
+            console.log('props: ', props);
+            this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
+                switch (this.state.type) {
+                    case TYPE.SEARCH:
+                        this.search()
+                        break;
+                    default:
+                        this.getData()
+                        break;
+                }
+            })
+        }
+    }
     loadMore = () => {
         const { page, size, data, keyword } = this.state
         if (data.length >= (page + 1) * size) {
@@ -81,12 +95,6 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
                 switch (this.state.type) {
                     case TYPE.SEARCH:
                         this.search()
-                        break;
-                    case TYPE.HOSPITAL:
-                        this.getDoctorHospitals()
-                        break;
-                    case TYPE.SPECIALIST:
-                        this.getDoctorSpecialists()
                         break;
                     default:
                         this.getData()
@@ -106,9 +114,6 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
             isNotHaveSchedule: true
         })
     }
-    goToAdvisory = () => {
-        this.props.navigation.navigate("listQuestion");
-    }
     renderItem = ({ item }) => {
 
         return (
@@ -116,21 +121,14 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
                 item={item}
                 onPressDoctor={this.goDetailDoctor(item)}
                 onPressBooking={this.addBookingDoctor(item)}
-                onPressAdvisory={this.goToAdvisory}
             />
         )
     }
-    onChangeText = (state) => (value) => {
-        this.setState({ [state]: value })
-        if (value.length == 0) {
-            this.getData()
-        }
-    }
     search = async () => {
         try {
-            let { keyword, page, size } = this.state
+            let { page, size, keyword } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            let res = await bookingDoctorProvider.searchListDoctorWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -144,22 +142,24 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
         }
 
     }
-    onSearch = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            type: TYPE.SEARCH
-        }, this.search)
-    }
+
     onRefress = () => {
         this.setState({
             page: 0,
             refreshing: true,
-            type: ''
-        }, this.getData)
+        }, () => {
+            switch (this.state.type) {
+                case TYPE.SEARCH:
+                    this.search()
+                    break;
+                default:
+                    this.getData()
+                    break;
+            }
+        })
     }
     keyExtractor = (item, index) => index.toString()
-    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
+    listEmpty = () => <Text style={styles.none_data}>Không có dữ liệu</Text>
 
     render() {
         const { refreshing, data } = this.state
@@ -174,7 +174,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
                 onEndReached={this.loadMore}
                 onEndReachedThreshold={0.6}
                 onRefresh={this.onRefress}
-                refreshing={this.state.refreshing}
+                refreshing={refreshing}
             />
         );
     }

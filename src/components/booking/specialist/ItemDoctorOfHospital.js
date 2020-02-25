@@ -21,13 +21,15 @@ class ItemDoctorOfHospital extends Component {
         }
     }
     render() {
-        const { item, onPress } = this.props
+        const { item, onPress, onPressDoctor } = this.props
         const icSupport = require("@images/new/user.png");
         const source = item.imagePath
-            ? { uri: item.imagePath }
+            ? { uri: item.imagePath.absoluteUrl() }
             : icSupport;
         return (
-            <View style={styles.containerItem}>
+            <TouchableOpacity
+                onPress={onPressDoctor}
+                style={styles.containerItem}>
                 <ImageLoad
                     resizeMode="cover"
                     imageStyle={styles.boderImage}
@@ -49,7 +51,7 @@ class ItemDoctorOfHospital extends Component {
                     }}
                 />
                 <View style={styles.containerProfile}>
-                    <Text style={styles.txtName}>{item.name}</Text>
+                    <Text style={styles.txtName}>{item.academicDegree} {item.name}</Text>
                     {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
                     <View style={styles.containerSpecialist}>
                         {item.specializations && item.specializations.length > 0 ?
@@ -67,7 +69,7 @@ class ItemDoctorOfHospital extends Component {
                             starSize={11}
                             containerStyle={{ width: '30%' }}
                             maxStars={5}
-                            rating={item.rating}
+                            rating={item.average ? item.average : 0}
                             starStyle={{ margin: 1, marginVertical: 7 }}
                             fullStarColor={"#fbbd04"}
                             emptyStarColor={"#fbbd04"}
@@ -80,7 +82,7 @@ class ItemDoctorOfHospital extends Component {
 
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.7
     },
     imgDefault: { width: 70, height: 70, alignSelf: "center" },
-    boderImage: { borderRadius: 35, borderWidth: 2, borderColor: '#00CBA7' },
+    boderImage: { borderRadius: 35 },
     avatar: { width: 70, height: 70, alignSelf: "flex-start", },
     imgPlaceHoder: {
         width: 70,

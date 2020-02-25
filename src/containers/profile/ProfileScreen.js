@@ -16,7 +16,7 @@ import objectUtils from "@utils/object-utils";
 import redux from "@redux-store";
 import { connect } from "react-redux";
 import * as Animatable from 'react-native-animatable';
-import { Card, Icon } from 'native-base';
+import { Card } from 'native-base';
 import NavigationService from "@navigators/NavigationService";
 
 class ProfileScreen extends Component {
@@ -304,7 +304,7 @@ class ProfileScreen extends Component {
                             </View> : null}
                             {details.weight || details.height ? <View style={[styles.viewItem, {}]}>
                                 <Text><Text style={styles.txLabel}>{constants.height}: </Text><Text style={styles.txContent}>{details.height + 'cm'} </Text></Text>
-                                <Text style={[styles.txLabel]}>{constants.weight}: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details.weight + 'kg'} </Text></Text>
+                                <Text style={[styles.txLabel]}>{constants.weight}: <Text style={styles.txContent}>{details.weight + 'kg'} </Text></Text>
                                 <View style={{ width: 20 }}></View>
                             </View> : null}
                             {details && details.height && details.weight ? <View style={styles.viewItem}>
@@ -451,7 +451,7 @@ class ProfileScreen extends Component {
                 <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
-                            <Icon name="add" style={{ color: '#FFF' }}></Icon>
+                            <ScaledImage height={25} source={require('@images/new/profile/ic_add.png')}></ScaledImage>
                         </TouchableOpacity>
                     </Card>
                 </Animatable.View>
@@ -533,12 +533,11 @@ const styles = StyleSheet.create({
     txLabel: {
         color: '#01C295',
         fontSize: 14,
-        fontWeight: 'bold'
     },
     txContent: {
         marginLeft: 5,
         color: '#000',
-        fontSize: 14
+        fontSize: 14,
 
     },
     imgBaner: {

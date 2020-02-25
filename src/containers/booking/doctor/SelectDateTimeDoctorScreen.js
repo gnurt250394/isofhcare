@@ -219,10 +219,14 @@ class SelectDateTimeDoctorScreen extends Component {
                         this.setState({ profileDoctor: s, isLoading: false }, () => {
                             this.selectMonth(new Date());
                         })
+                    }else{
+                        this.selectMonth(new Date());
+
                     }
                 }).catch(e => {
                     // this.selectMonth(new Date());
-                    this.setState({ isLoading: false })
+                            this.selectMonth(new Date());
+                            this.setState({ isLoading: false })
                     if (e) {
                         this.setState({
                             isLoading: false
@@ -595,6 +599,9 @@ class SelectDateTimeDoctorScreen extends Component {
                         backgroundColor: '#FFF',
                         borderWidth: 1,
                         borderColor: '#3161AD'
+                    },
+                    text: {
+                        color: '#000'
                     }
                 }
                 // delete schedules[this.state.dateString].selected;
