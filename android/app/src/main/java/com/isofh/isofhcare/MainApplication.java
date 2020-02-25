@@ -3,7 +3,7 @@ import android.app.Application;
 
 
 import cl.json.ShareApplication;
-import android.app.Application;
+// import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
