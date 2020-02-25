@@ -68,7 +68,7 @@ class TermsScreen extends Component {
                         <Text style={styles.title}>11. Lưu Ý Sử Dụng</Text>
                         <Text style={styles.content}>Một số tính năng kết bạn theo sở thích hay địa điểm như: Tìm bạn quanh đây có thể gây phiền toái cho người sử dụng. Khi sử dụng tính năng này, bạn có thể tìm thấy được bạn mới và đồng thời bạn cũng sẽ được tìm thấy bởi người lạ. Bạn phải cẩn thận khi quyết định hẹn gặp một người lạ thông qua tính năng này, nếu bạn phát hiện người lạ có dấu hiệu lừa đảo hoặc phạm tội, xin hãy báo cáo lại cho chúng tôi hoặc cơ quan Pháp luật gần nhất. Nếu bạn cảm thấy phiền toái sau khi sử dụng tính năng này, hãy chọn Ẩn vị trí để không bị làm phiền.</Text>
                         <Text style={styles.title}>12. Liên lạc với chúng tôi</Text>
-                        <Text style={styles.content}>Địa chỉ email: <Text style={{ color: 'blue' }}>support@iSofHcare.com</Text> hoặc Công ty cổ phần công nghệ iSofH. Địa chỉ: Tầng 3, Toà AB, UDIC Complex, Hoàng Đạo Thuý, Trung Hoà, Cầu Giấy, Hà Nội</Text>
+                        <Text style={styles.content}>Địa chỉ email: <Text style={{ color: 'blue' }}>cskh@isofhcare.com</Text> hoặc Công ty cổ phần công nghệ iSofH. Địa chỉ: Tầng 3, Toà AB, UDIC Complex, Hoàng Đạo Thuý, Trung Hoà, Cầu Giấy, Hà Nội</Text>
                         <Text style={styles.content}>Trân trọng cảm ơn bạn đã sử dụng sản phẩm và dịch vụ của chúng tôi.</Text>
                     </View>
                 </ScrollView>

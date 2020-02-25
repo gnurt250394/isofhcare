@@ -12,7 +12,7 @@ class SelectServiceScreen extends Component {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
         let serviceType = this.props.navigation.state.params.serviceType || {};
-        this.listServicesSelected = this.props.navigation.state.params.listServicesSelected || [];
+        this.listServicesSelected = this.props.navigation.getParam('listServicesSelected', []) || [];
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show(constants.msg.booking.please_select_location, "danger");
@@ -26,7 +26,7 @@ class SelectServiceScreen extends Component {
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            hospital: hospital || { hospital: {} },
+            hospital: hospital || {},
             serviceType,
             listSpecialist: [],
             specialists: []
@@ -35,20 +35,14 @@ class SelectServiceScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    selectService(service) {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(service.service, service.specialist && service.specialist.length > 0 ? service.specialist[0] : {});
-            this.props.navigation.pop();
-        }
-    }
+
 
 
     onRefresh = () => {
         let serviceType = this.state.serviceType ? this.state.serviceType.id || "" : ''
         let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAllServices(this.state.hospital.hospital.id).then(s => {
+            serviceProvider.getAllServices(this.state.hospital.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
@@ -58,11 +52,11 @@ class SelectServiceScreen extends Component {
                         //         let listService = s.data.data.sort(function (a, b) {
                         //             return new Date(a.service.createdDate) - new Date(b.service.createdDate);
                         //         });
-                                this.setState({
-                                    listService: s
-                                }, () => {
-                                    this.onSearch();
-                                });
+                        this.setState({
+                            listService: s
+                        }, () => {
+                            this.onSearch();
+                        });
                         // }
                     }
                 })
@@ -103,8 +97,9 @@ class SelectServiceScreen extends Component {
             </TouchableOpacity>
         );
     }
-    onPressItem1(item) {
-        let x = this.listServicesSelected.find(item2 => item2.id == item.id);
+    onPressItem1 = (item) => () => {
+        let x = (this.listServicesSelected || []).find(item2 => item2.id == item.id);
+        console.log('this.listServicesSelected: ', this.listServicesSelected);
         if (x) {
             item.checked = false;
             let index = this.listServicesSelected.indexOf(x);
@@ -119,7 +114,6 @@ class SelectServiceScreen extends Component {
         this.setState({
             listServiceSearch: [...this.state.listServiceSearch]
         })
-        // this.selectService.bind(this, item)
     }
     ok = () => {
         // let listChecked = this.state.listServiceSearch.filter(item => item.checked);
@@ -141,18 +135,51 @@ class SelectServiceScreen extends Component {
                 </View> : null
         )
     }
+    onSelected = (item) => {
+        let x = this.listServicesSelected.find(item2 => item2.id == item.id);
+        if (x) {
+            item.checked = false;
+            let index = this.listServicesSelected.indexOf(x);
+            this.listServicesSelected.splice(index, 1);
+        } else {
+            item.checked = true;
+            this.listServicesSelected.push(item);
+        }
+
+
+        this.setState({
+            listServiceSearch: [...this.state.listServiceSearch]
+        })
+    }
     footerComponent = () => <View style={{ height: 10 }} />
+    detalService = (item) => () => {
+        this.props.navigation.navigate('detalService', {
+            item,
+            onSelected: this.onSelected
+        })
+    }
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
-                <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
+            <TouchableOpacity onPress={this.onPressItem1(item)}>
+                <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.6)' } : { backgroundColor: '#FFF' }]}>
                     <View style={styles.groupContentItem}>
                         <Text style={styles.txtServices}>
                             {item.name}
                         </Text>
-                        {item.checked &&
+                        <Text style={{ paddingRight: 10, fontStyle: 'italic' }}>{item.monetaryAmount && item.monetaryAmount.value ? item.monetaryAmount.value.formatPrice() : 0}đ </Text>
+                        {/* {item.checked ?
                             <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
-                        }
+                            :
+                            <View style={{ width: 20 }} />
+                        } */}
+                        <TouchableOpacity
+                            onPress={this.detalService(item)}
+                            style={{
+                                paddingVertical: 10,
+                                paddingHorizontal: 15,
+                            }}>
+                            <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
+                        </TouchableOpacity>
                         {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
                     </View>
                     {/* <Text numberOfLines={2}>
@@ -221,17 +248,23 @@ class SelectServiceScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    help: {
+        alignItems: 'center'
+    },
     txtServices: {
         fontWeight: 'bold',
         flex: 1
     },
     groupContentItem: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        flex: 1
     },
     containerItem: {
         marginBottom: 2,
-        padding: 20,
         flexDirection: 'column',
         borderBottomColor: '#00000011',
         borderBottomWidth: 0.7
@@ -252,7 +285,7 @@ const styles = StyleSheet.create({
         color: "#02c39a",
         fontWeight: 'bold',
         marginLeft: 10,
-        width:'15%'
+        width: '15%'
     },
     buttonCheck: {
         alignSelf: 'flex-end',

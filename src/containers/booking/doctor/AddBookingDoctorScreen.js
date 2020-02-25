@@ -120,7 +120,7 @@ class AddBookingDoctorScreen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path, (s, e) => {
+                            imageProvider.upload(image.path,image.mime, (s, e) => {
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
@@ -370,6 +370,7 @@ class AddBookingDoctorScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
+                                this.isChecking = true
                                 s.payment = this.state.paymentMethod
                                 // snackbar.show('Đặt khám thành công', 'success')
                                 this.props.navigation.navigate("confirmBookingDoctor", {

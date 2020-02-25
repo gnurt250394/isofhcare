@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import Dimensions from 'Dimensions';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import { Dimensions, View, Text, ActivityIndicator, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
@@ -54,13 +53,11 @@ class ChangePasswordScreen extends Component {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true, disabled: true }, () => {
                 userProvider.changePassword(this.props.userApp.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
-                    console.log('s: ', s);
-                    this.setState({ isLoading: false, disabled: false });
                     switch (s.code) {
                         case 0:
                             snackbar.show(constants.msg.user.change_password_success, 'success');
                             this.props.navigation.navigate('home');
-                            return;
+                            break;
                         case 2:
                             snackbar.show(constants.msg.user.change_password_success_old_password_incorrect, 'danger');
                             break
@@ -68,6 +65,7 @@ class ChangePasswordScreen extends Component {
                             snackbar.show(constants.msg.user.change_password_not_success, 'danger');
                             break
                     }
+                    this.setState({ isLoading: false, disabled: false });
                 }).catch(e => {
                     this.setState({ isLoading: false, disabled: false });
                     snackbar.show(constants.msg.user.change_password_not_success, 'danger');
@@ -208,7 +206,7 @@ class ChangePasswordScreen extends Component {
                             disabled={this.state.disabled}
                             onPress={this.change.bind(this)}
                             style={styles.updatePass}>
-                            <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
+                            {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>}
                         </TouchableOpacity>
                     </View>
                     <View style={{ height: 50 }}></View>
@@ -237,7 +235,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignSelf: 'stretch',
         justifyContent: 'center',
-        marginTop:10
+        marginTop: 10
     },
     input: {
         maxWidth: 300,

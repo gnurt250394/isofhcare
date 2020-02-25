@@ -69,7 +69,7 @@ class ViewInDateScreen extends Component {
         let patient = this.props.ehealth.patient;
         let obj2 = {};
         patient.history.forEach(item => {
-            console.log('patient: ', patient);
+
 
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
             if (!obj2[key])
@@ -115,8 +115,12 @@ class ViewInDateScreen extends Component {
     }
     getDetailPatientHistory(patientHistoryId, id) {
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id, id).then(result => {
-                this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+
+            resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
+
+
+                this.setState({ result: result.result, resultDetail: result.resultDetail, data: result.data, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                 })
@@ -129,12 +133,12 @@ class ViewInDateScreen extends Component {
     dayPress(item) {
         let patient = this.props.ehealth.patient;
         let day2 = item.ddmmyyyy()
-        let id 
+        let id
         patient.history.forEach(item2 => {
-            console.log('item2: ', item2);
-            console.log('patient: ', patient);
+
+
             let day = item2.timeGoIn.toDateObject('-').ddmmyyyy();
-            if(day == day2){
+            if (day == day2) {
                 id = item2.id
             }
         });
@@ -145,36 +149,45 @@ class ViewInDateScreen extends Component {
             return;
         };
         this.setState({ dateSelected: item }, () => {
-            this.getDetailPatientHistory(item.patientHistory.patientHistoryId,id)
+            this.getDetailPatientHistory(item.patientHistory.patientHistoryId, id)
         })
     }
     viewCheckupResult() {
-        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMedicalTestResult() {
-        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewDiagnosticResult() {
-        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewSurgeryResult() {
-        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMoney() {
-        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     viewMedicine() {
-        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail })
+        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail, data: this.state.data })
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-            let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
-            let note = item.Diagnostic;
-            if (!note)
+            let item = this.state.result?.ListResultCheckup?.find(e => e.DoctorAdviceTxt || e.DiseaseDiagnostic || e.Diagnostic || e.First_Diagnostic || (e.Image && e.Image.length))
+
+            let note = null
+            if (item?.Diagnostic)
+                note = item.Diagnostic;
+            else if (item?.DiseaseDiagnostic)
                 note = item.DiseaseDiagnostic;
-            if (!note)
+            else if (item?.DoctorAdviceTxt)
+                note = item.DoctorAdviceTxt;
+            else if (item?.First_Diagnostic)
                 note = item.First_Diagnostic;
-            if (note)
+            else if (item?.Image.length) {
+                note = ' '
+            }
+
+            if (note) {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
@@ -183,14 +196,15 @@ class ViewInDateScreen extends Component {
                                 {/* <View style={styles.viewCheckupResult}></View> */}
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                                 <View style={styles.viewNote}>
-                                    <Text style={styles.txNote}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txNote}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
                         </Card>
                     </View>)
+            }
+            return null;
         }
-        return null;
     }
     // renderDoctorAdviceTxt() {
     //     if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
@@ -216,13 +230,19 @@ class ViewInDateScreen extends Component {
     renderDiagnosticResult() {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
+
             let note = item.SummaryResult;
-            if (!note)
-                note = item.Result;
-            if (!note)
-                note = item.Discussion;
-            if (!note)
-                note = item.Conclusion;
+            if (item.SummaryResult || (item.Image && item?.Image?.length != 0)) {
+                note = item?.SummaryResult || " "
+            } else {
+                if (!note)
+                    note = item.Result;
+                if (!note)
+                    note = item.Discussion;
+                if (!note)
+                    note = item.Conclusion;
+            }
+
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -231,7 +251,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewDiagnosticResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_ct_catlop.png')}></ScaledImage>
                                 <View style={styles.viewTx}>
-                                    <Text style={styles.txNoteBlue}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txNoteBlue}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -257,7 +277,7 @@ class ViewInDateScreen extends Component {
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                 <View style={styles.viewTxMoney}>
-                    <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
+                    <Text numberOfLines={2} style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
                     <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
                 </View>
                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
@@ -281,6 +301,9 @@ class ViewInDateScreen extends Component {
                 note = item.Microsome;
             if (!note)
                 note = item.BiopsyLocation;
+            if (item.SummaryResult || item?.Image?.length != 0) {
+                note = item?.SummaryResult || ' '
+            }
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -289,7 +312,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewSurgeryResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_giaiphau.png')}></ScaledImage>
                                 <View style={styles.viewTxSurgery}>
-                                    <Text style={styles.txSurgery}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txSurgery}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -304,6 +327,7 @@ class ViewInDateScreen extends Component {
         if (this.state.result) {
             let item = null;
             if (this.state.result.ListMedicine && this.state.result.ListMedicine.length) {
+
                 item = this.state.result.ListMedicine[this.state.result.ListMedicine.length - 1];
             }
             if (!item) {
@@ -325,7 +349,27 @@ class ViewInDateScreen extends Component {
             if (!item)
                 return null;
 
-            let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
+            let note = !item?.ServiceName
+                && !item?.Measure
+                && !item?.Quantity
+                && !item?.Unit ? ''
+                : (item?.ServiceName || "") + " " + (item?.Measure || "") + ", " + (item?.Quantity || "") + " " + (item?.Unit || "")
+            if (item.SummaryResult || (item.Image && item?.Image?.length != 0)) {
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                                <View style={styles.viewDrug}>
+                                    <Text numberOfLines={2} style={styles.txMedicine}>{item.SummaryResult}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>
+                )
+            }
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
@@ -334,7 +378,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
                                 <View style={styles.viewDrug}>
-                                    <Text style={styles.txMedicine}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txMedicine}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -375,8 +419,9 @@ class ViewInDateScreen extends Component {
                 }
                 else
                     note = item.ServiceName + ": " + item.Result;
-            } else {
-                return null;
+            }
+            else if (arr?.SummaryResult || arr?.Image?.length != 0) {
+                note = arr?.SummaryResult || ' '
             }
 
             if (note)
@@ -387,7 +432,7 @@ class ViewInDateScreen extends Component {
                             <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicalTestResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_xet_nghiem.png')}></ScaledImage>
                                 <View style={styles.viewTxMedical}>
-                                    <Text style={styles.txMedical}>{note}</Text>
+                                    <Text numberOfLines={2} style={styles.txMedical}>{note}</Text>
                                 </View>
                                 <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
                             </TouchableOpacity>
@@ -420,11 +465,14 @@ class ViewInDateScreen extends Component {
                 let hospitalId = this.props.ehealth.patient.hospitalEntity.id;
                 resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.id).then(result => {
                     if (result) {
-                        result = result.result;
-                        result.hospital = this.props.ehealth.hospital.hospital;
+                        let result1 = result.result;
+                        if (!result1?.Profile) {
+                            result1.Profile = result.resultDetail.Profile
+                        }
+                        result1.hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital;
                         this.exportPdfCom.exportPdf({
                             type: "all",
-                            result: result,
+                            result: result1,
                             fileName: constants.filenamePDF + patientHistoryId
                         }, () => {
                             this.setState({ isLoading: false });
@@ -483,12 +531,13 @@ class ViewInDateScreen extends Component {
     onEndLoading = () => this.setState({ isLoading: false })
     render() {
         return (
-            <ActivityPanel style={styles.container} title={constants.title.ehealth}
-
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
+                titleStyle={{ marginLeft: 50 }}
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
-                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><ScaledImage source={require('@images/new/ehealth/ic_share.png')} height={25} /></TouchableOpacity> :
                     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
+
             >
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>

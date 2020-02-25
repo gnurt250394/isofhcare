@@ -34,8 +34,8 @@ class CreateProfileScreen extends Component {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
             toggelDateTimePickerVisible: false,
-            valueGender: '1',
-            txGender: 'Nam',
+            valueGender: null,
+            txGender: 'Chọn giới tính',
             name: '',
             email: "",
             dob: "",
@@ -425,7 +425,7 @@ class CreateProfileScreen extends Component {
                                             onBlur,
                                             isError
                                         ) => (
-                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : (constants.dob)}</Text>
+                                                <Text style={[styles.ktq, { paddingVertical: 12 }, value ? { color: '#000' } : { color: '#808080' }]}>{value ? (value) : (constants.dob)}</Text>
                                             )}
                                         // onChangeText={s => {
                                         //   this.setState({ date: s });
@@ -473,7 +473,7 @@ class CreateProfileScreen extends Component {
                                     onPress={this.onShowGender}
                                 >
                                     <Text style={styles.mdk}>{constants.gender} <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                    <Text style={[styles.ktq, { paddingVertical: 12 }]}>
+                                    <Text style={[styles.ktq, { paddingVertical: 12 }, this.state.valueGender || this.state.valueGender == 0 ? { color: '#000' } : { color: '#808080' }]}>
                                         {this.state.txGender}
                                     </Text>
                                 </TouchableOpacity>

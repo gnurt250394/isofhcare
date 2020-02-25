@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Keyboard, TouchableOpacity, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider'
@@ -10,7 +10,9 @@ import { connect } from "react-redux";
 import RNGooglePlaces from 'react-native-google-places';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+import Form from "mainam-react-native-form-validate/Form";
+import Field from "mainam-react-native-form-validate/Field";
+import TextField from "mainam-react-native-form-validate/TextField";
 const devices_width = Dimensions.get('window').width
 class InputLocationScreen extends Component {
     constructor(props) {
@@ -46,39 +48,52 @@ class InputLocationScreen extends Component {
         }
     }
     onAddLocation = () => {
-        let { ownerName, telephone } = this.state
-        let ownerId = this.props.userApp.currentUser.id
-        if (!ownerName) {
-            snackbar.show('Họ và tên không được để trống.', 'danger')
-            return
+        Keyboard.dismiss();
+        if (!this.form.isValid()) {
+            return;
         }
-        if (!telephone) {
-            snackbar.show('Số điện thoại không được để trống.', 'danger')
-            return
-        }
-        if (!telephone.match(/^(\+?84|0|\(\+?84\))[1-9]\d{8,9}$/g)) {
-            snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
-            return
-        }
-        let dataAddress = this.state.resultsLocation
-        let data = {
-            "address": dataAddress.address,
-            "lat": dataAddress ? dataAddress.location.latitude : null,
-            "lng": dataAddress ? dataAddress.location.longitude : null,
-            "ownerId": ownerId,
-            "ownerName": ownerName,
-            "phone": telephone
-        }
-        drugProvider.addLocation(data).then(res => {
-            if (res) {
-                let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                if (callback) {
-                    callback(res.data);
-                    this.props.navigation.pop();
-                }
+        this.setState({
+            isLoading: true
+        }, () => {
+            let { ownerName, telephone } = this.state
+            let ownerId = this.props.userApp.currentUser.id
+            let dataAddress = this.state.resultsLocation
+            if (!dataAddress) {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Vui lòng chọn một trong các địa chỉ được gợi ý', 'danger')
+                return
             }
-        }).catch(e => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            let data = {
+                "address": dataAddress.address,
+                "lat": dataAddress ? dataAddress.location.latitude : null,
+                "lng": dataAddress ? dataAddress.location.longitude : null,
+                "ownerId": ownerId,
+                "ownerName": ownerName,
+                "phone": telephone
+            }
+            drugProvider.addLocation(data).then(res => {
+                if (res) {
+                    this.setState({
+                        isLoading: false
+                    })
+                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                    if (callback) {
+                        callback(res.data);
+                        this.props.navigation.pop();
+                    }
+                } else {
+                    this.setState({
+                        isLoading: false
+                    })
+                }
+            }).catch(e => {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            })
         })
     }
     openSearchModal = () => {
@@ -132,29 +147,49 @@ class InputLocationScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.activityPanel}
                 containerStyle={styles.container}
+                isLoading={this.state.isLoading}
                 menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onAddLocation}>
                     <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <View style={styles.viewName}>
-                    <Text style={styles.txName}>Họ và tên</Text>
-                    <TextInput value={this.state.ownerName} onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
-                </View>
-                <View style={styles.viewName}>
-                    <Text style={styles.txName}>Số điện thoại</Text>
-                    <TextInput value={this.state.telephone} onChangeText={text => this.setState({ telephone: text })} multiline={true} keyboardType={'numeric'} style={styles.inputName} placeholder={'Nhập số điện thoại'}></TextInput>
-                </View>
-                {/* <TouchableOpacity onPress={this.openSearchModal} style={styles.viewLocation}>
+                <Form ref={ref => (this.form = ref)}>
+                    <Field style={styles.viewName}>
+                        <Text style={styles.txName}>Họ và tên</Text>
+
+                        <TextField value={this.state.ownerName} validate={{
+                            rules: {
+                                required: true,
+                            },
+                            messages: {
+                                required: "Họ và tên không được bỏ trống",
+                            }
+                        }} errorStyle={styles.errorStyle} onChangeText={text => this.setState({ ownerName: text })} placeholderTextColor={'#000'} multiline={true} inputStyle={styles.inputName} placeholder={'Nhập họ và tên'}></TextField>
+                    </Field>
+                    <Field style={styles.viewName}>
+                        <Text style={styles.txName}>Số điện thoại</Text>
+                        <TextField value={this.state.telephone} validate={{
+                            rules: {
+                                required: true,
+                                phone: true
+                            },
+                            messages: {
+                                required: "Số điện thoại không được bỏ trống",
+                                phone: "Số điện thoại không hợp lệ"
+                            }
+                        }} onChangeText={text => this.setState({ telephone: text })} errorStyle={styles.errorStyle} placeholderTextColor={'#000'} multiline={true} keyboardType={'numeric'} inputStyle={styles.inputName} placeholder={'Nhập số điện thoại'}></TextField>
+                    </Field>
+                    {/* <TouchableOpacity onPress={this.openSearchModal} style={styles.viewLocation}>
                         <Text style={styles.txName}>Địa chỉ</Text>
                         <View style={styles.viewAddress}>
                             <Text style={styles.inputAdress}>{this.state.address ? this.state.address : 'Nhập địa chỉ'}</Text>
                         </View>
                     </TouchableOpacity> */}
+                </Form>
                 <View>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Địa chỉ</Text>
-                        <TextInput value={this.state.address} onChangeText={text => this.onFindLocation(text)} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
+                        <TextInput placeholderTextColor={'#000'} value={this.state.address} onChangeText={text => this.onFindLocation(text)} multiline={true} style={styles.inputAddress} placeholder={'Nhập địa chỉ'}></TextInput>
                     </View>
                     <ScrollView
                         keyboardShouldPersistTaps="handled"
@@ -169,7 +204,6 @@ class InputLocationScreen extends Component {
                         <KeyboardSpacer></KeyboardSpacer>
                     </ScrollView>
                 </View>
-                {/* <View style={styles.viewBottom}></View> */}
             </ActivityPanel>
         );
     }
@@ -189,7 +223,11 @@ const styles = StyleSheet.create({
         borderBottomColor: '#f2f2f2',
         borderBottomWidth: 1,
         justifyContent: 'space-between',
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+    },
+    errorStyle: {
+        color: "red",
+        marginTop: 10
     },
     txName: {
         fontSize: 16,
@@ -197,10 +235,16 @@ const styles = StyleSheet.create({
         textAlign: 'left'
     },
     inputName: {
-        width: '70%',
         minHeight: 48,
         textAlign: 'right',
-        color: '#000'
+        color: '#000',
+        flexWrap: 'wrap'
+    },
+    inputAddress: {
+        minHeight: 48,
+        textAlign: 'right',
+        color: '#000',
+        width: '70%'
     },
     viewLocation: {
         flexDirection: 'row',

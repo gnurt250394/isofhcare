@@ -12,6 +12,10 @@ class CheckupResult extends Component {
         }
     }
     renderItem(text) {
+        console.log('text: ', text);
+        if(!text){
+            return null
+        }
         // if (!text) {
         //     while (text.indexOf('\n') != -1) {
         //         text = text.replace("\n", "");
@@ -20,9 +24,10 @@ class CheckupResult extends Component {
         // }
         return <Text style={styles.txItem}>{text}</Text>
     }
-
+  
     render() {
         let { item } = this.props;
+        console.log('item: ', item);
         return <View style={styles.container} key={this.props.key}>
             <View style={styles.viewCheckup}>
                 <Text style={styles.txServiceName}>{item.ServiceName}</Text>
@@ -74,7 +79,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
                             <View style={styles.viewItem}>
                                 <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                {this.renderItem(item.Result + item.Discussion + item.SummaryResult)}
+                                {this.renderItem((item.Result || '') + (item.Discussion || '') + item.SummaryResult || '')}
                             </View>
                         </View> : null
                 }
@@ -126,6 +131,7 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    
     diagnosticLabel1:
     {
         color: constants.colors.primary_bold,
@@ -138,25 +144,15 @@ const styles = StyleSheet.create({
     },
     breakline: {
     },
-    txItem:{ marginLeft: 10, marginBottom: 10 },
-    container:{ flex: 1, marginTop: 20 },
-    viewCheckup:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    txServiceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
-    viewList:{
-        backgroundColor: "#ffffff",
-        shadowColor: "rgba(0, 0, 0, 0.05)",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowRadius: 10,
-        shadowOpacity: 1,
-        elevation: 3,
-        borderRadius: 5,
-        padding: 10
+    txItem: { marginLeft: 10, marginBottom: 10 },
+    container: { flex: 1, marginBottom: 20 },
+    viewCheckup: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txServiceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewList: {
+       
     },
-    viewItem:{ flexDirection: 'row' },
-    viewImg:{ flexDirection: 'row', marginTop: 10 },
-    scaleImg:{ marginTop: 4, marginRight: 7 }
+    viewItem: { flexDirection: 'row' },
+    viewImg: { flexDirection: 'row', marginTop: 10 },
+    scaleImg: { marginTop: 4, marginRight: 7 }
 })
 export default connect(mapStateToProps)(CheckupResult);

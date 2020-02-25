@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from "react";
 import ActivityPanel from "@components/ActivityPanel";
 import {
 	View,
-	ScrollView,
+	ActivityIndicator,
 	Linking,
 	StyleSheet,
 	Text,
@@ -18,8 +18,6 @@ import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
 import redux from "@redux-store";
 import ScaleImage from "mainam-react-native-scaleimage";
-import SocialNetwork from "@components/LoginSocial";
-import RNAccountKit from "react-native-facebook-account-kit";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -43,18 +41,12 @@ class LoginScreen extends Component {
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
-		// Configures the SDK with some options
-		RNAccountKit.configure({
-			titleType: "login",
-			initialPhoneCountryPrefix: "+84", // autodetected if none is provided
-			countryWhitelist: ["VN"], // [] by default
-			defaultCountry: "VN"
-		});
+
 	}
 	componentDidMount() {
 		firebase.messaging().getToken()
 			.then((token) => {
-				console.log('Device FCM Token: ', token);
+
 				userProvider.deviceId = DeviceInfo.getUniqueID();
 				userProvider.deviceToken = token;
 				firebase.messaging().subscribeToTopic("isofhcare_test");
@@ -63,47 +55,17 @@ class LoginScreen extends Component {
 
 
 	register() {
-		console.log(this.nextScreen)
+
 		this.props.navigation.replace("register", {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
 		})
-		// return;
-		// let verify = async () => {
-		// 	RNAccountKit.loginWithPhone().then(async token => {
-		// 		console.log(token);
-		// 		if (!token) {
-		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 		} else {
-		// 			let account = await RNAccountKit.getCurrentAccount();
-		// 			if (account && account.phoneNumber) {
-		// 				this.props.navigation.navigate("register", {
-		// 					user: {
-		// 						phone: "0" + account.phoneNumber.number,
-		// 						token: token.token,
-		// 						socialType: 1,
-		// 						socialId: "0"
-		// 					},
-		// 					nextScreen: this.nextScreen
-		// 				});
-		// 			} else {
-		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 			}
-		// 		}
-		// 	});
-		// };
-		// RNAccountKit.logout()
-		// 	.then(() => {
-		// 		verify();
-		// 	})
-		// 	.catch(x => {
-		// 		verify();
-		// 	});
+
 	}
 	getDetails = (token) => {
-		console.log(client.auth)
+
 		userProvider.getDetailsUser().then(res => {
-			console.log(res, 'sssssss')
+
 			let user = res.details
 			user.loginToken = token
 			this.props.dispatch(redux.userLogin(user));
@@ -130,7 +92,7 @@ class LoginScreen extends Component {
 					snackbar.show(s.message, "danger");
 				}
 			}).catch(e => {
-				console.log(e)
+
 				this.setState({ isLoading: false });
 				snackbar.show(constants.msg.error_occur, "danger");
 			});
@@ -143,9 +105,8 @@ class LoginScreen extends Component {
 		}
 
 		connectionUtils.isConnected().then(s => {
-			this.setState({ isLoading: true, disabled: false }, () => {
+			this.setState({ isLoading: true, disabled: true }, () => {
 				userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
-					this.setState({ isLoading: false, disabled: false });
 					switch (s.code) {
 						case 0:
 							var user = s.data.user;
@@ -163,20 +124,22 @@ class LoginScreen extends Component {
 							} else {
 								this.props.navigation.navigate("home", { showDraw: false });
 							}
-							return;
+							break;
 						case 4:
 							snackbar.show(constants.msg.user.this_account_not_active, "danger");
-							return;
+							break;
 						case 3:
 							snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
-							return;
+							break;
 						case 2:
 						case 1:
 							snackbar.show(constants.msg.user.account_blocked, "danger");
-							return;
+							break;
 						case 500:
 							snackbar.show(constants.msg.error_occur, "danger");
+							break
 					}
+					this.setState({ isLoading: false, disabled: false });
 				}).catch(e => {
 					this.setState({ isLoading: false, disabled: false });
 					snackbar.show(constants.msg.error_occur, "danger");
@@ -193,80 +156,7 @@ class LoginScreen extends Component {
 
 	forgotPassword() {
 		this.props.navigation.navigate('inputPhone')
-		// this.setState({
-		// 	requirePass: false
-		// }, () => {
-		// 	Keyboard.dismiss();
-		// 	if (!this.form.isValid()) {
-		// 		return;
-		// 	}
-		// 	connectionUtils.isConnected().then(s => {
-		// 		this.setState({
-		// 			isLoading: true
-		// 		}, () => {
-		// 			userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-		// 				switch (s.code) {
-		// 					case 0:
-		// 						this.props.navigation.navigate('verifyPhone', {
-		// 							phone: this.state.phone,
-		// 							verify: 2
-		// 						})
-		// 						break
-		// 					case 2:
-		// 						snackbar.show('Số điện thoại chưa được đăng ký', "danger");
-		// 						break
-		// 					case 6:
-		// 						this.props.navigation.navigate('verifyPhone', {
-		// 							phone: this.state.phone,
-		// 							verify: 2
-		// 						})
-		// 						break
-		// 				}
 
-
-		// 			})
-		// 			this.setState({
-		// 				isLoading: false,
-		// 				requirePass: true
-		// 			})
-		// 		})
-		// 	}).catch(e => {
-		// 		this.setState({
-		// 			isLoading: false,
-		// 			requirePass: true
-		// 		})
-		// 		snackbar.show(constants.msg.app.not_internet, "danger");
-		// 	})
-		// })
-
-		// let verify = async () => {
-		// 	RNAccountKit.loginWithPhone().then(async token => {
-		// 		console.log(token);
-		// 		if (!token) {
-		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 		} else {
-		// 			let account = await RNAccountKit.getCurrentAccount();
-		// 			if (account && account.phoneNumber) {
-		// 				this.props.navigation.replace("resetPassword", {
-		// 					user: {
-		// 						phone: "0" + account.phoneNumber.number,
-		// 						token: token.token,
-		// 						applicationId: constants.fbApplicationId,
-		// 					}
-		// 				});
-		// 			} else {
-		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
-		// 			}
-		// 		}
-		// 	});
-		// };
-		// RNAccountKit.logout()
-		// 	.then(() => {
-		// 		verify();
-		// 	})
-		// 	.catch(x => {
-		// 		verify();
-		// 	});
 	}
 	onShowPass = () => {
 		this.setState({
@@ -294,7 +184,7 @@ class LoginScreen extends Component {
 					style={styles.imgBg}
 					source={require('@images/new/account/img_bg_login.png')}
 					resizeMode={'cover'}
-					// resizeMethod="resize"
+				// resizeMethod="resize"
 				// image={require("@images/new/isofhcare.png")}
 				// imageStyle={{ marginRight: 50 }}
 				// showFullScreen={true}
@@ -332,7 +222,6 @@ class LoginScreen extends Component {
 														phone: "SĐT không hợp lệ"
 													}
 												}}
-												autoCapitalize={"none"}
 											/>
 											<Field style={styles.inputPass}>
 												<TextField
@@ -351,7 +240,6 @@ class LoginScreen extends Component {
 														}
 													}}
 													// inputStyle={styles.input}
-													autoCapitalize={"none"}
 												>
 
 												</TextField>
@@ -390,7 +278,7 @@ class LoginScreen extends Component {
 										</View>
 									</Form>
 									<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
-										<Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>
+										{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
 									</TouchableOpacity>
 								</Card>
 								<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>

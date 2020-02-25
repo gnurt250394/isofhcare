@@ -66,15 +66,15 @@ class PhotoViewerScreen extends Component {
                 if (Platform.OS == "android") {
                     config.path = dirs.PictureDir + '/' + filename
                     config.addAndroidDownloads =
-                        {
-                            useDownloadManager: true,
-                            notification: true,
-                            description: 'File downloaded by download manager.'
-                        }
+                    {
+                        useDownloadManager: true,
+                        notification: true,
+                        description: 'File downloaded by download manager.'
+                    }
                 }
-                // else {
-                //     config.path = dirs.DocumentDir + '/' + filename
-                // }
+                else {
+                    config.path = dirs.DocumentDir + '/' + filename
+                }
                 RNFetchBlob
                     .config(config)
                     .fetch('GET', url)
@@ -96,7 +96,7 @@ class PhotoViewerScreen extends Component {
             return null;
         return (
             <ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={(this.state.index + 1) + "/" + (this.state.urls.length)}>
-                <PhotoViewer urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
+                <PhotoViewer androidScaleType = "fitCenter" urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
             </ActivityPanel>
         );
     }

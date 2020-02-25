@@ -82,7 +82,7 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
-
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -132,8 +132,8 @@ android {
         applicationId "com.isofh.isofhcare"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 79
-        versionName "5.2"
+        versionCode 80
+        versionName "5.3"
         ndk {
             // abiFilters "armeabi-v7a", "x86", "arm64-v8a"
             abiFilters  "armeabi-v7a", "arm64-v8a"
@@ -217,62 +217,13 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-svg')
-    implementation project(':@react-native-community_netinfo')
-    implementation(project(":react-native-google-signin")) {
-        exclude group: "com.google.android.gms" // very important
-    }
-    implementation(project(':react-native-device-info'))
-            {
-                exclude group: "com.google.android.gms" // very important
-            }
-    implementation project(':react-native-webview')
-    implementation project(':react-native-gesture-handler')
-    implementation project(':react-native-facebook-account-kit')
-    implementation project(':react-native-fbsdk')
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
-    implementation project(':react-native-image-crop-picker')   
-    implementation project(':react-native-get-location')
-    implementation project(':react-native-google-places')
-    implementation project(':react-native-html-to-pdf')
-    implementation project(':react-native-linear-gradient')
-    implementation(project(':react-native-location'))
-            {
-                transitive = false
-                // exclude group: "com.google.android.gms" // very important
-                exclude group: 'com.google.android.gms', module: 'play-services-base'
-                exclude group: 'com.google.android.gms', module: 'play-services-location'
-
-            }
-    implementation project(':react-native-html-to-pdf')
-    implementation project(':react-native-maps')
-    implementation project(':react-native-print')
-    implementation project(':react-native-share')
-    implementation project(':react-native-sms')
-    implementation project(':react-native-vector-icons')
     compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
-    implementation project(':mainam-react-native-payoo')
-    implementation project(':react-native-wheel-picker-android')
-    implementation project(':realm')
-    implementation project(':rn-fetch-blob')
-    implementation project(':react-native-code-push')
-    implementation (project(':react-native-camera')) {
-        exclude group: "com.android.support"
-    }
-    implementation project(':appcenter-crashes')
-    implementation project(':appcenter-analytics')
-    implementation project(':appcenter')
-    implementation project(':@react-native-community_async-storage')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
 
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    //--------------
-    implementation(project(':react-native-firebase')) {
-        transitive = false
-    }
-    //REACT-NATIVE-FIREBASE MESSAGING
     implementation "com.google.firebase:firebase-messaging:18.0.0"
 
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
@@ -282,11 +233,6 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:16.0.1"
     implementation "com.google.firebase:firebase-core:16.0.9"
 
-    // mainam-react-native-location-switch
-    implementation(project(':mainam-react-native-location-switch'))
-            {
-                exclude group: "com.google.android.gms" // very important
-            }
     implementation "com.google.android.gms:play-services-auth:17.0.0"
     implementation "com.google.android.gms:play-services-location:17.0.0"
     //=====================

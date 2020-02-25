@@ -9,6 +9,7 @@ import RNLocation from 'react-native-location';
 import constants from '@resources/strings';
 import bookingSpecialistProvider from '@data-access/booking-specialist-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
+import locationUtils from '@utils/location-utils';
 const { width, height } = Dimensions.get('window');
 const mode = 'driving'; // 'walking';
 const LATITUDE_DELTA = 0.0922;
@@ -30,113 +31,35 @@ class MaphospitalScreen extends Component {
             },
             MARKERS: null,
             origin: '',
-            destination: item.hospital && item.hospital.contact && item.hospital.contact.address || '',
+            destination: item.contact && item.contact.address || '',
             destMarker: '',
             startMarker: '',
             imageloaded: false,
             isLoading: true,
             appState: AppState.currentState,
+            detailRouters: null
         };
     }
-    getCurrentLocation(callAgain) {
-        RNLocation.getLatestLocation().then(region => {
-            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-            this.setState({
-                origin: `${region.latitude},${region.longitude}`
-            }, this.getRoutePoints);
-        }).catch(() => {
-            locationProvider.getCurrentLocationHasSave().then(s => {
-                if (s && s.latitude && s.longitude) {
-                    s.latitudeDelta = 0.1;
-                    s.longitudeDelta = 0.1;
-                    this.setState({
-                        origin: `${s.latitude},${s.longitude}`
-                    }, this.getRoutePoints);
-                }
-            }).catch(e => {
-                if (!callAgain) {
-                    this.getCurrentLocation(true);
-                }
-            });
-        });
-    }
 
-    getLocation() {
-        let getLocation = () => {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: constants.booking.location_premmission,
-                        message: constants.booking.location_premission_content,
-                        buttonPositive: constants.actionSheet.accept,
-                        buttonNegative: constants.actionSheet.cancel
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-                    RNLocation.getLatestLocation().then(region => {
-                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                        this.setState({
-                            origin: `${region.latitude},${region.longitude}`
-                        }, this.getRoutePoints);
-                    }).catch((e) => {
-                        locationProvider.getCurrentLocationHasSave().then(s => {
-                            if (s && s.latitude && s.longitude) {
-                                s.latitudeDelta = 0.1;
-                                s.longitudeDelta = 0.1;
-                                this.setState({
-                                    origin: `${s.latitude},${s.longitude}`
-                                }, this.getRoutePoints);
-                            }
-                        }).catch(e => {
-                            if (!callAgain) {
-                                console.log("callAgain");
-                                this.getCurrentLocation(true);
-                            }
-                        });
-                    });
-                }
-            });
-        }
-
-        if (Platform.OS == 'android') {
-            GetLocation.getCurrentPosition({
-                enableHighAccuracy: true,
-                timeout: 15000,
-            })
-                .then(region => {
-                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                    this.setState({
-                        origin: `${region.latitude},${region.longitude}`
-                    }, this.getRoutePoints);
+    getLocation = () => {
+        this.setState({ isLoading: true }, () => {
+            locationUtils.getLocation().then(region => {
+                console.log('region: ', region);
+                this.setState({
+                    origin: `${region.latitude},${region.longitude}`,
+                }, this.getRoutePoints);
+            }).catch(err => {
+                locationUtils.requestPermission().then((region) => {
+                    this.getLocation()
+                }).catch(err => {
+                    this.setState({ isLoading: false })
                 })
-                .catch((error) => {
-                    const { code, message } = error
-                    if (code == 'UNAVAILABLE') {
-                        this.requestPermission()
-                    }
+            })
 
-                });
-        }
-        else {
-            try {
-                LocationSwitch.isLocationEnabled(() => {
-                    getLocation();
-                }, this.requestPermission);
-            } catch (error) {
-            }
-        }
+        })
 
     }
-    requestPermission = () => {
-        LocationSwitch.enableLocationService(1000, true, () => {
-            this.setState({ isLoading: true }, this.getLocation);
-        }, () => {
-            this.setState({ isLoading: false });
-        });
-    }
+
     getRoutePoints() {
         bookingSpecialistProvider.getLocationDirection(this.state.origin, this.state.destination, mode)
             .then(res => {
@@ -153,10 +76,15 @@ class MaphospitalScreen extends Component {
                         MARKERS: tempMARKERS,
                         destMarker: cortemp[length],
                         startMarker: cortemp[0],
+                        isLoading: false,
+                        detailRouters: res.routes[0].legs[0]
                     });
 
                 }
-            }).catch(e => { console.warn(e) });
+            }).catch(e => {
+                console.warn(e)
+                this.setState({ isLoading: false })
+            });
     }
 
 
@@ -195,12 +123,11 @@ class MaphospitalScreen extends Component {
 
     componentDidMount() {
         this.getLocation()
-
     }
     render() {
         return (
             <ActivityPanel
-                title={this.state.item.hospital.name}
+                title={this.state.item.name}
             // isLoading={this.state.isLoading}
             >
                 <View style={styles.container}>
@@ -223,7 +150,7 @@ class MaphospitalScreen extends Component {
                                     <Marker
                                         key={1}
                                         coordinate={this.state.startMarker}
-                                        image={require('@images/ic_maker.png')}
+                                    // image={require('@images/ic_maker.png')}
                                     >
                                     </Marker> : null
                                 }
@@ -231,13 +158,13 @@ class MaphospitalScreen extends Component {
                                     <Marker
                                         key={2}
                                         title="aaa"
-                                        image={require('@images/ic_maker.png')}
+                                        // image={require('@images/ic_maker.png')}
                                         coordinate={this.state.destMarker}
                                     >
                                         <Callout >
                                             <Text style={{
                                                 color: '#00BA99'
-                                            }}>{this.state.item.hospital.name}</Text>
+                                            }}>{this.state.item.name}</Text>
                                         </Callout>
                                     </Marker> : null
                                 }
@@ -251,7 +178,7 @@ class MaphospitalScreen extends Component {
                                 />
 
                                 <TouchableOpacity
-                                    onPress={this.requestPermission}
+                                    onPress={this.getLocation}
                                     style={[styles.buttonLocation, { bottom: 30, }]}>
                                     {this.state.isLoading ?
                                         <ActivityIndicator color="#FFF" size="small" /> :
@@ -260,7 +187,21 @@ class MaphospitalScreen extends Component {
                                 </TouchableOpacity>
                             </View>
                     }
-
+                    {this.state.detailRouters ?
+                        <View style={{
+                            backgroundColor: '#FFF',
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            padding: 10
+                        }}>
+                            <Text><Text style={{ color: 'red' }}>{this.state.detailRouters?.duration?.text}</Text> ({this.state.detailRouters?.distance?.text})</Text>
+                            <Text style={{ color: '#bbb', paddingVertical: 10 }}>Điểm bắt đầu: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.start_address}</Text></Text>
+                            <Text style={{ color: '#bbb', }}>Điểm cuối: <Text style={{color:'#3161AD'}}>{this.state.detailRouters.end_address}</Text></Text>
+                        </View>
+                        : null
+                    }
                     {/* <TouchableOpacity style={[styles.buttonLocation, {
                         bottom: 80,
                     }]}>

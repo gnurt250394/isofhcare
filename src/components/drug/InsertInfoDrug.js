@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import {
+    View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator, Keyboard
+} from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import { ScrollView } from 'react-native-gesture-handler';
 import NavigationService from "@navigators/NavigationService";
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
@@ -9,6 +10,9 @@ import constants from '@resources/strings';
 import drugProvider from '@data-access/drug-provider'
 import dataCacheProvider from '@data-access/datacache-provider';
 import redux from "@redux-store";
+import Form from "mainam-react-native-form-validate/Form";
+import Field from "mainam-react-native-form-validate/Field";
+import TextField from "mainam-react-native-form-validate/TextField";
 class InsertInfoDrug extends Component {
     constructor(props) {
         super(props);
@@ -58,160 +62,236 @@ class InsertInfoDrug extends Component {
         NavigationService.pop();
     }
     addMenuDrug = (isFinding) => {
-        var imageUris = this.props.imageUris
-        console.log('imageUris: ', imageUris);
-        var dataDrug = this.props.dataSearchDrug
-        let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
-        let note = this.state.note
-        let id = this.props.userApp.currentUser.id
-        let name = this.state.name
-        if (!name) {
-            snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
-            return
+        Keyboard.dismiss();
+        if (!this.form.isValid()) {
+            return;
         }
-        if (isFinding && !addressId) {
-            snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
-            return
-        }
-        let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
-        if (imageUris) {
-            if (imageUris && imageUris.length == 0) {
-                snackbar.show('Bạn cần chọn ít nhất một ảnh!', 'danger')
-                return
-            }
-            for (var i = 0; i < imageUris.length; i++) {
-                if (imageUris[i].loading) {
-                    snackbar.show(constants.msg.booking.image_loading, 'danger');
-                    return;
-                }
-                if (imageUris[i].error) {
-                    snackbar.show(constants.msg.booking.image_load_err, 'danger');
-                    return;
-                }
-            }
-            var images = [];
-            imageUris.forEach((item) => {
-
-                if (images)
-                    images.push({
-                        id: item.id ? item.id : null,
-                        action: item.action ? item.action : 'CREATE_OR_UPDATE',
-                        pathOriginal: item.url,
-                        pathThumbnail: item.thumbnail
+        this.setState({
+            isLoading: isFinding
+        }, () => {
+            var imageUris = this.props.imageUris
+            console.log('imageUris: ', imageUris);
+            var dataDrug = this.props.dataSearchDrug
+            let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
+            let note = this.state.note
+            let id = this.props.userApp.currentUser.id
+            let name = this.state.name
+            let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
+            if (imageUris) {
+                if (imageUris && imageUris.length == 0) {
+                    snackbar.show('Bạn cần chọn ít nhất một ảnh!', 'danger')
+                    this.setState({
+                        isLoading: false
                     })
-            });
-
-            let data = {
-                addressId: addressId,
-                images: images,
-                name: name,
-                note: note,
-                // ownerId: id,
-                "type": "IMAGE",
-                isFinding: isFinding,
-            }
-            drugProvider.createDrug(data, idDrug).then(res => {
-                console.log('resCreateDrug: ', res);
-
-                if (res && !this.props.dataEdit) {
-
-                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                } else {
-                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
+                    return
                 }
-            }).catch(err => {
-                if (err.response) {
-                    let status = err.response.data && err.response.data.status
-                    switch (status) {
-                        case 406:
-                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
-                            break
-                        default:
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            break
+                for (var i = 0; i < imageUris.length; i++) {
+                    if (imageUris[i].loading) {
+                        snackbar.show(constants.msg.booking.image_loading, 'danger');
+                        this.setState({
+                            isLoading: false
+                        })
+                        return;
                     }
-                } else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-
+                    if (imageUris[i].error) {
+                        this.setState({
+                            isLoading: false
+                        })
+                        snackbar.show(constants.msg.booking.image_load_err, 'danger');
+                        return;
+                    }
                 }
-            })
-            return
-        } if (dataDrug && !imageUris) {
-            if (dataDrug.length == 0) {
-                snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
+                var images = [];
+                imageUris.forEach((item) => {
+
+                    if (images)
+                        images.push({
+                            id: item.id ? item.id : null,
+                            action: item.action ? item.action : 'CREATE_OR_UPDATE',
+                            pathOriginal: item.url,
+                            pathThumbnail: item.thumbnail
+                        })
+                });
+
+                let data = {
+                    addressId: addressId,
+                    images: images,
+                    name: name,
+                    note: note,
+                    // ownerId: id,
+                    "type": "IMAGE",
+                    isFinding: isFinding,
+                }
+                drugProvider.createDrug(data, idDrug).then(res => {
+                    this.setState({
+                        isLoading: false
+                    })
+                    if (res && !this.props.dataEdit) {
+
+                        snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                        this.onCreateSuccess(res)
+                    } else {
+                        snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                        this.onCreateSuccess(res)
+                    }
+                }).catch(err => {
+                    if (err.response) {
+                        let status = err.response.data && err.response.data.status
+                        this.setState({
+                            isLoading: false
+                        })
+                        switch (status) {
+                            case 406:
+                                snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                                break
+                            default:
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                break
+                        }
+                    } else {
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        this.setState({
+                            isLoading: false
+                        })
+
+                    }
+                })
                 return
-            }
-            var medicines = []
-            for (let i = 0; i < dataDrug.length; i++) {
-                medicines.push({
-                    id: dataDrug[i].id ? dataDrug[i].id : null,
-                    name: `${dataDrug[i].name ? dataDrug[i].name : ''} ${dataDrug[i].packing ? dataDrug[i].packing : ''}`,
-                    // "unit": dataDrug[i].unit,
-                    medicineId: dataDrug[i].medicineId,
-                    action: dataDrug[i].action ? dataDrug[i].action : 'CREATE_OR_UPDATE'
+            } if (dataDrug && !imageUris) {
+                if (dataDrug.length == 0) {
+                    this.setState({
+                        isLoading: false
+                    })
+                    snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
+                    return
+                }
+                var medicines = []
+                for (let i = 0; i < dataDrug.length; i++) {
+                    medicines.push({
+                        id: dataDrug[i].id ? dataDrug[i].id : null,
+                        name: `${dataDrug[i].name ? dataDrug[i].name : ''} ${dataDrug[i].packing ? dataDrug[i].packing : ''}`,
+                        // "unit": dataDrug[i].unit,
+                        medicineId: dataDrug[i].medicineId,
+                        action: dataDrug[i].action ? dataDrug[i].action : 'CREATE_OR_UPDATE'
+                    })
+                }
+
+                let data2 = {
+                    addressId: addressId,
+                    medicines: medicines,
+                    name: name,
+                    note: note,
+                    // ownerId: id,
+                    isFinding: isFinding
+                }
+                drugProvider.createDrug(data2, idDrug).then(res => {
+                    if (res && !this.props.dataEdit) {
+                        snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                        this.setState({
+                            isLoading: false
+                        })
+                        this.onCreateSuccess(res)
+                    } else {
+                        snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                        this.setState({
+                            isLoading: false
+                        })
+                        this.onCreateSuccess(res)
+                    }
+                }).catch(err => {
+                    if (err.response) {
+                        this.setState({
+                            isLoading: false
+                        })
+                        let status = err.response.data && err.response.data.status
+                        switch (status) {
+                            case 406:
+                                snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                                break
+                            default:
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                break
+                        }
+                    } else {
+                        this.setState({
+                            isLoading: false
+                        })
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                    }
                 })
             }
+        })
 
-            let data2 = {
-                addressId: addressId,
-                medicines: medicines,
-                name: name,
-                note: note,
-                // ownerId: id,
-                isFinding: isFinding
-            }
-            drugProvider.createDrug(data2, idDrug).then(res => {
-                if (res && !this.props.dataEdit) {
-                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                } else {
-                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
-                    this.onCreateSuccess(res)
-                }
-            }).catch(err => {
-                if (err.response) {
-                    let status = err.response.data && err.response.data.status
-                    switch (status) {
-                        case 406:
-                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
-                            break
-                        default:
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            break
-                    }
-                } else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-
-                }
-            })
-        }
     }
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput value={this.state.name} placeholderTextColor="#000" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
-                </View>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput value={this.state.note} placeholderTextColor="#000" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
-                </View>
-                <View style={styles.viewInput}>
-                    <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
-                    <TouchableOpacity onPress={this.onSelectLocation} style={styles.btnLocation}>
-                        <View style={styles.inputLocation}>
+                <Form ref={ref => (this.form = ref)}>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
+                        <TextField
+                            onChangeText={text => this.setState({ name: text })}
+                            value={this.state.name}
+                            placeholder={'Nhập tên đơn thuốc'}
+                            errorStyle={styles.errorStyle}
+                            inputStyle={styles.inputNameDrug}
+                            underlineColorAndroid={'#fff'}
+                            placeholderTextColor='#000'
+                            validate={{
+                                rules: {
+                                    required: true,
+                                },
+                                messages: {
+                                    required: "Tên đơn thuốc không được bỏ trống",
+                                }
+                            }}
+                            autoCapitalize={"none"}
+                        />
+                    </Field>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Ghi chú</Text>
+                        <TextField
+                            value={this.state.note}
+                            placeholderTextColor="#000" onChangeText={text => this.setState({ note: text })}
+                            errorStyle={styles.errorStyle}
+                            inputStyle={styles.inputNote}
+                            placeholder={'Viết ghi chú cho đơn thuốc'}
+                            underlineColorAndroid={'#fff'}
+                            multiline={true}
+                            autoCapitalize={"none"}
+                        />
+                    </Field>
+                    <Field style={styles.viewInput}>
+                        <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
+                        <Field style={styles.locationBtn} >
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
-                            <Text style={styles.txLabelLocation}>{this.state.location ? this.state.location.address : 'Nhập địa chỉ'}</Text>
-                        </View>
-                        <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={() => this.addMenuDrug(true)} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
-                <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
-                <View style={styles.viewBottom}></View>
+                            <TextField
+                                value={this.state.location && this.state.location.address ? this.state.location.address : 'Chọn địa chỉ'}
+                                onPress={this.onSelectLocation}
+                                placeholderTextColor="#000"
+                                errorStyle={styles.errorStyle}
+                                inputStyle={styles.btnLocation}
+                                underlineColorAndroid={'#fff'}
+                                validate={{
+                                    rules: {
+                                        required: true,
+                                    },
+                                    messages: {
+                                        required: "Địa chỉ không được bỏ trống",
+                                    }
+                                }}
+                                multiline={true}
+                                editable={false}
+                                autoCapitalize={"none"}
+                            />
+                        </Field>
+                    </Field>
+                    {/* <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage> */}
+                    <TouchableOpacity disabled={this.state.isLoading} onPress={() => this.addMenuDrug(true)} style={styles.btnFind}>{this.state.isLoading ? <ActivityIndicator color={'#fff'} size={"large"}></ActivityIndicator> : <Text style={styles.txFind}>Tìm nhà thuốc</Text>}</TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
+                    <View style={styles.viewBottom}></View>
+                </Form>
             </View>
         );
     }
@@ -222,6 +302,18 @@ const styles = StyleSheet.create({
     },
     btnSave: {
         padding: 5
+    },
+    locationBtn: {
+        minHeight: 41,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#cccccc',
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'space-between',
+        padding: 10,
+        flex: 1,
+
     },
     btnTabScan: {
         borderTopLeftRadius: 25,
@@ -271,20 +363,20 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     btnLocation: {
-        minHeight: 41,
-        width: '100%',
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: '#cccccc',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 10
+        color: '#00A3FF',
+        textDecorationLine: 'underline',
+        fontSize: 14,
+        fontStyle: 'italic',
+        flexWrap: 'wrap',
+        paddingRight:10,
+        paddingLeft:10
+
     },
     inputLocation: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 5
+        flex: 1,
+        padding: 5,
     },
     txLabelLocation: {
         color: '#00A3FF',
@@ -319,7 +411,11 @@ const styles = StyleSheet.create({
     },
     viewBottom: {
         height: 50
-    }
+    },
+    errorStyle: {
+        color: "red",
+        marginTop: 10
+    },
 })
 function mapStateToProps(state) {
     return {

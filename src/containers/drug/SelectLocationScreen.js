@@ -54,31 +54,43 @@ class SelectLocationScreen extends Component {
         try {
             switch (index) {
                 case 0:
-                    drugProvider.setLocationDefault(dataSelect.id).then(res => {
-                        this.onGetLocation()
-                    }).catch(err => {
+                    this.setState({
+                        isLoading: true
+                    }, () => {
+                        drugProvider.setLocationDefault(dataSelect.id).then(res => {
+                            this.onGetLocation()
+                        }).catch(err => {
+                            this.setState({
+                                isLoading: false
+                            })
+                        })
                     })
                     return;
                 case 1:
                     this.props.navigation.navigate('inputLocation', { dataLocation: this.state.dataSelect, onSelected: this.editLocation.bind(this), })
                     return;
                 case 2:
-                    drugProvider.deleteLocation(dataSelect.id).then(res => {
-                        this.onGetLocation()
-                    }).catch(err => {
-                        if (err.response && err.response.data) {
-                            switch (err.response.data) {
-                                case 406:
-                                    snackbar.show('Không thể xóa địa chỉ đã có đơn thuốc dùng để tìm kiếm nhà thuốc', 'danger')
-                                    break
-                                default:
-                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                    break
-                            }
-                        } else {
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                    this.setState({
+                        isLoading: true
+                    }, () => {
+                        drugProvider.deleteLocation(dataSelect.id).then(res => {
+                            this.onGetLocation()
+                        }).catch(err => {
+                            this.setState({ isLoading: false })
+                            if (err.response && err.response.data) {
+                                switch (err.response.data) {
+                                    case 406:
+                                        snackbar.show('Không thể xóa địa chỉ đã có đơn thuốc dùng để tìm kiếm nhà thuốc', 'danger')
+                                        break
+                                    default:
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                        break
+                                }
+                            } else {
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
-                        }
+                            }
+                        })
                     })
                     return
             }
@@ -148,7 +160,7 @@ class SelectLocationScreen extends Component {
         return (
             <ActivityPanel style={styles.container} title={"Chọn địa chỉ đã lưu"} showFullScreen={true}>
                 {/* <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage> */}
-                {!this.state.isLoading && <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><TouchableOpacity style={styles.btnDot}><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity></TouchableOpacity>}
+                {!this.state.isLoading && <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity>}
                 <FlatList
                     data={this.state.dataLocation}
                     extraData={this.state}

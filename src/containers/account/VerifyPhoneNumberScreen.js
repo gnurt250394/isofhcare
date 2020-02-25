@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     },
     input: {
         maxWidth: 300,
-        backgroundColor: "#FFF",
+        // backgroundColor: "#FFF",
         width: DEVICE_WIDTH - 40,
         height: 42,
         marginHorizontal: 20,

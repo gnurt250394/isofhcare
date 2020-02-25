@@ -7,10 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  StyleSheet
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import Dimensions from "Dimensions";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
@@ -48,12 +48,12 @@ class AccountScreen extends Component {
       this.imagePicker.open(true, 200, 200, image => {
         this.showLoading(true, () => {
           imageProvider
-            .upload(image.path)
+            .upload(image.path,image.mime)
             .then(s => {
               this.showLoading(false, () => {
                 if (s && s.data.code == 0) {
                   let user = objectUtils.clone(this.props.userApp.currentUser);
-                  user.avatar = s.data.data.images[0].thumbnail;
+                  user.avatar = s.data.data.images[0].imageLink;
                   this.showLoading(true, () => {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
@@ -64,7 +64,7 @@ class AccountScreen extends Component {
                           let current = this.props.userApp.currentUser;
                           user.bookingNumberHospital = current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
-                          user.avatar = s.data.user.avatar.absoluteUrl()
+                          user.avatar = s.data.user.avatar
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
@@ -204,7 +204,7 @@ class AccountScreen extends Component {
         style={{ flex: 1, }}
         hideActionbar={true}
         showFullScreen={true}
-        containerStyle = {{backgroundColor:'#F8F8F8'}}
+        containerStyle={{ backgroundColor: '#F8F8F8' }}
       >
         <ScrollView showsVerticalScrollIndicator={false} >
           {this.props.userApp.isLogin
@@ -266,10 +266,10 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_ehealth.png")}
-                  width={26}
-                  height={26}
+                  width={32}
+                  height={32}
                 />
-                <Text style={[styles.itemText, { marginLeft: 27 }]}>Y bạ điện tử</Text>
+                <Text style={styles.itemText}>Y bạ điện tử</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               <View style={styles.borderMenu}></View>
@@ -298,10 +298,10 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_tranfer.png")}
-                  width={24}
-                  height={24}
+                  width={26}
+                  height={26}
                 />
-                <Text style={[styles.itemText, { marginLeft: 22, }]}>Lịch sử giao dịch</Text>
+                <Text style={styles.itemText}>Lịch sử giao dịch</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               {/* <TouchableOpacity
@@ -347,8 +347,8 @@ class AccountScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/account/ic_change_pass.png")}
-                  width={24}
-                  height={24}
+                  width={26}
+                  height={26}
                 />
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -409,11 +409,13 @@ class AccountScreen extends Component {
           <View style={[styles.borderMenu, { width: '95%' }]}></View>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={() => {
-              Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
-              );
-            }}
+            // onPress={() => {
+            //   Linking.openURL(
+            //     "mailto:cskh@isofhcare.com?subject=Hỗ trợ sử dụng app ISofhCare&body="
+            //   );
+            // }}
+            onPress={this.openLinkHotline}
+
           ><ScaledImage
               source={require("@images/new/account/ic_support.png")}
               width={24}
@@ -427,7 +429,7 @@ class AccountScreen extends Component {
             style={[styles.itemMenu]}
             onPress={() => {
               Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+                "mailto:cskh@isofhcare.com?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
               );
             }}
           ><ScaledImage
@@ -447,8 +449,8 @@ class AccountScreen extends Component {
           >
             <ScaledImage
               source={require("@images/new/account/ic_rules.png")}
-              width={24}
-              height={24}
+              width={26}
+              height={26}
             />
             <Text style={styles.itemText}>Điều khoản sử dụng</Text>
             <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -470,15 +472,15 @@ class AccountScreen extends Component {
               <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', }, this.props.userApp.isLogin ? {} : { top: 10 }]} onPress={() => {
+          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', paddingTop: 10 }, this.props.userApp.isLogin ? {} : {}]} onPress={() => {
             snackbar.show("Đang kiểm tra cập nhật", "success");
             codePushUtils.checkupDate();
           }}>
             <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
           </TouchableOpacity>
-          <View style={styles.viewSpaceBottom}>
+          {/* <View style={styles.viewSpaceBottom}>
             <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ActivityPanel>
@@ -500,13 +502,6 @@ const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   icon: {},
   btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
-  label: {
-    marginTop: 2,
-    color: "#4A4A4A",
-    fontSize: 15,
-    fontWeight: "600",
-    lineHeight: 23
-  },
   popup: {
     width: width * 0.8
   },
@@ -527,9 +522,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     flex: 1,
-    fontWeight: "400",
-    fontWeight: 'bold',
     fontSize: 15,
+    fontWeight: 'bold',
     color: '#000000',
     marginLeft: 20
   },

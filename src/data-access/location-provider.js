@@ -109,6 +109,7 @@ module.exports = {
     getCurrentLocationHasSave() {
         return new Promise((resolve, reject) => {
             datacacheProvider.readPromise("", constants.key.storage.CURRENT_LOCATION, true).then(s => {
+                console.log('s: ', s);
                 resolve(s);
             }).catch(e => {
                 reject(e);

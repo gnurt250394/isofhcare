@@ -9,7 +9,6 @@ import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 const FBSDK = require('react-native-fbsdk');
 import redux from '@redux-store';
 import { Toast } from 'native-base'
-import RNAccountKit from 'react-native-facebook-account-kit';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 const {
     LoginManager,

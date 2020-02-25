@@ -25,10 +25,10 @@ class ItemDoctor extends Component {
     }
 
     onMessage = () => {
-        console.log(this.state.item, 'message')
+        
     }
     onCallVideo = () => {
-        console.log(this.state.item, 'message')
+        
 
     }
     showModal = (item) => () => {
@@ -50,6 +50,7 @@ class ItemDoctor extends Component {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
         const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
+        
         return (
             <View>
                 <TouchableHighlight onPress={onPressDoctor} underlayColor={'#fff'} style={styles.containerItem}>
@@ -306,8 +307,8 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingBottom: 0
     },
-    boderImage: { borderRadius: 45, borderWidth: 2, borderColor: '#00CBA7' },
-    avatar: { width: 90, height: 90, alignSelf: "flex-start", },
+    boderImage: { borderRadius: 45, },
+    avatar: { width: 90, height: 90, alignSelf: "flex-start" },
     imgPlaceHoder: {
         width: 90,
         height: 90,

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, Platform, FlatList, ScrollView } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ActivityPanel from "@components/ActivityPanel";
+import snackbar from "@utils/snackbar-utils";
+
 const devices_width = Dimensions.get('window').width
 export default class DrugStoreScreen extends Component {
     constructor(props) {
@@ -16,22 +19,59 @@ export default class DrugStoreScreen extends Component {
             registrationNumber: data && data.registrationNumber,
             standardNumber: data && data.standardNumber,
             ownerName: data && data.ownerName,
-            ownerQualification: data && data.ownerQualification
+            ownerQualification: data && data.ownerQualification,
+            medicines: data && data.medicines
+
         };
     }
     openMap = () => {
-        var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
-        var url = scheme + `${this.state.address}`;
-        Linking.openURL(url);
+        // var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
+        // var url = scheme + `${this.state.address}`;
+        // Linking.openURL(url);
+        this.props.navigation.navigate("mapHospital", {
+            item: this.state.address
+        });
+    }
+    renderDrugItem = ({ item, index }) => {
+        return (
+            <View style={styles.viewItem}>
+                <Text style={styles.txName}>{`${item.name}`}</Text>
+            </View>
+        )
+    }
+    onEdit = () => {
+        // let dataDetail = this.state.dataDetail
+        // if (dataDetail.state == 'STORED') {
+        //     if (dataDetail && dataDetail.images && dataDetail.images.length) {
+        //         this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataDetail })
+        //         return
+        //     } if (dataDetail && dataDetail.medicines && dataDetail.medicines.length) {
+        //         this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataDetail })
+        //         return
+        //     }
+        // } else {
+        snackbar.show('Đơn thuốc không được phép thay đổi', 'danger')
+        // }
     }
     render() {
         return (
-            <View style={styles.container}>
-                <ScaledImage style={styles.bgdemo} width={devices_width} source={require('@images/new/drug/bg_demo.png')}></ScaledImage>
-                <View style={styles.viewShop}>
+            <ActivityPanel titleStyle={styles.txTitle} isLoading={this.state.isLoading} containerStyle={styles.container} title={"Nhà thuốc"} menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}><ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
+            </TouchableOpacity>}>
+                <ScrollView style={{ flex: 1 }}>
+                    <ScaledImage style={styles.bgdemo} width={devices_width} source={require('@images/new/drug/bg_demo.png')}></ScaledImage>
                     <Text style={styles.txNameShop}>{this.state.name.toUpperCase()}</Text>
-                    <View style = {{flexDirection:'row',alignItems:'center'}}><Text style={styles.txLocation}>{this.state.address}</Text><TouchableOpacity style = {{padding:5}} onPress={this.openMap}><Text style={styles.txBtn}>Xem bản đồ</Text></TouchableOpacity></View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}><Text style={styles.txLocation}>{this.state.address}</Text><TouchableOpacity style={{ padding: 5 }} onPress={this.openMap}><Text style={styles.txBtn}>Xem bản đồ</Text></TouchableOpacity></View>
                     <Text style={styles.txTitle}>Thông tin nhà thuốc</Text>
+                    <View style={styles.listSelect}>
+                        <Text style={styles.txSelect}>Danh sách thuốc đáp ứng({this.state.medicines.length})</Text>
+                        <FlatList
+                            data={this.state.medicines}
+                            extraData={this.state}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this.renderDrugItem}
+                        >
+                        </FlatList>
+                    </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Số điện thoại: </Text>
@@ -68,8 +108,8 @@ export default class DrugStoreScreen extends Component {
                         <Text style={styles.txLabel}>Số chứng chỉ hành nghề: </Text>
                         <Text style={styles.txContents}>{this.state.ownerCertificateNumber}</Text>
                     </View>
-                </View>
-            </View>
+                </ScrollView>
+            </ActivityPanel>
         );
     }
 }
@@ -84,7 +124,6 @@ const styles = StyleSheet.create({
     viewInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-        flex: 1
     },
     txLabel: {
         color: '#000',
@@ -123,9 +162,30 @@ const styles = StyleSheet.create({
         color: '#000',
         textAlign: 'left'
     },
-    viewShop: {
-        alignItems: 'flex-start',
-        marginVertical: 20,
-        flex: 1
-    }
+    listSelect: {
+        padding: 10,
+        flex: 1,
+        paddingLeft: 0,
+    },
+    txSelect: {
+        fontStyle: 'italic',
+    },
+    viewItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomColor: '#cccccc',
+        borderBottomWidth: 0.5,
+        paddingVertical: 10
+
+    },
+    txName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#00B090',
+        textAlign: 'left',
+        maxWidth: '80%'
+    },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 18 },
+
 })

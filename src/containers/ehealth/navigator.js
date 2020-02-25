@@ -17,13 +17,17 @@ import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
 import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 import AddNewEhealthScreen from '@containers/ehealth/AddNewEhealthScreen';
+import CreateEhealthScreen from '@containers/ehealth/uploadEhealth/CreateEhealthScreen';
+import ListEhealthUploadScreen from '@containers/ehealth/uploadEhealth/ListEhealthUploadScreen';
+import DetailsEhealthScreen from '@containers/ehealth/uploadEhealth/DetailsEhealthScreen';
+
 
 
 
 
 const handleCustomTransition = ({ scenes }) => {
     return fromRight();
-  }
+}
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
@@ -39,17 +43,20 @@ const EHealthNavigator = createStackNavigator({
     viewMoney: { screen: ViewMoneyScreen },
     viewSurgeryResult: { screen: ViewSurgeryResultScreen },
     searchProfile: { screen: SearchProfileScreen },
-    addNewEhealth:{screen:AddNewEhealthScreen},
+    addNewEhealth: { screen: AddNewEhealthScreen },
+    createEhealth: { screen: CreateEhealthScreen },
+    listEhealthUpload: { screen: ListEhealthUploadScreen },
+    detailsEhealth: { screen: DetailsEhealthScreen }
 }, {
-        headerMode: 'none',
+    headerMode: 'none',
+    header: null,
+    gesturesEnabled: false,
+    navigationOptions: {
         header: null,
-        gesturesEnabled: false,
-        navigationOptions: {
-            header: null,
-            gesturesEnabled: false
-        },
-        // mode: Platform.OS == 'ios' ? 'modal' : 'card'
-        transitionConfig: (nav) => handleCustomTransition(nav)
-    });
+        gesturesEnabled: false
+    },
+    // mode: Platform.OS == 'ios' ? 'modal' : 'card'
+    transitionConfig: (nav) => handleCustomTransition(nav)
+});
 
 export { EHealthNavigator };

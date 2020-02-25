@@ -3,7 +3,7 @@ import UserInput from "@components/UserInput";
 import ActivityPanel from "@components/ActivityPanel";
 import {
   View,
-  ScrollView,
+  ActivityIndicator,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -11,9 +11,9 @@ import {
   Image,
   Platform,
   Keyboard,
-  ImageBackground
+  ImageBackground,
+  Dimensions
 } from "react-native";
-import Dimensions from "Dimensions";
 import { connect } from "react-redux";
 import eyeImg from "@images/eye_black.png";
 import snackbar from "@utils/snackbar-utils";
@@ -24,7 +24,6 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import stringUtils from "mainam-react-native-string-utils";
 import dateUtils from "mainam-react-native-date-utils";
 import { DatePicker } from "native-base";
-import RNAccountKit from "react-native-facebook-account-kit";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -70,26 +69,9 @@ class RegisterScreen extends Component {
 
   changeEmail() {
     let verify = async () => {
-      RNAccountKit.loginWithEmail().then(async token => {
-        if (!token) {
-          snackbar.show("Xác minh email không thành công", "danger");
-        } else {
-          let account = await RNAccountKit.getCurrentAccount();
-          if (account && account.email) {
-            this.setState({ email: account.email });
-          } else {
-            snackbar.show("Xác minh email không thành công", "danger");
-          }
-        }
-      });
+
     };
-    RNAccountKit.logout()
-      .then(() => {
-        verify();
-      })
-      .catch(x => {
-        verify();
-      });
+
   }
 
   // register() {
@@ -152,21 +134,19 @@ class RegisterScreen extends Component {
             return
           }
           else {
-            this.setState({
-              isLoading: false,
-              disabled: false
-            })
             switch (res.code) {
               case 2: snackbar.show('Số điện thoại đã được đăng ký', 'danger')
                 break
               default: snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
             }
-
+            this.setState({
+              isLoading: false,
+              disabled: false
+            })
           }
 
         }).catch(e => {
-
           snackbar.show(constants.msg.app.not_internet, "danger");
         });
       })
@@ -351,7 +331,7 @@ class RegisterScreen extends Component {
               </Form>
               <View style={{ backgroundColor: '#fff' }}>
                 <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
-                  <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
+                  {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>}
                 </TouchableOpacity>
               </View>
               <View style={{ height: 50 }}></View>

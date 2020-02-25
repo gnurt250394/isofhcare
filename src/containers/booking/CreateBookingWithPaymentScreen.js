@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard,Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -12,14 +12,19 @@ import snackbar from '@utils/snackbar-utils';
 class CreateBookingWithPaymentScreen extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            isVisible: false
+        }
     }
-    state = {
-        isVisible: false
-    }
+
     onQrClick = () => {
         this.setState({
             isVisible: true,
         })
+    }
+    componentDidMount() {
+        
+
     }
     onCallHotline = () => {
         Linking.openURL('tel:1900299983')
@@ -64,9 +69,10 @@ class CreateBookingWithPaymentScreen extends Component {
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
+        console.log('booking: ', booking);
         let service = this.props.navigation.state.params.service || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital ) {
+        if (!booking || !booking.profile || !booking.hospital ) {
             this.props.navigation.pop();
             return null;
         }
@@ -102,11 +108,11 @@ class CreateBookingWithPaymentScreen extends Component {
                         <View style={styles.groupBody}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.CSYT}:</Text>
-                                <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
+                                <Text style={styles.text}>{booking.hospital.name}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.address}:</Text>
-                                <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
+                                <Text style={styles.text}>{booking.hospital.address}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.hotline}:</Text>
