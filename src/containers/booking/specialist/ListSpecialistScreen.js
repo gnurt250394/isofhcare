@@ -3,23 +3,11 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'r
 import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from "mainam-react-native-scaleimage";
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
-const list = [
-    {
-        id: 1,
-        name: 'Nam khoa, Vô sinh-Hiếm muộn, Vô sinh-Hiếm muộn',
-        icon: require('@images/ic_close.png')
-    },
-    {
-        id: 2,
-        name: 'Khoa nội',
-        icon: require('@images/ic_close.png')
-    },
-    {
-        id: 3,
-        name: 'Khoa nội',
-        icon: require('@images/ic_close.png')
-    },
-]
+const TYPE = {
+    SEARCH: 'SEARCH',
+    HOSPITAL: 'HOSPITAL',
+    DOCTOR: 'DOCTOR'
+}
 class ListSpecialistScreen extends Component {
 
     constructor(props) {
@@ -30,7 +18,8 @@ class ListSpecialistScreen extends Component {
             data: [],
             page: 0,
             size: 20,
-            keyword: ''
+            keyword: '',
+            type: ''
         }
     }
 
@@ -114,7 +103,7 @@ class ListSpecialistScreen extends Component {
     keyExtractor = (item, index) => `${item.id || index}`
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
     loadMore = () => {
-        const { page, size, data } = this.state
+        const { page, size, data, type } = this.state
         if (data.length >= (page + 1) * 20) {
             this.setState(preState => {
                 return {
@@ -123,7 +112,7 @@ class ListSpecialistScreen extends Component {
             }, () => {
                 switch (type) {
                     case TYPE.SEARCH:
-                        this.search()
+                        this.searchData()
                         break;
                     default:
                         this.getData()
