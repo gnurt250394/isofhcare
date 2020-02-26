@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 // import imagesUtils from 'mainam-react-native-image-utils'
-const urlDoctor = 'http://10.0.0.98:8080/'
+const urlDoctor = 'http://10.0.0.88:8088/'
 module.exports = {
     getListTopRateHospital() {
         return new Promise((resolve, reject) => {
