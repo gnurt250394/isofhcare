@@ -3,7 +3,6 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 // import imagesUtils from 'mainam-react-native-image-utils'
-const urlDoctor = 'http://35.198.240.51:8088/'
 module.exports = {
     getListTopRateHospital() {
         return new Promise((resolve, reject) => {
@@ -42,7 +41,7 @@ module.exports = {
     // },
     listDoctor() {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", urlDoctor + constants.api.home.get_list_doctor, {}, (s, e) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.home.get_list_doctor, {}, (s, e) => {
                 if (s) {
                     // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
                     //     
