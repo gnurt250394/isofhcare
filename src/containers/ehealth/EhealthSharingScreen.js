@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, ScrollView, Image } from 'react-native';
 import { Card, Icon } from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
@@ -122,7 +122,7 @@ class EhealthSharingScreen extends Component {
             return;
         }
         connectionUtils.isConnected().then(s => {
-            let hospitalId =  this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+            let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
             let patientHistoryId = this.state.history.patientHistoryId;
             this.setState({ isLoading: true }, () => {
                 ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd HH:mm:ss"), this.state.toDate.format("yyyy-MM-dd HH:mm:ss")).then(res => {
@@ -225,7 +225,7 @@ class EhealthSharingScreen extends Component {
                         </Card>
                         <Card>
                             <TouchableOpacity onPress={this.onClickPickFormDate(true)} style={styles.buttonPickDate}>
-                                <Icon name='calendar' style={styles.iconCalendar} />
+                                <Image source={require('@images/ic_calendar.png')} style={styles.iconCalendar} />
                                 <Text style={{ marginHorizontal: 10 }}>{constants.ehealth.validity_from}:</Text>
                                 {
                                     !this.state.fromDate ?
@@ -239,7 +239,7 @@ class EhealthSharingScreen extends Component {
                             </TouchableOpacity>
                             <View style={styles.between} />
                             <TouchableOpacity onPress={this.onClickPickFormDate(false)} style={styles.buttonPickDate}>
-                                <Icon name='calendar' style={styles.iconCalendar} />
+                                <Image source={require('@images/ic_calendar.png')} style={styles.iconCalendar} />
                                 <Text style={{ marginLeft: 10 }}>{constants.ehealth.validity_to}:</Text>
                                 {
                                     !this.state.toDate ?
@@ -254,7 +254,7 @@ class EhealthSharingScreen extends Component {
                             </TouchableOpacity>
                             <View style={styles.between} />
                             <TouchableOpacity onPress={this.onClickSearchProfile} style={styles.buttonPickDate}>
-                                <Icon name='person' style={styles.iconCalendar} />
+                                <Image source={require('@images/ic_person.png')} style={styles.iconCalendar} />
                                 <Text style={{ marginLeft: 10 }}>{constants.ehealth.reciver}:</Text>
                                 {
                                     !this.state.user ?
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         flex: 1
     },
-    iconCalendar: { color: '#00000080' },
+    iconCalendar: { height: 18, width: 18, resizeMode: 'contain', tintColor: '#777' },
     buttonPickDate: {
         flexDirection: 'row',
         alignItems: 'center',
