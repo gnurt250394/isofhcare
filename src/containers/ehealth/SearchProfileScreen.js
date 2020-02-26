@@ -234,7 +234,6 @@ class SearchProfileScreen extends Component {
             <ActivityPanel
                 backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text style={styles.cancelEhealth}>{constants.ehealth.cancel}</Text></TouchableOpacity>}
                 titleStyle={styles.titleStyle} title={constants.title.search_profile}
-                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={{
                     backgroundColor: '#02C39A',
                     borderBottomWidth: 0
@@ -251,8 +250,10 @@ class SearchProfileScreen extends Component {
                                 onChangeText={this.searchTextChange}
                                 returnKeyType="search"
                                 onSubmitEditing={this.onRefreshList} />
-                            <TouchableOpacity onPress={this.onRefreshList}>
-                                <Text style={styles.txSearch}>{constants.search}</Text>
+                            <TouchableOpacity style={styles.txSearch} onPress={this.onRefreshList}>
+                                <Text style={{
+                                    fontWeight: 'bold', color: '#FFF'
+                                }}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
@@ -298,6 +299,9 @@ const styles = StyleSheet.create({
     viewSearch: {
         justifyContent: 'space-between',
         elevation: 5,
+        shadowOffset: { width: 0, height: 1 },
+        shadowColor: '#00000040',
+        shadowOpacity: 0.5,
         height: 55,
         justifyContent: 'center', alignItems: 'center',
         backgroundColor: constants.colors.actionbar_color,
@@ -342,8 +346,15 @@ const styles = StyleSheet.create({
     scaledImage: { width: 30, height: 30 },
     textName: { fontWeight: '200', fontSize: 15, marginLeft: 10 },
     activity: { paddingLeft: 20 },
-    titleStyle: { marginRight: 0,color:'#fff' },
-    txSearch: { backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' },
+    titleStyle: { marginRight: 0, color: '#fff' },
+    txSearch: {
+        backgroundColor: constants.colors.actionbar_title_color,
+        padding: 7,
+        borderRadius: 20,
+        marginRight: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+    },
     viewTxSearch: { paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 },
     txtSearch: { fontSize: 15, color: '#000', },
     flatList: { flex: 1, backgroundColor: '#FFF' },
