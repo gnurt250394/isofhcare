@@ -84,7 +84,6 @@ class ListEhealthUpload extends Component {
     }
     renderItem = ({ item, index }) => {
         const source = item.hospitalImage ? { uri:  item.hospitalImage.absoluteUrl() } : require("@images/new/user.png");
-
         return (
             <Card style={styles.viewItem}>
                 <TouchableOpacity style={styles.btnItem} onPress={item.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
