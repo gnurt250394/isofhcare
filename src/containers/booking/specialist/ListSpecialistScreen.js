@@ -133,8 +133,9 @@ class ListSpecialistScreen extends Component {
         this.props.navigation.pop()
     }
     onChangeText = (keyword) => {
-        this.setState({ keyword })
+        this.setState({ keyword, type: TYPE.SEARCH })
         if (!keyword) {
+            this.setState({ type: '' })
             this.getData()
         }
     }
