@@ -43,11 +43,11 @@ class MyVoucherScreen extends Component {
     constructor(props) {
         super(props);
         let tabIndex = 0;
-        let voucherSelected = this.props.navigation.getParam('voucher', null)
+        let voucherSelected = this.props.navigation.getParam('voucher', {})
         let booking = this.props.navigation.getParam('booking', null)
-
-        if (this.props.navigation.state.params && this.props.navigation.state.params.selectTab)
-            tabIndex = this.props.navigation.state.params.selectTab;
+        let selectTab = this.props.navigation.getParam('selectTab', null)
+        if (selectTab)
+            tabIndex = selectTab;
         this.state = {
             isMyVocher: true,
             tabIndex,
@@ -156,7 +156,7 @@ class MyVoucherScreen extends Component {
                 case 0:
                     let { booking } = this.state
 
-                    let idHospital = booking.hospital.id
+                    let idHospital = booking && booking.hospital && booking.hospital.id ? booking.hospital.id : null
 
                     let { voucherSelected } = this.state
 
