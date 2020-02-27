@@ -320,12 +320,15 @@ class ProfileHospitalScreen extends Component {
                                     <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text> */}
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                        {profileHospital.specializations && profileHospital.specializations.length > 0 ?
-                                            profileHospital.specializations.map((e, i) => {
-                                                return (
-                                                    <Text style={styles.txtPosition} key={i}>{e.name}{i == profileHospital.specializations.length - 1 ? '.' : ', '}</Text>
-                                                )
-                                            }) :
+                                        {profileHospital.description && profileHospital.description ?
+
+                                            <View style={styles.flexRow}>
+                                                <View style={{
+                                                    paddingLeft: 5,
+                                                }}>
+                                                    <Text style={styles.txtPosition}>{profileHospital.description}</Text>
+                                                </View>
+                                            </View> :
                                             null
                                         }
                                     </View>
