@@ -596,6 +596,7 @@ module.exports = {
     booking_invalid: 'Đặt khám đã tồn tại trong hệ thống',
     add_voucher: 'THÊM MÃ ƯU ĐÃI',
     address: "Địa chỉ",
+    address_signup: "Nơi làm thủ tục",
     symptom: 'Triệu chứng',
     services: 'Dịch vụ',
     sum_price: 'Tổng tiền',
