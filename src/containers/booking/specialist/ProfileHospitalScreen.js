@@ -335,7 +335,7 @@ class ProfileHospitalScreen extends Component {
                                             <View style={{
                                                 paddingLeft: 5,
                                             }}>
-                                                <Text style={styles.txtPosition}>{profileHospital.experiences}</Text>
+                                                <Text style={styles.txtPosition}>{profileHospital.strength}</Text>
                                             </View>
                                         </View>
                                     </View>
