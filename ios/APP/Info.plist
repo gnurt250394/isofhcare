@@ -97,29 +97,29 @@
 		</dict>
 	</dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires access to microphone.</string>
+	<string>Cho phép iSofH Care truy cập mcrô của thiết bị này.</string>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>This app requires access to apple music.</string>
+	<string>Cho phép iSofH Care truy cập thư viện nhạc của thiết bị này.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>This app requires access to bluetooth.</string>
+	<string>Cho phép iSofH Care truy cập bluetooth của thiết bị này.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>This app requires access to the calenda.</string>
+	<string>Cho phép iSofH Care truy cập lịch của thiết bị này.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera.</string>
+	<string>Cho phép iSofH Care truy cập máy ảnh của thiết bị này.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Granting access will allow you to select contact to payment.</string>
+	<string>Cấp quyền truy cập sẽ cho phép bạn chọn liên hệ để thanh toán.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
+	<string>iSofH Care yêu cầu quyền truy cập FaceID để cho phép bạn truy cập nhanh chóng và an toàn</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires access to the location to get and find all facilities near you </string>
+	<string>Cho phép iSofH Care truy cập vào vị trí của thiết bị này.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to the location to get and find all facilities near you</string>
+	<string>Cho phép iSofH Care truy cập vào vị trí của thiết bị này.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>This app requires access to motion.</string>
+	<string>Ứng dụng này yêu cầu truy cập vào chuyển động.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>Cho phép iSofH Care truy cập vào thư viện ảnh của thiết bị này.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app requires access to the speech recognition library.</string>
+	<string>Ứng dụng này yêu cầu truy cập vào thư viện nhận dạng giọng nói của thiết bị.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
