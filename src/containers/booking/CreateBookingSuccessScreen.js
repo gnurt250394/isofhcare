@@ -116,6 +116,10 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{booking.hospital.address}</Text>
                             </View>
                             <View style={styles.row}>
+                                <Text style={styles.label}>{constants.booking.address_signup}:</Text>
+                                <Text style={styles.text}>{booking.hospital.checkinPlace}</Text>
+                            </View>
+                            <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.hotline}:</Text>
                                 <Text onPress={this.onCallHotline} style={styles.text}>{constants.booking.hotline_number}</Text>
                             </View>

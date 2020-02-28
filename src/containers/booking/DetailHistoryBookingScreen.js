@@ -301,20 +301,27 @@ class DetailHistoryBookingScreen extends Component {
                                 : null
 
                         }
+                        <View>
+                            <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                                <ScaledImage
+                                    height={20}
+                                    width={20}
+                                    source={require("@images/ic_location.png")}
+                                />
+                                <Text numberOfLines={5} style={styles.txLocation}>{constants.booking.address}</Text>
+                                <View style={[styles.viewInfoLocation]}>
+                                    <Text style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.name}</Text>
+                                    {this.state.booking.hospital.address ?
+                                        <Text style={styles.txAddress}>{this.state.booking.hospital.address}</Text> : null
 
-                        <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
-                            <ScaledImage
-                                height={20}
-                                width={20}
-                                source={require("@images/ic_location.png")}
-                            />
-                            <Text numberOfLines={5} style={styles.txLocation}>{constants.booking.address}</Text>
-                            <View style={[styles.viewInfoLocation]}>
-                                <Text style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.name}</Text>
-                                {this.state.booking.hospital.address ?
-                                    <Text style={styles.txAddress}>{this.state.booking.hospital.address}</Text> : null
-
-                                }
+                                    }
+                                </View>
+                            </View>
+                            <View style={[styles.viewLocation, { alignItems: 'flex-start', }]}>
+                                <Text style={[styles.txLocationCheckin,]}>{constants.booking.address_signup}</Text>
+                                <View style={[styles.viewInfoLocationCheckin]}>
+                                    <Text  style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.checkinPlace}</Text>
+                                </View>
                             </View>
                         </View>
                         <View style={styles.between}></View>
@@ -626,6 +633,9 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
 
     },
+    txLocationCheckin: {
+        marginHorizontal: 10,
+    },
     txClinic: {
         marginRight: 10,
         color: "#8F8E93",
@@ -633,6 +643,12 @@ const styles = StyleSheet.create({
         textAlign: 'right'
 
     },
+    viewInfoLocationCheckin: {
+        paddingHorizontal: 5,
+        alignItems: 'flex-end',
+        flex: 5
+    },
+
     viewInfoLocation: {
         paddingVertical: 5,
         paddingHorizontal: 5,

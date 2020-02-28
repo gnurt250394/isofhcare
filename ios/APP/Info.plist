@@ -64,7 +64,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>81</string>
+	<string>82</string>
 	<key>CodePushDeploymentKey</key>
 	<string>d_e1VVGMtjxvsGkWkKShQsZLyChcSJOdItZ-r</string>
 	<key>FacebookAppID</key>
@@ -97,27 +97,27 @@
 		</dict>
 	</dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập mcrô của thiết bị này.</string>
+	<string>Cho phép iSofH Care truy cập mcrô của thiết bị này để ghi âm.</string>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập thư viện nhạc của thiết bị này.</string>
+	<string>Cho phép iSofH Care truy cập thư viện nhạc của thiết bị này để lưu hoặc tải nhạc.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập bluetooth của thiết bị này.</string>
+	<string>Cho phép iSofH Care truy cập bluetooth của thiết bị này để kết nối với thiết bị khác.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Cho phép iSofH Care truy cập lịch của thiết bị này.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập máy ảnh của thiết bị này.</string>
+	<string>Cho phép iSofH Care truy cập máy ảnh của thiết bị này để lưu hoặc cập nhật ảnh cho ứng dụng.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Cấp quyền truy cập sẽ cho phép bạn chọn liên hệ để thanh toán.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>iSofH Care yêu cầu quyền truy cập FaceID để cho phép bạn truy cập nhanh chóng và an toàn</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập vào vị trí của thiết bị này.</string>
+	<string>Cho phép quyền sử dụng địa chỉ để cập nhật vị trí hiện tại của bạn.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập vào vị trí của thiết bị này.</string>
+	<string>Cho phép quyền sử dụng địa chỉ để cập nhật vị trí hiện tại của bạn.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Ứng dụng này yêu cầu truy cập vào chuyển động.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập vào thư viện ảnh của thiết bị này.</string>
+	<string>Cho phép iSofH Care truy cập vào thư viện ảnh của thiết bị này để lưu hoặc cập nhật ảnh cho ứng dụng.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Ứng dụng này yêu cầu truy cập vào thư viện nhận dạng giọng nói của thiết bị.</string>
 	<key>UIAppFonts</key>
