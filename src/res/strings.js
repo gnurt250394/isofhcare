@@ -807,6 +807,7 @@ module.exports = {
     profile: 'Hồ sơ cá nhân',
     list_booking: 'Chọn hình thức đặt khám',
     select_doctor: 'Chọn bác sĩ',
+    select_hospital: 'Chọn cơ sở y tế',
     info_doctor: 'Thông tin bác sỹ',
     edit_profile: 'Hoàn thành hồ sơ'
   },
