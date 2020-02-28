@@ -46,6 +46,7 @@ class ItemHospital extends Component {
     render() {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
+        console.log('item: ', item);
         const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
         return (
             <View>
@@ -85,7 +86,7 @@ class ItemHospital extends Component {
                                     alignItems: 'center'
                                 }}>
                                     <ScaleImage source={require('@images/ic_location.png')} height={18} style={styles.icLocation} />
-                                    <Text style={styles.txtLocation}>{item.checkInPlace}km</Text>
+                                    <Text style={styles.txtLocation}>km</Text>
                                 </View>
                                 <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>

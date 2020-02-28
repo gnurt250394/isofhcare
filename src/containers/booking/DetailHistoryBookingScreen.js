@@ -634,6 +634,7 @@ const styles = StyleSheet.create({
 
     },
     txLocationCheckin: {
+        fontWeight:'bold',
         marginHorizontal: 10,
     },
     txClinic: {
