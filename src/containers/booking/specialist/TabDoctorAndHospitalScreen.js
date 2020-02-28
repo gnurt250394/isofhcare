@@ -46,9 +46,9 @@ class TabDoctorAndHospitalScreen extends Component {
         };
     }
     onSetPage = (page) => () => {
-        this.setState({
-            isHospital: page == 1 ? true : false
-        })
+        // this.setState({
+        //     isHospital: page == 1 ? true : false
+        // })
         if (this.viewPager) this.viewPager.setPage(page);
     }
 
@@ -59,9 +59,6 @@ class TabDoctorAndHospitalScreen extends Component {
     onPageScroll = (e) => {
         var tabIndex = e.position;
         var offset = e.offset * 100;
-        this.setState({
-            isHospital: tabIndex == 1 ? true : false
-        })
         if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) {
             return
         };
@@ -80,7 +77,7 @@ class TabDoctorAndHospitalScreen extends Component {
     }
 
     onSearch = () => {
-        console.log(this.lisDoctor)
+
         if (!this.state.keyword) {
             return
         }
@@ -94,22 +91,23 @@ class TabDoctorAndHospitalScreen extends Component {
 
     getListLocation = () => {
         locationUtils.getLocation().then(region => {
-            console.log('region: ', region);
+
             this.setState({
                 latitude: region.latitude,
                 longitude: region.longitude
             }, this.onRefress);
         }).catch(err => {
-            console.log('err: ', err);
+
 
         })
     }
     render() {
+
         const { refreshing, data } = this.state
         return (
             <ActivityPanel
                 transparent={true}
-                title={this.state.isHospital ? constants.title.select_hospital : constants.title.select_doctor}
+                title={this.state.tabSelect ? constants.title.select_doctor : constants.title.select_hospital}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
@@ -118,7 +116,7 @@ class TabDoctorAndHospitalScreen extends Component {
                         onSubmitEditing={this.onSearch}
                         returnKeyType='search'
                         style={styles.inputSearch}
-                        placeholder={"Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế"}
+                        placeholder={this.state.tabSelect ? "Tìm kiếm bác sĩ" : "Tìm kiếm cơ sở y tế"}
                         underlineColorAndroid={"transparent"} />
                     {
                         this.state.type == TYPE.SEARCH ?
@@ -147,7 +145,7 @@ class TabDoctorAndHospitalScreen extends Component {
                                 <Text style={[styles.txtButtonTab, this.state.tabSelect ? {} : { color: '#3161AD' }]}>CƠ SỞ Y TẾ</Text>
                             </TouchableOpacity>
                         </View>
-                        {this.state.isHospital && <TouchableOpacity
+                        {!this.state.tabSelect && <TouchableOpacity
                             onPress={this.getListLocation}
                             style={styles.buttonLocation}>
                             <ScaleImage source={require('@images/ic_location.png')} height={20} style={styles.iconLocation} />
