@@ -46,6 +46,9 @@ class TabDoctorAndHospitalScreen extends Component {
         };
     }
     onSetPage = (page) => () => {
+        this.setState({
+            isHospital: page == 1 ? true : false
+        })
         if (this.viewPager) this.viewPager.setPage(page);
     }
 
@@ -56,7 +59,12 @@ class TabDoctorAndHospitalScreen extends Component {
     onPageScroll = (e) => {
         var tabIndex = e.position;
         var offset = e.offset * 100;
-        if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
+        this.setState({
+            isHospital: tabIndex == 1 ? true : false
+        })
+        if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) {
+            return
+        };
         this.setState({
             tabSelect: tabIndex == 0
         });
@@ -101,7 +109,7 @@ class TabDoctorAndHospitalScreen extends Component {
         return (
             <ActivityPanel
                 transparent={true}
-                title={constants.title.select_doctor}
+                title={this.state.isHospital ? constants.title.select_hospital : constants.title.select_doctor}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
@@ -139,12 +147,12 @@ class TabDoctorAndHospitalScreen extends Component {
                                 <Text style={[styles.txtButtonTab, this.state.tabSelect ? {} : { color: '#3161AD' }]}>CƠ SỞ Y TẾ</Text>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
+                        {this.state.isHospital && <TouchableOpacity
                             onPress={this.getListLocation}
                             style={styles.buttonLocation}>
                             <ScaleImage source={require('@images/ic_location.png')} height={20} style={styles.iconLocation} />
                             <Text style={styles.txtLocation}>Gần tôi</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> || null}
                     </View>
                     <IndicatorViewPager style={styles.flex}
                         ref={viewPager => this.viewPager = viewPager}

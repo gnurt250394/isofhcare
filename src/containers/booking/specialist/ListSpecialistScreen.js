@@ -162,7 +162,7 @@ class ListSpecialistScreen extends Component {
                         <View style={styles.containerInput}>
                             <TextInput style={styles.inputSearch}
                                 onSubmitEditing={this.searchData}
-                                value={this.state.keyword} placeholder="Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế" onChangeText={this.onChangeText} />
+                                value={this.state.keyword} placeholder="Tìm kiếm chuyên khoa" onChangeText={this.onChangeText} />
                             <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.searchData}>
                                 <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
                             </TouchableOpacity>
