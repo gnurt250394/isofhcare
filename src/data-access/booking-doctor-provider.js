@@ -175,13 +175,13 @@ module.exports = {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
-            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '' }
+            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '' }
             let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '' }]
             room = {
                 "id": room.id,
                 "name": room.name
             }
-           let patient = {
+            let patient = {
                 id: idUser,
                 name: patients.name,
                 phone: patients.phone

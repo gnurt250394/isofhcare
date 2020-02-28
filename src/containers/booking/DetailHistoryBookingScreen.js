@@ -320,7 +320,7 @@ class DetailHistoryBookingScreen extends Component {
                             <View style={[styles.viewLocation, { alignItems: 'flex-start', }]}>
                                 <Text style={[styles.txLocationCheckin,]}>{constants.booking.address_signup}</Text>
                                 <View style={[styles.viewInfoLocationCheckin]}>
-                                    <Text  style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.checkinPlace}</Text>
+                                    <Text  style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.checkInPlace}</Text>
                                 </View>
                             </View>
                         </View>
@@ -634,6 +634,7 @@ const styles = StyleSheet.create({
 
     },
     txLocationCheckin: {
+        fontWeight:'bold',
         marginHorizontal: 10,
     },
     txClinic: {
