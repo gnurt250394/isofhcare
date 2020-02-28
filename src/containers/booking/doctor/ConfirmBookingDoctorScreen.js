@@ -188,6 +188,7 @@ class ConfirmBookingDoctorScreen extends Component {
         //     return null;
         // }
         let bookingTime = new Date(bookingDate)
+        console.log(booking,'âsđá')
         return (
             <ActivityPanel
                 // hideBackButton={true}
