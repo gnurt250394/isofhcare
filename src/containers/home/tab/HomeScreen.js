@@ -145,12 +145,14 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_voucher.png"),
           text: "Mã ưu đãi",
           onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("myVoucher");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'myVoucher' }
-              });
+            // if (this.props.userApp.isLogin)
+            //   this.props.navigation.navigate("myVoucher");
+            // else
+            //   this.props.navigation.navigate("login", {
+            //     nextScreen: { screen: 'myVoucher' }
+            //   });
+            snackbar.show('Tính năng đang phát triển')
+
           }
         },
         {
