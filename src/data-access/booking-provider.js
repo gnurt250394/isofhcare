@@ -154,9 +154,9 @@ module.exports = {
 
   createBooking(date, description, hospitals, items, patientUser, time, idUser, images) {
     return new Promise((resolve, reject) => {
-      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || hospitals.contact && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '' }
-      console.log('hospital: ', patientUser.status);
-      patient = {
+      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || hospitals.contact && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '' }
+      console.log('hospital: ', hospitals);
+      let patient = {
         id: idUser,
         name: patientUser.name,
         phone: patientUser.phone
