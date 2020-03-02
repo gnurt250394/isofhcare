@@ -108,6 +108,7 @@ class TabDoctorAndHospitalScreen extends Component {
             <ActivityPanel
                 transparent={true}
                 title={this.state.tabSelect ? constants.title.select_doctor : constants.title.select_hospital}
+                backButtonClick = {() => this.props.navigation.pop()}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
