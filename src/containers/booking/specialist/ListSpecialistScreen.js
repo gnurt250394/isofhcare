@@ -233,10 +233,10 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     none_data: {
-        fontStyle: 'italic',
         marginTop: '50%',
         alignSelf: 'center',
-        fontSize: 17
+        fontSize: 17,
+        color:'#000'
     },
     buttonSearch: {
         marginRight: -2,

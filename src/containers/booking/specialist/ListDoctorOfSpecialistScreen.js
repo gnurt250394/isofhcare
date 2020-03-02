@@ -258,10 +258,11 @@ const styles = StyleSheet.create({
         borderRadius: 7
     },
     none_data: {
-        fontStyle: 'italic',
+        // fontStyle: 'italic',
         marginTop: '50%',
         alignSelf: 'center',
-        fontSize: 17
+        fontSize: 17,
+        color:'#000'
     },
     Specialist: {
         fontSize: 15,
