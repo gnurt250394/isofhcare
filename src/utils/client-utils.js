@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 // const server_url = "http://123.24.206.9:8000"; //dev
 // const server_url = "http://123.24.206.9:8000"; //test
 // const server_url = "https://api.produce.isofhcare.com"; //release
-const server_url = "http://10.0.0.88:9769"; //stable
+const server_url = "http://123.24.206.9:12034"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
@@ -71,8 +71,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
-  serviceSchedule: "http://10.0.0.88:8088/",
-  serviceBooking: "http://10.0.0.88:8082/",
+  serviceSchedule: "http://123.24.206.9:12032/",
+  serviceBooking: "http://123.24.206.9:12033/",
   response: {
     ok(data, message) {
       if (!message) message = "";
