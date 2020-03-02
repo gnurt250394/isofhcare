@@ -313,11 +313,11 @@ class ProfileHospitalScreen extends Component {
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
-                                    {contact?.hotLine && <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>}
+                                    {/* {contact?.hotLine && <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>} */}
                                     {contact?.telephone && <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>}
                                     {contact?.email && <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>}
-                                    {/* <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text> */}
+                                    <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
+                                    <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text>
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         {profileHospital.description && profileHospital.description ?
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline'
     },
     txtBold: {
-        fontWeight: 'bold'
+        // fontWeight: 'bold'
     },
     txtPhone: {
         color: '#000'
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     },
     txtPosition: {
         color: '#000000',
-        fontWeight: '700'
+        // fontWeight: '700'
     },
     txtBooking: {
         // backgroundColor: '#00CBA7',
@@ -582,11 +582,12 @@ const styles = StyleSheet.create({
         marginTop: 13
     },
     colorBold: {
-        color: '#b3b3b3',
+        color: '#000',
         fontSize: 15,
         fontWeight: 'bold',
         paddingVertical: 8,
-        fontStyle: 'italic'
+        // fontStyle: 'italic',
+        fontWeight:'bold'
     },
     fontItalic: { fontStyle: 'italic' },
     rating: { color: '#000', fontWeight: 'bold' },
