@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   },
   txtPosition: {
     color: '#000000',
-    fontWeight: '700'
+    // fontWeight: '700'
   },
   txtBooking: {
     backgroundColor: '#00CBA7',
@@ -497,11 +497,10 @@ const styles = StyleSheet.create({
     marginTop: 13
   },
   colorBold: {
-    color: '#b3b3b3',
+    color: '#000',
     fontSize: 15,
     fontWeight: 'bold',
     paddingVertical: 8,
-    fontStyle: 'italic'
   },
   fontItalic: { fontStyle: 'italic' },
   rating: { color: '#000', fontWeight: 'bold' },
