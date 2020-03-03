@@ -108,7 +108,6 @@ class TabDoctorAndHospitalScreen extends Component {
             <ActivityPanel
                 transparent={true}
                 title={this.state.tabSelect ? constants.title.select_doctor : constants.title.select_hospital}
-                backButtonClick = {() => this.props.navigation.pop()}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
@@ -155,7 +154,8 @@ class TabDoctorAndHospitalScreen extends Component {
                     </View>
                     <IndicatorViewPager style={styles.flex}
                         ref={viewPager => this.viewPager = viewPager}
-                        onPageScroll={this.onPageScroll}>
+                        onPageScroll={this.onPageScroll}
+                    >
                         <View style={[styles.flex, { paddingTop: 10, }]}>
                             <ListDoctorOfSpecialistScreen
                                 item={this.state.item}
