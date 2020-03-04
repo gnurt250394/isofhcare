@@ -190,7 +190,6 @@ class CreateBookingSuccessScreen extends Component {
                                     </View>
                                 </View>
                             }
-
                         </View>
                         {/* <View style={styles.view2}>
                         <View style={styles.col}>

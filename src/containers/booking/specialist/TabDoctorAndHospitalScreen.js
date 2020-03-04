@@ -70,14 +70,13 @@ class TabDoctorAndHospitalScreen extends Component {
 
 
     onChangeText = (state) => (value) => {
-        this.setState({ [state]: value })
+        this.setState({ [state]: value, type: TYPE.SEARCH })
         if (!value) {
             this.setState({ type: '' })
         }
     }
 
     onSearch = () => {
-
         if (!this.state.keyword) {
             return
         }
@@ -154,7 +153,8 @@ class TabDoctorAndHospitalScreen extends Component {
                     </View>
                     <IndicatorViewPager style={styles.flex}
                         ref={viewPager => this.viewPager = viewPager}
-                        onPageScroll={this.onPageScroll}>
+                        onPageScroll={this.onPageScroll}
+                    >
                         <View style={[styles.flex, { paddingTop: 10, }]}>
                             <ListDoctorOfSpecialistScreen
                                 item={this.state.item}

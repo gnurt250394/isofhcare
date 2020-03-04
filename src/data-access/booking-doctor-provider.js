@@ -175,7 +175,7 @@ module.exports = {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
-            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '' }
+            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '' }
             let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '' }]
             room = {
                 "id": room.id,
@@ -282,6 +282,21 @@ module.exports = {
             );
         });
     },
+
+    get_list_specialists_all() {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                `${constants.api.booking.doctor.get_list_specialists_all}`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+
     search_list_specialists(name) {
         return new Promise((resolve, reject) => {
             client.requestApi(

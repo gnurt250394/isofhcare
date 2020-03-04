@@ -25,9 +25,8 @@ class ListSpecialistScreen extends Component {
 
 
     getData = () => {
-        const { page, size } = this.state
         this.setState({ isLoading: true }, () => {
-            bookingDoctorProvider.get_list_specialists(page, size).then(res => {
+            bookingDoctorProvider.get_list_specialists_all().then(res => {
                 this.setState({ isLoading: false })
                 if (res && res.length > 0) {
                     this.formatData(res)
@@ -42,7 +41,7 @@ class ListSpecialistScreen extends Component {
 
     }
     searchData = () => {
-        const { page, size, keyword } = this.state
+        const { keyword } = this.state
         this.setState({ isLoading: true }, () => {
             bookingDoctorProvider.search_list_specialists(keyword.toLowerCase()).then(res => {
                 this.setState({ isLoading: false })
@@ -139,6 +138,11 @@ class ListSpecialistScreen extends Component {
             this.getData()
         }
     }
+    renderFooter = () => {
+        return (
+            <View style={{ height: 50 }}></View>
+        )
+    }
     render() {
         return (
             <ActivityPanel
@@ -179,9 +183,8 @@ class ListSpecialistScreen extends Component {
                         }}
                         numColumns={2}
                         ListEmptyComponent={this.listEmpty}
-                        onEndReached={this.loadMore}
-                        onEndReachedThreshold={0.6}
                         onRefresh={this.onRefress}
+                        ListFooterComponent={this.renderFooter}
                         refreshing={this.state.refreshing}
                     />
                 </View>
@@ -236,10 +239,10 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     none_data: {
-        fontStyle: 'italic',
         marginTop: '50%',
         alignSelf: 'center',
-        fontSize: 17
+        fontSize: 17,
+        color: '#000'
     },
     buttonSearch: {
         marginRight: -2,

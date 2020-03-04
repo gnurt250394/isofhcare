@@ -70,18 +70,22 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
         }
     }
     componentWillReceiveProps = (props) => {
-        if (props.type != this.state.type) {
+        if (props.keyword != this.state.keyword) {
             console.log('props: ', props);
-            this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
-                switch (this.state.type) {
-                    case TYPE.SEARCH:
-                        this.search()
-                        break;
-                    default:
-                        this.getData()
-                        break;
-                }
-            })
+            if (this.timeout) clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {
+                this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
+                    switch (this.state.type) {
+                        case TYPE.SEARCH:
+                            this.search()
+                            break;
+                        default:
+                            this.getData()
+                            break;
+                    }
+                })
+            }, 500);
+
         }
     }
     loadMore = () => {
@@ -127,7 +131,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
     search = async () => {
         try {
             let { page, size, keyword } = this.state
-            console.log('keyword: ', keyword);
+
             let res = await bookingDoctorProvider.searchListDoctorWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
@@ -258,10 +262,11 @@ const styles = StyleSheet.create({
         borderRadius: 7
     },
     none_data: {
-        fontStyle: 'italic',
+        // fontStyle: 'italic',
         marginTop: '50%',
         alignSelf: 'center',
-        fontSize: 17
+        fontSize: 17,
+        color: '#000'
     },
     Specialist: {
         fontSize: 15,
