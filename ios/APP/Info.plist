@@ -64,7 +64,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>82</string>
+	<string>83</string>
 	<key>CodePushDeploymentKey</key>
 	<string>FqWm2qyiPFklb-payLojC8vnDzM3r1BkLCS1H</string>
 	<key>FacebookAppID</key>
@@ -171,5 +171,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
