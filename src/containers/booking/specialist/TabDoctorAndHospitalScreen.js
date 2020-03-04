@@ -70,14 +70,13 @@ class TabDoctorAndHospitalScreen extends Component {
 
 
     onChangeText = (state) => (value) => {
-        this.setState({ [state]: value })
+        this.setState({ [state]: value, type: TYPE.SEARCH })
         if (!value) {
             this.setState({ type: '' })
         }
     }
 
     onSearch = () => {
-
         if (!this.state.keyword) {
             return
         }

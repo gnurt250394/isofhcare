@@ -99,18 +99,21 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
         })
     }
     componentWillReceiveProps = (props) => {
-        if (props.type != this.state.type) {
-            console.log('props: ', props);
-            this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
-                switch (this.state.type) {
-                    case TYPE.SEARCH:
-                        this.search()
-                        break;
-                    default:
-                        this.getData()
-                        break;
-                }
-            })
+        if (props.keyword != this.state.keyword) {
+            if (this.timeout) clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {
+                this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
+                    switch (this.state.type) {
+                        case TYPE.SEARCH:
+                            this.search()
+                            break;
+                        default:
+                            this.getData()
+                            break;
+                    }
+                })
+            }, 500);
+
         }
     }
     renderItem = ({ item }) => {
@@ -132,7 +135,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
     search = async () => {
         try {
             let { keyword, page, size } = this.state
-            console.log('keyword: ', keyword);
+
             let res = await bookingDoctorProvider.searchListHospitalWithSpecialist(this.props.item.id, keyword, page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
@@ -172,7 +175,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             <FlatList
                 data={data}
                 renderItem={this.renderItem}
-                
+
                 // style={{paddingTop:height/4}}
                 keyExtractor={this.keyExtractor}
                 ListEmptyComponent={this.listEmpty}
@@ -266,7 +269,7 @@ const styles = StyleSheet.create({
         marginTop: '30%',
         alignSelf: 'center',
         fontSize: 17,
-        color:'#000'
+        color: '#000'
     },
     Specialist: {
         fontSize: 15,
