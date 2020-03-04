@@ -138,6 +138,11 @@ class ListSpecialistScreen extends Component {
             this.getData()
         }
     }
+    renderFooter = () => {
+        return (
+            <View style={{ height: 50 }}></View>
+        )
+    }
     render() {
         return (
             <ActivityPanel
@@ -179,6 +184,7 @@ class ListSpecialistScreen extends Component {
                         numColumns={2}
                         ListEmptyComponent={this.listEmpty}
                         onRefresh={this.onRefress}
+                        ListFooterComponent={this.renderFooter}
                         refreshing={this.state.refreshing}
                     />
                 </View>
@@ -236,7 +242,7 @@ const styles = StyleSheet.create({
         marginTop: '50%',
         alignSelf: 'center',
         fontSize: 17,
-        color:'#000'
+        color: '#000'
     },
     buttonSearch: {
         marginRight: -2,
