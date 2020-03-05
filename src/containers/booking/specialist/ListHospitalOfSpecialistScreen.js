@@ -126,12 +126,7 @@ class ListHospitalOfSpecialistScreen extends React.PureComponent {
             />
         )
     }
-    onChangeText = (state) => (value) => {
-        this.setState({ [state]: value })
-        if (value.length == 0) {
-            this.getData()
-        }
-    }
+    
     search = async () => {
         try {
             let { keyword, page, size } = this.state
