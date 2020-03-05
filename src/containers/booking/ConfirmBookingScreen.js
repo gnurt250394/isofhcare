@@ -714,7 +714,6 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.address}</Text></Text>
                                 </View>
                             </View>
-
                             {/* <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
                                 <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>

@@ -236,6 +236,7 @@ class DetailHistoryBookingScreen extends Component {
     onBackdropPress = () => this.setState({ isVisible: false })
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
+        console.log(this.state.booking.hotLine, 'hotLinehotLinehotLine')
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
             <ActivityPanel
@@ -320,7 +321,7 @@ class DetailHistoryBookingScreen extends Component {
                             <View style={[styles.viewLocation, { alignItems: 'flex-start', }]}>
                                 <Text style={[styles.txLocationCheckin,]}>{constants.booking.address_signup}</Text>
                                 <View style={[styles.viewInfoLocationCheckin]}>
-                                    <Text  style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.checkinPlace}</Text>
+                                    <Text style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.checkInPlace}</Text>
                                 </View>
                             </View>
                         </View>
@@ -365,9 +366,9 @@ class DetailHistoryBookingScreen extends Component {
                             />
                             <Text style={styles.itemText}>Hỗ trợ</Text>
                             <View style={{ alignItems: 'flex-end' }}>
-                                <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text>
-                                {this.state.booking.hotLine ?
-                                    <Text>{this.state.booking.hotLine}</Text>
+                                {/* <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text> */}
+                                {this.state.booking.hospital.hotLine ?
+                                    <Text>{this.state.booking.hospital.hotLine}</Text>
                                     : null
                                 }
                             </View>
@@ -634,6 +635,7 @@ const styles = StyleSheet.create({
 
     },
     txLocationCheckin: {
+        fontWeight: 'bold',
         marginHorizontal: 10,
     },
     txClinic: {
