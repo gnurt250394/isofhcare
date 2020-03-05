@@ -57,9 +57,8 @@ module.exports = {
     getAllHospital() {
         let page = 0
         let size = 1000
-        let url = 'http://10.0.0.88:8088/'
         return new Promise((resolve, reject) => {
-            client.requestApi("get", url + `${constants.api.hospital.get_all_hospital}?page=${page}&size=${size}&sort=asc&properties=name`, {}, (s, e) => {
+            client.requestApi("get", `${client.serviceSchedule}${constants.api.hospital.get_all_hospital}?page=${page}&size=${size}&sort=asc&properties=name`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else

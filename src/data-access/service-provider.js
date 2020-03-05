@@ -2,7 +2,6 @@ import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
-const URL = 'http://10.0.0.88:8088/'
 module.exports = {
     getAll(hospitalId, specialistId, serviceTypeId, requestApi) {
         return new Promise((resolve, reject) => {
