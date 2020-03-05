@@ -44,20 +44,20 @@ class ListSpecialistScreen extends Component {
         if (this.timeout) clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
             const { keyword } = this.state
-            this.setState({ isLoading: true }, () => {
+            this.setState({}, () => {
                 bookingDoctorProvider.search_list_specialists(keyword.toLowerCase()).then(res => {
-                    this.setState({ isLoading: false })
+                    this.setState({})
                     if (res && res.length > 0) {
                         this.formatData(res)
                     } else {
                         this.formatData([])
                     }
                 }).catch(err => {
-                    this.setState({ isLoading: false })
+                    this.setState({})
                     this.formatData([])
                 })
             })
-        }, 1000);
+        }, 500);
 
 
     }
@@ -136,7 +136,7 @@ class ListSpecialistScreen extends Component {
         this.props.navigation.pop()
     }
     onChangeText = (keyword) => {
-        this.setState({ keyword, type: TYPE.SEARCH },() => {
+        this.setState({ keyword, type: TYPE.SEARCH }, () => {
             this.searchData()
         })
         if (!keyword) {
