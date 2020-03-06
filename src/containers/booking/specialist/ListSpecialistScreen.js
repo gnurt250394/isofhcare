@@ -13,8 +13,7 @@ class ListSpecialistScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            refreshing: false,
+            refreshing: true,
             data: [],
             page: 0,
             size: 20,
@@ -25,36 +24,40 @@ class ListSpecialistScreen extends Component {
 
 
     getData = () => {
-        this.setState({ isLoading: true }, () => {
+        this.setState({ refreshing: true }, () => {
             bookingDoctorProvider.get_list_specialists_all().then(res => {
-                this.setState({ isLoading: false })
+                this.setState({ refreshing: false })
                 if (res && res.length > 0) {
                     this.formatData(res)
                 } else {
                     this.formatData([])
                 }
             }).catch(err => {
-                this.setState({ isLoading: false })
+                this.setState({ refreshing: false })
                 this.formatData([])
             })
         })
 
     }
     searchData = () => {
-        const { keyword } = this.state
-        this.setState({ isLoading: true }, () => {
-            bookingDoctorProvider.search_list_specialists(keyword.toLowerCase()).then(res => {
-                this.setState({ isLoading: false })
-                if (res && res.length > 0) {
-                    this.formatData(res)
-                } else {
+        if (this.timeout) clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+            const { keyword } = this.state
+            this.setState({}, () => {
+                bookingDoctorProvider.search_list_specialists(keyword.toLowerCase()).then(res => {
+                    this.setState({})
+                    if (res && res.length > 0) {
+                        this.formatData(res)
+                    } else {
+                        this.formatData([])
+                    }
+                }).catch(err => {
+                    this.setState({})
                     this.formatData([])
-                }
-            }).catch(err => {
-                this.setState({ isLoading: false })
-                this.formatData([])
+                })
             })
-        })
+        }, 500);
+
 
     }
 
@@ -100,7 +103,7 @@ class ListSpecialistScreen extends Component {
         )
     }
     keyExtractor = (item, index) => `${item.id || index}`
-    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
+    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>Không có dữ liệu</Text>
     loadMore = () => {
         const { page, size, data, type } = this.state
         if (data.length >= (page + 1) * 20) {
@@ -132,7 +135,9 @@ class ListSpecialistScreen extends Component {
         this.props.navigation.pop()
     }
     onChangeText = (keyword) => {
-        this.setState({ keyword, type: TYPE.SEARCH })
+        this.setState({ keyword, type: TYPE.SEARCH }, () => {
+            this.searchData()
+        })
         if (!keyword) {
             this.setState({ type: '' })
             this.getData()
@@ -150,7 +155,7 @@ class ListSpecialistScreen extends Component {
                 transparent={true}
                 useCard={true}
                 containerStyle={styles.container}
-                isLoading={this.state.isLoading}>
+            >
                 <View style={styles.group}>
                     <View >
                         <TouchableOpacity
@@ -177,18 +182,19 @@ class ListSpecialistScreen extends Component {
                         renderItem={this.renderItem}
                         // style={{paddingTop:height/4}}
                         keyExtractor={this.keyExtractor}
+                        extraData={this.state}
                         style={{
-                            padding: 10
+                            padding: 10,
                             // justifyContent: 'space-evenly',
                         }}
                         numColumns={2}
                         ListEmptyComponent={this.listEmpty}
-                        onRefresh={this.onRefress}
+                        onRefresh={this.getData}
                         ListFooterComponent={this.renderFooter}
                         refreshing={this.state.refreshing}
                     />
                 </View>
-            </ActivityPanel >
+            </ActivityPanel>
         )
     }
 }
@@ -201,7 +207,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
         paddingTop: 20,
-        backgroundColor: 'rgba(0,0,0,0.4)'
+        backgroundColor: 'rgba(0,0,0,0.4)',
     },
     txtItem: {
         color: '#FFF',
