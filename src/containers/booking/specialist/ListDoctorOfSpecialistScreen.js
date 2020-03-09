@@ -25,7 +25,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
             isLoading: true,
             data: [],
             keyword: '',
-            page: 0,
+            page: 1,
             size: 20,
             refreshing: false,
             item: {},
@@ -56,11 +56,11 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
     }
     formatData = (data) => {
         if (data.length == 0) {
-            if (this.state.page == 0) {
+            if (this.state.page == 1) {
                 this.setState({ data })
             }
         } else {
-            if (this.state.page == 0) {
+            if (this.state.page == 1) {
                 this.setState({ data })
             } else {
                 this.setState(preState => {
@@ -71,10 +71,9 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
     }
     componentWillReceiveProps = (props) => {
         if (props.keyword != this.state.keyword) {
-            console.log('props: ', props);
             if (this.timeout) clearTimeout(this.timeout)
             this.timeout = setTimeout(() => {
-                this.setState({ type: props.type, keyword: props.keyword || '', page: 0, refreshing: true }, () => {
+                this.setState({ type: props.type, keyword: props.keyword || '', page: 1, refreshing: true }, () => {
                     switch (this.state.type) {
                         case TYPE.SEARCH:
                             this.search()
@@ -149,7 +148,7 @@ class ListDoctorOfSpecialistScreen extends React.PureComponent {
 
     onRefress = () => {
         this.setState({
-            page: 0,
+            page: 1,
             refreshing: true,
         }, () => {
             switch (this.state.type) {
