@@ -42,7 +42,7 @@ const ItemService = ({ item, onPress }) => {
                     <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
                     <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
                 </View>
-                <Text numberOfLines={2}>{item.description}</Text>
+                <Text numberOfLines={3}>{item.description}</Text>
             </View>
             <View style={styles.flag}>
                 <View style={styles.flagTop} >
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     containerProfile: {
         paddingLeft: 10,
         alignItems: 'flex-start',
+        height:'100%',
         flex: 1
     },
     imageLine: {
@@ -109,7 +110,8 @@ const styles = StyleSheet.create({
             height: 2
         },
         shadowColor: '#000',
-        elevation: 3
+        elevation: 3,
+        minHeight: '53%',
     },
     flag: {
         position: 'absolute',
