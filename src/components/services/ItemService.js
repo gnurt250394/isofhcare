@@ -10,6 +10,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel'
 import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
+const { height } = Dimensions.get('window')
 const ItemService = ({ item, onPress }) => {
     const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath?.absoluteUrl() } : require("@images/new/user.png");
     return (
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     containerProfile: {
         paddingLeft: 10,
         alignItems: 'flex-start',
-        height:'100%',
+        height: '100%',
         flex: 1
     },
     imageLine: {
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     },
     containerImage: {
         alignItems: 'center',
-        alignSelf: 'flex-start',
+        // alignSelf: 'flex-start',
         paddingHorizontal: 10
     },
     containerItem: {
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
         },
         shadowColor: '#000',
         elevation: 3,
-        minHeight: '53%',
+        height: 170,
     },
     flag: {
         position: 'absolute',

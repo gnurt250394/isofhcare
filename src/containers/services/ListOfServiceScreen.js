@@ -23,7 +23,7 @@ const ListOfServiceScreen = ({ navigation }) => {
             disableService: true
         });
     }
-    
+
     const renderDescription = (item) => {
         return (
             <ReadMoreText numberOfLines={4} >
@@ -83,7 +83,7 @@ const ListOfServiceScreen = ({ navigation }) => {
                         <View style={styles.flex}>
 
                             <Text style={styles.txtService}>{item?.name}</Text>
-                            <Text style={styles.txtHospital}>{item?.hospital?.name}</Text>
+                            <Text onPress={goToHospital} style={styles.txtHospital}>{item?.hospital?.name}</Text>
                         </View>
                         <TouchableOpacity
                             onPress={goToHospital}
