@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 const URL = 'http://10.0.0.98:8080/'
-module.exports = {
+export default {
     getAll(hospitalId, specialistId, serviceTypeId, requestApi) {
         return new Promise((resolve, reject) => {
             // if (!requestApi) {
@@ -56,4 +56,34 @@ module.exports = {
             // }
         });
     },
+    searchCategory(name, page = 0, size = 9999) {
+        let parameters =
+            (name ? 'name=' + name + '&' : '') +
+            ('page=' + page) +
+            ('&size=' + size)
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.category.category +
+                parameters, {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    },
+    getListServices( medicalName, categoryId, status, page, size) {
+        let parameters =
+            (medicalName ? 'medicalName=' + medicalName + '&' : '') +
+            (categoryId ? 'categoryId=' + categoryId + '&' : '') +
+            (status ? 'status=' + status + '&' : '') +
+            (page != null || page != undefined ? 'page=' + page + '&' : '') +
+            (size ? 'size=' + size : '')
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.service.get_all_services +
+                '/search' + '?' + parameters, {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    }
 }
