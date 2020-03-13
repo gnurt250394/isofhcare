@@ -38,6 +38,7 @@ class AddBookingScreen extends Component {
         let hospital = this.props.navigation.getParam('hospital')
         let bookingDate = this.props.navigation.getParam('bookingDate')
         let allowBooking = this.props.navigation.getParam('allowBooking')
+        let disableService = this.props.navigation.getParam('disableService')
         this.state = {
             colorButton: 'red',
             imageUris: [],
@@ -48,7 +49,8 @@ class AddBookingScreen extends Component {
             schedule,
             hospital,
             bookingDate,
-            allowBooking
+            allowBooking,
+            disableService
         }
     }
     _changeColor = () => {
@@ -479,11 +481,14 @@ class AddBookingScreen extends Component {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.article}>
-                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectHospital}>
+                            <TouchableOpacity style={styles.mucdichkham} disabled={this.state.disableService} onPress={this.selectHospital}>
                                 <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
                                 <Text style={styles.mdk}>{constants.booking.location}</Text>
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital && this.state.hospital.name ? this.state.hospital.name : constants.booking.select_location}</Text>
-                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                {!this.state.disableService ?
+                                    <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                    : null
+                                }
                             </TouchableOpacity>
                             {
                                 this.state.hospitalError ?
@@ -516,7 +521,7 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View> */}
 
-                            <TouchableOpacity style={[styles.mucdichkham]} onPress={this.onSelectServices}>
+                            <TouchableOpacity style={[styles.mucdichkham]} disabled={this.state.disableService} onPress={this.onSelectServices}>
                                 <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                                 <Text style={styles.mdk}>{constants.booking.service}</Text>
                                 {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
@@ -533,8 +538,9 @@ class AddBookingScreen extends Component {
                                     </View> :
                                     <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
                                 }
-
-                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                {!this.state.disableService ?
+                                    <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                    : null}
                             </TouchableOpacity>
                             {
                                 this.state.servicesError ?
