@@ -34,8 +34,8 @@ const ListServiceDetailScreen = ({ navigation }) => {
         type: ''
     });
     const getData = () => {
-        
-        serviceProvider.getListServices(state.keyword, state?.category?.id, state.page, state.size).then(res => {
+
+        serviceProvider.getListServices(state.keyword, state?.category?.id, 'APPROVED', state.page, state.size).then(res => {
             if (res?.content?.length > 0) {
                 formatData(res.content)
             } else {
