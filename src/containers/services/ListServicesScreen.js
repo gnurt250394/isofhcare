@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity, Image, Dimensions, StyleSheet } from 'react-native'
 import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@data-access/service-provider'
+import ImageLoad from "mainam-react-native-image-loader";
+import ImageUtils from 'mainam-react-native-image-utils'
 const { height } = Dimensions.get('window')
 const ListServicesScreen = ({ navigation }) => {
     const [state, setState] = useState(
@@ -12,11 +14,16 @@ const ListServicesScreen = ({ navigation }) => {
             data: []
         }
     );
+    console.log('state: ', state);
     async function getData() {
         try {
             let res = await serviceProvider.searchCategory(null, state.page, state.size)
-            
             if (res.length) {
+                // res.forEach(async(e) => {
+                //     let img = await ImageUtils.cachingImage(e.image, 50, 50, 'PNG', 0, 0)
+                //     e.image = img.path
+
+                // })
                 formatData(res)
             } else {
                 formatData([])
@@ -24,7 +31,7 @@ const ListServicesScreen = ({ navigation }) => {
 
         } catch (error) {
             formatData([])
-            
+
 
         }
     }
@@ -56,11 +63,27 @@ const ListServicesScreen = ({ navigation }) => {
     }
     const keyExtractor = (item, index) => `${index}`
     const renderItem = ({ item, index }) => {
+        console.log('item: ', item);
+        let source = item.image ? { uri: item.image } : require("@images/new/user.png")
         return (
             <TouchableOpacity
                 onPress={goToDetailService(item)}
                 style={styles.containerItem}>
-                <Image source={{ uri: item.image }} style={styles.imageItem} />
+                {/* <Image source={{ uri: item.image }} style={styles.imageItem} /> */}
+                <ImageLoad
+                    resizeMode="cover"
+                    imageStyle={styles.imageItem}
+                    borderRadius={10}
+                    customImagePlaceholderDefaultStyle={[{
+                        width:'100%',
+                        height:'100%'
+                    }]}
+                    placeholderSource={require("@images/new/user.png")}
+                    resizeMode="cover"
+                    loadingStyle={{ size: 'small', color: 'white' }}
+                    source={source}
+                    style={styles.imageItem}
+                />
                 <View style={styles.groupName}>
                     <Text style={styles.txtName} numberOfLines={2}>{item.name}</Text>
                 </View>
@@ -120,6 +143,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.3,
         elevation: 2,
-        backgroundColor:'#FFF'
+        backgroundColor: '#FFF'
     },
 })
