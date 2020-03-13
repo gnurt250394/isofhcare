@@ -1,58 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Dimensions, Image, FlatList } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel'
 import ImageLoad from "mainam-react-native-image-loader";
 import StarRating from 'react-native-star-rating';
 import ScaleImage from 'mainam-react-native-scaleimage';
+import ReadMoreText from '@components/ReadMoreText';
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    
+    const _text = useRef(null)
     const [description, setDescription] = useState('')
     const [state, setState] = useState({
-        data: [
-            {
-                id: 1,
-                name: 'Lê lê lê',
-                rating: 4.5,
-                comment: 'Tôi đã đặt khám ở đây và thấy dịch vụ rất tốt, chuyên nghiệp'
-            },
-            {
-                id: 2,
-                name: 'Lê lê lê',
-                rating: 4.5,
-                comment: 'Tôi đã đặt khám ở đây và thấy dịch vụ rất tốt, chuyên nghiệp'
-            },
-        ]
+        data: [],
     })
     const onSelected = () => {
-        
+
         item.hospital.address = item.hospital.contact.address
         navigation.navigate("addBooking1", {
             hospital: item.hospital,
             listServicesSelected: [item],
-            allowBooking:true,
-            disableService:true
+            allowBooking: true,
+            disableService: true
         });
     }
-    useEffect(() => {
-        if (item.description.length > 300) {
-            setDescription(item.description.substring(0, 300))
-        } else {
-            setDescription(item.description)
-        }
-    }, [])
-    const showDescription = (item) => () => {
-        setDescription(item.description)
-    }
+    
     const renderDescription = (item) => {
-
         return (
-            <Text style={styles.txtDescription}>{description} {description.length == 300 ? <Text onPress={showDescription(item)} style={{
-                color: '#FF8A00',
-                fontStyle: 'italic',
-                textDecorationLine:'underline'
-            }}>...Xem thêm</Text> : ''}</Text>
+            <ReadMoreText numberOfLines={4} >
+                <Text style={styles.txtDescription}>{item.description}</Text>
+            </ReadMoreText>
 
         )
     }
@@ -92,6 +68,11 @@ const ListOfServiceScreen = ({ navigation }) => {
 
         )
     }
+    const goToHospital = () => {
+        navigation.navigate('profileHospital', {
+            item: item.hospital
+        })
+    }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
     const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
     return (
@@ -104,22 +85,26 @@ const ListOfServiceScreen = ({ navigation }) => {
                             <Text style={styles.txtService}>{item?.name}</Text>
                             <Text style={styles.txtHospital}>{item?.hospital?.name}</Text>
                         </View>
-                        <ImageLoad
-                            resizeMode="cover"
-                            imageStyle={styles.borderImgProfile}
-                            borderRadius={25}
-                            customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImgProfile]}
-                            placeholderSource={require("@images/new/user.png")}
-                            resizeMode="cover"
-                            loadingStyle={{ size: 'small', color: 'gray' }}
-                            source={source}
-                            style={styles.imgProfile}
-                            defaultImage={() => {
-                                return (
-                                    <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                )
-                            }}
-                        />
+                        <TouchableOpacity
+                            onPress={goToHospital}
+                        >
+                            <ImageLoad
+                                resizeMode="cover"
+                                imageStyle={styles.borderImgProfile}
+                                borderRadius={25}
+                                customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImgProfile]}
+                                placeholderSource={require("@images/new/user.png")}
+                                resizeMode="cover"
+                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                source={source}
+                                style={styles.imgProfile}
+                                defaultImage={() => {
+                                    return (
+                                        <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                    )
+                                }}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <Image source={url} style={styles.imgService} />
                     <View style={styles.groupPrice}>
@@ -129,7 +114,9 @@ const ListOfServiceScreen = ({ navigation }) => {
                         <Text style={styles.txtVoucher}>Giam 100k</Text>
                     </View>
                 </View>
-                <View style={styles.groupBookingRating}>
+
+                {/** rating */}
+                {/* <View style={styles.groupBookingRating}>
                     <View style={styles.groupBooking}>
                         <Text style={styles.txtBooking}>Lượt đặt khám</Text>
                         <Text>100</Text>
@@ -142,12 +129,14 @@ const ListOfServiceScreen = ({ navigation }) => {
                         <Text style={styles.txtBooking}>Đánh giá</Text>
                         <Text style={styles.txtNumbberRating}>100</Text>
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.containerDetail}>
                     <Text style={styles.txtlabel}>Mô tả chi tiết</Text>
                     {renderDescription(item)}
                 </View>
-                <View style={{
+
+                {/** rating */}
+                {/* <View style={{
                     padding: 20,
                     borderTopColor: '#f2f2f2',
                     borderBottomColor: '#f2f2f2',
@@ -172,7 +161,7 @@ const ListOfServiceScreen = ({ navigation }) => {
                         renderItem={renderItem}
                         keyExtractor={keyExtractor}
                     />
-                </View>
+                </View> */}
             </ScrollView>
             <View style={styles.containerButtonSelect}>
                 <Text style={styles.txtTitleSelect}>Bạn muốn chọn dịch vụ khám này?</Text>
