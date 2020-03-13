@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 const ItemService = ({ item, onPress }) => {
-    const source = item.image ? { uri: item.image.absoluteUrl() } : require("@images/new/user.png");
+    const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath?.absoluteUrl() } : require("@images/new/user.png");
     return (
         <TouchableOpacity onPress={onPress} style={styles.containerItem}>
 
