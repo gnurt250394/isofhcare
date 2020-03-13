@@ -25,13 +25,16 @@ const ListOfServiceScreen = ({ navigation }) => {
             },
         ]
     })
-    // const onSelected = () => {
-    //     let onSelected = navigation.getParam('onSelected')
-    //     navigation.pop()
-    //     if (onSelected) {
-    //         onSelected(item)
-    //     }
-    // }
+    const onSelected = () => {
+        console.log('item: ', item);
+        item.hospital.address = item.hospital.contact.address
+        navigation.navigate("addBooking1", {
+            hospital: item.hospital,
+            listServicesSelected: [item],
+            allowBooking:true,
+            disableService:true
+        });
+    }
     useEffect(() => {
         if (item.description.length > 300) {
             setDescription(item.description.substring(0, 300))
@@ -57,7 +60,7 @@ const ListOfServiceScreen = ({ navigation }) => {
         return (
             <View style={{
                 paddingVertical: 10,
-               
+
             }}>
                 <View style={{
                     height: 0.5,
@@ -89,66 +92,67 @@ const ListOfServiceScreen = ({ navigation }) => {
         )
     }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
+    const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
     return (
         <ActivityPanel title="Chi tiết dịch vụ khám">
             <ScrollView>
-            <View style={{ paddingLeft: 25, }}>
-                <View style={styles.ContainerNameService}>
-                    <View style={styles.flex}>
+                <View style={{ paddingLeft: 25, }}>
+                    <View style={styles.ContainerNameService}>
+                        <View style={styles.flex}>
 
-                        <Text style={styles.txtService}>{item?.name}</Text>
-                        <Text style={styles.txtHospital}>{item?.hospital?.name}</Text>
+                            <Text style={styles.txtService}>{item?.name}</Text>
+                            <Text style={styles.txtHospital}>{item?.hospital?.name}</Text>
+                        </View>
+                        <ImageLoad
+                            resizeMode="cover"
+                            imageStyle={styles.borderImgProfile}
+                            borderRadius={25}
+                            customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImgProfile]}
+                            placeholderSource={require("@images/new/user.png")}
+                            resizeMode="cover"
+                            loadingStyle={{ size: 'small', color: 'gray' }}
+                            source={source}
+                            style={styles.imgProfile}
+                            defaultImage={() => {
+                                return (
+                                    <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                )
+                            }}
+                        />
                     </View>
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.borderImgProfile}
-                        borderRadius={25}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImgProfile]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={url}
-                        style={styles.imgProfile}
-                        defaultImage={() => {
-                            return (
-                                <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                            )
-                        }}
-                    />
-                </View>
-                <Image source={url} style={styles.imgService} />
-                <View style={styles.groupPrice}>
-                    <Text style={styles.txtPriceFinal}>{item?.price.formatPrice()} đ</Text>
-                    <Text style={styles.txtPriceUnit}>{item?.price.formatPrice()} đ</Text>
+                    <Image source={url} style={styles.imgService} />
+                    <View style={styles.groupPrice}>
+                        <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                        <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
 
-                    <Text style={styles.txtVoucher}>Giam 100k</Text>
+                        <Text style={styles.txtVoucher}>Giam 100k</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.groupBookingRating}>
-                <View style={styles.groupBooking}>
-                    <Text style={styles.txtBooking}>Lượt đặt khám</Text>
-                    <Text>100</Text>
+                <View style={styles.groupBookingRating}>
+                    <View style={styles.groupBooking}>
+                        <Text style={styles.txtBooking}>Lượt đặt khám</Text>
+                        <Text>100</Text>
+                    </View>
+                    <View style={styles.groupBooking}>
+                        <Text style={styles.txtBooking}>Lượt tư vấn</Text>
+                        <Text>100</Text>
+                    </View>
+                    <View style={styles.groupRating}>
+                        <Text style={styles.txtBooking}>Đánh giá</Text>
+                        <Text style={styles.txtNumbberRating}>100</Text>
+                    </View>
                 </View>
-                <View style={styles.groupBooking}>
-                    <Text style={styles.txtBooking}>Lượt tư vấn</Text>
-                    <Text>100</Text>
-                </View>
-                <View style={styles.groupRating}>
-                    <Text style={styles.txtBooking}>Đánh giá</Text>
-                    <Text style={styles.txtNumbberRating}>100</Text>
-                </View>
-            </View>
                 <View style={styles.containerDetail}>
                     <Text style={styles.txtlabel}>Mô tả chi tiết</Text>
                     {renderDescription(item)}
                 </View>
                 <View style={{
                     padding: 20,
-                    borderTopColor:'#f2f2f2',
-                    borderBottomColor:'#f2f2f2',
-                    borderTopWidth:10,
-                    borderBottomWidth:10,
-                    marginTop:20
+                    borderTopColor: '#f2f2f2',
+                    borderBottomColor: '#f2f2f2',
+                    borderTopWidth: 10,
+                    borderBottomWidth: 10,
+                    marginTop: 20
                 }}>
                     <View style={{
                         flexDirection: 'row',
@@ -156,9 +160,9 @@ const ListOfServiceScreen = ({ navigation }) => {
                         justifyContent: 'space-between'
                     }}>
                         <Text style={{
-                            color:'#00BA99',
-                            fontWeight:'bold',
-                            fontSize:15
+                            color: '#00BA99',
+                            fontWeight: 'bold',
+                            fontSize: 15
                         }}>ĐÁNH GIÁ</Text>
                         <Text>22 luot</Text>
                     </View>
@@ -172,7 +176,7 @@ const ListOfServiceScreen = ({ navigation }) => {
             <View style={styles.containerButtonSelect}>
                 <Text style={styles.txtTitleSelect}>Bạn muốn chọn dịch vụ khám này?</Text>
                 <TouchableOpacity
-                    // onPress={onSelected}
+                    onPress={onSelected}
                     style={styles.buttonSelect}>
                     <Text style={styles.txtSelect}>CHỌN</Text>
                 </TouchableOpacity>
@@ -209,7 +213,7 @@ const styles = StyleSheet.create({
     txtPriceFinal: {
         color: '#00BA99',
         fontWeight: 'bold',
-        fontSize:16
+        fontSize: 16
     },
     groupPrice: {
         flexDirection: 'row',

@@ -70,11 +70,10 @@ export default {
                 })
         })
     },
-    getListServices( medicalName, categoryId, status, page, size) {
+    getListServices( medicalName, categoryId, page, size) {
         let parameters =
             (medicalName ? 'medicalName=' + medicalName + '&' : '') +
             (categoryId ? 'categoryId=' + categoryId + '&' : '') +
-            (status ? 'status=' + status + '&' : '') +
             (page != null || page != undefined ? 'page=' + page + '&' : '') +
             (size ? 'size=' + size : '')
         return new Promise((resolve, reject) => {

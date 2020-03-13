@@ -20,39 +20,10 @@ const TYPE = {
     SPECIALIST: 'SPECIALIST'
 }
 const ListServiceDetailScreen = ({ navigation }) => {
-    console.log('navigation: ', navigation);
+
     const [state, setState] = useState({
-        isLoading: false,
-        data: [
-            {
-                id: 1,
-                name: 'Khám thạc sĩ',
-                hospital: {
-                    name: 'BV Đại học Y Hà nội',
-                    id: 1
-                },
-                price: 10000000,
-                description: 'Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc',
-                voucher: {
-
-                },
-                location: '2km'
-            },
-            {
-                id: 1,
-                name: 'Khám thạc sĩ',
-                hospital: {
-                    name: 'BV Đại học Y Hà nội',
-                    id: 1
-                },
-                price: 10000000,
-                description: 'Thạc sĩ. Bác sĩ Huỳnh Khiêm Huy đã có hơn 11 kinh nghiệm làm việc...',
-                voucher: {
-
-                },
-                location: '2km'
-            },
-        ],
+        isLoading: true,
+        data: [],
         keyword: '',
         infoDoctor: {},
         page: 0,
@@ -62,61 +33,70 @@ const ListServiceDetailScreen = ({ navigation }) => {
         item: {},
         type: ''
     });
-    // useEffect(() => {
-    //     getData()
-    //     return () => {
-    //     };
-    // }, [])
     const getData = () => {
-        console.log('getData')
-
-        console.log('state.categoryId: ', state.categoryId);
+        
         serviceProvider.getListServices(state.keyword, state?.category?.id, state.page, state.size).then(res => {
-            setState({ ...state, isLoading: false, refreshing: false })
-            if (res && res.length > 0) {
-                formatData(res)
+            if (res?.content?.length > 0) {
+                formatData(res.content)
             } else {
                 formatData([])
             }
         }).catch(err => {
             formatData([])
-            setState({ ...state, isLoading: false, refreshing: false })
 
         })
     }
+    useEffect(() => {
+        let timeout = setTimeout(() => {
+            if (state.refreshing || state.isLoading)
+                getData()
+
+        }, 500)
+        return () => clearTimeout(timeout)
+    }, [state.keyword, state.page, state.refreshing])
     const formatData = (data) => {
         if (data.length == 0) {
             if (state.page == 0) {
-                setState({ ...state, data })
+                setState({ ...state, data, isLoading: false, refreshing: false })
             }
         } else {
             if (state.page == 0) {
-                setState({ ...state, data })
+                setState({ ...state, data, isLoading: false, refreshing: false })
             } else {
                 setState(preState => {
-                    return { ...state, data: [...preState.data, ...data] }
+                    return { ...state, data: [...preState.data, ...data], isLoading: false, refreshing: false }
                 })
             }
         }
     }
-const gotoDetailService=(item)=>()=>{
-    navigation.navigate('listOfServices', { item })
-}
+    const gotoDetailService = (item) => () => {
+        navigation.navigate('listOfServices', { item })
+    }
     const renderItem = ({ item }) => {
         return (
             <ItemService item={item} onPress={gotoDetailService(item)} />
         )
     }
-    const onChangeText = (state) => (value) => {
-        setState({ [state]: value })
-        if (value.length == 0) {
-            getData()
-        }
+    const onChangeText = (state2) => (value) => {
+        setState({ ...state, [state2]: value, refreshing: true })
+
     }
 
     const keyExtractor = (item, index) => index.toString()
     const listEmpty = () => !state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
-
+    const loadMore = () => {
+        if (state.data.length >= (state.page + 1) * state.size) {
+            setState({ ...state, page: state.page + 1 })
+        }
+    }
+    const onRefresh = () => {
+        setState({
+            ...state,
+            keyword: '',
+            page: 0,
+            refreshing: true
+        })
+    }
     return (
         <ActivityPanel
             title={navigation?.state?.params?.item?.name}
@@ -126,7 +106,7 @@ const gotoDetailService=(item)=>()=>{
                 <TextInput
                     value={state.keyword}
                     onChangeText={onChangeText('keyword')}
-                    // onSubmitEditing={onSearch}
+                    onSubmitEditing={getData}
                     returnKeyType='search'
                     style={styles.inputSearch}
                     placeholder={"Tìm kiếm…"}
@@ -160,9 +140,9 @@ const gotoDetailService=(item)=>()=>{
                 // style={{paddingTop:height/4}}
                 keyExtractor={keyExtractor}
                 ListEmptyComponent={listEmpty}
-                // onEndReached={loadMore}
+                onEndReached={loadMore}
                 onEndReachedThreshold={0.6}
-                // onRefresh={onRefress}
+                onRefresh={onRefresh}
                 refreshing={state.refreshing}
             />
             {/* </ScrollView> */}

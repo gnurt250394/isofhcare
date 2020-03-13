@@ -39,8 +39,8 @@ const ItemService = ({ item, onPress }) => {
                 <Text style={styles.txtName}>{item.name}</Text>
                 <Text style={styles.txtHospital}>{item.hospital.name}</Text>
                 <View style={styles.groupPrice}>
-                    <Text style={styles.txtPriceFinal}>{item.price.formatPrice()} đ</Text>
-                    <Text style={styles.txtPriceUnit}>{item.price.formatPrice()} đ</Text>
+                    <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                    <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
                 </View>
                 <Text numberOfLines={2}>{item.description}</Text>
             </View>
