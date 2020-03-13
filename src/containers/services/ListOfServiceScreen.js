@@ -7,7 +7,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    console.log('item: ', item);
+    
     const [description, setDescription] = useState('')
     const [state, setState] = useState({
         data: [
@@ -26,7 +26,7 @@ const ListOfServiceScreen = ({ navigation }) => {
         ]
     })
     const onSelected = () => {
-        console.log('item: ', item);
+        
         item.hospital.address = item.hospital.contact.address
         navigation.navigate("addBooking1", {
             hospital: item.hospital,
@@ -50,8 +50,9 @@ const ListOfServiceScreen = ({ navigation }) => {
         return (
             <Text style={styles.txtDescription}>{description} {description.length == 300 ? <Text onPress={showDescription(item)} style={{
                 color: '#FF8A00',
-                fontStyle: 'italic'
-            }}>Xem thêm</Text> : ''}</Text>
+                fontStyle: 'italic',
+                textDecorationLine:'underline'
+            }}>...Xem thêm</Text> : ''}</Text>
 
         )
     }

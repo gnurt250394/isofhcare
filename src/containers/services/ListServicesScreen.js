@@ -9,37 +9,13 @@ const ListServicesScreen = ({ navigation }) => {
             isLoading: true,
             page: 0,
             size: 20,
-            data: [
-                // {
-                //     id: 1,
-                //     name: 'Khám sức khoẻ tổng quát',
-                //     image: 'https://i.pinimg.com/736x/7c/1a/e2/7c1ae2112b91008df6440f5a6ecece6a.jpg'
-                // },
-                // {
-                //     id: 2,
-                //     name: 'Kham tong quat',
-                //     image: 'https://media-cdn.tripadvisor.com/media/photo-s/12/45/4d/03/anhr-tren-d-i-nhin-v.jpg'
-
-                // },
-                // {
-                //     id: 3,
-                //     name: 'Kham tong quat',
-                //     image: 'https://media-cdn.tripadvisor.com/media/photo-s/12/45/4d/03/anhr-tren-d-i-nhin-v.jpg'
-
-                // },
-                // {
-                //     id: 3,
-                //     name: 'Kham tong quat',
-                //     image: 'https://media-cdn.tripadvisor.com/media/photo-s/12/45/4d/03/anhr-tren-d-i-nhin-v.jpg'
-
-                // },
-            ]
+            data: []
         }
     );
     async function getData() {
         try {
             let res = await serviceProvider.searchCategory(null, state.page, state.size)
-            console.log('res: ', res);
+            
             if (res.length) {
                 formatData(res)
             } else {
@@ -48,39 +24,32 @@ const ListServicesScreen = ({ navigation }) => {
 
         } catch (error) {
             formatData([])
-            console.log('error: ', error);
+            
 
         }
     }
     const formatData = (data) => {
         if (data.length == 0) {
             if (state.page == 0) {
-                setState({ ...state, data: [], isLoading: false  })
+                setState({ ...state, data: [], isLoading: false })
             } else {
             }
         } else {
             if (state.page == 0) {
-                setState({ ...state, data , isLoading: false })
+                setState({ ...state, data, isLoading: false })
             } else {
-                setState({ ...state, data: [...state.data, ...data], isLoading: false  })
+                setState({ ...state, data: [...state.data, ...data], isLoading: false })
             }
         }
     }
-    useEffect(() => {
 
-        getData()
-        return () => {
-        };
-    }, [])
     const loadMore = () => {
         if (state.data.length >= (state.page + 1) * state.size) {
             setState({ ...state, page: state.page + 1 })
         }
     }
     useEffect(() => {
-        if (state.page) {
-            getData()
-        }
+        getData()
     }, [state.page])
     const goToDetailService = (item) => () => {
         navigation.navigate('listServicesDetail', { item })
@@ -150,6 +119,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.3,
-        elevation: 2
+        elevation: 2,
+        backgroundColor:'#FFF'
     },
 })
