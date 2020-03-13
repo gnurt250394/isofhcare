@@ -995,6 +995,9 @@ module.exports = {
       get_all: isofhcare_service + "service/get-all",
       get_all_services: isofhcare_service + "catalog/v1/medicalservice",
     },
+    category: {
+      category: isofhcare_service + 'catalog/v1/categories/search?'
+    },
     schedule: {
       get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
       get_by_month_and_service: isofhcare_service + "schedule-booking/get-by-month-and-service",

@@ -34,6 +34,7 @@ import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import fonts from '@resources/fonts';
 import homeProvider from '@data-access/home-provider'
+import CategoryHighLight from "@components/home/CategoryHighLight";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -76,22 +77,24 @@ class HomeScreen extends Component {
 
         {
           icon: require("@images/new/homev2/ic_symptom.png"),
-          text: "Triệu chứng",
+          text: "Dịch vụ",
           onPress: () => {
+            this.props.navigation.navigate("listServices");
+            return
             snackbar.show('Tính năng đang phát triển')
           }
         }
       ],
       features: [
         {
-          icon: require("@images/new/homev2/ic_get_ticket.png"),
-          text: "Lấy số khám",
+          icon: require("@images/new/ic_calendar.png"),
+          text: "Lịch khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("getTicket");
+              this.props.navigation.navigate("listBookingHistory");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: "getTicket", param: {} }
+                nextScreen: { screen: "listBookingHistory", param: {} }
               });
           }
         },
@@ -478,6 +481,7 @@ class HomeScreen extends Component {
               <View style={styles.containerButton}>
                 {this.renderButton()}
               </View>
+              <CategoryHighLight data={this.state.listDataHospital} />
               {
                 this.renderDoctor()
               }
