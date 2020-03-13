@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
     containerSpecialist: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 10
+        paddingBottom: 10,
+        flexWrap:'wrap'
     },
     ButtonBooking: {
         backgroundColor: '#00CBA7',
