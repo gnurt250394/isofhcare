@@ -481,7 +481,7 @@ class HomeScreen extends Component {
               <View style={styles.containerButton}>
                 {this.renderButton()}
               </View>
-              <CategoryHighLight data={this.state.listDataHospital} />
+              <CategoryHighLight {...this.props} />
               {
                 this.renderDoctor()
               }
