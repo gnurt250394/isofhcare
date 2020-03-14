@@ -33,7 +33,7 @@ const ItemService = ({ item, onPress }) => {
                         )
                     }}
                 />
-                <Text>{item.location}</Text>
+                <Text>{item.distance} km</Text>
             </View>
             <Image resizeMode='cover' source={require("@images/new/ic_line_dash.png")} style={styles.imageLine} />
             <View style={styles.containerProfile}>
