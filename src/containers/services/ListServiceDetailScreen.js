@@ -12,6 +12,7 @@ import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import ItemService from '@components/services/ItemService';
 import serviceProvider from '@data-access/service-provider'
+import locationUtils from '@utils/location-utils';
 
 const { width, height } = Dimensions.get('window')
 const TYPE = {
@@ -31,20 +32,36 @@ const ListServiceDetailScreen = ({ navigation }) => {
         refreshing: false,
         category: navigation.getParam('item', {}),
         item: {},
-        type: ''
+        type: '',
+        lat: 0,
+        lon: 0
     });
-    const getData = () => {
-
-        serviceProvider.getListServices(state.keyword, state?.category?.id, 'APPROVED', state.page, state.size).then(res => {
+    const getData = async () => {
+        try {
+            let region = await locationUtils.getLocation()
+            if (region) {
+                setState({ ...state, lat: region.latitude, lon: region.longitude })
+            }
+            let res = await serviceProvider.getListServices(
+                state.keyword,
+                state?.category?.id,
+                'APPROVED',
+                region?.latitude,
+                region?.longitude,
+                state.page,
+                state.size
+            )
             if (res?.content?.length > 0) {
                 formatData(res.content)
             } else {
                 formatData([])
             }
-        }).catch(err => {
+
+        } catch (error) {
             formatData([])
 
-        })
+        }
+
     }
     useEffect(() => {
         let timeout = setTimeout(() => {
@@ -126,7 +143,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
                 }
                 <View style={styles.containerLocation} />
                 <TouchableOpacity style={[styles.buttonLocation]}
-                // onPress={onSearch}
+                onPress={getData}
                 >
                     <ScaleImage source={require('@images/ic_location.png')} height={16} style={{
                         tintColor: '#000',
