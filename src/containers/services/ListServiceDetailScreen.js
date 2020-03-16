@@ -33,21 +33,18 @@ const ListServiceDetailScreen = ({ navigation }) => {
         category: navigation.getParam('item', {}),
         item: {},
         type: '',
-        lat: 0,
-        lon: 0
+        latitude: null,
+        longitude: null
     });
     const getData = async () => {
         try {
-            let region = await locationUtils.getLocation()
-            if (region) {
-                setState({ ...state, lat: region.latitude, lon: region.longitude })
-            }
+
             let res = await serviceProvider.getListServices(
                 state.keyword,
                 state?.category?.id,
                 'APPROVED',
-                region?.latitude,
-                region?.longitude,
+                state?.latitude,
+                state?.longitude,
                 state.page,
                 state.size
             )
@@ -64,13 +61,15 @@ const ListServiceDetailScreen = ({ navigation }) => {
 
     }
     useEffect(() => {
+
         let timeout = setTimeout(() => {
-            if (state.refreshing || state.isLoading)
+            if (state.isLoading || state.refreshing)
                 getData()
 
         }, 500)
         return () => clearTimeout(timeout)
-    }, [state.keyword, state.page, state.refreshing])
+    }, [state.keyword, state.page, state.refreshing, state.latitude, state.longitude])
+
     const formatData = (data) => {
         if (data.length == 0) {
             if (state.page == 0) {
@@ -95,8 +94,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
         )
     }
     const onChangeText = (state2) => (value) => {
-        setState({ ...state, [state2]: value, refreshing: true })
-
+        setState({ ...state, [state2]: value, refreshing: true,})
     }
 
     const keyExtractor = (item, index) => index.toString()
@@ -106,10 +104,23 @@ const ListServiceDetailScreen = ({ navigation }) => {
             setState({ ...state, page: state.page + 1 })
         }
     }
+    const getDataWithLocation = async () => {
+        try {
+            let res = await locationUtils.getLocation()
+            if (res.latitude != state.latitude || res.longitude != state.longitude) {
+                setState({ ...state, latitude: res.latitude, longitude: res.longitude, isLoading: true })
+            }
+        } catch (error) {
+
+        }
+
+    }
     const onRefresh = () => {
         setState({
             ...state,
             keyword: '',
+            latitude: null,
+            longitude: null,
             page: 0,
             refreshing: true
         })
@@ -129,8 +140,9 @@ const ListServiceDetailScreen = ({ navigation }) => {
                     placeholder={"Tìm kiếm…"}
                     underlineColorAndroid={"transparent"} />
                 {
-                    state.type == TYPE.SEARCH ?
-                        <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={onRefress}>
+                    state.keyword ?
+                        <TouchableOpacity 
+                        style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={onRefresh}>
                             <ScaleImage source={require('@images/ic_close.png')} height={16} />
                         </TouchableOpacity>
                         :
@@ -143,7 +155,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
                 }
                 <View style={styles.containerLocation} />
                 <TouchableOpacity style={[styles.buttonLocation]}
-                onPress={getData}
+                    onPress={getDataWithLocation}
                 >
                     <ScaleImage source={require('@images/ic_location.png')} height={16} style={{
                         tintColor: '#000',
