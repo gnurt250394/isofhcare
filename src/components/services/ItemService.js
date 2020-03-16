@@ -33,7 +33,10 @@ const ItemService = ({ item, onPress }) => {
                         )
                     }}
                 />
-                <Text>{item.distance} km</Text>
+                {item.distance ?
+                    <Text>{item.distance} km</Text>
+                    : null
+                }
             </View>
             <Image resizeMode='cover' source={require("@images/new/ic_line_dash.png")} style={styles.imageLine} />
             <View style={styles.containerProfile}>
@@ -118,6 +121,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 2, height: 2 },
+        elevation: 2
     },
     flagTop: {
         width: 50,
