@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated, Image, PixelRatio } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
@@ -34,7 +34,7 @@ const ItemService = ({ item, onPress }) => {
                     }}
                 />
                 {item.distance ?
-                    <Text>{item.distance} km</Text>
+                    <Text style={styles.txtDistance}>{item.distance} km</Text>
                     : null
                 }
             </View>
@@ -59,6 +59,9 @@ const ItemService = ({ item, onPress }) => {
     )
 }
 const styles = StyleSheet.create({
+    txtDistance: {
+        fontSize: PixelRatio.get() <= 2 ? 13 : 14
+    },
     txtVoucher: {
         color: '#FFF',
         textAlign: 'center'
@@ -98,7 +101,8 @@ const styles = StyleSheet.create({
     containerImage: {
         alignItems: 'center',
         // alignSelf: 'flex-start',
-        paddingHorizontal: 10
+        paddingHorizontal: 5,
+        width: '25%',
     },
     containerItem: {
         flexDirection: 'row',
