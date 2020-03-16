@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import constants from '@resources/strings'
 import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
@@ -22,6 +22,26 @@ const getCurrentLocation = (callAgain) => {
             }
         });
     });
+}
+const openGps = () => {
+    Alert.alert(
+        'THÔNG BÁO',
+        'Bật vị trí để có thể sử dụng chức năng này',
+        [
+            {
+                text: "Cài đặt", onPress: () => {
+                    GetLocation.openGpsSettings().then(r => {
+
+                    })
+                },
+
+            },
+            {
+                text:'Huỷ',onPress:()=>{}
+            }
+        ],
+        { cancelable: true },
+    );
 }
 const getLocation = (callAgain) => {
     return new Promise((resolve, reject) => {
@@ -75,6 +95,7 @@ const getLocation = (callAgain) => {
                 .catch((error) => {
                     const { code, message } = error
                     if (code == 'UNAVAILABLE') {
+                        openGps()
                         reject()
                     } else {
                     }

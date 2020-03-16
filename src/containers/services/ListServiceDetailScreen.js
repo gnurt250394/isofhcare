@@ -107,10 +107,12 @@ const ListServiceDetailScreen = ({ navigation }) => {
     const getDataWithLocation = async () => {
         try {
             let res = await locationUtils.getLocation()
+            console.log('res: ', res);
             if (res.latitude != state.latitude || res.longitude != state.longitude) {
                 setState({ ...state, latitude: res.latitude, longitude: res.longitude, isLoading: true })
             }
         } catch (error) {
+            console.log('error: ', error);
 
         }
 
