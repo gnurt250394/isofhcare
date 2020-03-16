@@ -18,11 +18,11 @@ const CategoryHighLight = memo(({ navigation }) => {
         getServiceHighLight()
     }, [])
     const goToDetailService = (item) => () => {
-        navigation.navigate('listOfServices',{item})
+        navigation.navigate('listOfServices', { item })
     }
     const renderItem = ({ item, index }) => {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingBottom: 10 }}>
                 <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardView}>
                     <ScaledImage
                         uri={item?.image?.absoluteUrl() || ''}
@@ -30,8 +30,19 @@ const CategoryHighLight = memo(({ navigation }) => {
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
                 </TouchableOpacity>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name || ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name || ""}</Text>
                 <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+                {
+                    item.highlight ?
+                        <View style={styles.flag}>
+                            <View style={styles.flagTop} >
+                                <Text style={styles.txtVoucher}>Giam 100k</Text>
+                            </View>
+                            <View style={styles.flagBottom} />
+                        </View> : null
+                }
+
             </View>
         )
     }
@@ -53,6 +64,40 @@ const CategoryHighLight = memo(({ navigation }) => {
     )
 })
 const styles = StyleSheet.create({
+    txtHospital: {
+        color: '#00000070',
+        paddingLeft: 5,
+        paddingBottom: 7,
+    },
+    txtVoucher: {
+        color: '#FFF',
+        textAlign: 'center',
+    },
+    flag: {
+        position: 'absolute',
+        top: 0,
+        right: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.2,
+        elevation: 2
+    },
+    flagTop: {
+        width: 50,
+        paddingVertical: 10,
+        backgroundColor: '#ffac4d',
+        alignItems: 'center',
+        justifyContent: 'center'
+
+    },
+    flagBottom: {
+        borderBottomWidth: 13,
+        borderBottomColor: 'transparent',
+        borderLeftWidth: 25,
+        borderLeftColor: '#ffac4d',
+        borderRightWidth: 25,
+        borderRightColor: '#ffac4d'
+    },
     txtPrice: {
         color: '#00BA99',
         paddingLeft: 5
