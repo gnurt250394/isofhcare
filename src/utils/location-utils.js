@@ -89,11 +89,26 @@ const getLocation = (callAgain) => {
                     resolve(region)
 
                 })
-                .catch((error) => {
+                .catch(async (error) => {
                     const { code, message } = error
                     if (code == 'UNAVAILABLE') {
-                        requestPermission()
-                        reject()
+                        try {
+                            await requestPermission()
+                            let region = await GetLocation.getCurrentPosition({
+                                enableHighAccuracy: true,
+                                timeout: 15000,
+                            })
+
+                            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                            resolve(region)
+
+                        } catch (error) {
+                            reject()
+
+                        }
+
+
+
                     } else {
                     }
                 });

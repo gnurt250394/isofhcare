@@ -49,6 +49,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
                 state.size
             )
             if (res?.content?.length > 0) {
+                console.log('res: ', res);
                 formatData(res.content)
             } else {
                 formatData([])
