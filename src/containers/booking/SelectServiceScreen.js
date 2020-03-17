@@ -136,6 +136,9 @@ class SelectServiceScreen extends Component {
         )
     }
     onSelected = (item) => {
+        if (item.checked) {
+            return
+        }
         let x = this.listServicesSelected.find(item2 => item2.id == item.id);
         if (x) {
             item.checked = false;

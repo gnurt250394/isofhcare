@@ -2,21 +2,30 @@ import React, { useEffect, useState, memo } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
-const CategoryHighLight = memo(({ navigation }) => {
+const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
     const getServiceHighLight = async () => {
         try {
             let res = await serviceProvider.getListServicesHighLight()
             if (res?.length) {
                 setData(res)
+            } else {
+                setData([])
+
             }
         } catch (error) {
+            setData([])
 
         }
     }
     useEffect(() => {
         getServiceHighLight()
+
     }, [])
+    useEffect(() => {
+        if (refreshing)
+            getServiceHighLight()
+    }, [refreshing])
     const goToDetailService = (item) => () => {
         navigation.navigate('listOfServices', { item })
     }
@@ -30,8 +39,8 @@ const CategoryHighLight = memo(({ navigation }) => {
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
                 </TouchableOpacity>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name || ""}</Text>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name || ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
                 <View style={styles.groupPrice}>
                     <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
                     {
@@ -70,7 +79,7 @@ const CategoryHighLight = memo(({ navigation }) => {
                 />
             </View>
         )
-    }else{
+    } else {
         return null
     }
 
@@ -87,8 +96,10 @@ const styles = StyleSheet.create({
     },
     txtHospital: {
         color: '#00000070',
-        paddingLeft: 5,
-        paddingBottom: 7,
+        marginTop: 13,
+        marginLeft: 5,
+        maxWidth: 259,
+
     },
     txtVoucher: {
         color: '#FFF',
@@ -153,13 +164,13 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         backgroundColor: '#fff',
         height: 134,
-        width: 259
+        width: 259,
     },
     txContensHospital: {
         color: '#000',
         marginTop: 13,
         marginLeft: 5,
-        maxWidth: 259
+        maxWidth: 259,
     },
 });
 export default CategoryHighLight
