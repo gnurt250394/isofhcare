@@ -32,7 +32,14 @@ const CategoryHighLight = memo(({ navigation }) => {
                 </TouchableOpacity>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name || ""}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name || ""}</Text>
-                <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+                <View style={styles.groupPrice}>
+                    <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+                    {
+                        item.highlight ?
+                            <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+                            : null
+                    }
+                </View>
                 {
                     item.highlight ?
                         <View style={styles.flag}>
@@ -46,24 +53,38 @@ const CategoryHighLight = memo(({ navigation }) => {
             </View>
         )
     }
-    return (
-        <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
-            <View style={styles.viewAds}>
-                <Text style={styles.txAds}>DỊCH VỤ NỔI BẬT</Text>
+    if (data?.length) {
+        return (
+            <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+                <View style={styles.viewAds}>
+                    <Text style={styles.txAds}>DỊCH VỤ NỔI BẬT</Text>
+                </View>
+                <FlatList
+                    contentContainerStyle={styles.listAds}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    data={data}
+                    ListFooterComponent={<View style={styles.viewFooter}></View>}
+                    renderItem={renderItem}
+                />
             </View>
-            <FlatList
-                contentContainerStyle={styles.listAds}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                data={data}
-                ListFooterComponent={<View style={styles.viewFooter}></View>}
-                renderItem={renderItem}
-            />
-        </View>
-    )
+        )
+    }else{
+        return null
+    }
+
 })
 const styles = StyleSheet.create({
+    groupPrice: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    txtUnit: {
+        color: '#00000060',
+        paddingLeft: 10,
+        textDecorationLine: 'line-through'
+    },
     txtHospital: {
         color: '#00000070',
         paddingLeft: 5,
