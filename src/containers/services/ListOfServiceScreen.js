@@ -8,6 +8,7 @@ import ReadMoreText from '@components/ReadMoreText';
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
+    console.log('item: ', item);
     const _text = useRef(null)
     const [description, setDescription] = useState('')
     const [state, setState] = useState({
@@ -113,6 +114,14 @@ const ListOfServiceScreen = ({ navigation }) => {
 
                         <Text style={styles.txtVoucher}>Giam 100k</Text>
                     </View>
+                    <Text style={[styles.txtlabel, { paddingTop: 0 }]}>Khuyến mại</Text>
+                    <Text>Thời gian hiệu lực: <Text style={{
+                        color: "#00000080"
+                    }}>12h -14h các ngày 20/12/2019 - 22/12/2019</Text></Text>
+                    <Text>Các ngày áp dụng trong tuần: <Text style={{
+                        color: "#00BA99",
+                        fontWeight: 'bold'
+                    }}>T2, T3, T4, T5, T6, T7, CN</Text></Text>
                 </View>
 
                 {/** rating */}
