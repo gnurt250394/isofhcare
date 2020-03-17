@@ -1,10 +1,9 @@
-import { Platform, Alert } from 'react-native';
+import { Platform, Alert, Linking } from 'react-native';
 import constants from '@resources/strings'
 import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import GetLocation from 'react-native-get-location'
 import RNLocation from 'react-native-location';
-
 const getCurrentLocation = (callAgain) => {
     return RNLocation.getLatestLocation().then(region => {
         locationProvider.saveCurrentLocation(region.latitude, region.longitude);
@@ -25,17 +24,17 @@ const getCurrentLocation = (callAgain) => {
 }
 const openGps = () => {
     Alert.alert(
-        'THÔNG BÁO',
-        'Bật vị trí để có thể sử dụng chức năng này',
+        'Bạn chưa bật định vị vị trí',
+        'Vui lòng vào Cài đặt > Quyền riêng tư > Vị trí để bật định vị',
         [
             {
-                text: "Đồng ý", onPress: () => {
-                   requestPermission()
+                text: "Cài đặt", onPress: () => {
+                    Linking.openSettings()
                 },
 
             },
             {
-                text: 'Huỷ', onPress: () => { }
+                text: 'Quay lại', onPress: () => { }
             }
         ],
         { cancelable: true },
@@ -93,7 +92,7 @@ const getLocation = (callAgain) => {
                 .catch((error) => {
                     const { code, message } = error
                     if (code == 'UNAVAILABLE') {
-                        openGps()
+                        requestPermission()
                         reject()
                     } else {
                     }
@@ -103,10 +102,11 @@ const getLocation = (callAgain) => {
                 LocationSwitch.isLocationEnabled(() => {
                     getLocation();
                 }, () => {
-                    requestPermission()
+                    openGps()
                     reject()
                 });
             } catch (error) {
+                console.log('error: 2', error);
             }
         }
     })
