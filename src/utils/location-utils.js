@@ -29,15 +29,13 @@ const openGps = () => {
         'Bật vị trí để có thể sử dụng chức năng này',
         [
             {
-                text: "Cài đặt", onPress: () => {
-                    GetLocation.openGpsSettings().then(r => {
-
-                    })
+                text: "Đồng ý", onPress: () => {
+                   requestPermission()
                 },
 
             },
             {
-                text:'Huỷ',onPress:()=>{}
+                text: 'Huỷ', onPress: () => { }
             }
         ],
         { cancelable: true },
@@ -104,7 +102,10 @@ const getLocation = (callAgain) => {
             try {
                 LocationSwitch.isLocationEnabled(() => {
                     getLocation();
-                }, () => reject());
+                }, () => {
+                    requestPermission()
+                    reject()
+                });
             } catch (error) {
             }
         }
