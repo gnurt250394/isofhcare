@@ -1,106 +1,29 @@
-import React, { Component, PropTypes } from 'react';
+import React, { useState } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { Dimensions, View, TouchableOpacity, Platform } from 'react-native';
-import PhotoViewer from 'mainam-react-native-photo-viewer';
-const { width, height } = Dimensions.get('window');
-import permission from 'mainam-react-native-permission';
-import RNFetchBlob from 'rn-fetch-blob';
-let dirs = RNFetchBlob.fs.dirs
-import Share from 'react-native-share';
-class PhotoViewerScreen extends Component {
-    constructor(props) {
-        super(props)
-        var urls = this.props.navigation.getParam("urls", null);
-        if (!urls)
-            urls = [];
-        var index = this.props.navigation.getParam("index", null);
-        if (!index)
-            index = 0;
-        this.state = {
-            urls,
-            index
-        }
+import { Text, StyleSheet } from 'react-native';
+import ImageView from "react-native-image-viewing";
+
+function PhotoViewerScreen(props) {
+    const [index, setIndex] = useState(props.navigation.getParam("index", 0));
+    const [urls, seturls] = useState(props.navigation.getParam("urls", []));
+    const [visible, setIsVisible] = useState(true);
+    const close = () => {
+        props.navigation.pop()
     }
-    componentDidMount() {
+    return (
+        <ActivityPanel
+            containerStyle={{ flex: 1, backgroundColor: '#000' }}
+            hideActionbar={true}
+            showFullScreen={true}
 
-    }
-
-    preview() {
-        if (this.state.index > 0) {
-            this.setState({
-                index: this.state.index - 1
-            }, () => {
-                if (this.props.onPreview) {
-                    this.props.onPreview(this.state.index + 1, this.state.urls.length);
-                }
-            })
-        }
-    }
-    next() {
-        if (this.state.index < this.state.urls.length - 1) {
-            this.setState({
-                index: this.state.index + 1
-            }, () => {
-                if (this.props.onNext) {
-                    this.props.onNext(this.state.index + 1, this.state.urls.length);
-                }
-            })
-        }
-
-    }
-    async onDownload(url) {
-        await permission.requestStoragePermission((s) => {
-            if (s) {
-                let index = url.lastIndexOf("/");
-                let filename = "";
-                if (index != -1) {
-                    filename = url.substring(index + 1);
-                } else {
-                    filename = (new Date().getTime() + "");
-                }
-                let config = {
-                    fileCache: true,
-                };
-
-
-                if (Platform.OS == "android") {
-                    config.path = dirs.PictureDir + '/' + filename
-                    config.addAndroidDownloads =
-                    {
-                        useDownloadManager: true,
-                        notification: true,
-                        description: 'File downloaded by download manager.'
-                    }
-                }
-                else {
-                    config.path = dirs.DocumentDir + '/' + filename
-                }
-                RNFetchBlob
-                    .config(config)
-                    .fetch('GET', url)
-                    .then((resp) => {
-                        Share.open({
-                            title: "Chia sẻ",
-                            url: "file://" + resp.path(),
-                        });
-                    }).catch(err => {
-                    })
-            }
-        })
-    }
-
-
-    render() {
-        const bottonWidth = 200 > width ? width : 200;
-        if (!this.state.urls || this.state.urls.length == 0)
-            return null;
-        return (
-            <ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={(this.state.index + 1) + "/" + (this.state.urls.length)}>
-                <PhotoViewer androidScaleType={Platform.OS == 'android' ? "fitCenter" : null} urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
-            </ActivityPanel>
-        );
-    }
+        >
+            <ImageView images={urls} imageIndex={index} visible={visible} onRequestClose={close} />
+            {/* <Text style={styles.txIndex}>{(index + 1) + "/" + (urls.length)}</Text> */}
+        </ActivityPanel>
+    );
 }
-
+const styles = StyleSheet.create({
+    txIndex: { color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold', position: 'absolute', top: 10, alignSelf: 'center' }
+})
 
 export default PhotoViewerScreen;

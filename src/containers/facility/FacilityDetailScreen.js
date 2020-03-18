@@ -208,7 +208,12 @@ class FacilityDetailScreen extends Component {
             var index = this.state.list_images.indexOf(uri);
             if (index == -1)
                 index = 0;
-            this.props.navigation.navigate("photoViewer", { urls: this.state.list_images, index });
+
+            this.props.navigation.navigate("photoViewer", {
+                urls: this.state.list_images.map(item => {
+                    return { 'uri': item.absoluteUrl() }
+                }), index
+            });
 
         } catch (error) {
         }

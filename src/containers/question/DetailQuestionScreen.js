@@ -63,10 +63,10 @@ class DetailQuestionScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    showImage = (index) => () => {
+    showImage = (images,index) => () => {
         this.props.navigation.navigate("photoViewer", {
-            urls: images.map(item => {
-                return item.absoluteUrl()
+            urls:images.map(item => {
+                return { 'uri': item.absoluteUrl() }
             }), index
         });
     }
@@ -78,7 +78,7 @@ class DetailQuestionScreen extends Component {
                 <Text style={[styles.moreInfo, { marginTop: 20 }]}>{constants.image}:</Text>
                 <View style={styles.containerListImage}>
                     {
-                        images.map((item, index) => <TouchableOpacity onPress={this.showImage(item)} key={index} style={styles.buttonShowImage}>
+                        images.map((item, index) => <TouchableOpacity onPress={this.showImage(images,index)} key={index} style={styles.buttonShowImage}>
                             <Image
                                 style={styles.image}
                                 source={{
