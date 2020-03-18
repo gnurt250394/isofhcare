@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         minWidth:'100%',
         minHeight:'100%',
         padding: 0,
-        // resizeMode: 'center'
+        resizeMode: 'stretch'
 
     },
     containerItem: {
