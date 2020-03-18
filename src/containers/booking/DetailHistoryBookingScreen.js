@@ -145,7 +145,7 @@ class DetailHistoryBookingScreen extends Component {
         this.props.navigation.navigate("photoViewer", {
             index: index,
             urls: image.map(item => {
-                return item.absoluteUrl()
+                return {'uri':item.absoluteUrl()}
             }),
         });
     }

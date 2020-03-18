@@ -60,7 +60,7 @@ class DetailsEhealthScreen extends Component {
         this.props.navigation.navigate("photoViewer", {
             index: index,
             urls: image.map(item => {
-                return item
+                return { 'uri': item }
             }),
         });
     }
