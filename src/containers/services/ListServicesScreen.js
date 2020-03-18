@@ -141,8 +141,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         height: '100%',
         width: '100%',
+        minWidth:'100%',
+        minHeight:'100%',
         padding: 0,
-        resizeMode: 'cover'
+        // resizeMode: 'center'
 
     },
     containerItem: {
@@ -151,10 +153,10 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 12,
         marginHorizontal: 17,
-        shadowColor: '#000',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.3,
-        elevation: 3,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 2, height: 2 },
+        // shadowOpacity: 0.3,
+        // elevation: 3,
         backgroundColor: '#FFF'
     },
 })

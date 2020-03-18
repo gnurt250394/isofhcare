@@ -114,7 +114,7 @@ class HomeScreen extends Component {
         },
         {
           icon: require("@images/new/homev2/ic_ehealth.png"),
-          text: "Hồ sơ y tế cá nhân",
+          text: "Y bạ điện tử",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("ehealth");
