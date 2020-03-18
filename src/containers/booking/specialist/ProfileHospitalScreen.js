@@ -66,8 +66,8 @@ const listDoctor = [
     },
 ]
 class ProfileHospitalScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             name: '',
             nameSpecialist: '',
@@ -84,7 +84,8 @@ class ProfileHospitalScreen extends Component {
             showRating: false,
             listDoctor: [],
             page: 0,
-            size: 20
+            size: 20,
+            disableBooking: this.props.navigation.getParam('disableBooking', false)
         };
     }
     componentDidMount() {
@@ -168,6 +169,7 @@ class ProfileHospitalScreen extends Component {
 
         return (
             <ItemDoctorOfHospital
+                disableBooking={this.state.disableBooking}
                 item={item}
                 onPressDoctor={this.detailDoctor(item)}
                 onPress={this.addBookingDoctor(item)}
@@ -280,7 +282,10 @@ class ProfileHospitalScreen extends Component {
                                     <Text style={styles.nameDoctor}>{profileHospital.name}</Text>
                                     <Text style={{ paddingBottom: 10 }}>{contact.address}</Text>
                                     <View style={styles.containerButton}>
-                                        <Button label="Đặt khám" style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                                        {!this.state.disableBooking ?
+                                            <Button label="Đặt khám" style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                                            : null
+                                        }
                                         <Button label="Xem bản đồ" style={styles.txtAdvisory} textStyle={{ color: '#00A3FF' }} onPress={this.goToMap} />
                                     </View>
                                 </View>

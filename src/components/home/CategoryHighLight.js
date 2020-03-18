@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     },
     txtHospital: {
         color: '#00000070',
-        marginTop: 13,
         marginLeft: 5,
+        marginBottom:10,
         maxWidth: 259,
 
     },
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
         marginTop: 13,
         marginLeft: 5,
         maxWidth: 259,
+        fontSize:15
     },
 });
 export default CategoryHighLight

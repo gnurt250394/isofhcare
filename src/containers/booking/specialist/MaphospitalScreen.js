@@ -50,11 +50,13 @@ class MaphospitalScreen extends Component {
                     origin: `${region.latitude},${region.longitude}`,
                 }, this.getRoutePoints);
             }).catch(err => {
-                locationUtils.requestPermission().then((region) => {
-                    this.getLocation()
-                }).catch(err => {
                     this.setState({ isLoading: false })
-                })
+                console.log('err: ', err);
+                // locationUtils.requestPermission().then((region) => {
+                //     this.getLocation()
+                // }).catch(err => {
+                //     this.setState({ isLoading: false })
+                // })
             })
 
         })
