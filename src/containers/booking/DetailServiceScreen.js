@@ -61,7 +61,9 @@ const DetailServiceScreen = ({ navigation }) => {
     }
     const goToHospital = () => {
         navigation.navigate('profileHospital', {
-            item: item.hospital
+            item: item.hospital,
+            disableBooking:true
+
         })
     }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
