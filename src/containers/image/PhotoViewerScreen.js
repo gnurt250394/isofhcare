@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import ImageView from "react-native-image-viewing";
+import RNFetchBlob from 'rn-fetch-blob';
+import Share from 'react-native-share';
+import permission from 'mainam-react-native-permission';
+
+let dirs = RNFetchBlob.fs.dirs
 
 function PhotoViewerScreen(props) {
     const [index, setIndex] = useState(props.navigation.getParam("index", 0));
@@ -16,6 +21,57 @@ function PhotoViewerScreen(props) {
             <Text style={styles.txIndex}>{(id + 1) + "/" + (urls.length)}</Text>
         )
     }
+    const footer = () => {
+        return (
+            <TouchableOpacity onPress={onDownload} style={styles.btnDownload}>
+                <Text style={styles.txDownload}>
+                    Tải xuống
+                </Text>
+            </TouchableOpacity>
+        )
+    }
+    const onDownload = async () => {
+        let url = urls[id].uri
+        await permission.requestStoragePermission((s) => {
+            if (s) {
+                let index = url.lastIndexOf("/");
+                let filename = "";
+                if (index != -1) {
+                    filename = url.substring(index + 1);
+                } else {
+                    filename = (new Date().getTime() + "");
+                }
+                let config = {
+                    fileCache: true,
+                };
+
+
+                if (Platform.OS == "android") {
+                    config.path = dirs.PictureDir + '/' + filename
+                    config.addAndroidDownloads =
+                    {
+                        useDownloadManager: true,
+                        notification: true,
+                        description: 'File downloaded by download manager.'
+                    }
+                }
+                else {
+                    config.path = dirs.DocumentDir + '/' + filename
+                }
+                RNFetchBlob
+                    .config(config)
+                    .fetch('GET', url)
+                    .then((resp) => {
+                        Share.open({
+                            title: "Chia sẻ",
+                            url: "file://" + resp.path(),
+                        });
+                    }).catch(err => {
+                    })
+            }
+        })
+    }
+
     return (
         <ActivityPanel
             containerStyle={{ flex: 1, backgroundColor: '#000' }}
@@ -23,12 +79,14 @@ function PhotoViewerScreen(props) {
             showFullScreen={true}
 
         >
-            <ImageView HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} />
+            <ImageView FooterComponent={footer} HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} />
         </ActivityPanel>
     );
 }
 const styles = StyleSheet.create({
-    txIndex: { color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold', position: 'absolute', top: 10, alignSelf: 'center' }
+    txIndex: { color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold', position: 'absolute', top: 10, alignSelf: 'center' },
+    txDownload: { color: '#fff', textAlign: 'center', fontSize: 14 },
+    btnDownload: { height: 52, borderRadius: 6, backgroundColor: '#5eb8ff', justifyContent: 'center', alignItems: 'center', marginHorizontal: 60, marginBottom: 20 }
 })
 
 export default PhotoViewerScreen;
