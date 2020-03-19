@@ -67,7 +67,7 @@ const ItemService = ({ item, onPress }) => {
                 <Text style={styles.txtName}>{item.name}</Text>
                 <Text style={styles.txtHospital}>{item.hospital.name}</Text>
                 {
-                    item.promotion ?
+                    item?.promotion?.value ?
                         <View style={styles.groupPrice}>
                             <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
                             <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
@@ -80,7 +80,7 @@ const ItemService = ({ item, onPress }) => {
                 <Text numberOfLines={3}>{item.description}</Text>
             </View>
             {
-                item.promotion ?
+                item?.promotion?.value ?
                     <View style={styles.flag}>
                         <View style={styles.flagTop} >
                             <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>

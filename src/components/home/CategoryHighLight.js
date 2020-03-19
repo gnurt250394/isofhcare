@@ -68,7 +68,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
                 {
-                    item.promotion ?
+                    item?.promotion?.value ?
                         <View style={styles.groupPrice}>
                             <Text style={styles.txtPrice}>{renderPricePromotion(item)} đ</Text>
 
@@ -79,7 +79,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
 
                 }
                 {
-                    item.promotion ?
+                    item?.promotion?.value ?
                         <View style={styles.flag}>
                             <View style={styles.flagTop} >
                                 <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
