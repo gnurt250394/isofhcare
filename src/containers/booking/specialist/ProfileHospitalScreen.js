@@ -162,7 +162,8 @@ class ProfileHospitalScreen extends Component {
     }
     detailDoctor = (item) => () => {
         this.props.navigation.navigate('detailsDoctor', {
-            item
+            item,
+            disableBooking: this.state.disableBooking
         })
     }
     _renderItemDoctor = ({ item, index }) => {
