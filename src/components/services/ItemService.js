@@ -12,6 +12,24 @@ import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 const { height } = Dimensions.get('window')
 const ItemService = ({ item, onPress }) => {
+    const renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            text = promotion.value.formatPrice() + 'đÏ'
+        }
+        return text
+    }
+    const renderPricePromotion = (item) => {
+        let text = 0
+        if (item.promotion.type == "PERCENT") {
+            text = (item.monetaryAmount.value * (item.promotion.value / 100) || item.monetaryAmount.value).formatPrice()
+        } else {
+            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+        }
+        return text
+    }
     const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath?.absoluteUrl() } : require("@images/new/user.png");
     return (
         <TouchableOpacity onPress={onPress} style={styles.containerItem}>
@@ -42,18 +60,30 @@ const ItemService = ({ item, onPress }) => {
             <View style={styles.containerProfile}>
                 <Text style={styles.txtName}>{item.name}</Text>
                 <Text style={styles.txtHospital}>{item.hospital.name}</Text>
-                <View style={styles.groupPrice}>
-                    <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
-                    <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
-                </View>
+                {
+                    item.promotion ?
+                        <View style={styles.groupPrice}>
+                            <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
+                            <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                        </View>
+                        :
+                        <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+
+                }
+
                 <Text numberOfLines={3}>{item.description}</Text>
             </View>
-            <View style={styles.flag}>
-                <View style={styles.flagTop} >
-                    <Text style={styles.txtVoucher}>Giam 100k</Text>
-                </View>
-                <View style={styles.flagBottom} />
-            </View>
+            {
+                item.promotion ?
+                    <View style={styles.flag}>
+                        <View style={styles.flagTop} >
+                            <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                        </View>
+                        <View style={styles.flagBottom} />
+                    </View>
+                    : null
+            }
+
 
         </TouchableOpacity>
     )
