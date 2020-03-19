@@ -29,6 +29,24 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const goToDetailService = (item) => () => {
         navigation.navigate('listOfServices', { item })
     }
+    const renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            text = promotion.value.formatPrice() + 'đÏ'
+        }
+        return text
+    }
+    const renderPricePromotion = (item) => {
+        let text = 0
+        if (item.promotion.type == "PERCENT") {
+            text = (item.monetaryAmount.value * (item.promotion.value / 100) || item.monetaryAmount.value).formatPrice()
+        } else {
+            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+        }
+        return text
+    }
     const renderItem = ({ item, index }) => {
         return (
             <View style={{ flex: 1, paddingBottom: 10 }}>
@@ -41,19 +59,22 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                 </TouchableOpacity>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
-                <View style={styles.groupPrice}>
-                    <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
-                    {
-                        item.highlight ?
-                            <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
-                            : null
-                    }
-                </View>
                 {
-                    item.highlight ?
+                    item.promotion ?
+                        <View style={styles.groupPrice}>
+                            <Text style={styles.txtPrice}>{renderPricePromotion(item)} đ</Text>
+
+                            <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+                        </View>
+                        :
+                        <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
+
+                }
+                {
+                    item.promotion ?
                         <View style={styles.flag}>
                             <View style={styles.flagTop} >
-                                <Text style={styles.txtVoucher}>Giam 100k</Text>
+                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
                             </View>
                             <View style={styles.flagBottom} />
                         </View> : null
@@ -97,7 +118,7 @@ const styles = StyleSheet.create({
     txtHospital: {
         color: '#00000070',
         marginLeft: 5,
-        marginBottom:10,
+        marginBottom: 10,
         maxWidth: 259,
 
     },
@@ -171,7 +192,7 @@ const styles = StyleSheet.create({
         marginTop: 13,
         marginLeft: 5,
         maxWidth: 259,
-        fontSize:15
+        fontSize: 15
     },
 });
 export default CategoryHighLight
