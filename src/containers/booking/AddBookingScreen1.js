@@ -155,7 +155,7 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
-        console.log('profile: ', profile);
+        
         this.setState({ profile, allowBooking: true });
     }
     // selectServiceType(serviceType) {
@@ -198,7 +198,16 @@ class AddBookingScreen extends Component {
         }
     }
 
-
+    pricePromotion = (item) => {
+        let value = 0
+        if (item?.promotion?.type == "PERCENT") {
+            value = ((item?.monetaryAmount?.value * (item?.promotion?.value / 100)) || item?.monetaryAmount?.value)
+        } else {
+            value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+        }
+        console.log('value: ', value);
+        return value
+    }
     addBooking = () => {
 
         Keyboard.dismiss();
@@ -207,7 +216,7 @@ class AddBookingScreen extends Component {
 
         let error = false;
         if (!this.props.userApp.isLogin) {
-            this.props.navigation.replace("login", {
+        this.props.navigation.replace("login", {
                 nextScreen: {
                     screen: "addBooking1", param: {
                         profile: this.state.profile,
@@ -221,11 +230,6 @@ class AddBookingScreen extends Component {
             });
             return
         }
-
-
-
-
-
 
         if (this.state.contact) {
             this.setState({ contactError: "" })
@@ -285,21 +289,17 @@ class AddBookingScreen extends Component {
             }
             var images = [];
             this.state.imageUris.forEach((item) => {
-                console.log('item: ', item);
-
                 images.push(item.url);
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
-
-
-            console.log('img: ', img);
+            
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
 
                     const { userApp } = this.props
 
-                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
+                    let services = this.state.listServicesSelected.map(e => ({ price: this.pricePromotion(e), serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
                     let idUser = this.props.userApp.currentUser.id
                     bookingProvider.createBooking(
@@ -332,7 +332,7 @@ class AddBookingScreen extends Component {
                             }
                         })
                     }).catch(e => {
-                        console.log('e: ', e);
+                        
                         snackbar.show(constants.msg.booking.booking_err, "danger");
                         this.setState({ isLoading: false });
                     })
