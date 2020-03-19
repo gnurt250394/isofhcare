@@ -134,7 +134,7 @@ const ListOfServiceScreen = ({ navigation }) => {
                     </View>
                     <Image source={url} style={styles.imgService} />
                     {
-                        item.promotion ?
+                        item?.promotion?.value ?
                             <View style={styles.groupPrice}>
                                 <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
                                 <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
