@@ -31,8 +31,8 @@ const dataRate = [
   { id: 4, name: 'Lê Hùng', rate: 5, message: 'Bác sĩ rất ...' },
 ]
 class DetailsDoctorScreen extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       name: '',
       nameSpecialist: '',
@@ -44,7 +44,8 @@ class DetailsDoctorScreen extends Component {
       id: '',
       profileDoctor: {},
       item: {},
-      isVisible: false
+      isVisible: false,
+      disableBooking: this.props.navigation.getParam('disableBooking', false)
     };
   }
   componentDidMount() {
@@ -195,7 +196,10 @@ class DetailsDoctorScreen extends Component {
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
                     <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
-                    <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                    {!this.state.disableBooking ?
+                      <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                      : null
+                    }
                   </View>
 
 

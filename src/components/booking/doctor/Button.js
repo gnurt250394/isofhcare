@@ -34,10 +34,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 7,
-        paddingHorizontal: 10,
+        paddingHorizontal: '10%',
         backgroundColor: '#3161AD',
         borderRadius: 20,
-        flex: 1,
+        // flex: 1,
         marginHorizontal: 5
     },
 })
