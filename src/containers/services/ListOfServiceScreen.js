@@ -72,8 +72,26 @@ const ListOfServiceScreen = ({ navigation }) => {
     const goToHospital = () => {
         navigation.navigate('profileHospital', {
             item: item.hospital,
-            disableBooking:true
+            disableBooking: true
         })
+    }
+    const renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            text = promotion.value.formatPrice() + 'đÏ'
+        }
+        return text
+    }
+    const renderPricePromotion = (item) => {
+        let text = 0
+        if (item.promotion.type == "PERCENT") {
+            text = (item.monetaryAmount.value * (item.promotion.value / 100) || item.monetaryAmount.value).formatPrice()
+        } else {
+            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+        }
+        return text
     }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
     const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
@@ -109,12 +127,19 @@ const ListOfServiceScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <Image source={url} style={styles.imgService} />
-                    <View style={styles.groupPrice}>
-                        <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
-                        <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                    {
+                        item.promotion ?
+                            <View style={styles.groupPrice}>
+                                <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
+                                <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
 
-                        <Text style={styles.txtVoucher}>Giam 100k</Text>
-                    </View>
+                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                            </View> :
+                            <View style={styles.groupPrice}>
+                                <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                            </View>
+                    }
+
                     {/* <Text style={[styles.txtlabel, { paddingTop: 0 }]}>Khuyến mại</Text>
                     <Text>Thời gian hiệu lực: <Text style={{
                         color: "#00000080"
