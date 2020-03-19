@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 7,
         marginTop: 15,
-        marginLeft: 10,
+        marginLeft: 15,
         maxWidth: '50%'
     },
     imageItem: {
@@ -141,17 +141,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         height: '100%',
         width: '100%',
-        minWidth:'100%',
-        minHeight:'100%',
         padding: 0,
         resizeMode: 'stretch'
 
     },
     containerItem: {
         borderRadius: 10,
-        height: height / 8,
+        height: height / 7,
         marginTop: 15,
-        marginBottom: 12,
+        // marginBottom: 12,
         marginHorizontal: 17,
         // shadowColor: '#000',
         // shadowOffset: { width: 2, height: 2 },
