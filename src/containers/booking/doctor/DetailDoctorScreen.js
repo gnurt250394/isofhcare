@@ -198,7 +198,7 @@ class DetailsDoctorScreen extends Component {
                     <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                     {!this.state.disableBooking ?
                       <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
-                      : null
+                      : <View style={{ flex: 1 }} />
                     }
                   </View>
 
