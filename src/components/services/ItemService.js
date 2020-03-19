@@ -17,7 +17,13 @@ const ItemService = ({ item, onPress }) => {
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
-            text = promotion.value.formatPrice() + 'đÏ'
+            let value = (promotion?.value || 0).toString()
+            if (value.length > 7) {
+                text = value.substring(0, value.length - 3) + 'K'
+            } else {
+                text = promotion.value.formatPrice() + 'đ'
+
+            }
         }
         return text
     }
