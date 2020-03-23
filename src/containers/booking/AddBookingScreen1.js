@@ -155,7 +155,7 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
-        
+
         this.setState({ profile, allowBooking: true });
     }
     // selectServiceType(serviceType) {
@@ -201,7 +201,7 @@ class AddBookingScreen extends Component {
     pricePromotion = (item) => {
         let value = 0
         if (item?.promotion?.type == "PERCENT") {
-            value = ((item?.monetaryAmount?.value * (item?.promotion?.value / 100)) || item?.monetaryAmount?.value)
+            value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
         } else {
             value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
         }
@@ -216,7 +216,7 @@ class AddBookingScreen extends Component {
 
         let error = false;
         if (!this.props.userApp.isLogin) {
-        this.props.navigation.replace("login", {
+            this.props.navigation.replace("login", {
                 nextScreen: {
                     screen: "addBooking1", param: {
                         profile: this.state.profile,
@@ -293,7 +293,7 @@ class AddBookingScreen extends Component {
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
-            
+
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
 
@@ -332,7 +332,7 @@ class AddBookingScreen extends Component {
                             }
                         })
                     }).catch(e => {
-                        
+
                         snackbar.show(constants.msg.booking.booking_err, "danger");
                         this.setState({ isLoading: false });
                     })
