@@ -7,6 +7,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const getServiceHighLight = async () => {
         try {
             let res = await serviceProvider.getListServicesHighLight()
+
             if (res?.length) {
                 setData(res)
             } else {
@@ -14,6 +15,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
 
             }
         } catch (error) {
+
             setData([])
 
         }
@@ -49,13 +51,14 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const renderPricePromotion = (item) => {
         let text = 0
         if (item.promotion.type == "PERCENT") {
-            text = (item.monetaryAmount.value * (item.promotion.value / 100) || item.monetaryAmount.value).formatPrice()
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
         } else {
             text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
         }
         return text
     }
     const renderItem = ({ item, index }) => {
+        console.log('item: ', item);
         return (
             <View style={{ flex: 1, paddingBottom: 10 }}>
                 <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardView}>
