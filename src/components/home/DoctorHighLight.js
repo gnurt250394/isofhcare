@@ -12,7 +12,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listDoctor()
-            console.log('res: ', res);
+            
             if (res?.length) {
                 setData(res)
             } else {

@@ -30,7 +30,7 @@ const ItemService = ({ item, onPress }) => {
     const renderPricePromotion = (item) => {
         let text = 0
         if (item.promotion.type == "PERCENT") {
-            text = (item.monetaryAmount.value * (item.promotion.value / 100) || item.monetaryAmount.value).formatPrice()
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
         } else {
             text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
         }
