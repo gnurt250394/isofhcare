@@ -12,13 +12,23 @@ import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 const { height } = Dimensions.get('window')
 const ItemService = ({ item, onPress }) => {
+
+    const disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        if (startDate < day && endDate > day) {
+            return true
+        }
+        return false
+    }
     const renderPromotion = (promotion) => {
         let text = ''
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
             let value = (promotion?.value || 0).toString()
-            if (value.length > 7) {
+            if (value.length > 5) {
                 text = value.substring(0, value.length - 3) + 'K'
             } else {
                 text = promotion.value.formatPrice() + 'đ'
@@ -33,6 +43,9 @@ const ItemService = ({ item, onPress }) => {
             text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
         } else {
             text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+        }
+        if (text < 0) {
+            return 0
         }
         return text
     }
@@ -67,7 +80,7 @@ const ItemService = ({ item, onPress }) => {
                 <Text style={styles.txtName}>{item.name}</Text>
                 <Text style={styles.txtHospital}>{item.hospital.name}</Text>
                 {
-                    item?.promotion?.value ?
+                    item?.promotion?.value && disablePromotion(item.promotion) ?
                         <View style={styles.groupPrice}>
                             <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
                             <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
@@ -80,7 +93,7 @@ const ItemService = ({ item, onPress }) => {
                 <Text numberOfLines={3}>{item.description}</Text>
             </View>
             {
-                item?.promotion?.value ?
+                item?.promotion?.value && disablePromotion(item.promotion) ?
                     <View style={styles.flag}>
                         <View style={styles.flagTop} >
                             <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
