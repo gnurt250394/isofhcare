@@ -45,27 +45,27 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
-            let value = (promotion?.value || 0).toString()
-            if (value.length > 5) {
-                text = value.substring(0, value.length - 3) + 'K'
-            } else {
-                text = promotion.value.formatPrice() + 'đ'
+            // let value = (promotion?.value || 0).toString()
+            // if (value.length > 5) {
+            //     text = value.substring(0, value.length - 3) + 'K'
+            // } else {
+            text = promotion.value.formatPrice() + 'đ'
 
-            }
+            // }
         }
         return text
     }
     const renderPricePromotion = (item) => {
         let text = 0
         if (item.promotion.type == "PERCENT") {
-            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
         } else {
-            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+            text = (item.monetaryAmount.value - item.promotion.value || 0)
         }
         if (text < 0) {
             return 0
         }
-        return text
+        return text.formatPrice()
     }
     const renderItem = ({ item, index }) => {
 
@@ -96,7 +96,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                     item?.promotion?.value && disablePromotion(item?.promotion) ?
                         <View style={styles.flag}>
                             <View style={styles.flagTop} >
-                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                                <Text style={styles.txtVoucher}>{`Giảm \n ${renderPromotion(item.promotion)}`}</Text>
                             </View>
                             <View style={styles.flagBottom} />
                         </View> : null
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     txtVoucher: {
         color: '#FFF',
         textAlign: 'center',
+        width:85
     },
     flag: {
         position: 'absolute',
@@ -158,8 +159,9 @@ const styles = StyleSheet.create({
         elevation: 2
     },
     flagTop: {
-        width: 50,
+        // width: 70,
         paddingVertical: 10,
+        flexWrap: 'wrap',
         backgroundColor: '#ffac4d',
         alignItems: 'center',
         justifyContent: 'center'
