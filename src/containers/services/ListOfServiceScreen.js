@@ -102,14 +102,14 @@ const ListOfServiceScreen = ({ navigation }) => {
     const renderPricePromotion = (item) => {
         let text = 0
         if (item.promotion.type == "PERCENT") {
-            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
         } else {
-            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+            text = (item.monetaryAmount.value - item.promotion.value || 0)
         }
         if (text < 0) {
             return 0
         }
-        return text
+        return text.formatPrice()
     }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
     const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
