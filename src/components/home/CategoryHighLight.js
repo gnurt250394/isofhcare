@@ -35,7 +35,8 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-        if (startDate < day && endDate > day) {
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }
         return false
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     txtVoucher: {
         color: '#FFF',
         textAlign: 'center',
-        width:85
+        width: 85
     },
     flag: {
         position: 'absolute',
