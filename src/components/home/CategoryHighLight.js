@@ -31,15 +31,22 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const goToDetailService = (item) => () => {
         navigation.navigate('listOfServices', { item })
     }
+    const disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        if (startDate < day && endDate > day) {
+            return true
+        }
+        return false
+    }
     const renderPromotion = (promotion) => {
         let text = ''
-
-
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
             let value = (promotion?.value || 0).toString()
-            if (value.length > 7) {
+            if (value.length > 5) {
                 text = value.substring(0, value.length - 3) + 'K'
             } else {
                 text = promotion.value.formatPrice() + 'đ'
@@ -55,10 +62,13 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         } else {
             text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
         }
+        if (text < 0) {
+            return 0
+        }
         return text
     }
     const renderItem = ({ item, index }) => {
-        console.log('item: ', item);
+
         return (
             <View style={{ flex: 1, paddingBottom: 10 }}>
                 <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardView}>
@@ -71,8 +81,9 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
                 {
-                    item?.promotion?.value ?
-                        <View style={styles.groupPrice}>
+
+                    item?.promotion?.value && disablePromotion(item?.promotion) ?
+                        < View style={styles.groupPrice}>
                             <Text style={styles.txtPrice}>{renderPricePromotion(item)} đ</Text>
 
                             <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
@@ -82,7 +93,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
 
                 }
                 {
-                    item?.promotion?.value ?
+                    item?.promotion?.value && disablePromotion(item?.promotion) ?
                         <View style={styles.flag}>
                             <View style={styles.flagTop} >
                                 <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
@@ -91,7 +102,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                         </View> : null
                 }
 
-            </View>
+            </View >
         )
     }
     if (data?.length) {
