@@ -27,27 +27,27 @@ const ItemService = ({ item, onPress }) => {
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
-            let value = (promotion?.value || 0).toString()
-            if (value.length > 5) {
-                text = value.substring(0, value.length - 3) + 'K'
-            } else {
+            // let value = (promotion?.value || 0).toString()
+            // if (value.length > 5) {
+            //     text = value.substring(0, value.length - 3) + 'K'
+            // } else {
                 text = promotion.value.formatPrice() + 'đ'
 
-            }
+            // }
         }
         return text
     }
     const renderPricePromotion = (item) => {
         let text = 0
         if (item.promotion.type == "PERCENT") {
-            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0)).formatPrice()
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
         } else {
-            text = (item.monetaryAmount.value - item.promotion.value || 0).formatPrice()
+            text = (item.monetaryAmount.value - item.promotion.value || 0)
         }
         if (text < 0) {
             return 0
         }
-        return text
+        return text.formatPrice()
     }
     const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath?.absoluteUrl() } : require("@images/new/user.png");
     return (
@@ -96,7 +96,7 @@ const ItemService = ({ item, onPress }) => {
                 item?.promotion?.value && disablePromotion(item.promotion) ?
                     <View style={styles.flag}>
                         <View style={styles.flagTop} >
-                            <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                            <Text style={styles.txtVoucher}>{`Giảm \n ${renderPromotion(item.promotion)}`}</Text>
                         </View>
                         <View style={styles.flagBottom} />
                     </View>
@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
     },
     txtVoucher: {
         color: '#FFF',
-        textAlign: 'center'
+        textAlign: 'center',
+        width:85
     },
     txtPriceUnit: {
         color: '#00000050',
@@ -180,8 +181,9 @@ const styles = StyleSheet.create({
         elevation: 2
     },
     flagTop: {
-        width: 50,
+        // width: 50,
         paddingVertical: 10,
+        flexWrap:'wrap',
         backgroundColor: '#ffac4d',
         alignItems: 'center',
         justifyContent: 'center'
