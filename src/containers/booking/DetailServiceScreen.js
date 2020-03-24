@@ -62,9 +62,45 @@ const DetailServiceScreen = ({ navigation }) => {
     const goToHospital = () => {
         navigation.navigate('profileHospital', {
             item: item.hospital,
-            disableBooking:true
+            disableBooking: true
 
         })
+    }
+    const disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        if (startDate < day && endDate > day) {
+            return true
+        }
+        return false
+    }
+    const renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            // let value = (promotion?.value || 0).toString()
+            // if (value.length > 5) {
+            //     text = value.substring(0, value.length - 3) + 'K'
+            // } else {
+            text = promotion.value.formatPrice() + 'đ'
+
+            // }
+        }
+        return text
+    }
+    const renderPricePromotion = (item) => {
+        let text = 0
+        if (item.promotion.type == "PERCENT") {
+            text = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+        } else {
+            text = (item.monetaryAmount.value - item.promotion.value || 0)
+        }
+        if (text < 0) {
+            return 0
+        }
+        return text.formatPrice()
     }
     const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
     const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
@@ -100,20 +136,27 @@ const DetailServiceScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <Image source={url} style={styles.imgService} />
-                    <View style={styles.groupPrice}>
-                        <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
-                        <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                    {
+                        item?.promotion?.value && disablePromotion(item.promotion) ?
+                            <View style={styles.groupPrice}>
+                                <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
+                                <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
 
-                        <Text style={styles.txtVoucher}>Giam 100k</Text>
-                    </View>
-                    <Text style={[styles.txtlabel, { paddingTop: 0 }]}>Khuyến mại</Text>
+                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                            </View> :
+                            <View style={styles.groupPrice}>
+                                <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                            </View>
+                    }
+
+                    {/* <Text style={[styles.txtlabel, { paddingTop: 0 }]}>Khuyến mại</Text>
                     <Text>Thời gian hiệu lực: <Text style={{
                         color: "#00000080"
                     }}>12h -14h các ngày 20/12/2019 - 22/12/2019</Text></Text>
                     <Text>Các ngày áp dụng trong tuần: <Text style={{
                         color: "#00BA99",
                         fontWeight: 'bold'
-                    }}>T2, T3, T4, T5, T6, T7, CN</Text></Text>
+                    }}>T2, T3, T4, T5, T6, T7, CN</Text></Text> */}
                 </View>
 
                 {/** rating */}
@@ -131,17 +174,30 @@ const DetailServiceScreen = ({ navigation }) => {
                         <Text style={styles.txtNumbberRating}>100</Text>
                     </View>
                 </View> */}
-
-
                 <View style={styles.containerDetail}>
                     <Text style={styles.txtlabel}>Mô tả chi tiết</Text>
                     {renderDescription(item)}
                 </View>
 
-                {/**rating */}
-                {/* <View style={styles.containerRating}>
-                    <View style={styles.groupLabelRating}>
-                        <Text style={styles.txtLabelRating}>ĐÁNH GIÁ</Text>
+                {/** rating */}
+                {/* <View style={{
+                    padding: 20,
+                    borderTopColor: '#f2f2f2',
+                    borderBottomColor: '#f2f2f2',
+                    borderTopWidth: 10,
+                    borderBottomWidth: 10,
+                    marginTop: 20
+                }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Text style={{
+                            color: '#00BA99',
+                            fontWeight: 'bold',
+                            fontSize: 15
+                        }}>ĐÁNH GIÁ</Text>
                         <Text>22 luot</Text>
                     </View>
                     <FlatList
