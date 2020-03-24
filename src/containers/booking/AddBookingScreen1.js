@@ -197,15 +197,28 @@ class AddBookingScreen extends Component {
 
         }
     }
-
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        if (startDate < day && endDate > day) {
+            return true
+        }
+        return false
+    }
     pricePromotion = (item) => {
         let value = 0
-        if (item?.promotion?.type == "PERCENT") {
-            value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+        if (this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+            }
         } else {
-            value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+            value = item?.monetaryAmount?.value
         }
-        if(value < 0){
+
+        if (value < 0) {
             return 0
         }
         return value
