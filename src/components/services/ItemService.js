@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     txtHospital: {
-        width: '80%',
+        width: '68%',
         color: '#00000070'
     },
     txtName: {
-        width: '80%',
+        width: '68%',
         fontWeight: 'bold'
     },
     containerProfile: {
