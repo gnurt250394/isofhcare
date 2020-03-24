@@ -205,7 +205,9 @@ class AddBookingScreen extends Component {
         } else {
             value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
         }
-        console.log('value: ', value);
+        if(value < 0){
+            return 0
+        }
         return value
     }
     addBooking = () => {
