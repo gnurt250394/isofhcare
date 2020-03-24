@@ -208,7 +208,7 @@ class AddBookingScreen extends Component {
     }
     pricePromotion = (item) => {
         let value = 0
-        if (this.disablePromotion(item.promotion)) {
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
             if (item?.promotion?.type == "PERCENT") {
                 value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
             } else {
