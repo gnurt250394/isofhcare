@@ -1,10 +1,9 @@
-import { Platform } from 'react-native';
+import { Platform, Alert, Linking } from 'react-native';
 import constants from '@resources/strings'
 import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import GetLocation from 'react-native-get-location'
 import RNLocation from 'react-native-location';
-
 const getCurrentLocation = (callAgain) => {
     return RNLocation.getLatestLocation().then(region => {
         locationProvider.saveCurrentLocation(region.latitude, region.longitude);
@@ -22,6 +21,24 @@ const getCurrentLocation = (callAgain) => {
             }
         });
     });
+}
+const openGps = () => {
+    Alert.alert(
+        'Bạn chưa bật định vị vị trí',
+        'Vui lòng vào Cài đặt > Quyền riêng tư > Vị trí để bật định vị',
+        [
+            {
+                text: "Cài đặt", onPress: () => {
+                    Linking.openSettings()
+                },
+
+            },
+            {
+                text: 'Quay lại', onPress: () => { }
+            }
+        ],
+        { cancelable: true },
+    );
 }
 const getLocation = (callAgain) => {
     return new Promise((resolve, reject) => {
@@ -72,10 +89,26 @@ const getLocation = (callAgain) => {
                     resolve(region)
 
                 })
-                .catch((error) => {
+                .catch(async (error) => {
                     const { code, message } = error
                     if (code == 'UNAVAILABLE') {
-                        reject()
+                        try {
+                            await requestPermission()
+                            let region = await GetLocation.getCurrentPosition({
+                                enableHighAccuracy: true,
+                                timeout: 15000,
+                            })
+
+                            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                            resolve(region)
+
+                        } catch (error) {
+                            reject()
+
+                        }
+
+
+
                     } else {
                     }
                 });
@@ -83,8 +116,12 @@ const getLocation = (callAgain) => {
             try {
                 LocationSwitch.isLocationEnabled(() => {
                     getLocation();
-                }, () => reject());
+                }, () => {
+                    openGps()
+                    reject()
+                });
             } catch (error) {
+                console.log('error: 2', error);
             }
         }
     })

@@ -6,22 +6,23 @@ import StarRating from 'react-native-star-rating';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ReadMoreText from '@components/ReadMoreText';
 const { width, height } = Dimensions.get('window')
-const DetailServiceScreen = ({ navigation }) => {
+const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
+    console.log('item: ', item);
     const _text = useRef(null)
     const [description, setDescription] = useState('')
     const [state, setState] = useState({
         data: [],
-        measured: false,
-        shouldShowReadMore: false,
-        showAllText: false
     })
     const onSelected = () => {
-        let onSelected = navigation.getParam('onSelected')
-        navigation.pop()
-        if (onSelected) {
-            onSelected(item)
-        }
+
+        item.hospital.address = item.hospital.contact.address
+        navigation.navigate("addBooking1", {
+            hospital: item.hospital,
+            listServicesSelected: [item],
+            allowBooking: true,
+            disableService: true
+        });
     }
 
     const renderDescription = (item) => {
@@ -39,8 +40,17 @@ const DetailServiceScreen = ({ navigation }) => {
                 paddingVertical: 10,
 
             }}>
-                <View style={styles.lineTop} />
-                <Text style={styles.txtNameRating}>{item.name}</Text>
+                <View style={{
+                    height: 0.5,
+                    width: '98%',
+                    alignSelf: 'center',
+                    backgroundColor: '#00000070'
+                }} />
+                <Text style={{
+                    color: '#000',
+                    fontWeight: 'bold',
+                    paddingTop: 10
+                }}>{item.name}</Text>
                 <StarRating
                     disabled={true}
                     starSize={11}
@@ -63,14 +73,13 @@ const DetailServiceScreen = ({ navigation }) => {
         navigation.navigate('profileHospital', {
             item: item.hospital,
             disableBooking: true
-
         })
     }
     const disablePromotion = (promotion) => {
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-         let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
         if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }
@@ -220,38 +229,9 @@ const DetailServiceScreen = ({ navigation }) => {
     )
 }
 
-export default DetailServiceScreen
+export default ListOfServiceScreen
 
 const styles = StyleSheet.create({
-    txtLabelRating: {
-        color: '#00BA99',
-        fontWeight: 'bold',
-        fontSize: 15
-    },
-    groupLabelRating: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    containerRating: {
-        padding: 20,
-        borderTopColor: '#f2f2f2',
-        borderBottomColor: '#f2f2f2',
-        borderTopWidth: 10,
-        borderBottomWidth: 10,
-        marginTop: 20
-    },
-    txtNameRating: {
-        color: '#000',
-        fontWeight: 'bold',
-        paddingTop: 10
-    },
-    lineTop: {
-        height: 0.5,
-        width: '98%',
-        alignSelf: 'center',
-        backgroundColor: '#00000070'
-    },
     txtDescription: {
         color: '#00000090'
     },

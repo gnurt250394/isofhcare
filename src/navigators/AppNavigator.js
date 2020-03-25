@@ -142,6 +142,9 @@ import TabDoctorAndHospitalScreen from '@containers/booking/specialist/TabDoctor
 import ProfileHospitalScreen from '@containers/booking/specialist/ProfileHospitalScreen';
 import MaphospitalScreen from '@containers/booking/specialist/MaphospitalScreen';
 import DetailServiceScreen from '@containers/booking/DetailServiceScreen';
+import ListServicesScreen from '@containers/services/ListServicesScreen';
+import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
+import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -395,6 +398,9 @@ const RootNavigator = createStackNavigator(
     profileHospital: { screen: ProfileHospitalScreen },
     mapHospital: { screen: MaphospitalScreen },
     detalService: { screen: DetailServiceScreen },
+    listServices: { screen: ListServicesScreen },
+    listServicesDetail: { screen: ListServiceDetailScreen },
+    listOfServices: { screen: ListOfServiceScreen },
   },
   {
     headerMode: "none",

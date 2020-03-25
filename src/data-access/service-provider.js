@@ -55,4 +55,46 @@ module.exports = {
             // }
         });
     },
+    searchCategory(name, page = 0, size = 9999) {
+        let parameters =
+            (name ? 'name=' + name + '&' : '') +
+            ('page=' + page) +
+            ('&size=' + size)
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.category.category +
+                parameters, {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    },
+    getListServices(medicalName, categoryId, status, lat, lon, page, size) {
+        let parameters =
+            (medicalName ? 'medicalName=' + medicalName + '&' : '') +
+            (categoryId ? 'categoryId=' + categoryId + '&' : '') +
+            (status ? 'status=' + status + '&' : '') +
+            (lat ? 'lat=' + lat + '&' : '') +
+            (lon ? 'lon=' + lon + '&' : '') +
+            (page != null || page != undefined ? 'page=' + page + '&' : '') +
+            (size ? 'size=' + size : '')
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.service.get_all_services +
+                '/search' + '?' + parameters, {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    },
+    getListServicesHighLight() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.service.get_all_services +
+                '/highlights' , {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    }
 }

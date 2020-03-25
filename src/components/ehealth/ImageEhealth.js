@@ -7,7 +7,7 @@ const ImageEhealth = (props) => {
         props.navigation.navigate("photoViewer", {
             index: index,
             urls: image.map(item => {
-                return item.absoluteUrl()
+                return { 'uri': item.absoluteUrl() }
             }),
         });
     }
