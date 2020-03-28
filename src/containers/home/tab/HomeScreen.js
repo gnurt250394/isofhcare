@@ -54,6 +54,15 @@ class HomeScreen extends Component {
       listDataDoctor: [],
       featuresBooking: [
         {
+          icon: require("@images/new/homev2/ic_symptom.png"),
+          text: "Dịch vụ",
+          onPress: () => {
+            this.props.navigation.navigate("listServices");
+            return
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
           icon: require("@images/new/homev2/ic_doctor.png"),
           text: "Bác sĩ",
           onPress: () => {
@@ -67,25 +76,17 @@ class HomeScreen extends Component {
             this.props.navigation.navigate("addBooking1");
           }
         },
-        {
-          icon: require("@images/new/homev2/ic_specialist.png"),
-          text: "Chuyên khoa",
-          onPress: () => {
-            this.props.navigation.navigate("listSpecialist");
-            return
-            snackbar.show('Tính năng đang phát triển')
-          }
-        },
+        // {
+        //   icon: require("@images/new/homev2/ic_specialist.png"),
+        //   text: "Chuyên khoa",
+        //   onPress: () => {
+        //     this.props.navigation.navigate("listSpecialist");
+        //     return
+        //     snackbar.show('Tính năng đang phát triển')
+        //   }
+        // },
 
-        {
-          icon: require("@images/new/homev2/ic_symptom.png"),
-          text: "Dịch vụ",
-          onPress: () => {
-            this.props.navigation.navigate("listServices");
-            return
-            snackbar.show('Tính năng đang phát triển')
-          }
-        }
+
       ],
       features: [
         {
@@ -101,18 +102,6 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/homev2/ic_advisory.png"),
-          text: "Tư vấn",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("listQuestion");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "listQuestion", param: {} }
-              });
-          }
-        },
-        {
           icon: require("@images/new/homev2/ic_ehealth.png"),
           text: "Y bạ điện tử",
           onPress: () => {
@@ -121,6 +110,18 @@ class HomeScreen extends Component {
             else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: 'ehealth' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Tư vấn",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("listQuestion");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "listQuestion", param: {} }
               });
           }
         },
@@ -172,7 +173,7 @@ class HomeScreen extends Component {
       this.handleHardwareBack.bind(this)
     );
   }
- 
+
 
   componentWillUnmount() {
     // AppState.removeEventListener('change', this._handleAppStateChange);
@@ -208,7 +209,7 @@ class HomeScreen extends Component {
       })
     })
   }
- 
+
   getMarginBooking() {
     const pixel = PixelRatio.get()
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
@@ -221,7 +222,12 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{ flex: 1, alignItems: 'center' }} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{
+          flex: 1,
+          alignItems: 'center',
+          borderLeftColor: '#00000060',
+          borderLeftWidth: position == 0 ? 0 : 0.6
+        }} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -230,9 +236,9 @@ class HomeScreen extends Component {
                 onPress={item.onPress}
               >
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={40} />
                 </View>
-                  <Text style={[styles.label]}>{item.text}</Text></View>
+                  <Text style={[styles.label, { fontSize: 15, color: '#3161AD' }]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
@@ -285,7 +291,7 @@ class HomeScreen extends Component {
         </Animatable.View>);
     })
   }
- 
+
   getAdjustedFontSize(size) {
     return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
@@ -313,7 +319,7 @@ class HomeScreen extends Component {
       isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
     }
     let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 18 : 40)
-    let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
+    let height = (DEVICE_HEIGHT / 4) - this.state.height +statusHeight
     if (height >= 0) {
       return height
     } else {
@@ -329,7 +335,8 @@ class HomeScreen extends Component {
         hideActionbar={true}
         showBackgroundHeader={true}
         backgroundStyle={{
-          height: DEVICE_HEIGHT / 4
+          height: DEVICE_HEIGHT / 4,
+          resizeMode: 'stretch'
         }}
         backgroundHeader={headerHome}
       >
@@ -346,7 +353,7 @@ class HomeScreen extends Component {
                   this.setState({ height: e.nativeEvent.layout.height })
                 }}
                 style={[styles.padding21,]}>
-                {this.props.userApp.isLogin ?
+                {/* {this.props.userApp.isLogin ?
                   <View
                     style={styles.containerHeadertitle}>
                     <Text
@@ -354,7 +361,7 @@ class HomeScreen extends Component {
                     >Xin chào, </Text>
                     <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
                   </View> : <View style={styles.containerHeadertitle}>
-                  </View>}
+                  </View>} */}
                 <Card style={styles.card}>
                   <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
                   <View style={{ justifyContent: 'center' }}>
@@ -464,7 +471,7 @@ const styles = StyleSheet.create({
   padding21: {
     paddingHorizontal: 21,
   },
-  card: { borderRadius: 6, paddingHorizontal: 10 },
+  card: { borderRadius: 20, paddingHorizontal: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
