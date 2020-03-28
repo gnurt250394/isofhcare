@@ -98,7 +98,7 @@ const ListServicesScreen = ({ navigation }) => {
     return (
         <ActivityPanel
             isLoading={state.isLoading}
-            title="Nhóm dịch vụ">
+            title="Dịch vụ">
 
             <FlatList
                 data={state.data}
