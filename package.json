@@ -95,6 +95,7 @@
     "react-native-wheel-picker-android": "^2.0.5",
     "react-navigation": "^3.11.1",
     "react-navigation-transitions": "^1.0.12",
+    "react-native-otp-inputs":"5.0.1",
     "react-redux": "^7.1.0",
     "realm": "^2.29.2",
     "redux": "^4.0.4",
