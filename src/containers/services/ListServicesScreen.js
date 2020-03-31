@@ -98,7 +98,7 @@ const ListServicesScreen = ({ navigation }) => {
     return (
         <ActivityPanel
             isLoading={state.isLoading}
-            title="Nhóm dịch vụ">
+            title="Dịch vụ">
 
             <FlatList
                 data={state.data}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     txtName: {
         color: '#FFF',
         fontWeight: 'bold',
-        fontSize: PixelRatio.get() < 2 ? 13 : 14
+        fontSize: PixelRatio.get() < 2 ? 14 : 15
     },
     groupName: {
         backgroundColor: '#3161AD',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         paddingVertical: 7,
         marginTop: 15,
         marginLeft: 15,
-        maxWidth: '50%'
+        maxWidth: '40%'
     },
     imageItem: {
         position: 'absolute',
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     },
     containerItem: {
         borderRadius: 10,
-        height: height / 7,
-        marginTop: 15,
+        height: height / 6,
+        marginTop: 10,
         // marginBottom: 12,
         marginHorizontal: 17,
         // shadowColor: '#000',

@@ -71,14 +71,14 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const renderItem = ({ item, index }) => {
 
         return (
-            <View style={{ flex: 1, paddingBottom: 10 }}>
-                <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardView}>
+            <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
+                <View  style={styles.cardView}>
                     <ScaledImage
                         uri={item?.image?.absoluteUrl() || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
-                </TouchableOpacity>
+                </View>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
                 {
@@ -88,7 +88,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                             <Text style={styles.txtPrice}>{renderPricePromotion(item)} đ</Text>
 
                             <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
-                        </View>
+                            </ View>
                         :
                         <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
 
@@ -103,7 +103,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                         </View> : null
                 }
 
-            </View >
+            </TouchableOpacity >
         )
     }
     if (data?.length) {

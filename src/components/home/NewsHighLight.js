@@ -4,19 +4,21 @@ import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
 import { useSelector } from 'react-redux'
-const HospitalHighLight = memo(({ navigation, refreshing }) => {
+const NewsHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
     const userApp = useSelector((state) => state.userApp)
     const getServiceHighLight = async () => {
         try {
-            let res = await homeProvider.listHospital()
-            if (res?.code == 0) {
-                setData(res.data)
+            let res = await homeProvider.listNewsCovid()
+            console.log('res: ', res);
+            if (res?.code == 200) {
+                setData(res.data.news)
             } else {
                 setData([])
 
             }
         } catch (error) {
+            console.log('error: ', error);
             setData([])
 
         }
@@ -31,27 +33,19 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
     }, [refreshing])
     const goToDetailService = (item) => () => {
 
-        if (userApp.isLogin) {
-            navigation.navigate('profileHospital', { item })
-        }
-        else {
-
-            navigation.navigate("login", {
-                nextScreen: { screen: 'profileHospital', param: { item } }
-            });
-        }
+        navigation.navigate('detailNewsHighlight', { item, data })
     }
     const renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={goToDetailService(item)}  style={{ flex: 1 }}>
+            <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={item.imageHome.absoluteUrl()}
+                        uri={item.image.absoluteUrl()}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name : ""}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.title : ""}</Text>
             </TouchableOpacity>
         )
     }
@@ -59,7 +53,7 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
-                    <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
+                    <Text style={styles.txAds}>CẬP NHẬT THÔNG TIN COVID - 19</Text>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -86,4 +80,4 @@ const styles = StyleSheet.create({
     txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
 
 });
-export default HospitalHighLight
+export default NewsHighLight

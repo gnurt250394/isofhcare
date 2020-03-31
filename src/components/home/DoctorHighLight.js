@@ -44,9 +44,9 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
         return (
-            <View style={styles.cardViewDoctor}>
+            <TouchableOpacity  onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                 {/* <Card style={{ borderRadius: 5, }}> */}
-                <TouchableOpacity onPress={goToDetailService(item)} style={styles.containerImageDoctor}>
+                <View style={styles.containerImageDoctor}>
                     <Image
                         // uri={item.advertise.images.absoluteUrl()}
                         style={{ borderRadius: 5, width: '100%', height: '100%' }}
@@ -54,11 +54,11 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
                     // width={DEVICE_WIDTH / 3}
                     // height={137}
                     />
-                </TouchableOpacity>
+                </View>
                 {/* </Card> */}
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensDoctor}>{item.name ? item.name : ""}</Text>
 
-            </View>
+            </TouchableOpacity>
         )
     }
     if (data?.length) {
