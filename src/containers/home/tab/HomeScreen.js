@@ -37,6 +37,7 @@ import homeProvider from '@data-access/home-provider'
 import CategoryHighLight from "@components/home/CategoryHighLight";
 import DoctorHighLight from "@components/home/DoctorHighLight";
 import HospitalHighLight from "@components/home/HospitalHighLight";
+import NewsHighLight from "@components/home/NewsHighLight";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -377,6 +378,7 @@ class HomeScreen extends Component {
               <View style={styles.containerButton}>
                 {this.renderButton()}
               </View>
+              <NewsHighLight {...this.props} refreshing={this.state.refreshing} />
               <CategoryHighLight {...this.props} refreshing={this.state.refreshing} />
               <DoctorHighLight {...this.props} refreshing={this.state.refreshing} />
               <HospitalHighLight {...this.props} refreshing={this.state.refreshing} />

@@ -93,6 +93,20 @@ module.exports = {
             });
         });
     },
+    listNewsCovid() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.home.news_covid + '?keywords=covid&page=0&size=50', {}, (s, e) => {
+                if (s) {
+                    // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
+                    //     
+                    // })
+                    resolve(s);
+                } else {
+                    reject(e)
+                }
+            });
+        });
+    },
     getListHospital(callback, requestApi) {
         if (!requestApi) {
             datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_HOSPITAL).then(s => {

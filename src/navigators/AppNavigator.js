@@ -145,6 +145,7 @@ import DetailServiceScreen from '@containers/booking/DetailServiceScreen';
 import ListServicesScreen from '@containers/services/ListServicesScreen';
 import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
 import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
+import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -429,6 +430,7 @@ const RootNavigator = createStackNavigator(
     listServices: { screen: ListServicesScreen },
     listServicesDetail: { screen: ListServiceDetailScreen },
     listOfServices: { screen: ListOfServiceScreen },
+    detailNewsHighlight: { screen: DetailNewHighLightScreen },
   },
   {
     headerMode: "none",
