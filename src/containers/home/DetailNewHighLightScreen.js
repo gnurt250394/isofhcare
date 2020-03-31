@@ -7,10 +7,10 @@ import ReadMoreText from '@components/ReadMoreText';
 import ScaledImage from 'mainam-react-native-scaleimage';
 const DetailNewHighLightScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    console.log('item: ', item);
+
     const data = navigation.getParam('data', [])
-    const list = data.filter(e => e.id != item.id)
-    console.log('list: ', list);
+    const list = data.filter(e => e.id != item.id).slice(0, 5)
+
     const getTime = () => {
         let time = item.createdDate.substring(0, 10)
         return new Date(time).format('dd/MM/yyyy');
@@ -47,7 +47,11 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                             paddingBottom: 10
                         }}>{getTime()}</Text>
                         <Image source={{ uri: item.image.absoluteUrl() }} style={styles.imageNews} />
-                        <HTML html={'<div style="color: black">' + item.content + '</div>'} imagesMaxWidth={Dimensions.get('window').width-30} imagesInitialDimensions={{ width: Dimensions.get('window').width-30, height: 200 }} />
+                        <HTML html={'<div style="color: black">' + item.content + '</div>'}
+                            allowFontScaling={false}
+                            imagesMaxWidth={Dimensions.get('window').width - 30}
+                            imagesInitialDimensions={{ width: Dimensions.get('window').width - 30, height: (Dimensions.get('window').width - 30) * 1.5, }}
+                        />
                     </View>
                     <View style={styles.containerButton}>
                         <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
