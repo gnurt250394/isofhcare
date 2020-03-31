@@ -47,7 +47,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                             paddingBottom: 10
                         }}>{getTime()}</Text>
                         <Image source={{ uri: item.image.absoluteUrl() }} style={styles.imageNews} />
-                        <HTML html={item.content} imagesMaxWidth={Dimensions.get('window').width-30} imagesInitialDimensions={Dimensions.get('window').width-30} />
+                        <HTML html={item.content} imagesMaxWidth={Dimensions.get('window').width-30} imagesInitialDimensions={{ width: Dimensions.get('window').width-30, height: 200 }} />
                     </View>
                     <View style={styles.containerButton}>
                         <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
