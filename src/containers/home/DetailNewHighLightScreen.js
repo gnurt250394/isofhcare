@@ -37,7 +37,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         // navigation.navigate('')
     }
     return (
-        <ActivityPanel title="Phòng dịch Covid">
+        <ActivityPanel title="Nội dung chi tiết">
             <ScrollView style={styles.container}>
                 <View style={styles.flex}>
                     <View style={styles.containerTitle}>
@@ -64,7 +64,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                     {list.length ?
                         <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                             <View style={styles.viewAds}>
-                                <Text style={styles.txAds}>Cập nhật thông tin Covid</Text>
+                                <Text style={styles.txAds}>XEM THÊM</Text>
                             </View>
                             <FlatList
                                 contentContainerStyle={styles.listAds}
