@@ -33,20 +33,12 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
     }, [refreshing])
     const goToDetailService = (item) => () => {
 
-        if (userApp.isLogin) {
-            navigation.navigate('detailNewsHighlight', { item, data })
-        }
-        else {
-
-            navigation.navigate("login", {
-                nextScreen: { screen: 'detailNewsHighlight', param: { item } }
-            });
-        }
+        navigation.navigate('detailNewsHighlight', { item, data })
     }
     const renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
-                <View  style={styles.cardView}>
+                <View style={styles.cardView}>
                     <ScaledImage
                         uri={item.image.absoluteUrl()}
                         height={134}
