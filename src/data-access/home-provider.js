@@ -95,7 +95,7 @@ module.exports = {
     },
     listNewsCovid() {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", constants.api.home.news_covid + '?keywords=covid&page=0&size=50', {}, (s, e) => {
+            client.requestApi("get", constants.api.home.news_covid + '?keywords=covid&type=MEDICAL&isHighlight=true&page=0&size=50', {}, (s, e) => {
                 if (s) {
                     // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
                     //     

@@ -45,16 +45,16 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
     }
     const renderItem = ({ item, index }) => {
         return (
-            <View style={{ flex: 1 }}>
-                <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardView}>
+            <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
+                <View  style={styles.cardView}>
                     <ScaledImage
                         uri={item.image.absoluteUrl()}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
-                </TouchableOpacity>
+                </View>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.title : ""}</Text>
-            </View>
+            </TouchableOpacity>
         )
     }
     if (data?.length) {
