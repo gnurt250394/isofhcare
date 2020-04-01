@@ -167,19 +167,19 @@ class PushController extends Component {
                     case -1:
                         break;
                     case 'NEWS': {
-                        NavigationService.navigate('detailNewsHighlight', { item: data })
+                        NavigationService.navigate('detailNewsHighlight', { item: { id } })
                         break
                     }
                     case 'MEDICAL_SERVICE': {
-                        NavigationService.navigate('listOfServices', { item: data })
+                        NavigationService.navigate('listOfServices', { item: { id }  })
                         break
                     }
                     case 'HOSPITAL': {
-                        NavigationService.navigate('profileHospital', { item: data })
+                        NavigationService.navigate('profileHospital', { item: { id }  })
                         break
                     }
                     case 'DOCTOR': {
-                        NavigationService.navigate('detailsDoctor', { item: data })
+                        NavigationService.navigate('detailsDoctor', { item: { id }  })
                         break
                     }
 
@@ -305,19 +305,19 @@ class PushController extends Component {
                         this.openBooking(id);
                         break;
                     case 'NEWS': {
-                        NavigationService.navigate('detailNewsHighlight', { item: data })
+                        NavigationService.navigate('detailNewsHighlight', { item: { id }  })
                         break
                     }
                     case 'MEDICAL_SERVICE': {
-                        NavigationService.navigate('listOfServices', { item: data })
+                        NavigationService.navigate('listOfServices', { item: { id }  })
                         break
                     }
                     case 'HOSPITAL': {
-                        NavigationService.navigate('profileHospital', { item: data })
+                        NavigationService.navigate('profileHospital', { item: { id }  })
                         break
                     }
                     case 'DOCTOR': {
-                        NavigationService.navigate('detailsDoctor', { item: data })
+                        NavigationService.navigate('detailsDoctor', { item: { id }  })
                         break
                     }
                 }
