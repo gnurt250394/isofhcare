@@ -142,6 +142,10 @@ import TabDoctorAndHospitalScreen from '@containers/booking/specialist/TabDoctor
 import ProfileHospitalScreen from '@containers/booking/specialist/ProfileHospitalScreen';
 import MaphospitalScreen from '@containers/booking/specialist/MaphospitalScreen';
 import DetailServiceScreen from '@containers/booking/DetailServiceScreen';
+import ListServicesScreen from '@containers/services/ListServicesScreen';
+import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
+import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
+import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -197,11 +201,26 @@ const TabNavigatorComponent = createBottomTabNavigator(
     //     },
     //   }
     // },
-    drugTab: {
-      screen: DrugScreen,
+    // drugTab: {
+    //   screen: DrugScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Thuốc",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       if (userProvider.isLogin) {
+    //         console.log('userProvider.isLogin: ', userProvider.isLogin);
+    //         defaultHandler();
+    //       } else {
+    //         NavigationService.navigate("login");
+    //       }
+    //     },
+    //   }
+    // },
+    bookingTab: {
+      screen: ListBookingHistoryScreen,
       navigationOptions: {
-        tabBarLabel: "Thuốc",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
+        tabBarLabel: "Lich khám",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_booking_home.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           snackbar.show('Tính năng đang phát triển')
           return
@@ -214,6 +233,21 @@ const TabNavigatorComponent = createBottomTabNavigator(
         },
       }
     },
+    // ehealthTab: {
+    //   screen: EHealthNavigator,
+    //   navigationOptions: {
+    //     tabBarLabel: "Y bạ điên tử",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_ehealth_home.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       if (userProvider.isLogin) {
+    //         console.log('userProvider.isLogin: ', userProvider.isLogin);
+    //         defaultHandler();
+    //       } else {
+    //         NavigationService.navigate("login");
+    //       }
+    //     },
+    //   }
+    // },
     notificationTab: {
       screen: NotificationScreen,
       navigationOptions: {
@@ -395,6 +429,10 @@ const RootNavigator = createStackNavigator(
     profileHospital: { screen: ProfileHospitalScreen },
     mapHospital: { screen: MaphospitalScreen },
     detalService: { screen: DetailServiceScreen },
+    listServices: { screen: ListServicesScreen },
+    listServicesDetail: { screen: ListServiceDetailScreen },
+    listOfServices: { screen: ListOfServiceScreen },
+    detailNewsHighlight: { screen: DetailNewHighLightScreen },
   },
   {
     headerMode: "none",
