@@ -91,11 +91,21 @@ export default {
     getListServicesHighLight() {
         return new Promise((resolve, reject) => {
             client.requestApi("get", client.serviceSchedule + constants.api.service.get_all_services +
-                '/highlights' , {}, (x, e) => {
+                '/highlights', {}, (x, e) => {
                     resolve(x);
                     if (e)
                         reject(e);
                 })
         })
-    }
+    },
+    getDetailServices(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.service.get_all_services +
+                `/${id}`, {}, (x, e) => {
+                    resolve(x);
+                    if (e)
+                        reject(e);
+                })
+        })
+    },
 }
