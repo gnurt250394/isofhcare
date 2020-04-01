@@ -222,8 +222,6 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarLabel: "Lich khám",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_booking_home.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show('Tính năng đang phát triển')
-          return
           if (userProvider.isLogin) {
             console.log('userProvider.isLogin: ', userProvider.isLogin);
             defaultHandler();
