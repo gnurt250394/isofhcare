@@ -81,6 +81,7 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
+        console.log('notification: ', notification);
         if (!this.props.userApp.isLogin)
             return;
         if (!notification || notification.show_in_foreground)
@@ -135,6 +136,7 @@ class PushController extends Component {
 
     }
     onNotificationOpened(notificationOpen) {
+        console.log('notificationOpen: ', notificationOpen);
         try {
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
@@ -164,6 +166,22 @@ class PushController extends Component {
                         break;
                     case -1:
                         break;
+                    case 'NEWS': {
+                        NavigationService.navigate('detailNewsHighlight', { item: data })
+                        break
+                    }
+                    case 'MEDICAL_SERVICE': {
+                        NavigationService.navigate('listOfServices', { item: data })
+                        break
+                    }
+                    case 'HOSPITAL': {
+                        NavigationService.navigate('profileHospital', { item: data })
+                        break
+                    }
+                    case 'DOCTOR': {
+                        NavigationService.navigate('detailsDoctor', { item: data })
+                        break
+                    }
 
                 }
             }
@@ -258,6 +276,7 @@ class PushController extends Component {
         });
     }
     getInitialNotification(notificationOpen) {
+        console.log('notificationOpen: ', notificationOpen);
         if (notificationOpen) {
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
@@ -285,6 +304,22 @@ class PushController extends Component {
                     case 10:
                         this.openBooking(id);
                         break;
+                    case 'NEWS': {
+                        NavigationService.navigate('detailNewsHighlight', { item: data })
+                        break
+                    }
+                    case 'MEDICAL_SERVICE': {
+                        NavigationService.navigate('listOfServices', { item: data })
+                        break
+                    }
+                    case 'HOSPITAL': {
+                        NavigationService.navigate('profileHospital', { item: data })
+                        break
+                    }
+                    case 'DOCTOR': {
+                        NavigationService.navigate('detailsDoctor', { item: data })
+                        break
+                    }
                 }
             } catch (error) {
                 console.log(error);
