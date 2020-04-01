@@ -153,6 +153,22 @@ class NotificationScreen extends Component {
             this.openBooking(data.id);
             break
           }
+          case 'NEWS': {
+            NavigationService.navigate('detailNewsHighlight', { item: data })
+            break
+          }
+          case 'MEDICAL_SERVICE': {
+            NavigationService.navigate('listOfServices', { item: data })
+            break
+          }
+          case 'HOSPITAL': {
+            NavigationService.navigate('profileHospital', { item: data })
+            break
+          }
+          case 'DOCTOR': {
+            NavigationService.navigate('detailsDoctor', { item: data })
+            break
+          }
           default:
             this.setState({ isLoading: false });
         }
