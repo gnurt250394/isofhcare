@@ -38,6 +38,7 @@ class AddBookingScreen extends Component {
         let hospital = this.props.navigation.getParam('hospital')
         let bookingDate = this.props.navigation.getParam('bookingDate')
         let allowBooking = this.props.navigation.getParam('allowBooking')
+        let disableService = this.props.navigation.getParam('disableService')
         this.state = {
             colorButton: 'red',
             imageUris: [],
@@ -48,7 +49,8 @@ class AddBookingScreen extends Component {
             schedule,
             hospital,
             bookingDate,
-            allowBooking
+            allowBooking,
+            disableService
         }
     }
     _changeColor = () => {
@@ -153,7 +155,7 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
-        console.log('profile: ', profile);
+
         this.setState({ profile, allowBooking: true });
     }
     // selectServiceType(serviceType) {
@@ -195,8 +197,33 @@ class AddBookingScreen extends Component {
 
         }
     }
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
+            return true
+        }
+        return false
+    }
+    pricePromotion = (item) => {
+        let value = 0
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+            }
+        } else {
+            value = item?.monetaryAmount?.value
+        }
 
-
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
     addBooking = () => {
 
         Keyboard.dismiss();
@@ -219,11 +246,6 @@ class AddBookingScreen extends Component {
             });
             return
         }
-
-
-
-
-
 
         if (this.state.contact) {
             this.setState({ contactError: "" })
@@ -283,21 +305,17 @@ class AddBookingScreen extends Component {
             }
             var images = [];
             this.state.imageUris.forEach((item) => {
-                console.log('item: ', item);
-
                 images.push(item.url);
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
 
-
-            console.log('img: ', img);
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
 
                     const { userApp } = this.props
 
-                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
+                    let services = this.state.listServicesSelected.map(e => ({ price: this.pricePromotion(e), serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
                     let idUser = this.props.userApp.currentUser.id
                     bookingProvider.createBooking(
@@ -330,7 +348,7 @@ class AddBookingScreen extends Component {
                             }
                         })
                     }).catch(e => {
-                        console.log('e: ', e);
+
                         snackbar.show(constants.msg.booking.booking_err, "danger");
                         this.setState({ isLoading: false });
                     })
@@ -479,11 +497,14 @@ class AddBookingScreen extends Component {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.article}>
-                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectHospital}>
+                            <TouchableOpacity style={styles.mucdichkham} disabled={this.state.disableService} onPress={this.selectHospital}>
                                 <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
                                 <Text style={styles.mdk}>{constants.booking.location}</Text>
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital && this.state.hospital.name ? this.state.hospital.name : constants.booking.select_location}</Text>
-                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                {!this.state.disableService ?
+                                    <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                    : null
+                                }
                             </TouchableOpacity>
                             {
                                 this.state.hospitalError ?
@@ -516,7 +537,7 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View> */}
 
-                            <TouchableOpacity style={[styles.mucdichkham]} onPress={this.onSelectServices}>
+                            <TouchableOpacity style={[styles.mucdichkham]} disabled={this.state.disableService} onPress={this.onSelectServices}>
                                 <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                                 <Text style={styles.mdk}>{constants.booking.service}</Text>
                                 {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
@@ -533,8 +554,9 @@ class AddBookingScreen extends Component {
                                     </View> :
                                     <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
                                 }
-
-                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                {!this.state.disableService ?
+                                    <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                    : null}
                             </TouchableOpacity>
                             {
                                 this.state.servicesError ?

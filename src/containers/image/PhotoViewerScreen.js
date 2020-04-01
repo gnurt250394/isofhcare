@@ -1,54 +1,37 @@
-import React, { Component, PropTypes } from 'react';
+import React, { useState, useEffect } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { Dimensions, View, TouchableOpacity, Platform } from 'react-native';
-import PhotoViewer from 'mainam-react-native-photo-viewer';
-const { width, height } = Dimensions.get('window');
-import permission from 'mainam-react-native-permission';
+import { Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import ImageView from "react-native-image-viewing";
 import RNFetchBlob from 'rn-fetch-blob';
-let dirs = RNFetchBlob.fs.dirs
 import Share from 'react-native-share';
-class PhotoViewerScreen extends Component {
-    constructor(props) {
-        super(props)
-        var urls = this.props.navigation.getParam("urls", null);
-        if (!urls)
-            urls = [];
-        var index = this.props.navigation.getParam("index", null);
-        if (!index)
-            index = 0;
-        this.state = {
-            urls,
-            index
-        }
-    }
-    componentDidMount() {
+import permission from 'mainam-react-native-permission';
 
-    }
+let dirs = RNFetchBlob.fs.dirs
 
-    preview() {
-        if (this.state.index > 0) {
-            this.setState({
-                index: this.state.index - 1
-            }, () => {
-                if (this.props.onPreview) {
-                    this.props.onPreview(this.state.index + 1, this.state.urls.length);
-                }
-            })
-        }
+function PhotoViewerScreen(props) {
+    const [index, setIndex] = useState(props.navigation.getParam("index", 0));
+    const [urls, seturls] = useState(props.navigation.getParam("urls", []));
+    const [visible, setIsVisible] = useState(true);
+    const [id, setId] = useState(0);
+    const close = () => {
+        props.navigation.pop()
     }
-    next() {
-        if (this.state.index < this.state.urls.length - 1) {
-            this.setState({
-                index: this.state.index + 1
-            }, () => {
-                if (this.props.onNext) {
-                    this.props.onNext(this.state.index + 1, this.state.urls.length);
-                }
-            })
-        }
-
+    const header = () => {
+        return (
+            <Text style={styles.txIndex}>{(id + 1) + "/" + (urls.length)}</Text>
+        )
     }
-    async onDownload(url) {
+    const footer = () => {
+        return (
+            <TouchableOpacity onPress={onDownload} style={styles.btnDownload}>
+                <Text style={styles.txDownload}>
+                    Tải xuống
+                </Text>
+            </TouchableOpacity>
+        )
+    }
+    const onDownload = async () => {
+        let url = urls[id].uri
         await permission.requestStoragePermission((s) => {
             if (s) {
                 let index = url.lastIndexOf("/");
@@ -89,18 +72,21 @@ class PhotoViewerScreen extends Component {
         })
     }
 
+    return (
+        <ActivityPanel
+            containerStyle={{ flex: 1, backgroundColor: '#000' }}
+            hideActionbar={true}
+            showFullScreen={true}
 
-    render() {
-        const bottonWidth = 200 > width ? width : 200;
-        if (!this.state.urls || this.state.urls.length == 0)
-            return null;
-        return (
-            <ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={(this.state.index + 1) + "/" + (this.state.urls.length)}>
-                <PhotoViewer androidScaleType={Platform.OS == 'android' ? "fitCenter" : null} urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />
-            </ActivityPanel>
-        );
-    }
+        >
+            <ImageView FooterComponent={footer} HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} />
+        </ActivityPanel>
+    );
 }
-
+const styles = StyleSheet.create({
+    txIndex: { color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold', position: 'absolute', top: 10, alignSelf: 'center' },
+    txDownload: { color: '#fff', textAlign: 'center', fontSize: 14 },
+    btnDownload: { height: 52, borderRadius: 6, backgroundColor: '#5eb8ff', justifyContent: 'center', alignItems: 'center', marginHorizontal: 60, marginBottom: 20 }
+})
 
 export default PhotoViewerScreen;

@@ -34,6 +34,10 @@ import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import fonts from '@resources/fonts';
 import homeProvider from '@data-access/home-provider'
+import CategoryHighLight from "@components/home/CategoryHighLight";
+import DoctorHighLight from "@components/home/DoctorHighLight";
+import HospitalHighLight from "@components/home/HospitalHighLight";
+import NewsHighLight from "@components/home/NewsHighLight";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -51,6 +55,15 @@ class HomeScreen extends Component {
       listDataDoctor: [],
       featuresBooking: [
         {
+          icon: require("@images/new/homev2/ic_symptom.png"),
+          text: "Dịch vụ",
+          onPress: () => {
+            this.props.navigation.navigate("listServices");
+            return
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
           icon: require("@images/new/homev2/ic_doctor.png"),
           text: "Bác sĩ",
           onPress: () => {
@@ -64,47 +77,28 @@ class HomeScreen extends Component {
             this.props.navigation.navigate("addBooking1");
           }
         },
-        {
-          icon: require("@images/new/homev2/ic_specialist.png"),
-          text: "Chuyên khoa",
-          onPress: () => {
-            // snackbar.show('Tính năng đang phát triển')
-            this.props.navigation.navigate("listSpecialist");
-            return
-            // snackbar.show('Tính năng đang phát triển')
-          }
-        },
+        // {
+        //   icon: require("@images/new/homev2/ic_specialist.png"),
+        //   text: "Chuyên khoa",
+        //   onPress: () => {
+        //     this.props.navigation.navigate("listSpecialist");
+        //     return
+        //     snackbar.show('Tính năng đang phát triển')
+        //   }
+        // },
 
-        {
-          icon: require("@images/new/homev2/ic_symptom.png"),
-          text: "Triệu chứng",
-          onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
-          }
-        }
+
       ],
       features: [
         {
-          icon: require("@images/new/homev2/ic_get_ticket.png"),
-          text: "Lấy số khám",
+          icon: require("@images/new/ic_calendar.png"),
+          text: "Lịch khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("getTicket");
+              this.props.navigation.navigate("listBookingHistory");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: "getTicket", param: {} }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/homev2/ic_advisory.png"),
-          text: "Tư vấn",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("listQuestion");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "listQuestion", param: {} }
+                nextScreen: { screen: "listBookingHistory", param: {} }
               });
           }
         },
@@ -117,6 +111,18 @@ class HomeScreen extends Component {
             else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: 'ehealth' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Tư vấn",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("listQuestion");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "listQuestion", param: {} }
               });
           }
         },
@@ -168,102 +174,8 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    this.onGetHospital()
-    this.onGetDoctor()
   }
-  onSelectDoctor = (item) => {
-    if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('detailsDoctor', { item })
-    } else {
-      this.props.navigation.navigate("login", {
-        nextScreen: { screen: "detailsDoctor", param: { item } }
-      });
-    }
 
-  }
-  renderItemDoctor = ({ item, index }) => {
-
-    return (
-      <View style={styles.cardViewDoctor}>
-        {/* <Card style={{ borderRadius: 5, }}> */}
-        <TouchableOpacity onPress={() => this.onSelectDoctor(item)} style={styles.containerImageDoctor}>
-          <Image
-            // uri={item.advertise.images.absoluteUrl()}
-            style={{ borderRadius: 5, width: '100%', height: '100%' }}
-            source={{ uri: item.imagePath.absoluteUrl() }}
-          // width={DEVICE_WIDTH / 3}
-          // height={137}
-          />
-        </TouchableOpacity>
-        {/* </Card> */}
-        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensDoctor}>{item.name ? item.name : ""}</Text>
-
-      </View>
-    );
-  }
-  renderDoctor() {
-    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
-      <View style={styles.viewAds}>
-        <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
-      </View>
-      <FlatList
-        contentContainerStyle={styles.listAds}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        // extraData={this.state}
-        data={this.state.listDataDoctor}
-        // ListFooterComponent={<View style={styles.viewFooter}></View>}
-        renderItem={this.renderItemDoctor}
-      />
-    </View>)
-  }
-  getDetailsHospital = (item) => {
-    console.log('item: ', item);
-
-    if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('profileHospital', { item })
-    }
-    else {
-
-      this.props.navigation.navigate("login", {
-        nextScreen: { screen: 'profileHospital', param: { item } }
-      });
-    }
-  }
-  renderItemHospital = ({ item, index }) => {
-    return (
-      <View style={{ flex: 1 }}>
-        <TouchableOpacity onPress={() => this.getDetailsHospital(item)} style={styles.cardView}>
-          <ScaledImage
-            uri={item.imageHome.absoluteUrl()}
-            height={134}
-            style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
-          />
-        </TouchableOpacity>
-        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name : ""}</Text>
-      </View>
-    );
-  }
-  renderHospital() {
-    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
-      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
-      <View style={styles.viewAds}>
-        <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
-        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
-      </View>
-      <FlatList
-        contentContainerStyle={styles.listAds}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        data={this.state.listDataHospital}
-        ListFooterComponent={<View style={styles.viewFooter}></View>}
-        renderItem={this.renderItemHospital}
-      />
-    </View>)
-  }
 
   componentWillUnmount() {
     // AppState.removeEventListener('change', this._handleAppStateChange);
@@ -299,17 +211,7 @@ class HomeScreen extends Component {
       })
     })
   }
-  onGetDoctor = () => {
-    homeProvider.listDoctor().then(res => {
-      if (res) {
-        this.setState({
-          listDataDoctor: res
-        })
-      }
-    }).catch(err => {
 
-    })
-  }
   getMarginBooking() {
     const pixel = PixelRatio.get()
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
@@ -322,7 +224,12 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{ flex: 1, alignItems: 'center' }} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{
+          flex: 1,
+          alignItems: 'center',
+          borderLeftColor: '#00000060',
+          borderLeftWidth: position == 0 ? 0 : 0.6
+        }} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -331,9 +238,9 @@ class HomeScreen extends Component {
                 onPress={item.onPress}
               >
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={40} />
                 </View>
-                  <Text style={[styles.label]}>{item.text}</Text></View>
+                  <Text style={[styles.label, { fontSize: 15, color: '#3161AD' }]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
@@ -379,24 +286,14 @@ class HomeScreen extends Component {
                 <View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
-                <Text style={[styles.label,]}>{item.text}</Text>
+                <Text style={[styles.label, { paddingHorizontal: 10 }]}>{item.text}</Text>
               </TouchableOpacity>
 
           }
         </Animatable.View>);
     })
   }
-  onGetHospital = () => {
-    homeProvider.listHospital().then(res => {
-      if (res && res.code == 0) {
-        this.setState({
-          listDataHospital: res.data
-        })
-      }
-    }).catch(err => {
-      console.log(err)
-    })
-  }
+
   getAdjustedFontSize(size) {
     return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
@@ -424,7 +321,7 @@ class HomeScreen extends Component {
       isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
     }
     let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 18 : 40)
-    let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
+    let height = (DEVICE_HEIGHT / 4) - this.state.height +statusHeight
     if (height >= 0) {
       return height
     } else {
@@ -440,13 +337,15 @@ class HomeScreen extends Component {
         hideActionbar={true}
         showBackgroundHeader={true}
         backgroundStyle={{
-          height: DEVICE_HEIGHT / 4
+          height: DEVICE_HEIGHT / 4,
+          resizeMode: 'stretch'
         }}
         backgroundHeader={headerHome}
       >
         <View style={styles.container}>
 
           <ScrollView
+            refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
             <View style={[styles.scroll, { paddingTop: this.getHeightImage() }]}>
@@ -456,7 +355,7 @@ class HomeScreen extends Component {
                   this.setState({ height: e.nativeEvent.layout.height })
                 }}
                 style={[styles.padding21,]}>
-                {this.props.userApp.isLogin ?
+                {/* {this.props.userApp.isLogin ?
                   <View
                     style={styles.containerHeadertitle}>
                     <Text
@@ -464,7 +363,7 @@ class HomeScreen extends Component {
                     >Xin chào, </Text>
                     <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
                   </View> : <View style={styles.containerHeadertitle}>
-                  </View>}
+                  </View>} */}
                 <Card style={styles.card}>
                   <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
                   <View style={{ justifyContent: 'center' }}>
@@ -480,12 +379,10 @@ class HomeScreen extends Component {
               <View style={styles.containerButton}>
                 {this.renderButton()}
               </View>
-              {
-                this.renderDoctor()
-              }
-              {
-                this.renderHospital()
-              }
+              <NewsHighLight {...this.props} refreshing={this.state.refreshing} />
+              <CategoryHighLight {...this.props} refreshing={this.state.refreshing} />
+              <DoctorHighLight {...this.props} refreshing={this.state.refreshing} />
+              <HospitalHighLight {...this.props} refreshing={this.state.refreshing} />
               <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
           </ScrollView>
@@ -577,7 +474,7 @@ const styles = StyleSheet.create({
   padding21: {
     paddingHorizontal: 21,
   },
-  card: { borderRadius: 6, paddingHorizontal: 10 },
+  card: { borderRadius: 20, paddingHorizontal: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
@@ -613,7 +510,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 20,
     textAlign: 'center',
-    fontSize: 13
+    fontSize: 13,
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5

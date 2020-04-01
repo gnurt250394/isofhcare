@@ -90,6 +90,33 @@ class SelectServiceScreen extends Component {
 
         this.setState({ listServiceSearch: listSearch });
     }
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
+            return true
+        }
+        return false
+    }
+    pricePromotion = (item) => {
+        let value = 0
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+            }
+        } else {
+            value = item?.monetaryAmount?.value
+        }
+
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={this.showSearch} style={{ padding: 10 }}>
@@ -136,6 +163,9 @@ class SelectServiceScreen extends Component {
         )
     }
     onSelected = (item) => {
+        if (item.checked) {
+            return
+        }
         let x = this.listServicesSelected.find(item2 => item2.id == item.id);
         if (x) {
             item.checked = false;
@@ -159,6 +189,7 @@ class SelectServiceScreen extends Component {
         })
     }
     renderItem = ({ item }) => {
+        console.log('item: ', item);
         return (
             <TouchableOpacity onPress={this.onPressItem1(item)}>
                 <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.6)' } : { backgroundColor: '#FFF' }]}>
@@ -166,7 +197,7 @@ class SelectServiceScreen extends Component {
                         <Text style={styles.txtServices}>
                             {item.name}
                         </Text>
-                        <Text style={{ paddingRight: 10, fontStyle: 'italic' }}>{item.monetaryAmount && item.monetaryAmount.value ? item.monetaryAmount.value.formatPrice() : 0}đ </Text>
+                        <Text style={{ paddingRight: 10, fontStyle: 'italic' }}>{this.pricePromotion(item).formatPrice()}đ </Text>
                         {/* {item.checked ?
                             <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
                             :

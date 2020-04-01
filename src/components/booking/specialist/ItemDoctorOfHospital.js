@@ -76,9 +76,12 @@ class ItemDoctorOfHospital extends Component {
                             fullStar={require("@images/ic_star.png")}
                             emptyStar={require("@images/ic_empty_star.png")}
                         />
-                        <Button label="Đặt khám"
-                            style={styles.ButtonBooking}
-                            onPress={onPress} />
+                        {!this.props.disableBooking ?
+                            <Button label="Đặt khám"
+                                style={styles.ButtonBooking}
+                                onPress={onPress} />
+                            : null
+                        }
 
                     </View>
                 </View>
@@ -90,7 +93,8 @@ const styles = StyleSheet.create({
     containerSpecialist: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 10
+        paddingBottom: 10,
+        flexWrap: 'wrap'
     },
     ButtonBooking: {
         backgroundColor: '#00CBA7',

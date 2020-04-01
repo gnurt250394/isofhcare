@@ -351,7 +351,7 @@ class NotificationScreen extends Component {
     const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
 
     return (
-      <View>
+      <View style={[item.notification.watched == 1 ? { backgroundColor: '#FFF' } : { backgroundColor: '#00CBA710' }]}>
         {
           this.getDate(item, index)
         }
