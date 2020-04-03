@@ -31,15 +31,7 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
     }, [refreshing])
     const goToDetailService = (item) => () => {
 
-        if (userApp.isLogin) {
             navigation.navigate('profileHospital', { item })
-        }
-        else {
-
-            navigation.navigate("login", {
-                nextScreen: { screen: 'profileHospital', param: { item } }
-            });
-        }
     }
     const renderItem = ({ item, index }) => {
         return (

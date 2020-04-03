@@ -137,16 +137,26 @@ class ProfileHospitalScreen extends Component {
     }
     addBooking = () => {
         const item = this.props.navigation.getParam('item', {})
-        console.log('item: ', item);
         if (item.availableBooking == 0) {
             snackbar.show('Cơ sở y tế đang cập nhật đặt khám, mời bạn quay lại sau.')
             return
         }
-        let hospital = { address: this.state.profileHospital.contact.address, ...this.state.profileHospital }
-        console.log('hospital: ', hospital);
-        this.props.navigation.navigate('addBooking1', {
-            hospital,
-        })
+        let hospital = { address: this.state?.profileHospital?.contact?.address, ...this.state.profileHospital }
+        if (this.props.userApp.isLogin) {
+            this.props.navigation.navigate('addBooking1', {
+                hospital,
+            })
+        }
+        else {
+
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: 'addBooking1', param: {
+                        hospital,
+                    }
+                }
+            });
+        }
     }
     goToMap = () => {
         this.props.navigation.navigate("mapHospital", {

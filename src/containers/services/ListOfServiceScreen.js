@@ -5,11 +5,13 @@ import ImageLoad from "mainam-react-native-image-loader";
 import StarRating from 'react-native-star-rating';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ReadMoreText from '@components/ReadMoreText';
+import { useSelector } from 'react-redux'
 import serviceProvider from '@data-access/service-provider'
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    
+    const userApp = useSelector((state) => state.userApp)
+
     const _text = useRef(null)
     const [description, setDescription] = useState('')
     const [detail, setDetail] = useState({})
@@ -20,12 +22,27 @@ const ListOfServiceScreen = ({ navigation }) => {
     const onSelected = () => {
 
         item.hospital.address = item.hospital.contact.address
-        navigation.navigate("addBooking1", {
-            hospital: item.hospital,
-            listServicesSelected: [item],
-            allowBooking: true,
-            disableService: true
-        });
+        if (userApp.isLogin) {
+            navigation.navigate('addBooking1', {
+                hospital: item.hospital,
+                listServicesSelected: [item],
+                allowBooking: true,
+                disableService: true
+            })
+        }
+        else {
+
+            navigation.navigate("login", {
+                nextScreen: {
+                    screen: 'addBooking1', param: {
+                        hospital: item.hospital,
+                        listServicesSelected: [item],
+                        allowBooking: true,
+                        disableService: true
+                    }
+                }
+            });
+        }
     }
 
     const getDetailService = async () => {
