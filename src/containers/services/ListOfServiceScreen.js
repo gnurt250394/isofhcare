@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(151, 151, 151, 0.29)'
     },
     imgService: {
-        height: 200,
+        height: (width - 50) / 1.6,
         width: width - 50,
         resizeMode: 'contain',
     },
