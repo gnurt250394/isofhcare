@@ -87,7 +87,8 @@ class PushController extends Component {
         if (!notification || notification.show_in_foreground)
             return;
         if (notification.data && notification.data.id || notification.data && notification.data.notificationId) {
-            const type = Number(notification.data.type)
+            const type = notification.data.type
+            console.log('type: ', type);
             if (type == 5) {
                 this.openTicket(notification.data.id);
             }
@@ -141,7 +142,9 @@ class PushController extends Component {
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
                 var id = notificationOpen.notification.data.id;
-                const type = Number(notificationOpen.notification.data.type)
+                console.log('id: ', id);
+                const type = notificationOpen.notification.data.type
+                console.log('type: ', type);
                 switch (type) {
                     case 1:
                         this.openQuestion(id);
@@ -281,7 +284,9 @@ class PushController extends Component {
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
-                const type = Number(notificationOpen.notification.data.type)
+                console.log('id: ', id);
+                const type = notificationOpen.notification.data.type
+                console.log('type: ', type);
 
                 switch (type) {
                     case 2:
@@ -308,7 +313,7 @@ class PushController extends Component {
                         NavigationService.navigate('detailNewsHighlight', { item: { id }  })
                         break
                     }
-                    case 'MEDICAL_SERVICE': {
+                    case "MEDICAL_SERVICE": {
                         NavigationService.navigate('listOfServices', { item: { id }  })
                         break
                     }
