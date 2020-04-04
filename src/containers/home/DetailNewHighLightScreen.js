@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native'
 import ActivityPanel from '@components/ActivityPanel'
 import HTML from 'react-native-render-html';
@@ -9,25 +9,26 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 const DetailNewHighLightScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
 
+
     const [data, setData] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [detail, setDetail] = useState({})
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listNewsCovid()
-            console.log('res: ', res);
+            let resDetail = await homeProvider.getDetailNewsCovid(item.id)
+            setLoading(false)
             if (res?.code == 200) {
-                const list = res.data.news.filter(e => e.id != item.id).slice(0, 5)
-                const obj = res.data.news.find(e => e.id == item.id)
+                const list = [...res.data.news].filter(e => e.id != item.id).slice(0, 5)
                 setData(list)
-                setDetail(obj || {})
-                setLoading(false)
-            } else {
-                setData([])
-
             }
+            if (resDetail.code == 200) {
+                setDetail(resDetail?.data || {})
+            }
+
         } catch (error) {
-            console.log('error: ', error);
+
+            setLoading(false)
             setData([])
 
         }
@@ -35,7 +36,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
     useEffect(() => {
         getServiceHighLight()
 
-    }, [])
+    }, [item.id])
     const getTime = () => {
         let time = detail?.createdDate?.substring(0, 10)
         return new Date(time).format('dd/MM/yyyy');
@@ -44,16 +45,17 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         navigation.replace('detailNewsHighlight', { item })
     }
     const renderItem = ({ item, index }) => {
+
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={detail?.image?.absoluteUrl() || ''}
+                        uri={item?.image?.absoluteUrl() || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{detail ? detail.title : ""}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item.title}</Text>
             </TouchableOpacity>
         )
     }
@@ -62,7 +64,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         // navigation.navigate('')
     }
     return (
-        <ActivityPanel title="Nội dung chi tiết">
+        <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">
             <ScrollView style={styles.container}>
                 <View style={styles.flex}>
                     <View style={styles.containerTitle}>
@@ -95,7 +97,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                                 contentContainerStyle={styles.listAds}
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item, index) => index.toString()}
+                                keyExtractor={(item, index) => `${item.id || index}`}
                                 data={data}
                                 ListFooterComponent={<View style={styles.viewFooter}></View>}
                                 renderItem={renderItem}
