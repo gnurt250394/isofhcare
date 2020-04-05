@@ -38,8 +38,13 @@ const DetailNewHighLightScreen = ({ navigation }) => {
 
     }, [item.id])
     const getTime = () => {
-        let time = detail?.createdDate?.substring(0, 10)
-        return new Date(time).format('dd/MM/yyyy');
+        if (detail?.createdDate) {
+            let time = detail?.createdDate?.substring(0, 10)
+            return new Date(time).format('dd/MM/yyyy');
+
+        } else {
+            return ''
+        }
     }
     const goToDetailService = (item) => () => {
         navigation.replace('detailNewsHighlight', { item })
