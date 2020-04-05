@@ -5,73 +5,72 @@ import ImageLoad from "mainam-react-native-image-loader";
 import StarRating from 'react-native-star-rating';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ReadMoreText from '@components/ReadMoreText';
+import { useSelector } from 'react-redux'
+import serviceProvider from '@data-access/service-provider'
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    console.log('item: ', item);
+    const userApp = useSelector((state) => state.userApp)
+
     const _text = useRef(null)
     const [description, setDescription] = useState('')
+    const [detail, setDetail] = useState({})
+    const [isLoading, setLoading] = useState(true)
     const [state, setState] = useState({
         data: [],
     })
     const onSelected = () => {
 
         item.hospital.address = item.hospital.contact.address
-        navigation.navigate("addBooking1", {
-            hospital: item.hospital,
-            listServicesSelected: [item],
-            allowBooking: true,
-            disableService: true
-        });
+        if (userApp.isLogin) {
+            navigation.navigate('addBooking1', {
+                hospital: item.hospital,
+                listServicesSelected: [item],
+                allowBooking: true,
+                disableService: true
+            })
+        }
+        else {
+
+            navigation.navigate("login", {
+                nextScreen: {
+                    screen: 'addBooking1', param: {
+                        hospital: item.hospital,
+                        listServicesSelected: [item],
+                        allowBooking: true,
+                        disableService: true
+                    }
+                }
+            });
+        }
     }
 
+    const getDetailService = async () => {
+        try {
+            let res = await serviceProvider.getDetailServices(item.id)
+            if (res) {
+                setDetail(res)
+                setLoading(false)
+            }
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getDetailService()
+    }, [])
     const renderDescription = (item) => {
         return (
             <ReadMoreText numberOfLines={4} >
-                <Text style={styles.txtDescription}>{item.description}</Text>
+                <Text style={styles.txtDescription}>{item?.description}</Text>
             </ReadMoreText>
 
         )
     }
-    const keyExtractor = (item, index) => `${index}`
-    const renderItem = ({ item, index }) => {
-        return (
-            <View style={{
-                paddingVertical: 10,
 
-            }}>
-                <View style={{
-                    height: 0.5,
-                    width: '98%',
-                    alignSelf: 'center',
-                    backgroundColor: '#00000070'
-                }} />
-                <Text style={{
-                    color: '#000',
-                    fontWeight: 'bold',
-                    paddingTop: 10
-                }}>{item.name}</Text>
-                <StarRating
-                    disabled={true}
-                    starSize={11}
-                    containerStyle={{ width: '20%' }}
-                    maxStars={5}
-                    rating={item.rating}
-                    starStyle={{ margin: 1, marginVertical: 7 }}
-                    fullStarColor={"#fbbd04"}
-                    emptyStarColor={"#fbbd04"}
-                    fullStar={require("@images/ic_star.png")}
-                    emptyStar={require("@images/ic_empty_star.png")}
-                    halfStar={require("@images/half_star.png")}
-                />
-                <Text numberOfLines={3}>{item.comment}</Text>
-            </View>
-
-        )
-    }
     const goToHospital = () => {
         navigation.navigate('profileHospital', {
-            item: item.hospital,
+            item: detail?.hospital,
             disableBooking: true
         })
     }
@@ -112,17 +111,17 @@ const ListOfServiceScreen = ({ navigation }) => {
         }
         return text.formatPrice()
     }
-    const url = item.image ? { uri: item.image } : require('@images/new/ic_default_service.png')
-    const source = item.hospital.imagePath ? { uri: item.hospital.imagePath } : require("@images/new/user.png");
+    const url = detail.image ? { uri: detail.image } : require('@images/new/ic_default_service.png')
+    const source = detail?.hospital?.imagePath ? { uri: detail?.hospital?.imagePath } : require("@images/new/user.png");
     return (
-        <ActivityPanel title="Chi tiết dịch vụ khám">
+        <ActivityPanel isLoading={isLoading} title="Chi tiết dịch vụ khám">
             <ScrollView>
                 <View style={{ paddingLeft: 25, }}>
                     <View style={styles.ContainerNameService}>
                         <View style={styles.flex}>
 
-                            <Text style={styles.txtService}>{item?.name}</Text>
-                            <Text onPress={goToHospital} style={styles.txtHospital}>{item?.hospital?.name}</Text>
+                            <Text style={styles.txtService}>{detail?.name}</Text>
+                            <Text onPress={goToHospital} style={styles.txtHospital}>{detail?.hospital?.name}</Text>
                         </View>
                         <TouchableOpacity
                             onPress={goToHospital}
@@ -147,15 +146,15 @@ const ListOfServiceScreen = ({ navigation }) => {
                     </View>
                     <Image source={url} style={styles.imgService} />
                     {
-                        item?.promotion?.value && disablePromotion(item.promotion) ?
+                        detail?.promotion?.value && disablePromotion(detail.promotion) ?
                             <View style={styles.groupPrice}>
-                                <Text style={styles.txtPriceFinal}>{renderPricePromotion(item)} đ</Text>
-                                <Text style={styles.txtPriceUnit}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                                <Text style={styles.txtPriceFinal}>{renderPricePromotion(detail)} đ</Text>
+                                <Text style={styles.txtPriceUnit}>{detail?.monetaryAmount?.value?.formatPrice()} đ</Text>
 
-                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(item.promotion)}</Text>
+                                <Text style={styles.txtVoucher}>Giảm {renderPromotion(detail.promotion)}</Text>
                             </View> :
                             <View style={styles.groupPrice}>
-                                <Text style={styles.txtPriceFinal}>{item?.monetaryAmount?.value?.formatPrice()} đ</Text>
+                                <Text style={styles.txtPriceFinal}>{detail?.monetaryAmount?.value?.formatPrice()} đ</Text>
                             </View>
                     }
 
@@ -186,7 +185,7 @@ const ListOfServiceScreen = ({ navigation }) => {
                 </View> */}
                 <View style={styles.containerDetail}>
                     <Text style={styles.txtlabel}>Mô tả chi tiết</Text>
-                    {renderDescription(item)}
+                    {renderDescription(detail)}
                 </View>
 
                 {/** rating */}
@@ -304,7 +303,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(151, 151, 151, 0.29)'
     },
     imgService: {
-        height: 200,
+        height: (width - 50) / 1.6,
         width: width - 50,
         resizeMode: 'contain',
     },

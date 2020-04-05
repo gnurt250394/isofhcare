@@ -4,7 +4,8 @@ import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@data-access/service-provider'
 import ImageLoad from "mainam-react-native-image-loader";
 import ImageUtils from 'mainam-react-native-image-utils'
-const { height } = Dimensions.get('screen')
+const { height, width } = Dimensions.get('screen')
+console.log('width: ', width - 336);
 const ListServicesScreen = ({ navigation }) => {
     const [state, setState] = useState(
         {
@@ -147,10 +148,12 @@ const styles = StyleSheet.create({
     },
     containerItem: {
         borderRadius: 10,
-        height: height / 6,
+        width: width - 30,
+        alignSelf: 'center',
+        height: (width - 30) / 3,
         marginTop: 10,
         // marginBottom: 12,
-        marginHorizontal: 17,
+        // marginHorizontal: 17,
         // shadowColor: '#000',
         // shadowOffset: { width: 2, height: 2 },
         // shadowOpacity: 0.3,

@@ -321,7 +321,7 @@ class HomeScreen extends Component {
       isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
     }
     let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 18 : 40)
-    let height = (DEVICE_HEIGHT / 4) - this.state.height +statusHeight
+    let height = (DEVICE_WIDTH/2) - this.state.height +statusHeight
     if (height >= 0) {
       return height
     } else {
@@ -337,8 +337,8 @@ class HomeScreen extends Component {
         hideActionbar={true}
         showBackgroundHeader={true}
         backgroundStyle={{
-          height: DEVICE_HEIGHT / 4,
-          resizeMode: 'stretch'
+          height: DEVICE_WIDTH/2,
+          resizeMode: 'cover'
         }}
         backgroundHeader={headerHome}
       >
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: "row",
-    padding: 21,
+    paddingHorizontal:21,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     borderRadius: 5,
