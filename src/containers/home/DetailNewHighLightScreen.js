@@ -79,11 +79,15 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                             paddingBottom: 10
                         }}>{getTime()}</Text>
                         <Image source={{ uri: detail?.image?.absoluteUrl() || '' }} style={styles.imageNews} />
-                        <HTML html={'<div style="color: black">' + detail?.content + '</div>'}
-                            allowFontScaling={false}
-                            imagesMaxWidth={Dimensions.get('window').width - 30}
-                            imagesInitialDimensions={{ width: Dimensions.get('window').width - 30, height: (Dimensions.get('window').width - 30) * 1.5, }}
-                        />
+                        {
+                            detail?.content ?
+                                <HTML html={'<div style="color: black">' + detail?.content + '</div>'}
+                                    allowFontScaling={false}
+                                    imagesMaxWidth={Dimensions.get('window').width - 30}
+                                    imagesInitialDimensions={{ width: Dimensions.get('window').width - 30, height: (Dimensions.get('window').width - 30) * 1.5, }}
+                                />
+                                : null
+                        }
                     </View>
                     <View style={styles.containerButton}>
                         <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
