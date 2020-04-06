@@ -81,12 +81,14 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
+        console.log('notification: ', notification);
         if (!this.props.userApp.isLogin)
             return;
         if (!notification || notification.show_in_foreground)
             return;
         if (notification.data && notification.data.id || notification.data && notification.data.notificationId) {
-            const type = Number(notification.data.type)
+            const type = notification.data.type
+            console.log('type: ', type);
             if (type == 5) {
                 this.openTicket(notification.data.id);
             }
@@ -135,11 +137,14 @@ class PushController extends Component {
 
     }
     onNotificationOpened(notificationOpen) {
+        console.log('notificationOpen: ', notificationOpen);
         try {
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
                 var id = notificationOpen.notification.data.id;
-                const type = Number(notificationOpen.notification.data.type)
+                console.log('id: ', id);
+                const type = notificationOpen.notification.data.type
+                console.log('type: ', type);
                 switch (type) {
                     case 1:
                         this.openQuestion(id);
@@ -164,6 +169,22 @@ class PushController extends Component {
                         break;
                     case -1:
                         break;
+                    case 'NEWS': {
+                        NavigationService.navigate('detailNewsHighlight', { item: { id } })
+                        break
+                    }
+                    case 'MEDICAL_SERVICE': {
+                        NavigationService.navigate('listOfServices', { item: { id }  })
+                        break
+                    }
+                    case 'HOSPITAL': {
+                        NavigationService.navigate('profileHospital', { item: { id }  })
+                        break
+                    }
+                    case 'DOCTOR': {
+                        NavigationService.navigate('detailsDoctor', { item: { id }  })
+                        break
+                    }
 
                 }
             }
@@ -258,11 +279,14 @@ class PushController extends Component {
         });
     }
     getInitialNotification(notificationOpen) {
+        console.log('notificationOpen: ', notificationOpen);
         if (notificationOpen) {
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
-                const type = Number(notificationOpen.notification.data.type)
+                console.log('id: ', id);
+                const type = notificationOpen.notification.data.type
+                console.log('type: ', type);
 
                 switch (type) {
                     case 2:
@@ -285,6 +309,22 @@ class PushController extends Component {
                     case 10:
                         this.openBooking(id);
                         break;
+                    case 'NEWS': {
+                        NavigationService.navigate('detailNewsHighlight', { item: { id }  })
+                        break
+                    }
+                    case "MEDICAL_SERVICE": {
+                        NavigationService.navigate('listOfServices', { item: { id }  })
+                        break
+                    }
+                    case 'HOSPITAL': {
+                        NavigationService.navigate('profileHospital', { item: { id }  })
+                        break
+                    }
+                    case 'DOCTOR': {
+                        NavigationService.navigate('detailsDoctor', { item: { id }  })
+                        break
+                    }
                 }
             } catch (error) {
                 console.log(error);
