@@ -431,6 +431,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         textAlign: 'center',
+        width:'100%',
+        flex:1
     },
     inputStyle: {
         borderBottomWidth: 4,
