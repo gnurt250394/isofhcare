@@ -10,7 +10,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listNewsCovid()
-            console.log('res: ', res);
+            
             if (res?.code == 200) {
                 setData(res.data.news)
             } else {
@@ -18,7 +18,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
 
             }
         } catch (error) {
-            console.log('error: ', error);
+            
             setData([])
 
         }
@@ -40,7 +40,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={item.image.absoluteUrl()}
+                        uri={item?.image?.absoluteUrl() || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
