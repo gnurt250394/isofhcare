@@ -104,7 +104,8 @@ const ListServicesScreen = ({ navigation }) => {
             <FlatList
                 data={state.data}
                 contentContainerStyle={{
-                    paddingTop: '6%'
+                    paddingTop: '6%',
+                    paddingBottom:10
                 }}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
