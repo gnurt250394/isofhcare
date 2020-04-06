@@ -72,15 +72,15 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
 
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
-                <View  style={styles.cardView}>
+                <View style={styles.cardView}>
                     <ScaledImage
                         uri={item?.image?.absoluteUrl() || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
                 </View>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.name?.trimStart() || ""}</Text>
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item?.hospital?.name?.trimStart() || ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item && item.name ? item.name : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txtHospital}>{item.hospital.name && item.hospital.name ? item.hospital.name : ""}</Text>
                 {
 
                     item?.promotion?.value && disablePromotion(item?.promotion) ?
@@ -88,7 +88,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
                             <Text style={styles.txtPrice}>{renderPricePromotion(item)} đ</Text>
 
                             <Text style={styles.txtUnit}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
-                            </ View>
+                        </ View>
                         :
                         <Text style={styles.txtPrice}>{(item?.monetaryAmount?.value || 0).formatPrice()} đ</Text>
 
