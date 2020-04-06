@@ -78,8 +78,8 @@ const ItemService = ({ item, onPress }) => {
             </View>
             <Image resizeMode='cover' source={require("@images/new/ic_line_dash.png")} style={styles.imageLine} />
             <View style={styles.containerProfile}>
-                <Text style={styles.txtName}>{item.name}</Text>
-                <Text style={styles.txtHospital}>{item.hospital.name}</Text>
+                <Text numberOfLines={2} style={styles.txtName}>{item.name}</Text>
+                <Text numberOfLines={2} style={styles.txtHospital}>{item.hospital.name}</Text>
                 {
                     item?.promotion?.value && disablePromotion(item.promotion) ?
                         <View style={styles.groupPrice}>
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
     txtPriceFinal: {
         color: '#00BA99',
         paddingRight: 10,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingTop:10
     },
     groupPrice: {
         flexDirection: 'row',
@@ -170,7 +171,8 @@ const styles = StyleSheet.create({
         },
         shadowColor: '#000',
         elevation: 3,
-        height: 170,
+        height: 180,
+        overflow:'hidden'
     },
     flag: {
         position: 'absolute',
