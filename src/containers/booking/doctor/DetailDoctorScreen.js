@@ -68,11 +68,25 @@ class DetailsDoctorScreen extends Component {
   }
 
   addBooking = () => {
-    this.props.navigation.navigate('selectTimeDoctor', {
-      item: this.state.profileDoctor,
-      isNotHaveSchedule: true,
-      schedules: this.state.profileDoctor.schedules
-    })
+    if (this.props.userApp.isLogin) {
+      this.props.navigation.navigate('selectTimeDoctor', {
+        item: this.state.profileDoctor,
+        isNotHaveSchedule: true,
+        schedules: this.state.profileDoctor.schedules
+      })
+    }
+    else {
+
+      this.props.navigation.navigate("login", {
+        nextScreen: {
+          screen: 'selectTimeDoctor', param: {
+            item: this.state.profileDoctor,
+            isNotHaveSchedule: true,
+            schedules: this.state.profileDoctor.schedules
+          }
+        }
+      });
+    }
   }
   goToAdvisory = () => {
     // this.props.navigation.navigate("listQuestion");

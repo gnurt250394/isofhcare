@@ -33,13 +33,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             getServiceHighLight()
     }, [refreshing])
     const goToDetailService = (item) => () => {
-        if (userApp.isLogin) {
             navigation.navigate('detailsDoctor', { item })
-        } else {
-            navigation.navigate("login", {
-                nextScreen: { screen: "detailsDoctor", param: { item } }
-            });
-        }
     }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
