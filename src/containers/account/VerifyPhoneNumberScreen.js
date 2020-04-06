@@ -436,6 +436,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 4,
         borderColor: '#3161AD',
         width: 38,
+        height:42,
         alignItems: 'center',
         textAlign: 'center',
     },
