@@ -8,7 +8,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import Button from './Button';
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
-
+import { withNavigation } from 'react-navigation'
+import { connect } from 'react-redux';
 class ItemDoctor extends Component {
     constructor(props) {
         super(props);
@@ -25,15 +26,59 @@ class ItemDoctor extends Component {
     }
 
     onMessage = () => {
-        
+        this.setState({ isVisible: false }, () => {
+            if (this.props.userApp.isLogin) {
+                this.props.navigation.navigate('selectTimeDoctor', {
+                    item: this.state.item,
+                    isNotHaveSchedule: true,
+                    schedules: this.state.item.schedules
+                })
+            }
+            else {
+
+                this.props.navigation.navigate("login", {
+                    nextScreen: {
+                        screen: 'selectTimeDoctor', param: {
+                            item: this.state.item,
+                            isNotHaveSchedule: true,
+                            schedules: this.state.item.schedules
+                        }
+                    }
+                });
+            }
+
+        })
+
     }
     onCallVideo = () => {
-        
+        this.setState({ isVisible: false }, () => {
+            if (this.props.userApp.isLogin) {
+                this.props.navigation.navigate('selectTimeDoctor', {
+                    item: this.state.item,
+                    isNotHaveSchedule: true,
+                    schedules: this.state.item.schedules
+                })
+            }
+            else {
+
+                this.props.navigation.navigate("login", {
+                    nextScreen: {
+                        screen: 'selectTimeDoctor', param: {
+                            item: this.state.item,
+                            isNotHaveSchedule: true,
+                            schedules: this.state.item.schedules
+                        }
+                    }
+                });
+            }
+
+        })
+
 
     }
     showModal = (item) => () => {
-        snackbar.show('Tính năng đang phát triển')
-        return
+        // snackbar.show('Tính năng đang phát triển')
+        // return
         this.setState({ isVisible: true, item })
     }
     renderDots = (item, i) => {
@@ -50,7 +95,7 @@ class ItemDoctor extends Component {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
         const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
-        
+
         return (
             <View>
                 <TouchableHighlight onPress={onPressDoctor} underlayColor={'#fff'} style={styles.containerItem}>
@@ -104,7 +149,7 @@ class ItemDoctor extends Component {
                                     }
                                 </View>
                                 <View style={styles.containerButton}>
-                                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.showModal(item)} source={require("@images/new/booking/ic_chat.png")} />
+                                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.showModal(item)} source={require("@images/new/videoCall/ic_call.png")} />
                                     <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                                 </View>
                             </View>
@@ -316,4 +361,9 @@ const styles = StyleSheet.create({
     },
 
 });
-export default ItemDoctor;
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(withNavigation(ItemDoctor));

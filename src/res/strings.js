@@ -153,6 +153,7 @@ module.exports = {
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
     action_otp_phone: "ACTION_OTP_PHONE",
     action_add_drug: 'ACTION_ADD_DRUG',
+    save_user_id:'SAVE_USER_ID'
   },
   colors: {
     breakline: "#c0c0c0",
@@ -872,7 +873,8 @@ module.exports = {
       check_otp_phone: isofhcare_service + 'user/verify-sms-code',
       re_send_otp: isofhcare_service + 'user/registration',
       get_user_details: isofhcare_service + '/user',
-      resetPw: isofhcare_service + 'user/replace-password'
+      resetPw: isofhcare_service + 'user/replace-password',
+      get_token: isofhcare_service + 'user/call/access-token'
 
 
     },

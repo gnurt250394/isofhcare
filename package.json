@@ -101,7 +101,8 @@
     "realm": "^2.29.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "rn-fetch-blob": "^0.10.16"
+    "rn-fetch-blob": "^0.10.16",
+    "stringee-react-native": "^1.2.9"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

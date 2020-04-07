@@ -53,6 +53,19 @@ module.exports = {
       if (callback) callback(s, e);
     });
   },
+  getToken(userId) {
+    return new Promise((resolve, reject) => {
+      // var body = {
+      //   phoneOrMail: phone,
+      //   code
+      // };
+      client.requestApi("get", constants.api.user.get_token, {}, (s, e) => {
+        if (s) resolve(s);
+        reject(e);
+      });
+    })
+
+  },
   changePassword(id, passwordOld, passwordNew, ) {
     return new Promise((resolve, reject) => {
       var body = {

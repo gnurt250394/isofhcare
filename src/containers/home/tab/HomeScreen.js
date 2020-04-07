@@ -38,6 +38,7 @@ import CategoryHighLight from "@components/home/CategoryHighLight";
 import DoctorHighLight from "@components/home/DoctorHighLight";
 import HospitalHighLight from "@components/home/HospitalHighLight";
 import NewsHighLight from "@components/home/NewsHighLight";
+import InitialVideoCall from "@components/InitialVideoScreen";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -320,7 +321,7 @@ class HomeScreen extends Component {
       isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
     }
     let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 18 : 40)
-    let height = (DEVICE_WIDTH/2) - this.state.height +statusHeight
+    let height = (DEVICE_WIDTH / 2) - this.state.height + statusHeight
     if (height >= 0) {
       return height
     } else {
@@ -328,6 +329,7 @@ class HomeScreen extends Component {
     }
   }
   render() {
+    console.log(this.props.userApp,'login')
     const headerHome = require("@images/app/header.png")
     return (
       <ActivityPanel
@@ -336,7 +338,7 @@ class HomeScreen extends Component {
         hideActionbar={true}
         showBackgroundHeader={true}
         backgroundStyle={{
-          height: DEVICE_WIDTH/2,
+          height: DEVICE_WIDTH / 2,
           resizeMode: 'cover'
         }}
         backgroundHeader={headerHome}
@@ -386,6 +388,11 @@ class HomeScreen extends Component {
             </View>
           </ScrollView>
         </View>
+        {
+          this.props.userApp.isLogin ?
+            <InitialVideoCall {...this.props} />
+            : null
+        }
         <PushController />
       </ActivityPanel>
     );
@@ -438,7 +445,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: "row",
-    paddingHorizontal:21,
+    paddingHorizontal: 21,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     borderRadius: 5,
@@ -567,6 +574,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
+  console.log('state: ', state);
   return {
     userApp: state.userApp
   };
