@@ -156,6 +156,13 @@ class HomeScreen extends Component {
           text: "Nhiều hơn",
           onPress: () => {
             snackbar.show('Tính năng đang phát triển')
+            // this.props.navigation.navigate("videoCall", {
+            //   from: this.props.userApp?.currentUser?.id || "",
+            //   to: 5640,
+            //   isOutgoingCall: true,
+            //   isVideoCall: true,
+            //   profile: {doctor:{name:'trung'},patient:{name:"hihi"}}
+            // });
           }
         }
       ],

@@ -188,6 +188,7 @@ class VideoCallScreen extends Component {
         sipReason
     }) => {
         console.log(
+            "_callDidChangeSignalingState" +
             "callId-" +
             callId +
             "code-" +
@@ -203,7 +204,7 @@ class VideoCallScreen extends Component {
         switch (code) {
             case 2:
                 this.setState({ answered: true });
-                if (this.mediaConnected) {
+                if (this.state.mediaConnected) {
                     this.setState({ callState: "Started" });
                 }
                 break;
@@ -243,7 +244,7 @@ class VideoCallScreen extends Component {
     // Media state
     _callDidChangeMediaState = ({ callId, code, description }) => {
         console.log(
-            "callId-" + callId + "code-" + code + " description-" + description
+            "_callDidChangeMediaState" + "callId-" + callId + "code-" + code + " description-" + description
         );
         switch (code) {
             case 0:
@@ -403,20 +404,33 @@ class VideoCallScreen extends Component {
                 {this.state.isVideoCall &&
                     this.state.callId !== "" &&
                     this.state.hasReceivedRemoteStream && (
-                        <StringeeVideoView
-                            style={styles.remoteView}
-                            callId={this.state.callId}
-                            local={false}
-                        />
+                        <View style={styles.remoteView}>
+                            <StringeeVideoView
+                                style={styles.remoteView}
+                                callId={this.state.callId}
+                                local={false}
+                            />
+                        </View>
                     )}
 
                 <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: '100%',
                     paddingTop: 15,
-                    marginBottom: 20
+                    marginBottom: 20,
+                    alignSelf: 'flex-end'
                 }}>
+
+                    {this.state.hasReceivedLocalStream &&
+                        this.state.callId !== "" &&
+                        this.state.isVideoCall && (
+                            <StringeeVideoView
+                                style={styles.localView}
+                                callId={this.state.callId}
+                                local={true}
+                                overlay={true}
+                            >
+
+                            </StringeeVideoView>
+                        )}
                     {this.state.isVideoCall && (
                         <TouchableOpacity
                             onPress={this._onSwitchCameraPress}
@@ -428,16 +442,6 @@ class VideoCallScreen extends Component {
                             />
                         </TouchableOpacity>
                     )}
-                    {this.state.hasReceivedLocalStream &&
-                        this.state.callId !== "" &&
-                        this.state.isVideoCall && (
-                            <StringeeVideoView
-                                style={styles.localView}
-                                callId={this.state.callId}
-                                local={true}
-                            />
-                        )}
-
 
                 </View>
                 <View style={{
@@ -540,7 +544,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         backgroundColor: "#00A6AD",
-        position: "relative"
     },
 
     callOptionContainer: {
@@ -596,23 +599,22 @@ const styles = StyleSheet.create({
         right: 20,
         width: 150,
         height: 200,
-        zIndex: 1
+        zIndex: 2,
     },
     remoteView: {
         backgroundColor: "black",
         position: "absolute",
-        top: 0,
-        left: 0,
         width: width,
         height: height,
         zIndex: 0
     },
     camera: {
-        top: 40,
-        left: 20,
+        top: 190,
+        right: 70,
         width: 40,
         height: 40,
-        zIndex: 2
+        zIndex: 3,
+        position: 'absolute',
     }
 });
 function mapStateToProps(state) {
