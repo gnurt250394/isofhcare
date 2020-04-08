@@ -157,6 +157,22 @@ module.exports = {
             );
         })
     },
+    get_detail_schedules_online(hospitalId, doctorId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_schedules1 +
+                `/` +
+                `${hospitalId}/${doctorId}/online`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        })
+    },
     /**
      * 
      * @param {string} date 
@@ -172,14 +188,15 @@ module.exports = {
      * @param {object} room 
      */
     create(date, description, doctor, hospitals, items, patients, scheduleId, time, room, idUser, images) {
+        console.log('items: ', items);
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
             let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '' }
-            let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '' }]
+            let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '', isOnline: items.isOnline }]
             room = {
                 "id": room.id,
-                "name": room.name
+                "name": room.name,
             }
             let patient = {
                 id: idUser,

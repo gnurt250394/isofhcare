@@ -5,7 +5,6 @@ import serviceProvider from '@data-access/service-provider'
 import ImageLoad from "mainam-react-native-image-loader";
 import ImageUtils from 'mainam-react-native-image-utils'
 const { height, width } = Dimensions.get('screen')
-console.log('width: ', width - 336);
 const ListServicesScreen = ({ navigation }) => {
     const [state, setState] = useState(
         {
