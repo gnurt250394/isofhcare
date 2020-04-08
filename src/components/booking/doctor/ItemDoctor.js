@@ -50,29 +50,33 @@ class ItemDoctor extends Component {
         })
 
     }
-    onCallVideo = () => {
-        this.setState({ isVisible: false }, () => {
-            if (this.props.userApp.isLogin) {
-                this.props.navigation.navigate('selectTimeDoctor', {
-                    item: this.state.item,
-                    isNotHaveSchedule: true,
-                    schedules: this.state.item.schedules
-                })
-            }
-            else {
+    onCallVideo = (item) => () => {
+        // this.setState({ isVisible: false }, () => {
+        if (this.props.userApp.isLogin) {
+            this.props.navigation.navigate('selectTimeDoctor', {
+                item: item,
+                isNotHaveSchedule: true,
+                isOnline: true
 
-                this.props.navigation.navigate("login", {
-                    nextScreen: {
-                        screen: 'selectTimeDoctor', param: {
-                            item: this.state.item,
-                            isNotHaveSchedule: true,
-                            schedules: this.state.item.schedules
-                        }
+                // schedules: item.schedules
+            })
+        }
+        else {
+
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: 'selectTimeDoctor', param: {
+                        item: item,
+                        isNotHaveSchedule: true,
+                        isOnline: true
+
+                        // schedules: item.schedules
                     }
-                });
-            }
+                }
+            });
+        }
 
-        })
+        // })
 
 
     }
@@ -149,7 +153,7 @@ class ItemDoctor extends Component {
                                     }
                                 </View>
                                 <View style={styles.containerButton}>
-                                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.showModal(item)} source={require("@images/new/videoCall/ic_call.png")} />
+                                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo(item)} source={require("@images/new/videoCall/ic_call.png")} />
                                     <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                                 </View>
                             </View>

@@ -329,7 +329,6 @@ class HomeScreen extends Component {
     }
   }
   render() {
-    console.log(this.props.userApp,'login')
     const headerHome = require("@images/app/header.png")
     return (
       <ActivityPanel

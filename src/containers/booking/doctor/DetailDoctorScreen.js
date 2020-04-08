@@ -96,62 +96,64 @@ class DetailsDoctorScreen extends Component {
   }
 
   onCallVideo = () => {
-    this.setState({ isVisible: false }, () => {
-      // if (this.props.userApp.isLogin) {
-      //   this.props.navigation.navigate('selectTimeDoctor', {
-      //     item: this.state.item,
-      //     isNotHaveSchedule: true,
-      //     schedules: this.state.item.schedules
-      //   })
-      // }
-      // else {
+    // this.setState({ isVisible: false }, () => {
+    if (this.props.userApp.isLogin) {
+      this.props.navigation.navigate('selectTimeDoctor', {
+        item: this.state.profileDoctor,
+        isNotHaveSchedule: true,
+        schedules: this.state.profileDoctor.schedules,
+        isOnline:true
 
-      //   this.props.navigation.navigate("login", {
-      //     nextScreen: {
-      //       screen: 'selectTimeDoctor', param: {
-      //         item: this.state.item,
-      //         isNotHaveSchedule: true,
-      //         schedules: this.state.item.schedules
-      //       }
-      //     }
-      //   });
-      // }
+      })
+    }
+    else {
 
-      this.props.navigation.navigate("videoCall", {
-        from: this.state.myUserId,
-        to: this.state.item.userId,
-        isOutgoingCall: true,
-        isVideoCall: true
+      this.props.navigation.navigate("login", {
+        nextScreen: {
+          screen: 'selectTimeDoctor', param: {
+            item: this.state.profileDoctor,
+            isNotHaveSchedule: true,
+            schedules: this.state.profileDoctor.schedules,
+            isOnline:true
+          }
+        }
       });
-    })
+    }
+    // this.props.navigation.navigate("videoCall", {
+    //   from: this.props.userApp.currentUser.id,
+    //   to: this.state.item.userId,
+    //   isOutgoingCall: true,
+    //   isVideoCall: true
+    // });
+    // })
   }
   onCallVoice = () => {
     this.setState({ isVisible: false }, () => {
-      // if (this.props.userApp.isLogin) {
-      //   this.props.navigation.navigate('selectTimeDoctor', {
-      //     item: this.state.item,
-      //     isNotHaveSchedule: true,
-      //     schedules: this.state.item.schedules
-      //   })
-      // }
-      // else {
+      if (this.props.userApp.isLogin) {
+        this.props.navigation.navigate('selectTimeDoctor', {
+          item: this.state.item,
+          isNotHaveSchedule: true,
+          schedules: this.state.item.schedules
+        })
+      }
+      else {
 
-      //   this.props.navigation.navigate("login", {
-      //     nextScreen: {
-      //       screen: 'selectTimeDoctor', param: {
-      //         item: this.state.item,
-      //         isNotHaveSchedule: true,
-      //         schedules: this.state.item.schedules
-      //       }
-      //     }
-      //   });
-      // }
-      this.props.navigation.navigate("videoCall", {
-        from: this.state.myUserId,
-        to: this.state.callToUserId,
-        isOutgoingCall: true,
-        isVideoCall: false
-      });
+        this.props.navigation.navigate("login", {
+          nextScreen: {
+            screen: 'selectTimeDoctor', param: {
+              item: this.state.item,
+              isNotHaveSchedule: true,
+              schedules: this.state.item.schedules
+            }
+          }
+        });
+      }
+      // this.props.navigation.navigate("videoCall", {
+      //   from: this.state.myUserId,
+      //   to: this.state.callToUserId,
+      //   isOutgoingCall: true,
+      //   isVideoCall: false
+      // });
     })
   }
   renderText = (data) => {
@@ -268,7 +270,7 @@ class DetailsDoctorScreen extends Component {
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
-                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/videoCall/ic_call.png")} />
+                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
                     {!this.state.disableBooking ?
                       <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                       : <View style={{ flex: 1 }} />

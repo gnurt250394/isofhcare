@@ -14,9 +14,7 @@ import { StringeeClient } from "stringee-react-native";
 import UserProvider from '@data-access/user-provider'
 import { connect } from "react-redux";
 import reduxStore from '@redux-store'
-const user1 = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJTS05aQ2pHNXRRb2czME1yVGY4cXBNWm9zUHZoak5vb2RFIiwicmVzdF9hcGkiOnRydWUsImV4cCI6MTU4OTgzMDk1MywidXNlcklkIjo1MDg5LCJqdGkiOiJTS05aQ2pHNXRRb2czME1yVGY4cXBNWm9zUHZoak5vb2RFLTE1ODYyMzA5NTM4NjYifQ.NkcU1QlxcXZlnuzegfD2I_mJxvg2VaMlP2ph6uBtSFg";
-const user2 = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJTS05aQ2pHNXRRb2czME1yVGY4cXBNWm9zUHZoak5vb2RFIiwiZXhwIjoxNTg2MjM2NzU1LCJ1c2VySWQiOiI1MDg5IiwianRpIjoiU0tOWkNqRzV0UW9nMzBNclRmOHFwTVpvc1B2aGpOb29kRS0xNTg2MjMzMTU1MTE2In0.4xt9jklPXDcJsbEqYisR389Ym_BkW9_OHGkUBiz1FFQ";
-
+import RNCallKeepManager from '@components/RNCallKeepManager'
 const iOS = Platform.OS === "ios" ? true : false;
 
 class InitialVideoCall extends Component {
@@ -28,7 +26,6 @@ class InitialVideoCall extends Component {
       callToUserId: "",
       hasConnected: false
     };
-
     this.clientEventHandlers = {
       onConnect: this._clientDidConnect,
       onDisConnect: this._clientDidDisConnect,
@@ -38,7 +35,7 @@ class InitialVideoCall extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.getTokenAndConnect()
 
   }
@@ -59,15 +56,13 @@ class InitialVideoCall extends Component {
     console.log('isReconnecting: ', isReconnecting);
     console.log('projectId: ', projectId);
     console.log("_clientDidConnect - " + userId);
-    reduxStore.saveUserId(userId)
 
   };
 
   _clientDidDisConnect = (err) => {
     console.log('err: ', err);
     console.log("_clientDidDisConnect");
-    reduxStore.saveUserId('')
-    
+
   };
 
   _clientDidFailWithError = (e) => {
@@ -76,6 +71,7 @@ class InitialVideoCall extends Component {
   };
 
   _clientRequestAccessToken = () => {
+    this.getTokenAndConnect()
     console.log("_clientRequestAccessToken");
     // Token để kết nối tới Stringee server đã hết bạn. Bạn cần lấy token mới và gọi connect lại ở đây
     // this.refs.client.connect("NEW_TOKEN");
@@ -110,44 +106,16 @@ class InitialVideoCall extends Component {
       "customDataFromYourServer-" +
       customDataFromYourServer
     );
-
-    this.props.navigation.navigate("videoCall", {
-      callId: callId,
-      from: from,
-      to: to,
-      isOutgoingCall: false,
-      isVideoCall: isVideoCall
-    });
+    // RNCallKeepManager.setIsAppForeGround(true)
+    // RNCallKeepManager.displayIncommingCall({
+    //   callId: callId,
+    //   from: from,
+    //   to: to,
+    //   isOutgoingCall: false,
+    //   isVideoCall: isVideoCall
+    // });
   };
 
-  // Action
-  _onVoiceCallButtonPress = () => {
-    console.log("_onVoiceCallButtonPress");
-    Keyboard.dismiss();
-    if (this.state.callToUserId != "" && this.state.hasConnected) {
-      this.props.navigation.navigate("videoCall", {
-        from: this.state.myUserId,
-        to: this.state.callToUserId,
-        isOutgoingCall: true,
-        isVideoCall: false
-      });
-    }
-  };
-
-  _onVideoCallButtonPress = () => {
-    Keyboard.dismiss();
-    console.log("_onVideoCallButtonPress");
-    console.log('this.state.hasConnected: ', this.state.hasConnected);
-    console.log('this.state.callToUserId : ', this.state.callToUserId);
-    if (this.state.callToUserId != "" && this.state.hasConnected) {
-      this.props.navigation.navigate("videoCall", {
-        from: this.state.myUserId,
-        to: this.state.callToUserId,
-        isOutgoingCall: true,
-        isVideoCall: true
-      });
-    }
-  };
 
   render() {
     return (
@@ -162,22 +130,10 @@ class InitialVideoCall extends Component {
 
       //   <Text style={styles.info}>Logged in as: {this.state.myUserId}</Text>
 
-      //   <TextInput
-      //     underlineColorAndroid="transparent"
-      //     style={styles.input}
-      //     autoCapitalize="none"
-      //     value={this.state.callToUserId}
-      //     placeholder="Make a call to userId"
-      //     onChangeText={text => this.setState({ callToUserId: text })}
-      //   />
+
 
       //   <View style={styles.buttonView}>
-      //     <TouchableOpacity
-      //       style={styles.button}
-      //       onPress={this._onVoiceCallButtonPress}
-      //     >
-      //       <Text style={styles.text}>Voice videoCall</Text>
-      //     </TouchableOpacity>
+
 
       //     <TouchableOpacity
       //       style={styles.button}

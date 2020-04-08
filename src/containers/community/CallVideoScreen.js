@@ -16,7 +16,7 @@ import { each } from "underscore";
 import { StringeeCall, StringeeVideoView } from "stringee-react-native";
 import { connect } from "react-redux";
 
-var height = Dimensions.get("window").height;
+var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
 
 const muteImg = require("@images/new/videoCall/mute.png");
@@ -90,7 +90,8 @@ class VideoCallScreen extends Component {
         hasReceivedRemoteStream: false,
 
         answered: false,
-        mediaConnected: false
+        mediaConnected: false,
+        profile: this.props.navigation.getParam('profile', {})
     };
 
     componentWillMount() { }
@@ -124,7 +125,7 @@ class VideoCallScreen extends Component {
                 from,
                 to,
                 isVideoCall,
-                videoResolution: "NORMAL"
+                videoResolution: "HD"
             };
 
             const parameters = JSON.stringify(myObj);
@@ -407,31 +408,42 @@ class VideoCallScreen extends Component {
                         />
                     )}
 
-                {this.state.hasReceivedLocalStream &&
-                    this.state.callId !== "" &&
-                    this.state.isVideoCall && (
-                        <StringeeVideoView
-                            style={styles.localView}
-                            callId={this.state.callId}
-                            local={true}
-                        />
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    paddingTop: 15,
+                    marginBottom: 20
+                }}>
+                    {this.state.isVideoCall && (
+                        <TouchableOpacity
+                            onPress={this._onSwitchCameraPress}
+                            style={styles.camera}
+                        >
+                            <Image
+                                source={require("@images/new/videoCall/camera_switch.png")}
+                                style={{ width: 40, height: 40 }}
+                            />
+                        </TouchableOpacity>
                     )}
+                    {this.state.hasReceivedLocalStream &&
+                        this.state.callId !== "" &&
+                        this.state.isVideoCall && (
+                            <StringeeVideoView
+                                style={styles.localView}
+                                callId={this.state.callId}
+                                local={true}
+                            />
+                        )}
 
-                {this.state.isVideoCall && (
-                    <TouchableOpacity
-                        onPress={this._onSwitchCameraPress}
-                        style={styles.camera}
-                    >
-                        <Image
-                            source={require("@images/new/videoCall/camera_switch.png")}
-                            style={{ width: 40, height: 40 }}
-                        />
-                    </TouchableOpacity>
-                )}
 
-                <Text style={styles.userId}>{this.state.userId}</Text>
-                <Text style={styles.callState}>{this.state.callState}</Text>
-
+                </View>
+                <View style={{
+                    flex: 1
+                }}>
+                    <Text style={styles.userId}>{this.state.profile.name}</Text>
+                    <Text style={styles.callState}>{this.state.callState}</Text>
+                </View>
                 {this.state.isShowOptionView ? (
                     <View style={styles.callOptionContainer}>
                         <TouchableOpacity onPress={this._onMutePress}>
@@ -530,34 +542,30 @@ const styles = StyleSheet.create({
     },
 
     callOptionContainer: {
-        height: 70,
-        width: 280,
+        width: width - 100,
+        alignSelf: 'center',
         flexDirection: "row",
         justifyContent: "space-between",
-        position: "absolute",
-        bottom: 200
     },
 
     callActionContainer: {
-        position: "absolute",
-        height: 70,
-        bottom: 40,
-        left: 40,
-        right: 40,
+        // height: 70,
+        width: width - 100,
+        alignSelf: 'center',
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        paddingBottom: 20
     },
 
     callActionContainerEnd: {
-        position: "absolute",
-        height: 70,
-        bottom: 40,
-        left: 40,
-        right: 40,
+        alignSelf: 'center',
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        paddingTop: 20,
+        paddingBottom: 20
+
     },
 
     button: {
@@ -569,22 +577,23 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 28,
         fontWeight: "bold",
-        marginTop: 130
+        textAlign: 'center'
     },
 
     callState: {
         color: "white",
         fontSize: 14,
         fontWeight: "bold",
-        marginTop: 20
+        marginTop: 20,
+        textAlign: 'center'
+
     },
     localView: {
         backgroundColor: "black",
-        position: "absolute",
         top: 20,
         right: 20,
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 200,
         zIndex: 1
     },
     remoteView: {
@@ -597,9 +606,8 @@ const styles = StyleSheet.create({
         zIndex: 0
     },
     camera: {
-        position: "absolute",
         top: 40,
-        left: 0,
+        left: 20,
         width: 40,
         height: 40,
         zIndex: 2

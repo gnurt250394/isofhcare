@@ -17,7 +17,7 @@ import org.pweitz.reactnative.locationswitch.LocationSwitch;
 import vn.payoo.paymentsdk.OnPayooPaymentCompleteListener;
 import vn.payoo.paymentsdk.data.model.response.ResponseObject;
 import vn.payoo.paymentsdk.data.model.type.GroupType;
-
+import io.wazo.callkeep.RNCallKeepModule; // Add these import lines
 public class MainActivity extends ReactActivity implements OnPayooPaymentCompleteListener {
 
     /**
@@ -53,6 +53,18 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
             PayooModule.promise.resolve(new Gson().toJson(responseObject.getData()));
         } else {
             PayooModule.promise.reject(groupType + "", responseObject.toString());
+        }
+    }
+      @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0) {
+            switch (requestCode) {
+                case RNCallKeepModule.REQUEST_READ_PHONE_STATE:
+                    RNCallKeepModule.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    break;
+            }
         }
     }
 }
