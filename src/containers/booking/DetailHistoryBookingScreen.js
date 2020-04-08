@@ -239,7 +239,7 @@ class DetailHistoryBookingScreen extends Component {
             to: this.state.booking?.doctor?.id || "",
             isOutgoingCall: true,
             isVideoCall: true,
-            profile: this.state.booking.doctor
+            profile: this.state.booking
         });
     }
     onBackdropPress = () => this.setState({ isVisible: false })

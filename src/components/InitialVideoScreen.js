@@ -44,8 +44,10 @@ class InitialVideoCall extends Component {
     try {
       // await this.refs.client.connect(user2);
       let res = await UserProvider.getToken()
-      if (res.code == 0)
+      console.log('res: ', res);
+      if (res.code == 0) {
         await this.refs.client.connect(res.data);
+      }
     } catch (error) {
       console.log('error: ', error);
 
@@ -115,7 +117,9 @@ class InitialVideoCall extends Component {
     //   isVideoCall: isVideoCall
     // });
   };
-
+  componentWillUnmount() {
+    this.refs.client ? this.refs.client.disconnect() : null
+  }
 
   render() {
     return (
