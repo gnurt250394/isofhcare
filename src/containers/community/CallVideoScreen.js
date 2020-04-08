@@ -117,6 +117,7 @@ class VideoCallScreen extends Component {
         const from = userApp?.currentUser?.id || "";
         const to = params ? params.to : "";
         const isVideoCall = params ? params.isVideoCall : false;
+        const profile = params ? params.profile : {};
 
         console.log("isVideoCall " + isVideoCall);
 
@@ -125,7 +126,8 @@ class VideoCallScreen extends Component {
                 from,
                 to,
                 isVideoCall,
-                videoResolution: "HD"
+                videoResolution: "HD",
+                customData: JSON.stringify(profile)
             };
 
             const parameters = JSON.stringify(myObj);
@@ -441,7 +443,7 @@ class VideoCallScreen extends Component {
                 <View style={{
                     flex: 1
                 }}>
-                    <Text style={styles.userId}>{this.state.profile.name}</Text>
+                    <Text style={styles.userId}>{this.state.profile?.doctor?.name || ""}</Text>
                     <Text style={styles.callState}>{this.state.callState}</Text>
                 </View>
                 {this.state.isShowOptionView ? (
