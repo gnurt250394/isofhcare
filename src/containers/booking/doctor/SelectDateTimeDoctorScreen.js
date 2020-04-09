@@ -30,6 +30,8 @@ class SelectDateTimeDoctorScreen extends Component {
     constructor(props) {
         super(props);
         let service = this.props.navigation.state.params.service;
+        let isOnline = this.props.navigation.getParam('isOnline') || false;
+        let item = this.props.navigation.getParam('item') || {};
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
         this.state = {
             service,
@@ -37,7 +39,9 @@ class SelectDateTimeDoctorScreen extends Component {
             isNotHaveSchedule,
             listHospital: [],
             profileDoctor: {},
-            scheduleFinal:[]
+            scheduleFinal: [],
+            isOnline,
+            item
         }
         this.days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     }
@@ -134,7 +138,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     });
 
                 }
-                date.setMinutes(date.getMinutes() + 30);
+                if(this.state.isOnline){
+                    date.setMinutes(date.getMinutes() + 15);
+
+                }else{
+                    date.setMinutes(date.getMinutes() + 30);
+
+                }
 
             }
             this.setState({ listTime })
@@ -209,14 +219,14 @@ class SelectDateTimeDoctorScreen extends Component {
     }
 
     getSchedusOnline = () => {
-        const item = this.props.navigation.getParam('item', {})
-        console.log('item: ', item);
+        const { item } = this.state
+        
         let doctorId = item && item.id || ""
         let hospitalId = item && item.hospital ? item.hospital.id : ""
         bookingDoctorProvider.get_detail_schedules_online(hospitalId, doctorId).then(res => {
-            console.log('res: ', res);
+            
             if (res)
-                this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item },()=>{
+                this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item }, () => {
                     this.selectMonth(new Date());
 
                 })
@@ -228,8 +238,8 @@ class SelectDateTimeDoctorScreen extends Component {
     getDetailDoctor = () => {
         try {
             this.setState({ isLoading: true }, () => {
-                const item = this.props.navigation.getParam('item', {})
-                console.log('item: ', item);
+                const { item } = this.state
+                
                 let id = item && item.id
                 bookingDoctorProvider.detailDoctor(id).then(s => {
                     this.setState({ isLoading: false })
@@ -261,7 +271,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
     }
     componentDidMount() {
-        const isOnline = this.props.navigation.getParam('isOnline')
+        const { isOnline } = this.state
         if (isOnline) {
             this.getSchedusOnline()
         } else {
@@ -325,7 +335,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 let keyDate = new Date(key);
 
                 if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
-                    console.log('this.state.schedules: ', this.state.scheduleFinal);
+                    
                     let doctor = this.state.profileDoctor
                         && this.state.profileDoctor.academicDegree
                         && this.state.profileDoctor.name
@@ -548,6 +558,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: res,
                         schedule: this.state.schedule,
+                        isOnline:this.state.isOnline
                     })
                 }).catch(err => {
 

@@ -14,7 +14,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
         super(props)
     }
     state = {
-        isVisible: false
+        isVisible: false,
+        isOnline: this.props.navigation.getParam('isOnline') || false
     }
     onQrClick = () => {
         this.setState({
@@ -63,6 +64,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
         let booking = this.props.navigation.getParam('booking');
         let service = detailSchedule.medicalService || [];
         let voucher = this.props.navigation.getParam('voucher');
+        let paymentMethod = this.props.navigation.getParam('paymentMethod');
         // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
         //     this.props.navigation.pop();
         //     return null;
@@ -71,7 +73,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
         return (
             <ActivityPanel
                 hideBackButton={true}
-                title={constants.title.create_booking_success}
+                title={this.state.isOnline ? "Chi tiết lịch gọi" : constants.title.create_booking_success}
                 titleStyle={styles.txtTitle}
                 transparent={true}
             >
@@ -171,7 +173,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
 
                         </View>
                         {
-                            booking.payment == 6 ?
+                            paymentMethod == 6 ?
                                 <View style={styles.paymentInfo}>
                                     <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                                     <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text

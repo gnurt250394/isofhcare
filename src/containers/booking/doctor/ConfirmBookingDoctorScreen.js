@@ -17,9 +17,11 @@ class ConfirmBookingDoctorScreen extends Component {
         let detailSchedule = this.props.navigation.getParam('detailSchedule');
         let bookingDate = this.props.navigation.getParam('bookingDate');
         let booking = this.props.navigation.getParam('booking');
+        let isOnline = this.props.navigation.getParam('isOnline');
         this.state = {
             isVisible: false,
-            paymentMethod: 2,
+            isOnline,
+            paymentMethod: isOnline ? 6 : 2,
             booking,
             bookingDate,
             detailSchedule,
@@ -128,8 +130,9 @@ class ConfirmBookingDoctorScreen extends Component {
                                     detailSchedule: this.state.detailSchedule,
                                     voucher: this.state.voucher,
                                     booking: this.state.booking,
-                                    bookingDate: this.state.bookingDate
-
+                                    bookingDate: this.state.bookingDate,
+                                    paymentMethod: this.state.paymentMethod,
+                                    isOnline: this.state.isOnline
                                 }
                             }
                         });
@@ -188,7 +191,7 @@ class ConfirmBookingDoctorScreen extends Component {
         //     return null;
         // }
         let bookingTime = new Date(bookingDate)
-        console.log(booking,'âsđá')
+        console.log(booking, 'âsđá')
         return (
             <ActivityPanel
                 // hideBackButton={true}
@@ -304,7 +307,7 @@ class ConfirmBookingDoctorScreen extends Component {
                         </View>
                         {/** Payment Method */}
                         <View>
-                            <TouchableOpacity style={styles.buttonPayment}
+                            <TouchableOpacity disabled={this.state.isOnline} style={styles.buttonPayment}
                                 onPress={this.setlectPaymentMethod}
                             >
                                 <ScaleImage style={styles.image} source={require("@images/new/booking/ic_price.png")} width={18} />
@@ -312,7 +315,11 @@ class ConfirmBookingDoctorScreen extends Component {
                                     <Text>Phương thức thanh toán</Text>
                                     <Text style={styles.txtPaymentMethod}>{this.renderPaymentMethod()}</Text>
                                 </View>
-                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                                {
+                                    !this.state.isOnline ?
+                                        <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                                        : null
+                                }
                             </TouchableOpacity>
                         </View>
 
