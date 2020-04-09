@@ -123,8 +123,8 @@ class VideoCallScreen extends Component {
 
         if (isOutgoingCall) {
             const myObj = {
-                from,
-                to,
+                from: from + "",
+                to: to + "",
                 isVideoCall,
                 videoResolution: "HD",
                 customData: JSON.stringify(profile)
@@ -144,7 +144,10 @@ class VideoCallScreen extends Component {
             this.stringeeCall.makeCall(
                 parameters,
                 (status, code, message, callId, customDataFromYourServer) => {
+                    debugger;
                     this.setState({ callId: callId });
+                    // nó đang không nhảy vào đây
+
                     console.log(
                         "status-" +
                         status +
@@ -175,6 +178,8 @@ class VideoCallScreen extends Component {
 
             this.stringeeCall.initAnswer(callId, (status, code, message) => {
                 console.log(message);
+                //no kho ban vao day à
+                // cái này để lắng nghe có cuộc gọi đến
             });
         }
     }
