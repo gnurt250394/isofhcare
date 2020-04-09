@@ -8,7 +8,10 @@ class ReadMoreText extends React.Component {
         showAllText: false
     };
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.getLengthText()
+    }
+    getLengthText = async () => {
         this._isMounted = true;
         await nextFrameAsync();
 
@@ -40,17 +43,25 @@ class ReadMoreText extends React.Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
-
+    onLayout = (event) => {
+        const { height } = event.nativeEvent.layout
+        if (height > 80) {
+            this.setState({ shouldShowReadMore: true }, () => {
+                this.props.onReady && this.props.onReady();
+            });
+        }
+    }
     render() {
-        let { measured, showAllText } = this.state;
+        let { measured, showAllText, shouldShowReadMore } = this.state;
 
         let { numberOfLines } = this.props;
 
         return (
             <View>
                 <Text
-                    numberOfLines={measured && !showAllText ? numberOfLines : 0}
+                    numberOfLines={shouldShowReadMore && !showAllText ? numberOfLines : 0}
                     style={this.props.textStyle}
+                    onLayout={this.onLayout}
                     ref={text => {
                         this._text = text;
                     }}
@@ -73,6 +84,7 @@ class ReadMoreText extends React.Component {
 
     _maybeRenderReadMore() {
         let { shouldShowReadMore, showAllText } = this.state;
+
 
         if (shouldShowReadMore && !showAllText) {
             if (this.props.renderTruncatedFooter) {
