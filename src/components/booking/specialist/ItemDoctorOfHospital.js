@@ -4,6 +4,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import ImageLoad from "mainam-react-native-image-loader";
 import StarRating from 'react-native-star-rating';
 import Button from "@components/booking/doctor/Button";
+import { connect } from 'react-redux';
 
 class ItemDoctorOfHospital extends Component {
     constructor(props) {
@@ -19,6 +20,36 @@ class ItemDoctorOfHospital extends Component {
         } else {
             return ', '
         }
+    }
+    onCallVideo = (item) => () => {
+        // this.setState({ isVisible: false }, () => {
+        if (this.props.userApp.isLogin) {
+            this.props.navigation.navigate('selectTimeDoctor', {
+                item: item,
+                isNotHaveSchedule: true,
+                isOnline: true
+
+                // schedules: item.schedules
+            })
+        }
+        else {
+
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: 'selectTimeDoctor', param: {
+                        item: item,
+                        isNotHaveSchedule: true,
+                        isOnline: true
+
+                        // schedules: item.schedules
+                    }
+                }
+            });
+        }
+
+        // })
+
+
     }
     render() {
         const { item, onPress, onPressDoctor } = this.props
@@ -77,9 +108,13 @@ class ItemDoctorOfHospital extends Component {
                             emptyStar={require("@images/ic_empty_star.png")}
                         />
                         {!this.props.disableBooking ?
-                            <Button label="Đặt khám"
-                                style={styles.ButtonBooking}
-                                onPress={onPress} />
+                            <View style={styles.containerButton}>
+                                <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo(item)}  />
+                                <Button label="Đặt khám"
+                                    style={styles.ButtonBooking}
+                                    onPress={onPress} />
+                            </View>
+
                             : null
                         }
 
@@ -96,11 +131,22 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         flexWrap: 'wrap'
     },
+    txtAdvisory: {
+        backgroundColor: '#FF8A00',
+    },
+    containerButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: 10,
+        marginBottom: 10
+    },
     ButtonBooking: {
         backgroundColor: '#00CBA7',
-        flex: 0,
-        paddingHorizontal: 20,
-        marginLeft: 20
+        // flex: 0,
+        // paddingHorizontal: 20,
+        // marginLeft: 20
+        marginLeft: 6
     },
     containerRating: {
         flexDirection: 'row',
@@ -137,4 +183,11 @@ const styles = StyleSheet.create({
         alignSelf: "center"
     },
 });
-export default ItemDoctorOfHospital;
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp,
+        navigation: state.navigation
+
+    };
+}
+export default connect(mapStateToProps)(ItemDoctorOfHospital);
