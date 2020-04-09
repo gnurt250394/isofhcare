@@ -65,7 +65,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
     useEffect(() => {
 
         let timeout = setTimeout(() => {
-            if (state.isLoading || state.refreshing)
+            // if (state.isLoading || state.refreshing)
                 getData()
 
         }, 500)
@@ -180,7 +180,7 @@ const ListServiceDetailScreen = ({ navigation }) => {
                 keyExtractor={keyExtractor}
                 ListEmptyComponent={listEmpty}
                 onEndReached={loadMore}
-                onEndReachedThreshold={0.6}
+                onEndReachedThreshold={0.8}
                 onRefresh={onRefresh}
                 refreshing={state.refreshing}
             />
