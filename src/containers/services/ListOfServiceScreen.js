@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     },
     containerDetail: {
         paddingHorizontal: 25,
+        paddingBottom:20
     },
     txtPrice: {
         color: 'rgba(0, 0, 0, 0.5)',
