@@ -85,17 +85,17 @@ class ReadMoreText extends React.Component {
                 </Text>
             );
         } 
-        else if (shouldShowReadMore && showAllText) {
-            if (this.props.renderRevealedFooter) {
-                return this.props.renderRevealedFooter(this._handlePressReadLess);
-            }
+        // else if (shouldShowReadMore && showAllText) {
+        //     if (this.props.renderRevealedFooter) {
+        //         return this.props.renderRevealedFooter(this._handlePressReadLess);
+        //     }
 
-            return (
-                <Text style={styles.button} onPress={this._handlePressReadLess}>
-                    Ẩn
-                </Text>
-            );
-        }
+        //     return (
+        //         <Text style={styles.button} onPress={this._handlePressReadLess}>
+        //             Ẩn
+        //         </Text>
+        //     );
+        // }
     }
 }
 
