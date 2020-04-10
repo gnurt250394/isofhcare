@@ -13,6 +13,7 @@ import {
 import { StringeeClient } from "stringee-react-native";
 import UserProvider from '@data-access/user-provider'
 import { connect } from "react-redux";
+import firebase from 'react-native-firebase'
 import reduxStore from '@redux-store'
 import RNCallKeepManager from '@components/RNCallKeepManager'
 const iOS = Platform.OS === "ios" ? true : false;
@@ -47,6 +48,7 @@ class InitialVideoCall extends Component {
       console.log('res: ', res);
       if (res.code == 0) {
         await this.refs.client.connect(res.data);
+
       }
     } catch (error) {
       console.log('error: ', error);
@@ -58,6 +60,18 @@ class InitialVideoCall extends Component {
     console.log('isReconnecting: ', isReconnecting);
     console.log('projectId: ', projectId);
     console.log("_clientDidConnect - " + userId);
+    await firebase.messaging().requestPermission()
+    firebase.messaging().getToken().then(token => {
+      console.log('token: ', token);
+      this.refs.client.registerPush(
+        token,
+        __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
+        true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
+        (status, code, message) => {
+          console.log(message, 'meeee');
+        }
+      );
+    })
 
   };
 
