@@ -56,7 +56,7 @@ class InitialVideoCall extends Component {
     }
   }
   // Connection
-  _clientDidConnect = ({ userId, projectId, isReconnecting }) => {
+  _clientDidConnect = async({ userId, projectId, isReconnecting }) => {
     console.log('isReconnecting: ', isReconnecting);
     console.log('projectId: ', projectId);
     console.log("_clientDidConnect - " + userId);
