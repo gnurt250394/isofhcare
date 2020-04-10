@@ -191,8 +191,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                         <View>
                                             <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
                                                 <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
-                                            <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
-                                                <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View>
+                                            {/* <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
+                                                <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View> */}
                                             <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                         </View>
 
