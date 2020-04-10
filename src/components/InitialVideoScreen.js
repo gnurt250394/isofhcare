@@ -56,11 +56,10 @@ class InitialVideoCall extends Component {
     }
   }
   // Connection
-  _clientDidConnect = async({ userId, projectId, isReconnecting }) => {
+  _clientDidConnect = async ({ userId, projectId, isReconnecting }) => {
     console.log('isReconnecting: ', isReconnecting);
     console.log('projectId: ', projectId);
     console.log("_clientDidConnect - " + userId);
-    await firebase.messaging().requestPermission()
     firebase.messaging().getToken().then(token => {
       console.log('token: ', token);
       this.refs.client.registerPush(
