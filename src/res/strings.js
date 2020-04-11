@@ -153,6 +153,7 @@ module.exports = {
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
     action_otp_phone: "ACTION_OTP_PHONE",
     action_add_drug: 'ACTION_ADD_DRUG',
+    save_user_id:'SAVE_USER_ID'
   },
   colors: {
     breakline: "#c0c0c0",
@@ -627,13 +628,13 @@ module.exports = {
     guide: {
       part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank: 'Ngân hàng',
-      bank_name: 'TECHCOMBANK',
+      bank_name: 'BIDV',
       account_number: 'Số tài khoản',
-      number: '19134033802010',
+      number: '16010000552552',
       copy: 'SAO CHÉP',
       owner_name: 'Tên chủ thẻ',
-      name_account: 'CONG TY TNHH MOT THANH VIEN ISOFHCARE',
-      name_account2: 'CONG TY TNHH\nMOT THANH VIEN ISOFHCARE',
+      name_account: 'BENH VIEN PHOI TW',
+      name_account2: 'BENH VIEN PHOI TW',
       branch: 'Chi nhánh',
       branch_name: 'TECHCOMBANK Ba Đình',
       enter_content_payment: 'Nhập nội dung chuyển khoản',
@@ -872,7 +873,8 @@ module.exports = {
       check_otp_phone: isofhcare_service + 'user/verify-sms-code',
       re_send_otp: isofhcare_service + 'user/registration',
       get_user_details: isofhcare_service + '/user',
-      resetPw: isofhcare_service + 'user/replace-password'
+      resetPw: isofhcare_service + 'user/replace-password',
+      get_token: isofhcare_service + 'user/call/access-token'
 
 
     },
@@ -923,6 +925,7 @@ module.exports = {
         get_detail_doctor: isofhcare_service + 'catalog/v1/doctor',
         search_list_doctor: isofhcare_service + 'catalog/v1/doctor/search',
         get_detail_schedules: isofhcare_service + 'catalog/v1/schedule',
+        get_detail_schedules1: isofhcare_service + 'catalog/v1/schedules',
         create_booking: isofhcare_service + 'appointment/v1/doctor',
         get_list_hospitals: isofhcare_service + 'catalog/v1/hospitals',
         get_list_specialists: isofhcare_service + 'catalog/v1/specializations',

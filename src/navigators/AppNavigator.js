@@ -146,6 +146,7 @@ import ListServicesScreen from '@containers/services/ListServicesScreen';
 import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
 import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
 import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen';
+import VideoCallScreen from '@containers/community/CallVideoScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -366,6 +367,7 @@ const RootNavigator = createStackNavigator(
     detailQuestion: { screen: DetailQuestionScreen },
     detailsProfile: { screen: ProfileInfo },
     detailsDoctor: { screen: DetailsDoctorScreen },
+    videoCall: { screen: VideoCallScreen },
     // booking navigation
     addBooking: AddBookingScreen,
     addBooking1: AddBookingScreen1,

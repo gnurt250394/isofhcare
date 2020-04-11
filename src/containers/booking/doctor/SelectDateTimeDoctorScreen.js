@@ -30,13 +30,18 @@ class SelectDateTimeDoctorScreen extends Component {
     constructor(props) {
         super(props);
         let service = this.props.navigation.state.params.service;
+        let isOnline = this.props.navigation.getParam('isOnline') || false;
+        let item = this.props.navigation.getParam('item') || {};
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
         this.state = {
             service,
             listTime: [],
             isNotHaveSchedule,
             listHospital: [],
-            profileDoctor: {}
+            profileDoctor: {},
+            scheduleFinal: [],
+            isOnline,
+            item
         }
         this.days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     }
@@ -63,7 +68,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
         let data = this.state.schedules[day].lock || [];
 
-        let listSchedules = this.state.profileDoctor.schedules || []
+        let listSchedules = this.state.scheduleFinal || []
 
 
         let dateOfWeek = this.getDayOfWeek(day)
@@ -133,7 +138,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     });
 
                 }
-                date.setMinutes(date.getMinutes() + 30);
+                if(this.state.isOnline){
+                    date.setMinutes(date.getMinutes() + 15);
+
+                }else{
+                    date.setMinutes(date.getMinutes() + 30);
+
+                }
 
             }
             this.setState({ listTime })
@@ -207,26 +218,44 @@ class SelectDateTimeDoctorScreen extends Component {
         // return "#3161AD";
     }
 
+    getSchedusOnline = () => {
+        const { item } = this.state
+        
+        let doctorId = item && item.id || ""
+        let hospitalId = item && item.hospital ? item.hospital.id : ""
+        bookingDoctorProvider.get_detail_schedules_online(hospitalId, doctorId).then(res => {
+            
+            if (res)
+                this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item }, () => {
+                    this.selectMonth(new Date());
+
+                })
+
+        }).catch(err => {
+
+        })
+    }
     getDetailDoctor = () => {
         try {
             this.setState({ isLoading: true }, () => {
-                const item = this.props.navigation.getParam('item', {})
+                const { item } = this.state
+                
                 let id = item && item.id
                 bookingDoctorProvider.detailDoctor(id).then(s => {
                     this.setState({ isLoading: false })
                     if (s) {
                         // this.getListSchedule(s.hospital.id, s.id)
-                        this.setState({ profileDoctor: s, isLoading: false }, () => {
+                        this.setState({ profileDoctor: s, scheduleFinal: s.schedules, isLoading: false }, () => {
                             this.selectMonth(new Date());
                         })
-                    }else{
+                    } else {
                         this.selectMonth(new Date());
 
                     }
                 }).catch(e => {
                     // this.selectMonth(new Date());
-                            this.selectMonth(new Date());
-                            this.setState({ isLoading: false })
+                    this.selectMonth(new Date());
+                    this.setState({ isLoading: false })
                     if (e) {
                         this.setState({
                             isLoading: false
@@ -242,7 +271,13 @@ class SelectDateTimeDoctorScreen extends Component {
 
     }
     componentDidMount() {
-        this.getDetailDoctor()
+        const { isOnline } = this.state
+        if (isOnline) {
+            this.getSchedusOnline()
+        } else {
+
+            this.getDetailDoctor()
+        }
 
     }
     timeStringToDate(time) {
@@ -299,7 +334,8 @@ class SelectDateTimeDoctorScreen extends Component {
                     continue;
                 let keyDate = new Date(key);
 
-                if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
+                if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
+                    
                     let doctor = this.state.profileDoctor
                         && this.state.profileDoctor.academicDegree
                         && this.state.profileDoctor.name
@@ -308,7 +344,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     snackbar.show(doctor + ' không có lịch làm việc trong thời gian này', 'danger')
                 }
 
-                let dataSchedules = this.state.profileDoctor.schedules ? this.state.profileDoctor.schedules : []
+                let dataSchedules = this.state.scheduleFinal ? this.state.scheduleFinal : []
                 for (let i = 0; i < dataSchedules.length; i++) {
 
                     if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
@@ -522,6 +558,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: res,
                         schedule: this.state.schedule,
+                        isOnline:this.state.isOnline
                     })
                 }).catch(err => {
 
@@ -657,7 +694,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         keyboardDismissMode="on-drag">
 
                         <Card style={styles.containerCalendar}>
-                            <Text style={styles.txtTitleHeader}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
+                            <Text style={styles.txtTitleHeader}>{profileDoctor?.academicDegree} {profileDoctor?.name}</Text>
                             <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
                             <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
@@ -694,7 +731,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>{profileDoctor.academicDegree} {profileDoctor.name} không có lịch làm việc trong thời gian này</Text>
+                                <Text style={styles.txtHelp}>{profileDoctor?.academicDegree} {profileDoctor?.name} không có lịch làm việc trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>

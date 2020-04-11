@@ -90,11 +90,72 @@ class DetailsDoctorScreen extends Component {
   }
   goToAdvisory = () => {
     // this.props.navigation.navigate("listQuestion");
-    snackbar.show('Tính năng đang phát triển')
-    return
+    // snackbar.show('Tính năng đang phát triển')
+    // return
     this.setState({ isVisible: true })
   }
 
+  onCallVideo = () => {
+    // this.setState({ isVisible: false }, () => {
+    if (this.props.userApp.isLogin) {
+      this.props.navigation.navigate('selectTimeDoctor', {
+        item: this.state.profileDoctor,
+        isNotHaveSchedule: true,
+        schedules: this.state.profileDoctor.schedules,
+        isOnline:true
+
+      })
+    }
+    else {
+
+      this.props.navigation.navigate("login", {
+        nextScreen: {
+          screen: 'selectTimeDoctor', param: {
+            item: this.state.profileDoctor,
+            isNotHaveSchedule: true,
+            schedules: this.state.profileDoctor.schedules,
+            isOnline:true
+          }
+        }
+      });
+    }
+    // this.props.navigation.navigate("videoCall", {
+    //   from: this.props.userApp.currentUser.id,
+    //   to: this.state.item.userId,
+    //   isOutgoingCall: true,
+    //   isVideoCall: true
+    // });
+    // })
+  }
+  onCallVoice = () => {
+    this.setState({ isVisible: false }, () => {
+      if (this.props.userApp.isLogin) {
+        this.props.navigation.navigate('selectTimeDoctor', {
+          item: this.state.item,
+          isNotHaveSchedule: true,
+          schedules: this.state.item.schedules
+        })
+      }
+      else {
+
+        this.props.navigation.navigate("login", {
+          nextScreen: {
+            screen: 'selectTimeDoctor', param: {
+              item: this.state.item,
+              isNotHaveSchedule: true,
+              schedules: this.state.item.schedules
+            }
+          }
+        });
+      }
+      // this.props.navigation.navigate("videoCall", {
+      //   from: this.state.myUserId,
+      //   to: this.state.callToUserId,
+      //   isOutgoingCall: true,
+      //   isVideoCall: false
+      // });
+    })
+  }
   renderText = (data) => {
     console.log('data: ', data);
     if (Array.isArray(data)) {
@@ -209,7 +270,7 @@ class DetailsDoctorScreen extends Component {
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
-                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
+                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
                     {!this.state.disableBooking ?
                       <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                       : <View style={{ flex: 1 }} />
@@ -339,7 +400,9 @@ class DetailsDoctorScreen extends Component {
         >
           <View style={styles.containerModal}>
             <View >
-              <TouchableOpacity style={[styles.buttonMessage, { backgroundColor: '#e6fffa', }]}>
+              <TouchableOpacity
+                onPress={this.onCallVoice}
+                style={[styles.buttonMessage, { backgroundColor: '#e6fffa', }]}>
                 <ScaleImage source={require('@images/new/booking/ic_message.png')} height={50} />
                 <Text style={styles.txtPrice}>50k/ Phiên</Text>
                 <Text style={styles.txtname}>Tư vấn qua tin nhắn</Text>
@@ -347,7 +410,7 @@ class DetailsDoctorScreen extends Component {
               <Text style={styles.txtDetail}>Xem chi tiết</Text>
             </View>
             <View>
-              <TouchableOpacity style={[styles.buttonMessage,]}>
+              <TouchableOpacity onPress={this.onCallVideo} style={[styles.buttonMessage,]}>
                 <ScaleImage source={require('@images/new/booking/ic_video_call.png')} height={50} />
                 <Text style={styles.txtPrice}>35k/ Phiên</Text>
                 <Text style={styles.txtname}>Tư vấn qua video call</Text>
