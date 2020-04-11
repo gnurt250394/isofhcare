@@ -91,6 +91,7 @@ class VideoCallScreen extends Component {
 
         answered: false,
         mediaConnected: false,
+        timer: { minus: '00', secon: '00' },
         profile: this.props.navigation.getParam('profile', {})
     };
 
@@ -183,7 +184,23 @@ class VideoCallScreen extends Component {
             });
         }
     }
-
+    countUpTimer = () => {
+        var sec = 0;
+        function pad(val) { return val > 9 ? val : "0" + val; }
+        this.countUp = setInterval(() => {
+            this.setState({
+                timer: {
+                    secon: pad(++sec % 60),
+                    minus: pad(parseInt(sec / 60))
+                }
+            });
+        }, 1000);
+        this.timeout = setTimeout(this._onEndCallPress, 900000)
+    }
+    componentWillUnmount() {
+        if (this.countUp) clearInterval(this.countUp)
+        if (this.timeout) clearTimeout(this.timeout)
+    }
     // Signaling state
     _callDidChangeSignalingState = ({
         callId,
@@ -208,6 +225,7 @@ class VideoCallScreen extends Component {
         this.setState({ callState: reason });
         switch (code) {
             case 2:
+                this.countUpTimer()
                 this.setState({ answered: true });
                 if (this.state.mediaConnected) {
                     this.setState({ callState: "Started" });
@@ -453,7 +471,12 @@ class VideoCallScreen extends Component {
                     flex: 1
                 }}>
                     <Text style={styles.userId}>{this.state.profile?.doctor?.name || ""}</Text>
-                    <Text style={styles.callState}>{this.state.callState}</Text>
+                    {
+                        this.state.callState == "Started" ?
+                            <Text style={styles.callState}>{this.state.timer.minus} : {this.state.timer.secon}</Text>
+                            :
+                            <Text style={styles.callState}>{this.state.callState}</Text>
+                    }
                 </View>
                 {this.state.isShowOptionView ? (
                     <View style={styles.callOptionContainer}>
