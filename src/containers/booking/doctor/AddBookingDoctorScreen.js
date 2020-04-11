@@ -33,6 +33,7 @@ class AddBookingDoctorScreen extends Component {
         let bookingDate = this.props.navigation.getParam('bookingDate', {})
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
+        let isOnline = this.props.navigation.getParam('isOnline', {})
 
 
         this.state = {
@@ -46,7 +47,8 @@ class AddBookingDoctorScreen extends Component {
             profileDoctor,
             hospital,
             paymentMethod: 2,
-            detailSchedule: this.props.navigation.getParam('detailSchedule', {})
+            detailSchedule: this.props.navigation.getParam('detailSchedule', {}),
+            isOnline
         }
         this.isChecking = true
     }
@@ -120,7 +122,7 @@ class AddBookingDoctorScreen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path,image.mime, (s, e) => {
+                            imageProvider.upload(image.path, image.mime, (s, e) => {
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
@@ -366,7 +368,8 @@ class AddBookingDoctorScreen extends Component {
                         schedule.label,
                         detailSchedule.room,
                         idUser,
-                        img
+                        img,
+                        this.state.isOnline
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
@@ -380,7 +383,8 @@ class AddBookingDoctorScreen extends Component {
                                     detailSchedule,
                                     voucher: this.state.voucher,
                                     booking: s,
-                                    bookingDate: this.state.bookingDate
+                                    bookingDate: this.state.bookingDate,
+                                    isOnline:this.state.isOnline
                                     // }
                                     // }
                                 });
@@ -583,10 +587,10 @@ class AddBookingDoctorScreen extends Component {
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
-        const { profileDoctor, profile, hospital, detailSchedule } = this.state
+        const { profileDoctor, profile, hospital, detailSchedule, isOnline } = this.state
         const services = hospital.services || []
         return (
-            <ActivityPanel title="Đặt Khám"
+            <ActivityPanel title={isOnline ? "Thông tin lịch gọi" : "Đặt Khám"}
                 isLoading={this.state.isLoading} >
                 <View style={{ backgroundColor: 'rgba(225,225,225,0.3)', flex: 1 }}>
                     <KeyboardAwareScrollView>
