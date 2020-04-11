@@ -518,12 +518,12 @@ class DetailHistoryBookingScreen extends Component {
                                             <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                    {/* <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
                                         <Text style={[styles.txPrice, { color: 'red' }]}>
                                             {constants.booking.guide.branch_name}
                                         </Text>
-                                    </View>
+                                    </View> */}
                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
                                         <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
