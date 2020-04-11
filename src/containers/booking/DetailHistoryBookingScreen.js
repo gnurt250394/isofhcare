@@ -252,15 +252,26 @@ class DetailHistoryBookingScreen extends Component {
             let time = date.format('HH:mm')
 
             let timeOnline = booking.time.split(':')
-            let a = parseInt(timeOnline[0])
-            a += 2
-            timeOnline[0] = a.toString()
+            let secon = parseInt(timeOnline[1])
+            let minus = parseInt(timeOnline[0])
+            if (secon >= 45) {
+                secon = '00'
+                minus += 1
+            } else {
+                secon += 15
+            }
+            timeOnline[1] = secon.toString()
+            timeOnline[0] = minus.toString()
+            console.log('timeOnline: ', timeOnline.join(':'));
 
 
-            if (dateBooking.compareDate(date) > 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
+            console.log('dateBooking.compareDate(date): ', dateBooking.compareDate(date));
+            console.log('date: ', date);
+            console.log('dateBooking: ', dateBooking);
+            if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
                 return true
             } else {
-                return true
+                return false
             }
         }
     }
