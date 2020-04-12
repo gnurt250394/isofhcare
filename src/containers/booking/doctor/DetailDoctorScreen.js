@@ -205,7 +205,7 @@ class DetailsDoctorScreen extends Component {
       case 'DeputyOfDepartment': return 'Phó khoa'
       case 'DepartmentChief': return 'Phụ trách khoa'
       case 'HeadNurse': return 'Điều dưỡng trưởng'
-      case 'Nursing': return 'Y tá'
+      case 'Nursing': return 'Phó trưởng khoa'
       case 'ChiefMedicalTechnician': return 'Kỹ thuật y trưởng'
       default: return ''
     }
