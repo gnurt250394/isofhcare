@@ -119,6 +119,8 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_advisory.png"),
           text: "Tư vấn",
           onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+            return
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("listQuestion");
             else
@@ -131,6 +133,8 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_voucher.png"),
           text: "Mã ưu đãi",
           onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+            return
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("myVoucher");
             else
@@ -143,12 +147,13 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_drug.png"),
           text: "Thuốc",
           onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("drugTab");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'drugTab' }
-              });
+            // if (this.props.userApp.isLogin)
+            //   this.props.navigation.navigate("drugTab");
+            // else
+            //   this.props.navigation.navigate("login", {
+            //     nextScreen: { screen: 'drugTab' }
+            //   });
+            snackbar.show('Tính năng đang phát triển')
           }
         },
         {
