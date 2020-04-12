@@ -286,6 +286,7 @@ class ListBookingHistoryScreen extends Component {
     render() {
         return (
             <ActivityPanel
+                backButtonClick={() => this.props.navigation.goBack()}
                 title={constants.title.patient_history_screen}
                 isLoading={this.state.isLoading}
             >
