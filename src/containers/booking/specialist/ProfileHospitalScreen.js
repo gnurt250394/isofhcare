@@ -196,7 +196,7 @@ class ProfileHospitalScreen extends Component {
                     starSize={11}
                     containerStyle={{ width: '20%' }}
                     maxStars={5}
-                    rating={item.rate}
+                    rating={5}
                     starStyle={{ margin: 1, marginVertical: 7 }}
                     fullStarColor={"#fbbd04"}
                     emptyStarColor={"#fbbd04"}

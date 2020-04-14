@@ -100,7 +100,7 @@ class ItemDoctorOfHospital extends Component {
                             starSize={11}
                             containerStyle={{ width: '30%' }}
                             maxStars={5}
-                            rating={item.average ? item.average : 0}
+                            rating={5}
                             starStyle={{ margin: 1, marginVertical: 7 }}
                             fullStarColor={"#fbbd04"}
                             emptyStarColor={"#fbbd04"}
