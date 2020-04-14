@@ -12,7 +12,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listDoctor()
-            
+
             if (res?.length) {
                 setData(res)
             } else {
@@ -33,24 +33,35 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             getServiceHighLight()
     }, [refreshing])
     const goToDetailService = (item) => () => {
-            navigation.navigate('detailsDoctor', { item })
+        navigation.navigate('detailsDoctor', { item })
+    }
+    const renderAcademic = (academicDegree) => {
+        console.log('academicDegree: ', academicDegree);
+        switch (academicDegree) {
+            case 'BS': return 'Bác sĩ'
+            case 'ThS': return 'Thạc sĩ'
+            case 'TS': return 'Tiến sĩ'
+            case 'PGS': return 'Phó giáo sư'
+            case 'GS': return 'Giáo sư'
+            default: return ''
+        }
     }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
         return (
-            <TouchableOpacity  onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
+            <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                 {/* <Card style={{ borderRadius: 5, }}> */}
                 <View style={styles.containerImageDoctor}>
                     <Image
                         // uri={item.advertise.images.absoluteUrl()}
-                        style={{ borderRadius: 5, width: '100%', height: '100%' }}
+                        style={{ borderRadius: 5, width: '100%', height: '100%'}}
                         source={source}
                     // width={DEVICE_WIDTH / 3}
                     // height={137}
                     />
                 </View>
                 {/* </Card> */}
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensDoctor}>{item.name ? item.name : ""}</Text>
+                <Text  style={styles.txContensDoctor}>{item.academicDegree + '.'}{item.name ? item.name : ""}</Text>
 
             </TouchableOpacity>
         )
@@ -85,6 +96,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         margin: 1,
         width: DEVICE_WIDTH / 3,
+        alignSelf:'center',
         height: 137,
         shadowColor: '#222',
         shadowOffset: {
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
-    cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
+    cardViewDoctor: {  borderRadius: 6, marginRight: 18 },
     txContensDoctor: { color: '#000', margin: 13, marginLeft: 5, },
 });
 export default DoctorHighLight
