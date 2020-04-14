@@ -84,7 +84,7 @@ class ProfileHospitalScreen extends Component {
             showRating: false,
             listDoctor: [],
             page: 0,
-            size: 20,
+            size: 50,
             disableBooking: this.props.navigation.getParam('disableBooking', false)
         };
     }
