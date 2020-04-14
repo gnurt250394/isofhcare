@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
     cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, width: 259 },
-    txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259,fontWeight:1000 },
+    txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259,fontWeight:'bold' },
 
 });
 export default HospitalHighLight
