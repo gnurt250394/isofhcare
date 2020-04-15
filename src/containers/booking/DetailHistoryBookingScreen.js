@@ -254,11 +254,11 @@ class DetailHistoryBookingScreen extends Component {
             let timeOnline = booking.time.split(':')
             let secon = parseInt(timeOnline[1])
             let minus = parseInt(timeOnline[0])
-            if (secon >= 45) {
+            if (secon >= 30) {
                 secon = '00'
                 minus += 1
             } else {
-                secon += 15
+                secon += 30
             }
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
@@ -510,68 +510,73 @@ class DetailHistoryBookingScreen extends Component {
                         {
                             this.state.booking.invoice && this.state.booking.invoice.payment == "BANK_TRANSFER" ?
                                 <React.Fragment>
-                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
-                                        <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
-                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
-                                            {constants.booking.guide.number}
-                                        </Text>
-                                            <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
-                                        </TouchableOpacity>
-                                    </View>
-                                    {/* <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                     <Text style={styles.txLabelPrice}>{constants.booking.guide.bank}:</Text>
+                                            <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>{constants.booking.guide.bank_name}</Text>
+                                        </View>
+                                   
+                                        <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                            <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
+                                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
+                                                {constants.booking.guide.number}
+                                            </Text>
+                                                <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
+                                            </TouchableOpacity>
+                                        </View>
+                                        {/* <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
                                         <Text style={[styles.txPrice, { color: 'red' }]}>
                                             {constants.booking.guide.branch_name}
                                         </Text>
                                     </View> */}
-                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
-                                        <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
-                                        <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
-                                            {constants.booking.guide.name_account2}
-                                        </Text>
-                                    </View>
-                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
-                                        <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
-                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
-                                            DK {this.state.booking.reference}
-                                        </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
-                                    </View>
-                                    <View style={styles.between}></View>
+                                        <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                            <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
+                                            <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
+                                                {constants.booking.guide.name_account2}
+                                            </Text>
+                                        </View>
+                                        <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                            <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
+                                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                                                DK {this.state.booking.reference}
+                                            </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
+                                        </View>
+                                        <View style={styles.between}></View>
                                 </React.Fragment>
                                 : null
                         }
 
                         <View style={styles.viewStatus}>
-                            <ScaledImage
-                                height={20}
-                                width={20}
-                                source={require("@images/ic_status.png")}
-                            />
-                            <Text style={styles.txStatusLabel}>{constants.booking.status_booking}</Text>
-                            {this.status()}
-                        </View>
-                        <View style={styles.between}></View>
+                                        <ScaledImage
+                                            height={20}
+                                            width={20}
+                                            source={require("@images/ic_status.png")}
+                                        />
+                                        <Text style={styles.txStatusLabel}>{constants.booking.status_booking}</Text>
+                                        {this.status()}
+                                    </View>
+                                    <View style={styles.between}></View>
 
 
                     </View>
-                    <View style={styles.end}></View>
+                                <View style={styles.end}></View>
                 </ScrollView>}
                 <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={this.onBackdropPress}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={styles.modal}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <QRCode
-                        value={this.state.value}
-                        size={250}
-                        fgColor='white' />
-                </Modal>
-                {/* <Modal
+                        isVisible={this.state.isVisible}
+                        onBackdropPress={this.onBackdropPress}
+                        backdropOpacity={0.5}
+                        animationInTiming={500}
+                        animationOutTiming={500}
+                        style={styles.modal}
+                        backdropTransitionInTiming={1000}
+                        backdropTransitionOutTiming={1000}
+                    >
+                        <QRCode
+                            value={this.state.value}
+                            size={250}
+                            fgColor='white' />
+                    </Modal>
+                    {/* <Modal
           isVisible={this.state.isVisibleIdHis}
           onBackdropPress={() => this.setState({ isVisibleIdHis: false })}
           backdropOpacity={0.5}
@@ -594,13 +599,13 @@ class DetailHistoryBookingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
-    txtBookingCall: {
-        color: '#FFF',
+                    txtBookingCall: {
+                    color: '#FFF',
         paddingLeft: 10,
         fontWeight: 'bold'
     },
     buttonBookingCall: {
-        backgroundColor: '#FF8A00',
+                    backgroundColor: '#FF8A00',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 20,
@@ -610,17 +615,17 @@ const styles = StyleSheet.create({
 
     },
     flex: {
-        flex: 1,
+                    flex: 1,
 
     },
     containerProfileName: {
-        flex: 1,
+                    flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
 
     },
     itemMenu: {
-        flexDirection: "row",
+                    flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingLeft: 10,
@@ -633,65 +638,65 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
     },
     itemText: {
-        flex: 1,
+                    flex: 1,
         fontSize: 15,
         fontWeight: 'bold',
         marginLeft: 10
     },
     modal: {
-        flex: 1,
+                    flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
     },
     end: {
-        width: '100%',
+                    width: '100%',
         height: 50,
         backgroundColor: "#f7f9fb"
     },
     between: {
-        backgroundColor: '#EDECED',
+                    backgroundColor: '#EDECED',
         height: 1,
         marginLeft: 30
     },
     price: {
-        alignSelf: 'flex-end',
+                    alignSelf: 'flex-end',
         marginBottom: 5
     },
     txtBold: {
-        alignSelf: 'flex-end',
+                    alignSelf: 'flex-end',
         fontWeight: 'bold'
     },
     image: {
-        alignSelf: 'center',
+                    alignSelf: 'center',
         borderRadius: 20,
         width: 40,
         height: 40
     },
     borderImage: {
-        borderRadius: 20,
+                    borderRadius: 20,
         borderWidth: 0.5,
         borderColor: 'rgba(151, 151, 151, 0.29)'
     },
     ImageViewer: {
-        width: 70,
+                    width: 70,
         height: 70,
         borderRadius: 10
     },
     buttonShowImage: {
-        marginRight: 10,
+                    marginRight: 10,
         marginBottom: 10,
         width: 70,
         height: 70,
         borderRadius: 10
     },
     containerListImage: {
-        flexDirection: 'row',
+                    flexDirection: 'row',
         flexWrap: 'wrap',
         marginTop: 10,
         borderRadius: 10
     },
     viewName: {
-        flexDirection: "row",
+                    flexDirection: "row",
         width: "100%",
         paddingVertical: 10,
         alignItems: "center",
@@ -705,12 +710,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     txName: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         flex: 1,
         marginLeft: 8
     },
     viewService: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
@@ -721,17 +726,17 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     txService: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         flex: 1,
         marginHorizontal: 10
     },
     txInfoService: {
-        maxWidth: 200,
+                    maxWidth: 200,
         marginRight: 12,
         color: "#8F8E93"
     },
     viewLocation: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         width: "100%",
         alignContent: "flex-end",
@@ -742,43 +747,43 @@ const styles = StyleSheet.create({
 
     },
     txLocation: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         flex: 1,
         marginHorizontal: 10,
 
     },
     txLocationCheckin: {
-        fontWeight: 'bold',
+                    fontWeight: 'bold',
         marginHorizontal: 10,
     },
     txClinic: {
-        marginRight: 10,
+                    marginRight: 10,
         color: "#8F8E93",
         fontWeight: "bold",
         textAlign: 'right'
 
     },
     viewInfoLocationCheckin: {
-        paddingHorizontal: 5,
+                    paddingHorizontal: 5,
         alignItems: 'flex-end',
         flex: 5
     },
 
     viewInfoLocation: {
-        paddingVertical: 5,
+                    paddingVertical: 5,
         paddingHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'flex-end',
         flex: 5
     },
     txAddress: {
-        color: "#8F8E93",
+                    color: "#8F8E93",
         flex: 1,
         marginHorizontal: 10,
         textAlign: 'right'
     },
     viewDate: {
-        paddingVertical: 10,
+                    paddingVertical: 10,
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
@@ -788,26 +793,26 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     txDate: {
-        flex: 1,
+                    flex: 1,
         fontWeight: "bold",
         marginHorizontal: 10
     },
     viewDateTime: {
-        alignItems: "flex-end",
+                    alignItems: "flex-end",
         paddingVertical: 5,
         paddingHorizontal: 15,
         width: "50%"
     },
     txTime: {
-        color: "#8F8E93",
+                    color: "#8F8E93",
         flex: 1,
         fontWeight: "bold"
     },
     txDateInfo: {
-        color: "#8F8E93"
+                    color: "#8F8E93"
     },
     viewSymptom: {
-        backgroundColor: "#fff",
+                    backgroundColor: "#fff",
         marginVertical: 20,
         width: "100%",
         borderBottomColor: "#EDECED",
@@ -818,7 +823,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     viewPrice: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
@@ -829,17 +834,17 @@ const styles = StyleSheet.create({
 
     },
     txLabelPrice: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         marginHorizontal: 10,
         flex: 1
     },
     txPrice: {
-        alignItems: "flex-end",
+                    alignItems: "flex-end",
         marginRight: 12,
         color: "#8F8E93"
     },
     viewPayment: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
@@ -849,17 +854,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     txPayment: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         flex: 1,
         marginHorizontal: 10
     },
     paymentHospital: {
-        color: "#8F8E93",
+                    color: "#8F8E93",
         marginRight: 12,
 
     },
     viewStatus: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         marginTop: 15,
         width: "100%",
@@ -871,17 +876,17 @@ const styles = StyleSheet.create({
 
     },
     txStatusLabel: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         flex: 1,
         marginHorizontal: 10
     },
     txStatus: {
-        color: "#8F8E93",
+                    color: "#8F8E93",
         marginRight: 12,
 
     },
     viewBaCode: {
-        paddingVertical: 15,
+                    paddingVertical: 15,
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
@@ -894,18 +899,18 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     txLabelBarcode: {
-        fontWeight: "bold",
+                    fontWeight: "bold",
         marginHorizontal: 10,
         flex: 1
     },
 
     titleStyle: {
-        color: '#FFF'
+                    color: '#FFF'
     },
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+                    userApp: state.userApp
     };
 }
 export default connect(mapStateToProps)(DetailHistoryBookingScreen);
