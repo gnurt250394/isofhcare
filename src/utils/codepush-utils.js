@@ -4,9 +4,10 @@ import snackbar from "@utils/snackbar-utils";
 import constants from '@resources/strings';
 import dataCacheProvider from '@data-access/datacache-provider';
 function updateFromAppStore() {
+    const appName = Platform.OS == "android" ? "CH Play" : "App Store"
     Alert.alert(
         'THÔNG BÁO',
-        'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
+        `Ứng dụng đã có phiên bản mới trên ${appName}. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!`,
         [
             {
                 text: 'Cập nhật', onPress: () => {
