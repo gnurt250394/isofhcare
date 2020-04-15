@@ -305,13 +305,39 @@ class AddBookingDoctorScreen extends Component {
         return "";
     }
 
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
+            return true
+        }
+        return false
+    }
+    pricePromotion = (item) => {
+        let value = 0
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+            }
+        } else {
+            value = item?.monetaryAmount?.value
+        }
 
-
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
 
     createBooking() {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
+        console.log('detailSchedule: ', detailSchedule);
         if (!this.props.userApp.isLogin) {
             this.props.navigation.replace("login", {
                 nextScreen: {
@@ -347,9 +373,12 @@ class AddBookingDoctorScreen extends Component {
             images.push(item.url);
         });
         let img = images ? images : ''
+
         console.log('img: ', img);
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
+        let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
+        detailSchedule.medicalService = services
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
@@ -384,7 +413,7 @@ class AddBookingDoctorScreen extends Component {
                                     voucher: this.state.voucher,
                                     booking: s,
                                     bookingDate: this.state.bookingDate,
-                                    isOnline:this.state.isOnline
+                                    isOnline: this.state.isOnline
                                     // }
                                     // }
                                 });
@@ -492,6 +521,7 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     renderServices = (hospital) => {
+        console.log('hospital: ', hospital);
         if (Array.isArray(hospital))
             return (
                 <View style={styles.containerService} >
@@ -524,7 +554,7 @@ class AddBookingDoctorScreen extends Component {
                             {hospital && hospital.name ?
                                 <View style={styles.containerPrice}>
                                     <Text style={styles.txtService} >{hospital.name}</Text>
-                                    <Text style={styles.txtPrice}>{hospital.monetaryAmount.value.formatPrice()}đ </Text>
+                                    <Text style={styles.txtPrice}>{this.pricePromotion(hospital).formatPrice()}đ </Text>
                                 </View>
                                 : null}
 
