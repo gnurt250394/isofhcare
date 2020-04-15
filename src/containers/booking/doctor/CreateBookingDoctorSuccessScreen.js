@@ -119,7 +119,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 <Text style={styles.txtAddressBooking}>{booking.hospital.checkInPlace}</Text>
                             </View>
                             <View style={styles.between} />
-                            {service && service.monetaryAmount && service.monetaryAmount.value ?
+                            {service && service.name?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>{constants.booking.services}:</Text>
                                     <View style={styles.containerServices}>

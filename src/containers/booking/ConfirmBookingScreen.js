@@ -785,14 +785,14 @@ class ConfirmBookingScreen extends Component {
                     {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
-                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(6)}>
+                                {/* <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(6)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 6 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 {/* <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(1)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 1 &&
