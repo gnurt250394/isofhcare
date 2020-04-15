@@ -138,13 +138,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     });
 
                 }
-                if(this.state.isOnline){
-                    date.setMinutes(date.getMinutes() + 15);
+                // if(this.state.isOnline){
+                //     date.setMinutes(date.getMinutes() + 15);
 
-                }else{
+                // }else{
                     date.setMinutes(date.getMinutes() + 30);
 
-                }
+                // }
 
             }
             this.setState({ listTime })
