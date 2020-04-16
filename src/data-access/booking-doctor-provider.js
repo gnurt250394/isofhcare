@@ -192,7 +192,7 @@ module.exports = {
         console.log('items: ', items);
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
-            let doctors = { id: doctor.userId, name: doctor.name, phone: doctor.telephone }
+            let doctors = { id: doctor.userId, name: doctor.name, phone: doctor.telephone, academicDegree: doctor.academicDegree }
             let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '' }
             let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || 0, isOnline: isOnline }]
             room = {
