@@ -14,6 +14,12 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             let res = await homeProvider.listDoctor()
 
             if (res?.length) {
+                let index = res.findIndex(e => e.id == 56)
+                if (index > 0) {
+                    let data = res.splice(index, 1)
+                    res=[...data,...res]
+                }
+
                 setData(res)
             } else {
                 setData([])
@@ -54,14 +60,14 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
                 <View style={styles.containerImageDoctor}>
                     <Image
                         // uri={item.advertise.images.absoluteUrl()}
-                        style={{ borderRadius: 5, width: '100%', height: '100%'}}
+                        style={{ borderRadius: 5, width: '100%', height: '100%' }}
                         source={source}
                     // width={DEVICE_WIDTH / 3}
                     // height={137}
                     />
                 </View>
                 {/* </Card> */}
-                <Text  style={styles.txContensDoctor}>{item.academicDegree + '.'}{item.name ? item.name : ""}</Text>
+                <Text style={styles.txContensDoctor}>{item.academicDegree + '.'}{item.name ? item.name : ""}</Text>
 
             </TouchableOpacity>
         )
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         margin: 1,
         width: DEVICE_WIDTH / 3,
-        alignSelf:'center',
+        alignSelf: 'center',
         height: 137,
         shadowColor: '#222',
         shadowOffset: {
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
-    cardViewDoctor: {  borderRadius: 6, marginRight: 18 },
+    cardViewDoctor: { borderRadius: 6, marginRight: 18 },
     txContensDoctor: { color: '#000', margin: 13, marginLeft: 5, },
 });
 export default DoctorHighLight
