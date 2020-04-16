@@ -126,8 +126,8 @@ class ItemDoctorOfHospital extends Component {
                         />
                         {!this.props.disableBooking ?
                             <View style={styles.containerButton}>
-                                <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
-                                <Button label="Đặt khám"
+                                <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
+                                <Button label={`Đặt khám\ntại cơ sở y tế`}
                                     style={styles.ButtonBooking}
                                     onPress={onPress} />
                             </View>

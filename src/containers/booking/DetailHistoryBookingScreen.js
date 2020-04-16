@@ -336,7 +336,7 @@ class DetailHistoryBookingScreen extends Component {
                                                 height={20}
                                                 source={require("@images/new/videoCall/ic_call.png")}
                                             />
-                                            <Text style={styles.txtBookingCall}>Gọi khám</Text>
+                                            <Text style={styles.txtBookingCall}>{`Gọi khám\nonline`}</Text>
                                         </TouchableOpacity>
                                     </View> : null
                             }
