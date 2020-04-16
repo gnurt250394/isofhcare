@@ -170,8 +170,8 @@ class ItemDoctor extends Component {
                                     }
                                 </View>
                                 <View style={styles.containerButton}>
-                                    <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo(item)} source={require("@images/new/videoCall/ic_call.png")} />
-                                    <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
+                                    <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} source={require("@images/new/videoCall/ic_call.png")} />
+                                    <Button label={`Đặt khám\ntại cơ sở y tế`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                                 </View>
                             </View>
                         </View>
