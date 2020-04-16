@@ -56,7 +56,14 @@ class DetailsDoctorScreen extends Component {
     let id = item && item.id
     bookingDoctorProvider.detailDoctor(id).then(s => {
       if (s) {
-        this.setState({ profileDoctor: s, isLoading: false })
+        if (s && s.workingProcesses && s.workingProcesses.length) {
+          s.workingProcesses.length && s.workingProcesses.sort(function (a, b) {
+            return new Date(b.startDate) - new Date(a.startDate);
+          });
+          this.setState({ profileDoctor: s, isLoading: false })
+        } else {
+          this.setState({ profileDoctor: s, isLoading: false })
+        }
       }
     }).catch(e => {
       if (e) {
@@ -102,7 +109,7 @@ class DetailsDoctorScreen extends Component {
         item: this.state.profileDoctor,
         isNotHaveSchedule: true,
         schedules: this.state.profileDoctor.schedules,
-        isOnline:true
+        isOnline: true
 
       })
     }
@@ -114,7 +121,7 @@ class DetailsDoctorScreen extends Component {
             item: this.state.profileDoctor,
             isNotHaveSchedule: true,
             schedules: this.state.profileDoctor.schedules,
-            isOnline:true
+            isOnline: true
           }
         }
       });
@@ -217,6 +224,31 @@ class DetailsDoctorScreen extends Component {
   }
   _keyExtractor = (item, index) => `${item.id || index}`
   onBackdropPress = () => { this.setState({ isVisible: false }) }
+  renderItemWorking = ({ item, index }) => {
+    return (
+      <View style={styles.viewItemBooking}>
+        <Text style={styles.txItemWorking}>+ </Text>
+        <Text style={styles.contentWorking}>{`${item.startDate ? item.startDate.toDateObject('-').format("dd/MM/yyyy") : ''} - ${item.endDate ? item.endDate.toDateObject('-').format("dd/MM/yyyy") : 'Hiện tại'} : ${item.position} tại ${item.workPlace}`}</Text>
+      </View>
+    )
+  }
+  renderWorking = () => {
+    const { profileDoctor } = this.state
+    if (profileDoctor && profileDoctor.workingProcesses && profileDoctor.workingProcesses.length) {
+      return (
+        <FlatList
+          data={profileDoctor.workingProcesses}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={this.state}
+          renderItem={this.renderItemWorking}
+
+        >
+
+        </FlatList>
+      )
+    }
+    // return `${x.startDate ? moment(x.startDate).format("DD/MM/YYYY") : ''} - ${x.endDate ? moment(x.endDate).format("DD/MM/YYYY") : 'Hiện tại'} : ${x.position} tại ${x.workPlace}`
+  }
   render() {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
@@ -328,6 +360,7 @@ class DetailsDoctorScreen extends Component {
                   }
                 </View>
                 <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
+                {this.renderWorking()}
                 <View style={styles.flex}>
                   <View style={styles.flexRow}>
                     {/* <View style={styles.dots} /> */}
@@ -635,6 +668,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5
   },
+  viewItemBooking :{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20 },
+  txItemWorking:{ alignSelf: 'flex-start', },
+  contentWorking:{ fontSize: 14, textAlign: 'left',},
 });
 function mapStateToProps(state) {
   return {

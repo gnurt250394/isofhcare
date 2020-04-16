@@ -119,6 +119,7 @@ class VideoCallScreen extends Component {
         const to = params ? params.to : "";
         const isVideoCall = params ? params.isVideoCall : false;
         const profile = params ? params.profile : {};
+        console.log('profile: ', profile);
 
         console.log("isVideoCall " + isVideoCall);
 
@@ -470,7 +471,7 @@ class VideoCallScreen extends Component {
                 <View style={{
                     flex: 1
                 }}>
-                    <Text style={styles.userId}>{this.state.profile?.doctor?.name || ""}</Text>
+                    <Text style={styles.userId}>{this.state.profile?.doctor?.academicDegree ? this.state.profile?.doctor?.academicDegree + '.' : ""} {this.state.profile?.doctor?.name || ""}</Text>
                     {
                         this.state.callState == "Started" ?
                             <Text style={styles.callState}>{this.state.timer.minus} : {this.state.timer.secon}</Text>
