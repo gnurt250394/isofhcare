@@ -249,6 +249,23 @@ class DetailsDoctorScreen extends Component {
     }
     // return `${x.startDate ? moment(x.startDate).format("DD/MM/YYYY") : ''} - ${x.endDate ? moment(x.endDate).format("DD/MM/YYYY") : 'Hiện tại'} : ${x.position} tại ${x.workPlace}`
   }
+  renderAcademic = (academicDegree) => {
+    switch (academicDegree) {
+        case 'BS': return 'BS'
+        case 'ThS': return 'Ths'
+        case 'TS': return 'TS'
+        case 'PGS': return 'PGS'
+        case 'GS': return 'GS'
+        case 'BSCKI': return 'BSCKI'
+        case 'BSCKII': return 'BSCKII'
+        case 'GSTS': return 'GS.TS'
+        case 'PGSTS': return 'PGS.TS'
+        case 'ThsBS': return 'Ths.BS'
+        case 'ThsBSCKII': return 'Ths.BSCKII'
+        case 'TSBS': return 'TS.BS'
+        default: return ''
+    }
+}
   render() {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
@@ -298,7 +315,7 @@ class DetailsDoctorScreen extends Component {
                   style={styles.imgDefault}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
+                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree ? this.renderAcademic(profileDoctor.academicDegree) + '.' : ''}{profileDoctor.name}</Text>
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
@@ -668,7 +685,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5
   },
-  viewItemBooking :{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20 },
+  viewItemBooking :{ flexDirection: 'row', alignItems: 'center', paddingRight: 20 },
   txItemWorking:{ alignSelf: 'flex-start', },
   contentWorking:{ fontSize: 14, textAlign: 'left',},
 });

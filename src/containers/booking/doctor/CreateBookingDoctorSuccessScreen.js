@@ -58,6 +58,28 @@ class CreateBookingDoctorSuccessScreen extends Component {
         return (service.monetaryAmount.value - price).formatPrice()
     }
     onBackdropPress = () => this.setState({ isVisible: false })
+    renderAcademic = (academicDegree) => {
+        if (academicDegree) {
+            switch (academicDegree) {
+                case 'BS': return 'BS.'
+                case 'ThS': return 'Ths.'
+                case 'TS': return 'TS.'
+                case 'PGS': return 'PGS.'
+                case 'GS': return 'GS.'
+                case 'BSCKI': return 'BSCKI.'
+                case 'BSCKII': return 'BSCKII.'
+                case 'GSTS': return 'GS.TS.'
+                case 'PGSTS': return 'PGS.TS.'
+                case 'ThsBS': return 'Ths.BS.'
+                case 'ThsBSCKII': return 'Ths.BSCKII.'
+                case 'TSBS': return 'TS.BS.'
+                default: return ''
+            }
+        }
+        else {
+            return ''
+        }
+    }
     render() {
         let detailSchedule = this.props.navigation.getParam('detailSchedule');
         let bookingDate = this.props.navigation.getParam('bookingDate');
@@ -103,7 +125,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bác sĩ:</Text>
-                                <Text style={styles.text}>{detailSchedule.doctor.academicDegree} {detailSchedule.doctor.name}</Text>
+                                <Text style={styles.text}>{this.renderAcademic(detailSchedule.doctor.academicDegree)} {detailSchedule.doctor.name}</Text>
                             </View>
                             <View style={styles.between} />
                             <View style={styles.row}>

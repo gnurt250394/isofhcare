@@ -142,7 +142,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 //     date.setMinutes(date.getMinutes() + 15);
 
                 // }else{
-                    date.setMinutes(date.getMinutes() + 30);
+                date.setMinutes(date.getMinutes() + 30);
 
                 // }
 
@@ -220,11 +220,11 @@ class SelectDateTimeDoctorScreen extends Component {
 
     getSchedusOnline = () => {
         const { item } = this.state
-        
+
         let doctorId = item && item.id || ""
         let hospitalId = item && item.hospital ? item.hospital.id : ""
         bookingDoctorProvider.get_detail_schedules_online(hospitalId, doctorId).then(res => {
-            
+
             if (res)
                 this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item }, () => {
                     this.selectMonth(new Date());
@@ -239,7 +239,7 @@ class SelectDateTimeDoctorScreen extends Component {
         try {
             this.setState({ isLoading: true }, () => {
                 const { item } = this.state
-                
+
                 let id = item && item.id
                 bookingDoctorProvider.detailDoctor(id).then(s => {
                     this.setState({ isLoading: false })
@@ -288,6 +288,28 @@ class SelectDateTimeDoctorScreen extends Component {
         d.setMinutes(minutes);
         return d
     }
+    renderAcademic = (academicDegree) => {
+        if (academicDegree) {
+            switch (academicDegree) {
+                case 'BS': return 'BS.'
+                case 'ThS': return 'Ths.'
+                case 'TS': return 'TS.'
+                case 'PGS': return 'PGS.'
+                case 'GS': return 'GS.'
+                case 'BSCKI': return 'BSCKI.'
+                case 'BSCKII': return 'BSCKII.'
+                case 'GSTS': return 'GS.TS.'
+                case 'PGSTS': return 'PGS.TS.'
+                case 'ThsBS': return 'Ths.BS.'
+                case 'ThsBSCKII': return 'Ths.BSCKII.'
+                case 'TSBS': return 'TS.BS.'
+                default: return ''
+            }
+        }
+        else {
+            return ''
+        }
+    }
     generateSchedule(month) {
         try {
             let arrIndex = []
@@ -335,11 +357,11 @@ class SelectDateTimeDoctorScreen extends Component {
                 let keyDate = new Date(key);
 
                 if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
-                    
+
                     let doctor = this.state.profileDoctor
                         && this.state.profileDoctor.academicDegree
                         && this.state.profileDoctor.name
-                        ? this.state.profileDoctor.academicDegree + " " + this.state.profileDoctor.name
+                        ? this.renderAcademic(this.state.profileDoctor.academicDegree) + this.state.profileDoctor.name
                         : 'Bác sĩ'
                     snackbar.show(doctor + ' không có lịch làm việc trong thời gian này', 'danger')
                 }
@@ -558,7 +580,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: res,
                         schedule: this.state.schedule,
-                        isOnline:this.state.isOnline
+                        isOnline: this.state.isOnline
                     })
                 }).catch(err => {
 
@@ -694,7 +716,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         keyboardDismissMode="on-drag">
 
                         <Card style={styles.containerCalendar}>
-                            <Text style={styles.txtTitleHeader}>{profileDoctor?.academicDegree} {profileDoctor?.name}</Text>
+                            <Text style={styles.txtTitleHeader}>{this.renderAcademic(profileDoctor.academicDegree)}{profileDoctor?.name}</Text>
                             <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
                             <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
@@ -731,7 +753,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>{profileDoctor?.academicDegree} {profileDoctor?.name} không có lịch làm việc trong thời gian này</Text>
+                                <Text style={styles.txtHelp}>{this.renderAcademic(profileDoctor.academicDegree)}{profileDoctor?.name} không có lịch làm việc trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
