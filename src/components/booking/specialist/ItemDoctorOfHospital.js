@@ -74,71 +74,75 @@ class ItemDoctorOfHospital extends Component {
         const source = item.imagePath
             ? { uri: item.imagePath.absoluteUrl() }
             : icSupport;
-        return (
-            <TouchableOpacity
-                onPress={onPressDoctor}
-                style={styles.containerItem}>
-                <ImageLoad
-                    resizeMode="cover"
-                    imageStyle={styles.boderImage}
-                    borderRadius={35}
-                    customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-                    placeholderSource={icSupport}
-                    style={styles.avatar}
-                    loadingStyle={{ size: "small", color: "gray" }}
-                    source={source}
-                    defaultImage={() => {
-                        return (
-                            <ScaleImage
-                                resizeMode="cover"
-                                source={icSupport}
-                                width={70}
-                                style={styles.imgDefault}
+        if (item && item.status == 'ACTIVE') {
+            return (
+                <TouchableOpacity
+                    onPress={onPressDoctor}
+                    style={styles.containerItem}>
+                    <ImageLoad
+                        resizeMode="cover"
+                        imageStyle={styles.boderImage}
+                        borderRadius={35}
+                        customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                        placeholderSource={icSupport}
+                        style={styles.avatar}
+                        loadingStyle={{ size: "small", color: "gray" }}
+                        source={source}
+                        defaultImage={() => {
+                            return (
+                                <ScaleImage
+                                    resizeMode="cover"
+                                    source={icSupport}
+                                    width={70}
+                                    style={styles.imgDefault}
+                                />
+                            );
+                        }}
+                    />
+                    <View style={styles.containerProfile}>
+                        <Text style={styles.txtName}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '.' : ''}{item.name}</Text>
+                        {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
+                        <View style={styles.containerSpecialist}>
+                            {item.specializations && item.specializations.length > 0 ?
+                                item.specializations.slice(0, 2).map((e, i) => {
+                                    return (
+                                        <Text style={styles.txtSpecialist} numberOfLines={1} key={i}>{e.name}{this.renderDots(item, i)}</Text>
+                                    )
+                                }) :
+                                null
+                            }
+                        </View>
+                        <View style={styles.containerRating}>
+                            <StarRating
+                                disabled={true}
+                                starSize={11}
+                                containerStyle={{ width: '30%' }}
+                                maxStars={5}
+                                rating={5}
+                                starStyle={{ margin: 1, marginVertical: 7 }}
+                                fullStarColor={"#fbbd04"}
+                                emptyStarColor={"#fbbd04"}
+                                fullStar={require("@images/ic_star.png")}
+                                emptyStar={require("@images/ic_empty_star.png")}
                             />
-                        );
-                    }}
-                />
-                <View style={styles.containerProfile}>
-                    <Text style={styles.txtName}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '.' : ''}{item.name}</Text>
-                    {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
-                    <View style={styles.containerSpecialist}>
-                        {item.specializations && item.specializations.length > 0 ?
-                            item.specializations.slice(0, 2).map((e, i) => {
-                                return (
-                                    <Text style={styles.txtSpecialist} numberOfLines={1} key={i}>{e.name}{this.renderDots(item, i)}</Text>
-                                )
-                            }) :
-                            null
-                        }
-                    </View>
-                    <View style={styles.containerRating}>
-                        <StarRating
-                            disabled={true}
-                            starSize={11}
-                            containerStyle={{ width: '30%' }}
-                            maxStars={5}
-                            rating={5}
-                            starStyle={{ margin: 1, marginVertical: 7 }}
-                            fullStarColor={"#fbbd04"}
-                            emptyStarColor={"#fbbd04"}
-                            fullStar={require("@images/ic_star.png")}
-                            emptyStar={require("@images/ic_empty_star.png")}
-                        />
-                        {!this.props.disableBooking ?
-                            <View style={styles.containerButton}>
-                                <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
-                                <Button label={`Đặt khám\ntại cơ sở y tế`}
-                                    style={styles.ButtonBooking}
-                                    onPress={onPress} />
-                            </View>
+                            {!this.props.disableBooking ?
+                                <View style={styles.containerButton}>
+                                    <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
+                                    <Button label={`Đặt khám\ntại cơ sở y tế`}
+                                        style={styles.ButtonBooking}
+                                        onPress={onPress} />
+                                </View>
 
-                            : null
-                        }
+                                : null
+                            }
 
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        );
+                </TouchableOpacity>
+            );
+        } else {
+            return null
+        }
     }
 }
 const styles = StyleSheet.create({
