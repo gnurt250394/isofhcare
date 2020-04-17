@@ -294,7 +294,7 @@ class ProfileHospitalScreen extends Component {
                                     <Text style={{ paddingBottom: 10 }}>{contact.address}</Text>
                                     <View style={styles.containerButton}>
                                         {!this.state.disableBooking ?
-                                            <Button label="Đặt khám" style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                                            <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám\ntại CSYT`} style={[styles.txtBooking, item.availableBooking == 0 ? { backgroundColor: '#BBB' } : {}]} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                                             : null
                                         }
                                         <Button label="Xem bản đồ" style={styles.txtAdvisory} textStyle={{ color: '#00A3FF' }} onPress={this.goToMap} />
@@ -395,6 +395,7 @@ class ProfileHospitalScreen extends Component {
                                     data={this.state.listDoctor}
                                     renderItem={this._renderItemDoctor}
                                     keyExtractor={this._keyExtractor}
+                                    extraData={this.state}
                                 />
                             </Card> : null
                         }
