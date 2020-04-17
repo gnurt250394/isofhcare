@@ -386,13 +386,20 @@ class ProfileHospitalScreen extends Component {
 
                         {/** */}
                         {this.state?.listDoctor?.length ?
-                            <DoctorOfHospital idDoctor={profileHospital.id} /> : null
+                            <Card style={styles.containerInfo}>
+                                <View
+                                    style={[styles.buttonProfile]}>
+                                    <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
+                                </View>
+                                <DoctorOfHospital idDoctor={profileHospital.id} />
+                            </Card> : null
                         }
+
                     </View>
 
 
                 </ScrollView>
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 }

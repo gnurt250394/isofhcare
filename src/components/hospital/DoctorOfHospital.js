@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import {
     View,
     StyleSheet,
@@ -9,18 +9,11 @@ import { connect } from "react-redux";
 import { Card } from 'native-base'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
-class DoctorOfHospital extends Component {
+class DoctorOfHospital extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            nameSpecialist: '',
-            certificateCode: '',
-            intro: '',
-            rating: 0,
             isLoading: true,
-            avatar: '',
-            id: '',
             item: {},
             listDoctor: [],
             page: 0,
@@ -88,18 +81,12 @@ class DoctorOfHospital extends Component {
 
     render() {
         return (
-            <Card style={styles.containerInfo}>
-                <View
-                    style={[styles.buttonProfile]}>
-                    <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
-                </View>
-                <FlatList
-                    data={this.state.listDoctor}
-                    renderItem={this._renderItemDoctor}
-                    keyExtractor={this._keyExtractor}
-                    extraData={this.state}
-                />
-            </Card>
+            <FlatList
+                data={this.state.listDoctor}
+                renderItem={this._renderItemDoctor}
+                keyExtractor={this._keyExtractor}
+                extraData={this.state}
+            />
         );
     }
 }
@@ -357,7 +344,9 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        navigation: state.navigation
+
     };
 }
 export default connect(mapStateToProps)(DoctorOfHospital);
