@@ -8,7 +8,6 @@ import {
   Button,
   TouchableOpacity,
   Keyboard,
-  AsyncStorage
 } from "react-native";
 import { StringeeClient } from "stringee-react-native";
 import UserProvider from '@data-access/user-provider'
