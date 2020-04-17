@@ -202,6 +202,9 @@ class ListBookingHistoryScreen extends Component {
             id: item.id
         });
     };
+    getTime = (time) => {
+        return parseInt(time.replace(':', ''), 10)
+    }
     getTimeOnline = (booking) => {
         if (booking && booking.date && booking.time) {
             let isOnline = booking.invoice.services.find(e => e.isOnline == true)
@@ -220,25 +223,37 @@ class ListBookingHistoryScreen extends Component {
             }
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
-            if (!isOnline) {
-                if (dateBooking.compareDate(date) > 0) {
+
+            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':')) && isOnline) {
+                return true
+            } else {
+                if (dateBooking.compareDate(date) == 1 && !isOnline) {
                     return true
-                } else if (dateBooking.compareDate(date) == 0) {
-                    if (time >= booking.time)
-                        return false
-                    else 
-                        return true
+                } else if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && !isOnline) {
+                    return true
                 } else {
                     return false
                 }
-            } else {
-                if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
-                    return true
-                } else {
-                    return false 
-                }
             }
-           
+            // if (!isOnline) {
+            //     if (dateBooking.compareDate(date) > 0) {
+            //         return true
+            //     } else if (dateBooking.compareDate(date) == 0) {
+            //         if (time >= booking.time)
+            //             return false
+            //         else 
+            //             return true
+            //     } else {
+            //         return false
+            //     }
+            // } else {
+            //     if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
+            //         return true
+            //     } else {
+            //         return false 
+            //     }
+            // }
+
 
         }
     }
