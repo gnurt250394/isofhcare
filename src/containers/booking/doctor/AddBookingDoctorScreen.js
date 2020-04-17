@@ -321,7 +321,7 @@ class AddBookingDoctorScreen extends Component {
             if (item?.promotion?.type == "PERCENT") {
                 value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
             } else {
-                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
             }
         } else {
             value = item?.monetaryAmount?.value
@@ -612,6 +612,28 @@ class AddBookingDoctorScreen extends Component {
             onItemSelected: this.onSelectPaymentMethod
         })
     }
+    renderAcademic = (academicDegree) => {
+        if (academicDegree) {
+            switch (academicDegree) {
+                case 'BS': return 'BS.'
+                case 'ThS': return 'Ths.'
+                case 'TS': return 'TS.'
+                case 'PGS': return 'PGS.'
+                case 'GS': return 'GS.'
+                case 'BSCKI': return 'BSCKI.'
+                case 'BSCKII': return 'BSCKII.'
+                case 'GSTS': return 'GS.TS.'
+                case 'PGSTS': return 'PGS.TS.'
+                case 'ThsBS': return 'Ths.BS.'
+                case 'ThsBSCKII': return 'Ths.BSCKII.'
+                case 'TSBS': return 'TS.BS.'
+                default: return ''
+            }
+        }
+        else {
+            return ''
+        }
+    }
     render() {
 
         let minDate = new Date();
@@ -642,7 +664,7 @@ class AddBookingDoctorScreen extends Component {
                         }
                         <ViewHeader
                             source={require("@images/new/booking/ic_serviceType.png")}
-                            name={profileDoctor ? profileDoctor.academicDegree + ' ' + profileDoctor.name : null}
+                            name={profileDoctor ? this.renderAcademic(profileDoctor.academicDegree) + profileDoctor.name : null}
                             subName={''}
                             label={'Bác sĩ'}
                         />

@@ -51,50 +51,57 @@ class ItemDoctorOfHospital extends Component {
 
 
     }
+    renderAcademic = (academicDegree) => {
+        switch (academicDegree) {
+            case 'BS': return 'BS'
+            case 'ThS': return 'Ths'
+            case 'TS': return 'TS'
+            case 'PGS': return 'PGS'
+            case 'GS': return 'GS'
+            case 'BSCKI': return 'BSCKI'
+            case 'BSCKII': return 'BSCKII'
+            case 'GSTS': return 'GS.TS'
+            case 'PGSTS': return 'PGS.TS'
+            case 'ThsBS': return 'Ths.BS'
+            case 'ThsBSCKII': return 'Ths.BSCKII'
+            case 'TSBS': return 'TS.BS'
+            default: return ''
+        }
+    }
     render() {
         const { item, onPress, onPressDoctor } = this.props
         const icSupport = require("@images/new/user.png");
         const source = item.imagePath
             ? { uri: item.imagePath.absoluteUrl() }
             : icSupport;
-        return (
-            <TouchableOpacity
-                onPress={onPressDoctor}
-                style={styles.containerItem}>
-                <ImageLoad
-                    resizeMode="cover"
-                    imageStyle={styles.boderImage}
-                    borderRadius={35}
-                    customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-                    placeholderSource={icSupport}
-                    style={styles.avatar}
-                    loadingStyle={{ size: "small", color: "gray" }}
-                    source={source}
-                    defaultImage={() => {
-                        return (
-                            <ScaleImage
-                                resizeMode="cover"
-                                source={icSupport}
-                                width={70}
-                                style={styles.imgDefault}
-                            />
-                        );
-                    }}
-                />
-                <View style={styles.containerProfile}>
-                    <Text style={styles.txtName}>{item.academicDegree} {item.name}</Text>
-                    {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
-                    <View style={styles.containerSpecialist}>
-                        {item.specializations && item.specializations.length > 0 ?
-                            item.specializations.slice(0, 2).map((e, i) => {
-                                return (
-                                    <Text style={styles.txtSpecialist} numberOfLines={1} key={i}>{e.name}{this.renderDots(item, i)}</Text>
-                                )
-                            }) :
-                            null
-                        }
-                    </View>
-                    <View style={styles.containerRating}>
+        if (item && item.status == 'ACTIVE') {
+            return (
+                <TouchableOpacity
+                    onPress={onPressDoctor}
+                    style={styles.containerItem}>
+                    <ImageLoad
+                        resizeMode="cover"
+                        imageStyle={styles.boderImage}
+                        borderRadius={35}
+                        customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                        placeholderSource={icSupport}
+                        style={styles.avatar}
+                        loadingStyle={{ size: "small", color: "gray" }}
+                        source={source}
+                        defaultImage={() => {
+                            return (
+                                <ScaleImage
+                                    resizeMode="cover"
+                                    source={icSupport}
+                                    width={70}
+                                    style={styles.imgDefault}
+                                />
+                            );
+                        }}
+                    />
+                    <View style={styles.containerProfile}>
+                        <Text style={styles.txtName}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '.' : ''}{item.name}</Text>
+                        {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
                         <StarRating
                             disabled={true}
                             starSize={11}
@@ -107,21 +114,37 @@ class ItemDoctorOfHospital extends Component {
                             fullStar={require("@images/ic_star.png")}
                             emptyStar={require("@images/ic_empty_star.png")}
                         />
-                        {!this.props.disableBooking ?
-                            <View style={styles.containerButton}>
-                                <Button label="Gọi khám" style={styles.txtAdvisory} onPress={this.onCallVideo(item)}  />
-                                <Button label="Đặt khám"
-                                    style={styles.ButtonBooking}
-                                    onPress={onPress} />
-                            </View>
+                        <View style={styles.containerSpecialist}>
+                            {item.specializations && item.specializations.length > 0 ?
+                                item.specializations.slice(0, 2).map((e, i) => {
+                                    return (
+                                        <Text style={styles.txtSpecialist} numberOfLines={1} key={i}>{e.name}{this.renderDots(item, i)}</Text>
+                                    )
+                                }) :
+                                null
+                            }
+                        </View>
+                        <View style={styles.containerRating}>
 
-                            : null
-                        }
+                            {!this.props.disableBooking ?
+                                <View style={styles.containerButton}>
+                                    <Button label={`Gọi khám\nonline`} textStyle = {{textAlign:'center'}} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
+                                    <Button label={`Đặt khám\ntại CSYT`}
+                                        style={styles.ButtonBooking}
+                                        textStyle = {{textAlign:'center'}}
+                                        onPress={onPress} />
+                                </View>
 
+                                : null
+                            }
+
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        );
+                </TouchableOpacity>
+            );
+        } else {
+            return null
+        }
     }
 }
 const styles = StyleSheet.create({

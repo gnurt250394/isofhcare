@@ -9,12 +9,15 @@ import {
     Dimensions,
     Platform,
     Alert,
-    PermissionsAndroid
+    PermissionsAndroid,
+    BackHandler,
+    AppState
 } from "react-native";
 import { each } from "underscore";
 
 import { StringeeCall, StringeeVideoView } from "stringee-react-native";
 import { connect } from "react-redux";
+import KeepAwake from 'react-native-keep-awake';
 
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
@@ -55,6 +58,7 @@ const checkAndroidPermissions = () =>
     });
 
 class VideoCallScreen extends Component {
+    isAnswerSuccess = true
     constructor(props) {
         super(props);
 
@@ -95,9 +99,26 @@ class VideoCallScreen extends Component {
         profile: this.props.navigation.getParam('profile', {})
     };
 
-    componentWillMount() { }
+    _handleAppStateChange = (nextAppState) => {
+        if (nextAppState !== 'active' && this.isAnswerSuccess) {
+            // const fbNotification = new firebase.notifications.Notification()
+            //     .setNotificationId(StringUtils.guid())
+            //     .setBody("Bạn có đang có 1 cuộc gọi")
+            //     .setTitle('')
+            //     .android.setChannelId("isofhcare-master")
+            //     .android.setSmallIcon("ic_launcher")
+            //     .android.setPriority(firebase.notifications.Android.Priority.High)
+            //     .setSound("default")
+            //     .setData({});
+            //     console.log('fbNotification: ', fbNotification);
+            // firebase.notifications().displayNotification(fbNotification)
+        }
+    }
 
     componentDidMount() {
+        AppState.addEventListener('change', this._handleAppStateChange);
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+
         if (Platform.OS === "android") {
             checkAndroidPermissions()
                 .then(() => {
@@ -119,6 +140,7 @@ class VideoCallScreen extends Component {
         const to = params ? params.to : "";
         const isVideoCall = params ? params.isVideoCall : false;
         const profile = params ? params.profile : {};
+        console.log('profile: ', profile);
 
         console.log("isVideoCall " + isVideoCall);
 
@@ -148,7 +170,8 @@ class VideoCallScreen extends Component {
                     debugger;
                     this.setState({ callId: callId });
                     // nó đang không nhảy vào đây
-
+                    KeepAwake.activate();
+                    this._onSpeakerPress()
                     console.log(
                         "status-" +
                         status +
@@ -188,18 +211,34 @@ class VideoCallScreen extends Component {
         var sec = 0;
         function pad(val) { return val > 9 ? val : "0" + val; }
         this.countUp = setInterval(() => {
+            let warn = ''
+            let secon = pad(++sec % 60)
+            let minus = pad(parseInt(sec / 60))
+            if (minus >= 25) {
+                warn = 30 - minus
+                this.setState({
+                    warn
+                })
+            }
             this.setState({
                 timer: {
-                    secon: pad(++sec % 60),
-                    minus: pad(parseInt(sec / 60))
+                    secon,
+                    minus
                 }
             });
         }, 1000);
-        this.timeout = setTimeout(this._onEndCallPress, 900000)
+        this.timeout = setTimeout(this._onEndCallPress, 1800000)
+    }
+    handleBackButton() {
+        return true;
     }
     componentWillUnmount() {
+        KeepAwake.deactivate();
         if (this.countUp) clearInterval(this.countUp)
         if (this.timeout) clearTimeout(this.timeout)
+        AppState.removeEventListener('change', this._handleAppStateChange);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+
     }
     // Signaling state
     _callDidChangeSignalingState = ({
@@ -420,7 +459,28 @@ class VideoCallScreen extends Component {
     endCallAndDismissView = () => {
         this.props.navigation.goBack();
     };
-
+    renderAcademic = (academicDegree) => {
+        if (academicDegree) {
+            switch (academicDegree) {
+                case 'BS': return 'BS.'
+                case 'ThS': return 'Ths.'
+                case 'TS': return 'TS.'
+                case 'PGS': return 'PGS.'
+                case 'GS': return 'GS.'
+                case 'BSCKI': return 'BSCKI.'
+                case 'BSCKII': return 'BSCKII.'
+                case 'GSTS': return 'GS.TS.'
+                case 'PGSTS': return 'PGS.TS.'
+                case 'ThsBS': return 'Ths.BS.'
+                case 'ThsBSCKII': return 'Ths.BSCKII.'
+                case 'TSBS': return 'TS.BS.'
+                default: return ''
+            }
+        }
+        else {
+            return ''
+        }
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -470,12 +530,17 @@ class VideoCallScreen extends Component {
                 <View style={{
                     flex: 1
                 }}>
-                    <Text style={styles.userId}>{this.state.profile?.doctor?.name || ""}</Text>
+                    <Text style={styles.userId}>{this.state.profile?.doctor?.academicDegree ? this.renderAcademic(this.state.profile.doctor.academicDegree) : ""}{this.state.profile?.doctor?.name || ""}</Text>
                     {
                         this.state.callState == "Started" ?
                             <Text style={styles.callState}>{this.state.timer.minus} : {this.state.timer.secon}</Text>
                             :
                             <Text style={styles.callState}>{this.state.callState}</Text>
+                    }
+                    {
+                        this.state.warn ?
+                            <Text style={{ color: "#FFF", fontSize: 20, textAlign: 'center' }}>Thời gian gọi còn lại của bạn còn {this.state.warn} phút</Text>
+                            : null
                     }
                 </View>
                 {this.state.isShowOptionView ? (
