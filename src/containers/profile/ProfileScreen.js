@@ -37,7 +37,7 @@ class ProfileScreen extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.navigation.state.params && nextProps.navigation.state.params.id) {
             let id = nextProps.navigation.state.params && nextProps.navigation.state.params.id ? nextProps.navigation.state.params.id : ''
-            console.log(id);
+
             this.onGetDetail(id)
         }
     }
@@ -74,7 +74,9 @@ class ProfileScreen extends Component {
                             this.setState({
                                 imageAvt: image
                             });
-                            imageProvider.upload(this.state.imageAvt.path, (s, e) => {
+
+                            imageProvider.upload(this.state.imageAvt.path, null, (s, e) => {
+
                                 if (s.success && s.data.code == 0) {
                                     let images = s.data.data.images[0].thumbnail;
                                     this.setState({
@@ -129,13 +131,13 @@ class ProfileScreen extends Component {
                                 avatar: image,
                                 type: 'ORIGINAL',
                             }
-                        console.log(data, 'body');
+
                         let id = this.state.data.medicalRecords.id
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
                                 if (res.code == 0) {
-                                    console.log(res, 'ádasd')
+
                                     if (this.state.data.medicalRecords.status == 1) {
                                         let current = this.props.userApp.currentUser;
                                         current.avatar = res.data.medicalRecords.avatar
@@ -156,7 +158,7 @@ class ProfileScreen extends Component {
                                 this.setState({
                                     isLoading: false
                                 });
-                                console.log(err, 'asdsd');
+
                                 snackbar.show(constants.msg.app.err_try_again, "danger");
                             });
                     }
@@ -181,7 +183,7 @@ class ProfileScreen extends Component {
         let province = dataLocaotion.province ? dataLocaotion.province.countryCode : null
         let zone = dataLocaotion.zone ? dataLocaotion.zone.name : ''
         let village = dataLocaotion.medicalRecords.village && dataLocaotion.medicalRecords.village != ' ' ? dataLocaotion.medicalRecords.village : null
-        console.log(district, province, zone, village)
+
         if (district && province && zone && village) {
             this.setState({
                 location: `${village}, ${zone}, ${district}, ${province}`
@@ -220,7 +222,7 @@ class ProfileScreen extends Component {
 
         }
         else if (village) {
-            console.log('else iffffffffff')
+
             this.setState({
                 location: `${village}`
             })
@@ -279,7 +281,7 @@ class ProfileScreen extends Component {
     }
     //render profile by statusConfirm
     renderProfile = (details) => {
-        console.log(this.state.location, 'ạdkád')
+
         switch (details.statusConfirm) {
             case 'ACTIVE': {
                 return (
