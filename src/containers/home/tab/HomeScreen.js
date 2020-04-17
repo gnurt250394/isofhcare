@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  console.log('state: ', state);
+  
   return {
     userApp: state.userApp
   };
