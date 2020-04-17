@@ -23,7 +23,7 @@ import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
-import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
+import DoctorOfHospital from "@components/hospital/DoctorOfHospital";
 import ImageUtils from 'mainam-react-native-image-utils';
 const dataRate = [
     { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
@@ -386,18 +386,7 @@ class ProfileHospitalScreen extends Component {
 
                         {/** */}
                         {this.state?.listDoctor?.length ?
-                            <Card style={styles.containerInfo}>
-                                <View
-                                    style={[styles.buttonProfile]}>
-                                    <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
-                                </View>
-                                <FlatList
-                                    data={this.state.listDoctor}
-                                    renderItem={this._renderItemDoctor}
-                                    keyExtractor={this._keyExtractor}
-                                    extraData={this.state}
-                                />
-                            </Card> : null
+                            <DoctorOfHospital idDoctor={profileHospital.id} /> : null
                         }
                     </View>
 
