@@ -15,7 +15,6 @@ import UserProvider from '@data-access/user-provider'
 import { connect } from "react-redux";
 import firebase from 'react-native-firebase'
 import reduxStore from '@redux-store'
-import RNCallKeepManager from '@components/RNCallKeepManager'
 const iOS = Platform.OS === "ios" ? true : false;
 
 class InitialVideoCall extends Component {
