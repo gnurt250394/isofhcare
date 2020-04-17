@@ -271,7 +271,7 @@ class DetailHistoryBookingScreen extends Component {
             if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
                 return true
             } else {
-                return true
+                return false
             }
         }
     }
