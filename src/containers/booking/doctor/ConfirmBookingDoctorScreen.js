@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -176,7 +176,44 @@ class ConfirmBookingDoctorScreen extends Component {
             voucher: this.state.voucher
         })
     }
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+    }
+    componentWillUnmount = () => {
+        this.backHandler && this.backHandler.remove();
+
+    }
+    handleBackButton = () => {
+        console.log(1111111111)
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    static navigationOptions = {
+        gesturesEnabled: false,
+    };
     onBackdropPress = () => this.setState({ isVisible: false })
+    renderAcademic = (academicDegree) => {
+        if (academicDegree) {
+            switch (academicDegree) {
+                case 'BS': return 'BS.'
+                case 'ThS': return 'Ths.'
+                case 'TS': return 'TS.'
+                case 'PGS': return 'PGS.'
+                case 'GS': return 'GS.'
+                case 'BSCKI': return 'BSCKI.'
+                case 'BSCKII': return 'BSCKII.'
+                case 'GSTS': return 'GS.TS.'
+                case 'PGSTS': return 'PGS.TS.'
+                case 'ThsBS': return 'Ths.BS.'
+                case 'ThsBSCKII': return 'Ths.BSCKII.'
+                case 'TSBS': return 'TS.BS.'
+                default: return ''
+            }
+        }
+        else {
+            return ''
+        }
+    }
     render() {
         // let detailSchedule = this.props.navigation.getParam('detailSchedule');
         // let bookingDate = this.props.navigation.getParam('bookingDate');
@@ -194,7 +231,7 @@ class ConfirmBookingDoctorScreen extends Component {
         console.log(booking, 'âsđá')
         return (
             <ActivityPanel
-                // hideBackButton={true}
+                hideBackButton={true}
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
@@ -225,7 +262,7 @@ class ConfirmBookingDoctorScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bác sĩ:</Text>
-                                <Text style={styles.text}>{detailSchedule.doctor.academicDegree} {detailSchedule.doctor.name}</Text>
+                                <Text style={styles.text}>{this.renderAcademic(detailSchedule.doctor.academicDegree)}{detailSchedule.doctor.name}</Text>
                             </View>
                             <View style={styles.between} />
                             <View style={styles.row}>
@@ -327,7 +364,7 @@ class ConfirmBookingDoctorScreen extends Component {
 
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                                <Text style={styles.datkham}>Đặt khám</Text>
+                                <Text style={styles.datkham}>Hoàn thành</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>

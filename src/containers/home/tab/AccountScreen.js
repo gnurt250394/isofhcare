@@ -48,7 +48,7 @@ class AccountScreen extends Component {
       this.imagePicker.open(true, 200, 200, image => {
         this.showLoading(true, () => {
           imageProvider
-            .upload(image.path,image.mime)
+            .upload(image.path, image.mime)
             .then(s => {
               this.showLoading(false, () => {
                 if (s && s.data.code == 0) {
@@ -422,6 +422,7 @@ class AccountScreen extends Component {
               height={24}
             />
             <Text style={styles.itemText}>Hỗ trợ</Text>
+            <Text style={{ flex: 1, textAlign: "right", paddingRight: 10 }}>1900299983</Text>
             <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
           </TouchableOpacity>
           <View style={[styles.borderMenu, { width: '95%' }]}></View>

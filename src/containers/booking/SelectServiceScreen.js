@@ -42,18 +42,29 @@ class SelectServiceScreen extends Component {
         let serviceType = this.state.serviceType ? this.state.serviceType.id || "" : ''
         let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAllServices(this.state.hospital.id).then(s => {
+            serviceProvider.getListServices(
+                this.state.hospital.id,
+                false,
+                null,
+                null,
+                'APPROVED',
+                0,
+                0,
+                0,
+                999
+            ).then(s => {
+                console.log('s: ', s);
                 this.setState({
                     refreshing: false
                 }, () => {
-                    if (s) {
+                    if (s && s.content) {
                         // switch (s.code) {
                         //     case 0:
                         //         let listService = s.data.data.sort(function (a, b) {
                         //             return new Date(a.service.createdDate) - new Date(b.service.createdDate);
                         //         });
                         this.setState({
-                            listService: s
+                            listService: s.content
                         }, () => {
                             this.onSearch();
                         });

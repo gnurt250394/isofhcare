@@ -202,14 +202,75 @@ class ListBookingHistoryScreen extends Component {
             id: item.id
         });
     };
+    getTime = (time) => {
+        return parseInt(time.replace(':', ''), 10)
+    }
+    getTimeOnline = (booking) => {
+        if (booking && booking.date && booking.time) {
+            let isOnline = booking.invoice.services.find(e => e.isOnline == true)
+            let date = new Date()
+            let dateBooking = new Date(booking.date)
+            let time = date.format('HH:mm')
+
+            let timeOnline = booking.time.split(':')
+            let secon = parseInt(timeOnline[1])
+            let minus = parseInt(timeOnline[0])
+            if (secon >= 30) {
+                secon = '00'
+                minus += 1
+            } else {
+                secon += 30
+            }
+            timeOnline[1] = secon.toString()
+            timeOnline[0] = minus.toString()
+
+            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':')) && isOnline) {
+                return true
+            } else {
+                if (dateBooking.compareDate(date) == 1 && !isOnline) {
+                    return true
+                } else if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && !isOnline) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            // if (!isOnline) {
+            //     if (dateBooking.compareDate(date) > 0) {
+            //         return true
+            //     } else if (dateBooking.compareDate(date) == 0) {
+            //         if (time >= booking.time)
+            //             return false
+            //         else 
+            //             return true
+            //     } else {
+            //         return false
+            //     }
+            // } else {
+            //     if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
+            //         return true
+            //     } else {
+            //         return false 
+            //     }
+            // }
+
+
+        }
+    }
+    renderBookingOnline = (item) => {
+
+        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite,]}>Lịch gọi khám</Text>
+    }
     renderItem = ({ item }) => {
         let date = new Date(item.date)
-
+        let isOnline = item.invoice.services.find(e => e.isOnline == true)
         return (
             <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
                 <View style={styles.row}>
                     <View
-                        style={styles.containerDate}
+                        style={[styles.containerDate,
+                        this.getTimeOnline(item) ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
+                        ]}
                     >
                         <View style={{ marginVertical: 10 }}>
                             <Text
@@ -242,7 +303,18 @@ class ListBookingHistoryScreen extends Component {
                             <Text style={styles.txtUserName}>{item.patient && item.patient.name ? item.patient.name : ''}</Text>
                             <Text style={styles.txtUserName}>{item.hospital && item.hospital.name ? item.hospital.name : ""}</Text>
                         </View>
-                        {item.status ? this.renderStatus(item.status) : null}
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            flexShrink: 1
+                        }}>
+
+                            {item.status ? this.renderStatus(item.status) : null}
+                            {isOnline ? this.renderBookingOnline(item) : null}
+
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -354,7 +426,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     flexStart: {
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         alignSelf: 'flex-start',
     },
     txtUserName: { color: 'rgb(142,142,147)' },
@@ -378,7 +450,8 @@ const styles = StyleSheet.create({
     },
     containerDate: {
         width: "25%",
-        alignItems: "center"
+        alignItems: "center",
+
     },
     row: { flexDirection: "row" },
     listBtn: {

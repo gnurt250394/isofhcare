@@ -42,18 +42,25 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
         navigation.navigate('detailsDoctor', { item })
     }
     const renderAcademic = (academicDegree) => {
-        console.log('academicDegree: ', academicDegree);
         switch (academicDegree) {
-            case 'BS': return 'Bác sĩ'
-            case 'ThS': return 'Thạc sĩ'
-            case 'TS': return 'Tiến sĩ'
-            case 'PGS': return 'Phó giáo sư'
-            case 'GS': return 'Giáo sư'
+            case 'BS': return 'BS'
+            case 'ThS': return 'Ths'
+            case 'TS': return 'TS'
+            case 'PGS': return 'PGS'
+            case 'GS': return 'GS'
+            case 'BSCKI': return 'BSCKI'
+            case 'BSCKII': return 'BSCKII'
+            case 'GSTS': return 'GS.TS'
+            case 'PGSTS': return 'PGS.TS'
+            case 'ThsBS': return 'Ths.BS'
+            case 'ThsBSCKII': return 'Ths.BSCKII'
+            case 'TSBS': return 'TS.BS'
             default: return ''
         }
     }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
+        // if (item.status == 'ACTIVE') {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                 {/* <Card style={{ borderRadius: 5, }}> */}
@@ -67,10 +74,11 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
                     />
                 </View>
                 {/* </Card> */}
-                <Text style={styles.txContensDoctor}>{item.academicDegree + '.'}{item.name ? item.name : ""}</Text>
+                <Text style={styles.txContensDoctor}>{item.academicDegree ? renderAcademic(item.academicDegree) + '.' : ''}{item.name ? item.name : ""}</Text>
 
             </TouchableOpacity>
         )
+        // }
     }
     if (data?.length) {
         return (

@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     txtButton: {
         color: '#fff',
         fontWeight: 'bold',
+        textAlign:'center',
         fontSize: PixelRatio.get() <= 2 ? 12 : 14
     },
     button: {

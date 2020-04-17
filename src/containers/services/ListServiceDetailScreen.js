@@ -41,6 +41,8 @@ const ListServiceDetailScreen = ({ navigation }) => {
         try {
 
             let res = await serviceProvider.getListServices(
+                null,
+                false,
                 state.keyword,
                 state?.category?.id,
                 'APPROVED',
