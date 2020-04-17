@@ -204,6 +204,7 @@ class ListBookingHistoryScreen extends Component {
     };
     getTimeOnline = (booking) => {
         if (booking && booking.date && booking.time) {
+            let isOnline = booking.invoice.services.find(e => e.isOnline == true)
             let date = new Date()
             let dateBooking = new Date(booking.date)
             let time = date.format('HH:mm')
@@ -219,17 +220,31 @@ class ListBookingHistoryScreen extends Component {
             }
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
-
-            if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':')) {
-                return true
+            if (!isOnline) {
+                if (dateBooking.compareDate(date) > 0) {
+                    return true
+                } else if (dateBooking.compareDate(date) == 0) {
+                    if (time >= booking.time)
+                        return false
+                    else 
+                        return true
+                } else {
+                    return false
+                }
             } else {
-                return false
+                if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
+                    return true
+                } else {
+                    return false 
+                }
             }
+           
+
         }
     }
     renderBookingOnline = (item) => {
 
-        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite, this.getTimeOnline(item) ? {} : { backgroundColor: '#06e0b190' }]}>Lịch gọi khám</Text>
+        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite,]}>Lịch gọi khám</Text>
     }
     renderItem = ({ item }) => {
         let date = new Date(item.date)
@@ -238,7 +253,9 @@ class ListBookingHistoryScreen extends Component {
             <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
                 <View style={styles.row}>
                     <View
-                        style={styles.containerDate}
+                        style={[styles.containerDate,
+                        this.getTimeOnline(item) ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
+                        ]}
                     >
                         <View style={{ marginVertical: 10 }}>
                             <Text
@@ -418,7 +435,8 @@ const styles = StyleSheet.create({
     },
     containerDate: {
         width: "25%",
-        alignItems: "center"
+        alignItems: "center",
+
     },
     row: { flexDirection: "row" },
     listBtn: {
