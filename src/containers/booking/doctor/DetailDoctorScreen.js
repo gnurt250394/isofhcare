@@ -104,6 +104,10 @@ class DetailsDoctorScreen extends Component {
 
   onCallVideo = () => {
     // this.setState({ isVisible: false }, () => {
+      if(!this.state.profileDoctor.userId){
+        snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
+        return
+    }
     if (this.props.userApp.isLogin) {
       this.props.navigation.navigate('selectTimeDoctor', {
         item: this.state.profileDoctor,

@@ -419,7 +419,9 @@ class VideoCallScreen extends Component {
             }
         );
     };
-
+    static navigationOptions = {
+        gesturesEnabled: false,
+    };
     _onSwitchCameraPress = () => {
         this.stringeeCall.switchCamera(
             this.state.callId,

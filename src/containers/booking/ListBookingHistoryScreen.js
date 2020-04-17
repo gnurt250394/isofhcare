@@ -202,9 +202,38 @@ class ListBookingHistoryScreen extends Component {
             id: item.id
         });
     };
+    getTimeOnline = (booking) => {
+        if (booking && booking.date && booking.time) {
+            let date = new Date()
+            let dateBooking = new Date(booking.date)
+            let time = date.format('HH:mm')
+
+            let timeOnline = booking.time.split(':')
+            let secon = parseInt(timeOnline[1])
+            let minus = parseInt(timeOnline[0])
+            if (secon >= 30) {
+                secon = '00'
+                minus += 1
+            } else {
+                secon += 30
+            }
+            timeOnline[1] = secon.toString()
+            timeOnline[0] = minus.toString()
+
+            if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':')) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    renderBookingOnline = (item) => {
+
+        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite, this.getTimeOnline(item) ? {} : { backgroundColor: '#06e0b190' }]}>Lịch gọi khám</Text>
+    }
     renderItem = ({ item }) => {
         let date = new Date(item.date)
-
+        let isOnline = item.invoice.services.find(e => e.isOnline == true)
         return (
             <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
                 <View style={styles.row}>
@@ -242,7 +271,18 @@ class ListBookingHistoryScreen extends Component {
                             <Text style={styles.txtUserName}>{item.patient && item.patient.name ? item.patient.name : ''}</Text>
                             <Text style={styles.txtUserName}>{item.hospital && item.hospital.name ? item.hospital.name : ""}</Text>
                         </View>
-                        {item.status ? this.renderStatus(item.status) : null}
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            flexShrink: 1
+                        }}>
+
+                            {item.status ? this.renderStatus(item.status) : null}
+                            {isOnline ? this.renderBookingOnline(item) : null}
+
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -354,7 +394,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     flexStart: {
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         alignSelf: 'flex-start',
     },
     txtUserName: { color: 'rgb(142,142,147)' },
