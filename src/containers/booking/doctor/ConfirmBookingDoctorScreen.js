@@ -177,13 +177,15 @@ class ConfirmBookingDoctorScreen extends Component {
         })
     }
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
     }
     componentWillUnmount = () => {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+        this.backHandler && this.backHandler.remove();
 
     }
-    handleBackButton() {
+    handleBackButton = () => {
+        console.log(1111111111)
+        this.props.navigation.goBack(null);
         return true;
     }
     static navigationOptions = {
@@ -362,7 +364,7 @@ class ConfirmBookingDoctorScreen extends Component {
 
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                                <Text style={styles.datkham}>Đặt khám</Text>
+                                <Text style={styles.datkham}>Hoàn thành</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
