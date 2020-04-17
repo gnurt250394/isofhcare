@@ -50,7 +50,7 @@
     "mainam-react-native-scaleimage": "^2.0.0",
     "mainam-react-native-select-image": "^5.0.0",
     "mainam-react-native-string-utils": "^3.0.2",
-    "mainam-react-native-viewpager": "^1.0.3",
+    "mainam-react-native-viewpager": "^1.0.4",
     "native-base": "^2.13.5",
     "prop-types": "^15.7.2",
     "react": "16.9.0",

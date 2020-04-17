@@ -243,12 +243,15 @@ class DetailHistoryBookingScreen extends Component {
         });
     }
     onBackdropPress = () => this.setState({ isVisible: false })
+    getTime = (time) => {
+        return parseInt(time.replace(':', ''), 10)
+    }
     getTimeOnline = () => {
         const { booking } = this.state
         let isOnline = this.state.booking.invoice.services.find(e => e.isOnline == true)
         if (booking && booking.date && booking.time) {
             let date = new Date()
-            let dateBooking = new Date(booking.date + booking.time)
+            let dateBooking = new Date(booking.date)
             let time = date.format('HH:mm')
 
             let timeOnline = booking.time.split(':')
@@ -262,9 +265,10 @@ class DetailHistoryBookingScreen extends Component {
             }
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
-
-
-            if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
+            if (dateBooking.compareDate(date) == 0
+                && this.getTime(time) >= this.getTime(booking.time)
+                && this.getTime(time) <= this.getTime(timeOnline.join(':'))
+                && isOnline) {
                 return true
             } else {
                 return false
