@@ -213,7 +213,7 @@ class AddBookingScreen extends Component {
             if (item?.promotion?.type == "PERCENT") {
                 value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
             } else {
-                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || item?.monetaryAmount?.value)
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
             }
         } else {
             value = item?.monetaryAmount?.value
