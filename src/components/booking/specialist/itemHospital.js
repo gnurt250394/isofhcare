@@ -105,7 +105,7 @@ class ItemHospital extends Component {
                                     <ScaleImage source={require('@images/ic_location.png')} height={18} style={styles.icLocation} />
                                     <Text style={styles.txtLocation}>km</Text>
                                 </View>
-                                <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
+                                <Button textStyle = {{textAlign:'center'}} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>
                     </View>
