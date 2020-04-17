@@ -395,6 +395,7 @@ class ProfileHospitalScreen extends Component {
                                     data={this.state.listDoctor}
                                     renderItem={this._renderItemDoctor}
                                     keyExtractor={this._keyExtractor}
+                                    extraData = {this.state}
                                 />
                             </Card> : null
                         }

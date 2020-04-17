@@ -302,9 +302,9 @@ class DetailsDoctorScreen extends Component {
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
-                    <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
+                    <Button textStyle = {{textAlign:'center'}} label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
                     {!this.state.disableBooking ?
-                      <Button label={`Đặt khám\ntại cơ sở y tế`} style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                      <Button textStyle = {{textAlign:'center'}} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                       : <View style={{ flex: 1 }} />
                     }
                   </View>

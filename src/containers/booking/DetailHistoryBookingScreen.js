@@ -619,6 +619,7 @@ const styles = StyleSheet.create({
     txtBookingCall: {
         color: '#FFF',
         paddingLeft: 10,
+        textAlign:'center',
         fontWeight: 'bold'
     },
     buttonBookingCall: {
