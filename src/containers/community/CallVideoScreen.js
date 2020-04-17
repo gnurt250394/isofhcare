@@ -541,7 +541,12 @@ class VideoCallScreen extends Component {
                     }
                     {
                         this.state.warn ?
-                            <Text style={{ color: "#FFF", fontSize: 20, textAlign: 'center' }}>Thời gian gọi còn lại của bạn còn {this.state.warn} phút</Text>
+                            <Text style={{
+                                color: "#FFF",
+                                fontSize: 20,
+                                textAlign: 'center',
+                                paddingHorizontal: 20
+                            }}>Thời gian gọi còn lại của bạn còn {this.state.warn} phút</Text>
                             : null
                     }
                 </View>
