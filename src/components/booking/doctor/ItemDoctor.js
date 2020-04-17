@@ -51,6 +51,10 @@ class ItemDoctor extends Component {
 
     }
     onCallVideo = (item) => () => {
+        if(!item.userId){
+            snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
+            return
+        }
         // this.setState({ isVisible: false }, () => {
         if (this.props.userApp.isLogin) {
             this.props.navigation.navigate('selectTimeDoctor', {

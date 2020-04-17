@@ -223,17 +223,22 @@ class SelectDateTimeDoctorScreen extends Component {
 
         let doctorId = item && item.id || ""
         let hospitalId = item && item.hospital ? item.hospital.id : ""
-        bookingDoctorProvider.get_detail_schedules_online(hospitalId, doctorId).then(res => {
+        this.setState({ isLoading: true }, () => {
+            bookingDoctorProvider.get_detail_schedules_online(hospitalId, doctorId).then(res => {
 
-            if (res)
-                this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item }, () => {
-                    this.selectMonth(new Date());
+                if (res)
+                    this.setState({ isLoading: false, scheduleFinal: res, profileDoctor: item }, () => {
+                        this.selectMonth(new Date());
 
-                })
+                    })
 
-        }).catch(err => {
+            }).catch(err => {
+                this.setState({ isLoading: false })
+                this.selectMonth(new Date());
 
+            })
         })
+
     }
     getDetailDoctor = () => {
         try {

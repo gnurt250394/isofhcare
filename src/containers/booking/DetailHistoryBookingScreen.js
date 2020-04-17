@@ -248,7 +248,7 @@ class DetailHistoryBookingScreen extends Component {
         let isOnline = this.state.booking.invoice.services.find(e => e.isOnline == true)
         if (booking && booking.date && booking.time) {
             let date = new Date()
-            let dateBooking = new Date(booking.date)
+            let dateBooking = new Date(booking.date + booking.time)
             let time = date.format('HH:mm')
 
             let timeOnline = booking.time.split(':')
@@ -262,10 +262,6 @@ class DetailHistoryBookingScreen extends Component {
             }
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
-
-
-
-
 
 
             if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
@@ -619,7 +615,7 @@ const styles = StyleSheet.create({
     txtBookingCall: {
         color: '#FFF',
         paddingLeft: 10,
-        textAlign:'center',
+        textAlign: 'center',
         fontWeight: 'bold'
     },
     buttonBookingCall: {
