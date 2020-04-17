@@ -108,7 +108,6 @@ class DetailsDoctorScreen extends Component {
         snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
         return
     }
-      console.log('this.state.profileDoctor: ', this.state.profileDoctor);
     if (this.props.userApp.isLogin) {
       this.props.navigation.navigate('selectTimeDoctor', {
         item: this.state.profileDoctor,

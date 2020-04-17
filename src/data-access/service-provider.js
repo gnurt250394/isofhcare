@@ -70,9 +70,11 @@ export default {
                 })
         })
     },
-    getListServices(medicalName, categoryId, status, lat, lon, page, size) {
+    getListServices(hospitalId,isOnline, medicalName, categoryId, status, lat, lon, page, size) {
         let parameters =
+            (typeof isOnline != 'undefined' ? 'isOnline=' + isOnline + '&' : '') +
             (medicalName ? 'medicalName=' + medicalName + '&' : '') +
+            (hospitalId ? 'hospitalId=' + hospitalId + '&' : '') +
             (categoryId ? 'categoryId=' + categoryId + '&' : '') +
             (status ? 'status=' + status + '&' : '') +
             (lat ? 'lat=' + lat + '&' : '') +

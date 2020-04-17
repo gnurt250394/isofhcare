@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -176,6 +176,19 @@ class ConfirmBookingDoctorScreen extends Component {
             voucher: this.state.voucher
         })
     }
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    }
+    componentWillUnmount = () => {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+
+    }
+    handleBackButton() {
+        return true;
+    }
+    static navigationOptions = {
+        gesturesEnabled: false,
+    };
     onBackdropPress = () => this.setState({ isVisible: false })
     renderAcademic = (academicDegree) => {
         if (academicDegree) {
@@ -216,7 +229,7 @@ class ConfirmBookingDoctorScreen extends Component {
         console.log(booking, 'âsđá')
         return (
             <ActivityPanel
-                // hideBackButton={true}
+                hideBackButton={true}
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
