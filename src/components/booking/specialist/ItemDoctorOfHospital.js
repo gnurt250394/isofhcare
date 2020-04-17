@@ -74,7 +74,7 @@ class ItemDoctorOfHospital extends Component {
         const source = item.imagePath
             ? { uri: item.imagePath.absoluteUrl() }
             : icSupport;
-        if (item && item.status == 'ACTIVE') {
+        // if (item && item.status == 'ACTIVE') {
             return (
                 <TouchableOpacity
                     onPress={onPressDoctor}
@@ -142,9 +142,9 @@ class ItemDoctorOfHospital extends Component {
                     </View>
                 </TouchableOpacity>
             );
-        } else {
-            return null
-        }
+        // } else {
+        //     return null
+        // }
     }
 }
 const styles = StyleSheet.create({

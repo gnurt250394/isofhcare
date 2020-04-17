@@ -116,7 +116,7 @@ class ItemDoctor extends Component {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
         const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
-        if (item && item.status == 'ACTIVE') {
+        // if (item && item.status == 'ACTIVE') {
             return (
                 <View>
                     <TouchableHighlight onPress={onPressDoctor} underlayColor={'#fff'} style={styles.containerItem}>
@@ -212,9 +212,9 @@ class ItemDoctor extends Component {
                     </Modal>
                 </View>
             );
-        }else{
-            return null
-        }
+        // }else{
+            // return null
+        // }
     }
 }
 
