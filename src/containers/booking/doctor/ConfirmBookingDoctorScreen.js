@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -176,6 +176,21 @@ class ConfirmBookingDoctorScreen extends Component {
             voucher: this.state.voucher
         })
     }
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+    }
+    componentWillUnmount = () => {
+        this.backHandler && this.backHandler.remove();
+
+    }
+    handleBackButton = () => {
+        console.log(1111111111)
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    static navigationOptions = {
+        gesturesEnabled: false,
+    };
     onBackdropPress = () => this.setState({ isVisible: false })
     renderAcademic = (academicDegree) => {
         if (academicDegree) {
@@ -216,7 +231,7 @@ class ConfirmBookingDoctorScreen extends Component {
         console.log(booking, 'âsđá')
         return (
             <ActivityPanel
-                // hideBackButton={true}
+                hideBackButton={true}
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
@@ -349,7 +364,7 @@ class ConfirmBookingDoctorScreen extends Component {
 
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                                <Text style={styles.datkham}>Đặt khám</Text>
+                                <Text style={styles.datkham}>Hoàn thành</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
