@@ -102,6 +102,18 @@ class ItemDoctorOfHospital extends Component {
                     <View style={styles.containerProfile}>
                         <Text style={styles.txtName}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '.' : ''}{item.name}</Text>
                         {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
+                        <StarRating
+                            disabled={true}
+                            starSize={11}
+                            containerStyle={{ width: '30%' }}
+                            maxStars={5}
+                            rating={5}
+                            starStyle={{ margin: 1, marginVertical: 7 }}
+                            fullStarColor={"#fbbd04"}
+                            emptyStarColor={"#fbbd04"}
+                            fullStar={require("@images/ic_star.png")}
+                            emptyStar={require("@images/ic_empty_star.png")}
+                        />
                         <View style={styles.containerSpecialist}>
                             {item.specializations && item.specializations.length > 0 ?
                                 item.specializations.slice(0, 2).map((e, i) => {
@@ -113,23 +125,13 @@ class ItemDoctorOfHospital extends Component {
                             }
                         </View>
                         <View style={styles.containerRating}>
-                            <StarRating
-                                disabled={true}
-                                starSize={11}
-                                containerStyle={{ width: '30%' }}
-                                maxStars={5}
-                                rating={5}
-                                starStyle={{ margin: 1, marginVertical: 7 }}
-                                fullStarColor={"#fbbd04"}
-                                emptyStarColor={"#fbbd04"}
-                                fullStar={require("@images/ic_star.png")}
-                                emptyStar={require("@images/ic_empty_star.png")}
-                            />
+
                             {!this.props.disableBooking ?
                                 <View style={styles.containerButton}>
-                                    <Button label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
-                                    <Button label={`Đặt khám\ntại cơ sở y tế`}
+                                    <Button label={`Gọi khám\nonline`} textStyle = {{textAlign:'center'}} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} />
+                                    <Button label={`Đặt khám\ntại CSYT`}
                                         style={styles.ButtonBooking}
+                                        textStyle = {{textAlign:'center'}}
                                         onPress={onPress} />
                                 </View>
 
