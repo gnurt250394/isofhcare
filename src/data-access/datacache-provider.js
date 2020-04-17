@@ -1,5 +1,6 @@
 const Realm = require('realm');
-import { AsyncStorage } from "react-native";
+// import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage'
 import realmModel from '@models/realm-models';
 module.exports = {
     save(userId, key, value, saveToLocalStorage) {
