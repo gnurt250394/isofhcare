@@ -316,12 +316,15 @@ class AddBookingDoctorScreen extends Component {
         return false
     }
     pricePromotion = (item) => {
+        console.log('item: ', item);
         let value = 0
         if (item?.promotion && this.disablePromotion(item.promotion)) {
             if (item?.promotion?.type == "PERCENT") {
                 value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
             } else {
+
                 value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
+                console.log('value: ', value);
             }
         } else {
             value = item?.monetaryAmount?.value
@@ -378,7 +381,7 @@ class AddBookingDoctorScreen extends Component {
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
         let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
-        detailSchedule.medicalService = services
+        console.log('detailSchedule: ', detailSchedule);
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
@@ -390,7 +393,7 @@ class AddBookingDoctorScreen extends Component {
                         // discount,
                         detailSchedule.doctor,
                         profileDoctor.hospital,
-                        detailSchedule.medicalService,
+                        services,
                         patitent,
                         // this.getPaymentMethod(),
                         detailSchedule.id,

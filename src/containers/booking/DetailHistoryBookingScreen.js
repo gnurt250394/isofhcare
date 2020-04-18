@@ -248,7 +248,7 @@ class DetailHistoryBookingScreen extends Component {
     }
     getTimeOnline = () => {
         const { booking } = this.state
-        let isOnline = this.state.booking.invoice.services.find(e => e.isOnline == true)
+
         if (booking && booking.date && booking.time) {
             let date = new Date()
             let dateBooking = new Date(booking.date)
@@ -268,7 +268,7 @@ class DetailHistoryBookingScreen extends Component {
             if (dateBooking.compareDate(date) == 0
                 && this.getTime(time) >= this.getTime(booking.time)
                 && this.getTime(time) <= this.getTime(timeOnline.join(':'))
-                && isOnline) {
+            ) {
                 return true
             } else {
                 return false
@@ -294,7 +294,7 @@ class DetailHistoryBookingScreen extends Component {
     }
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
-
+        let isOnline = this.state.booking?.invoice?.services ? this.state.booking.invoice.services.find(e => e.isOnline == true) : null
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
             <ActivityPanel
@@ -323,22 +323,40 @@ class DetailHistoryBookingScreen extends Component {
                                 <Text style={styles.txName}>{this.state.booking.patient.name}</Text>
                             </View>
                             {
-                                this.getTimeOnline() ?
-                                    <View style={[styles.flex, {
-                                        borderLeftColor: '#00000050',
-                                        borderLeftWidth: 1
-                                    }]}>
-                                        <TouchableOpacity
-                                            onPress={this.onCallVideo}
-                                            style={styles.buttonBookingCall}>
-                                            <ScaledImage
-                                                width={20}
-                                                height={20}
-                                                source={require("@images/new/videoCall/ic_call.png")}
-                                            />
-                                            <Text style={styles.txtBookingCall}>{`Gọi khám\nonline`}</Text>
-                                        </TouchableOpacity>
-                                    </View> : null
+                                isOnline ? (
+                                    this.getTimeOnline() ?
+                                        <View style={[styles.flex, {
+                                            borderLeftColor: '#00000050',
+                                            borderLeftWidth: 1
+                                        }]}>
+                                            <TouchableOpacity
+                                                onPress={this.onCallVideo}
+                                                style={styles.buttonBookingCall}>
+                                                <ScaledImage
+                                                    width={20}
+                                                    height={20}
+                                                    source={require("@images/new/videoCall/ic_call.png")}
+                                                />
+                                                <Text style={styles.txtBookingCall}>{`Gọi khám\nonline`}</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        :
+                                        <View style={[styles.flex, {
+                                            borderLeftColor: '#00000050',
+                                            borderLeftWidth: 1
+                                        }]}>
+                                            <TouchableOpacity
+                                                disabled={true}
+                                                onPress={this.onCallVideo}
+                                                style={[styles.buttonBookingCall, { backgroundColor: '#ffcf99' }]}>
+                                                <ScaledImage
+                                                    width={20}
+                                                    height={20}
+                                                    source={require("@images/new/videoCall/ic_call.png")}
+                                                />
+                                                <Text style={styles.txtBookingCall}>{`Gọi khám\nonline`}</Text>
+                                            </TouchableOpacity>
+                                        </View>) : null
                             }
 
                         </View>
