@@ -10,8 +10,8 @@ import {
     Platform,
     Alert,
     PermissionsAndroid,
-    BackHandler,
-    AppState
+    AppState,
+    DeviceEventEmitter
 } from "react-native";
 import { each } from "underscore";
 
@@ -117,7 +117,7 @@ class VideoCallScreen extends Component {
 
     componentDidMount() {
         AppState.addEventListener('change', this._handleAppStateChange);
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+        DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
 
         if (Platform.OS === "android") {
             checkAndroidPermissions()
@@ -237,7 +237,7 @@ class VideoCallScreen extends Component {
         if (this.countUp) clearInterval(this.countUp)
         if (this.timeout) clearTimeout(this.timeout)
         AppState.removeEventListener('change', this._handleAppStateChange);
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+        DeviceEventEmitter.removeAllListeners('hardwareBackPress')
 
     }
     // Signaling state
