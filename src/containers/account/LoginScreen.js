@@ -419,8 +419,8 @@ const styles = StyleSheet.create({
 	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
 	imgIsc: { alignSelf: 'center', },
 	placeholder: { fontSize: 16, fontWeight: '300' },
-	viewFogot: { flexDirection: 'row', marginTop: 10, alignSelf: "flex-end", flex: 1 },
-	btnFogot: { padding: 5 },
+	viewFogot: { flexDirection: 'row', marginTop: 10, alignSelf:"flex-end",flex:1 },
+	btnFogot: {  padding:5 },
 	txFogot: {
 		color: '#00A3FF',
 		paddingRight: 5,
