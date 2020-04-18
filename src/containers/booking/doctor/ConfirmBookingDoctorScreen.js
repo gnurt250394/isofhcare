@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, BackHandler, DeviceEventEmitter } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -50,11 +50,14 @@ class ConfirmBookingDoctorScreen extends Component {
         this.props.navigation.pop();
     }
     getPrice = (service, voucher) => {
+        console.log('service: ', service);
         let price = voucher && voucher.price ? voucher.price : 0
-        if (price > service.monetaryAmount.value) {
+        let promotionPrice = 0
+        promotionPrice = this.pricePromotion(service) - price
+        if (promotionPrice < 0) {
             return 0
         }
-        return (service.monetaryAmount.value - price).formatPrice()
+        return (promotionPrice).formatPrice()
     }
     onSelectPaymentMethod = (paymentMethod) => {
         this.setState({ paymentMethod })
@@ -177,15 +180,14 @@ class ConfirmBookingDoctorScreen extends Component {
         })
     }
     componentDidMount() {
-        this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
+        DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
     }
-    componentWillUnmount = () => {
-        this.backHandler && this.backHandler.remove();
 
+    componentWillUnmount() {
+        DeviceEventEmitter.removeAllListeners('hardwareBackPress')
     }
-    handleBackButton = () => {
-        console.log(1111111111)
-        this.props.navigation.goBack(null);
+
+    handleBackButton() {
         return true;
     }
     static navigationOptions = {
@@ -213,6 +215,51 @@ class ConfirmBookingDoctorScreen extends Component {
         else {
             return ''
         }
+    }
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
+            return true
+        }
+        return false
+    }
+    pricePromotion = (item) => {
+        console.log('item: ', item);
+        let value = 0
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
+                console.log('value: ', value);
+            }
+        } else {
+            value = item?.monetaryAmount?.value
+        }
+
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
+    renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            // let value = (promotion?.value || 0).toString()
+            // if (value.length > 5) {
+            //     text = value.substring(0, value.length - 3) + 'K'
+            // } else {
+            text = promotion.value.formatPrice() + 'đ'
+
+            // }
+        }
+        return text
     }
     render() {
         // let detailSchedule = this.props.navigation.getParam('detailSchedule');
@@ -285,6 +332,17 @@ class ConfirmBookingDoctorScreen extends Component {
                                         <View style={styles.flex}>
                                             <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text>
                                             <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>({parseInt(service.monetaryAmount.value).formatPrice()}đ) </Text>
+                                        </View>
+                                    </View>
+                                </View> : null
+                            }
+                            {service && service.promotion ?
+                                <View style={styles.row}>
+                                    <Text style={styles.label}>Khuyến mại:</Text>
+                                    <View style={styles.containerServices}>
+                                        <View style={styles.flex}>
+                                            {/* <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text> */}
+                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>Giảm {this.renderPromotion(service.promotion)}</Text>
                                         </View>
                                     </View>
                                 </View> : null
