@@ -239,7 +239,7 @@ class LoginScreen extends Component {
 															required: "Mật khẩu không được bỏ trống"
 														}
 													}}
-													// inputStyle={styles.input}
+												// inputStyle={styles.input}
 												>
 
 												</TextField>
@@ -413,14 +413,14 @@ const styles = StyleSheet.create({
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
 	imgBg: { flex: 1, backgroundColor: '#000', },
-	txLogin: { color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 },
+	txLogin: { color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 50 },
 	viewCard: { flex: 1, justifyContent: 'center', },
 	viewLogin: { marginHorizontal: 22 },
 	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
 	imgIsc: { alignSelf: 'center', },
 	placeholder: { fontSize: 16, fontWeight: '300' },
-	viewFogot: { flexDirection: 'row', marginTop: 15 },
-	btnFogot: { alignItems: "flex-end", flex: 1 },
+	viewFogot: { flexDirection: 'row', marginTop: 10, alignSelf: "flex-end", flex: 1 },
+	btnFogot: { padding: 5 },
 	txFogot: {
 		color: '#00A3FF',
 		paddingRight: 5,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
 	},
 	btnLogin: { backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
 	txlg: { color: '#FFF', fontSize: 17 },
-	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
+	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 80 },
 	txSignUp: { color: '#FFF', fontSize: 17 },
 	viewBottom: { height: 50 }
 });
