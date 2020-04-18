@@ -224,36 +224,11 @@ class ListBookingHistoryScreen extends Component {
             timeOnline[1] = secon.toString()
             timeOnline[0] = minus.toString()
 
-            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':')) && isOnline) {
+            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':'))) {
                 return true
             } else {
-                if (dateBooking.compareDate(date) == 1 && !isOnline) {
-                    return true
-                } else if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && !isOnline) {
-                    return true
-                } else {
-                    return false
-                }
+                return false
             }
-            // if (!isOnline) {
-            //     if (dateBooking.compareDate(date) > 0) {
-            //         return true
-            //     } else if (dateBooking.compareDate(date) == 0) {
-            //         if (time >= booking.time)
-            //             return false
-            //         else 
-            //             return true
-            //     } else {
-            //         return false
-            //     }
-            // } else {
-            //     if (dateBooking.compareDate(date) == 0 && time >= booking.time && time <= timeOnline.join(':') && isOnline) {
-            //         return true
-            //     } else {
-            //         return false 
-            //     }
-            // }
-
 
         }
     }
@@ -269,7 +244,10 @@ class ListBookingHistoryScreen extends Component {
                 <View style={styles.row}>
                     <View
                         style={[styles.containerDate,
-                        this.getTimeOnline(item) ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
+                        this.getTimeOnline(item)
+                            && (item.status == 'NEW'
+                                || item.status == 'ACCEPTED'
+                                || item.status == 'CHECKIN') ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
                         ]}
                     >
                         <View style={{ marginVertical: 10 }}>

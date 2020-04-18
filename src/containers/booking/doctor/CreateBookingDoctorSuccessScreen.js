@@ -23,8 +23,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
         })
     }
 
-    getPaymentMethod(booking) {
-        switch (booking.payment) {
+    getPaymentMethod(paymentMethod) {
+        switch (paymentMethod) {
             case 1:
                 return constants.payment.VNPAY;
             case 2:
@@ -52,10 +52,12 @@ class CreateBookingDoctorSuccessScreen extends Component {
     }
     getPrice = (service, voucher) => {
         let price = voucher && voucher.price ? voucher.price : 0
-        if (price > service.monetaryAmount.value) {
+        let promotionPrice = 0
+        promotionPrice = this.pricePromotion(service) - price
+        if (promotionPrice < 0) {
             return 0
         }
-        return (service.monetaryAmount.value - price).formatPrice()
+        return (promotionPrice).formatPrice()
     }
     onBackdropPress = () => this.setState({ isVisible: false })
     renderAcademic = (academicDegree) => {
@@ -80,10 +82,56 @@ class CreateBookingDoctorSuccessScreen extends Component {
             return ''
         }
     }
+    disablePromotion = (promotion) => {
+        let startDate = new Date(promotion.startDate)
+        let endDate = new Date(promotion.endDate)
+        let day = new Date()
+        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        if (startDate < day && endDate > day && isDayOfWeek != 0) {
+            return true
+        }
+        return false
+    }
+    pricePromotion = (item) => {
+        console.log('item: ', item);
+        let value = 0
+        if (item?.promotion && this.disablePromotion(item.promotion)) {
+            if (item?.promotion?.type == "PERCENT") {
+                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
+            } else {
+
+                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
+                console.log('value: ', value);
+            }
+        } else {
+            value = item?.monetaryAmount?.value
+        }
+
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
+    renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            // let value = (promotion?.value || 0).toString()
+            // if (value.length > 5) {
+            //     text = value.substring(0, value.length - 3) + 'K'
+            // } else {
+            text = promotion.value.formatPrice() + 'đ'
+
+            // }
+        }
+        return text
+    }
     render() {
         let detailSchedule = this.props.navigation.getParam('detailSchedule');
         let bookingDate = this.props.navigation.getParam('bookingDate');
         let booking = this.props.navigation.getParam('booking');
+        console.log('booking: aa', booking);
         let service = detailSchedule.medicalService || [];
         let voucher = this.props.navigation.getParam('voucher');
         let paymentMethod = this.props.navigation.getParam('paymentMethod');
@@ -141,13 +189,24 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 <Text style={styles.txtAddressBooking}>{booking.hospital.checkInPlace}</Text>
                             </View>
                             <View style={styles.between} />
-                            {service && service.name?
+                            {service && service.name ?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>{constants.booking.services}:</Text>
                                     <View style={styles.containerServices}>
                                         <View style={styles.flex}>
                                             <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text>
                                             <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>({parseInt(service.monetaryAmount.value).formatPrice()}đ) </Text>
+                                        </View>
+                                    </View>
+                                </View> : null
+                            }
+                            {service && service.promotion ?
+                                <View style={styles.row}>
+                                    <Text style={styles.label}>Khuyến mại:</Text>
+                                    <View style={styles.containerServices}>
+                                        <View style={styles.flex}>
+                                            {/* <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text> */}
+                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>Giảm {this.renderPromotion(service.promotion)}</Text>
                                         </View>
                                     </View>
                                 </View> : null
@@ -178,7 +237,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             }
                             <View style={styles.row}>
                                 <Text style={styles.txtPaymentMethod}>{constants.booking.payment_method}</Text>
-                                <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
+                                <Text style={styles.text}>{this.getPaymentMethod(paymentMethod)}</Text>
                             </View>
                             {/* {
                                 booking.payment == 4 && <View>
