@@ -96,7 +96,7 @@ class ProfileHospitalScreen extends Component {
         let id = item && item.id
         bookingDoctorProvider.detailHospital(id).then(s => {
             if (s) {
-                this.setState({ profileHospital: s, isLoading: false }, this.getDoctor)
+                this.setState({ profileHospital: s, isLoading: false })
             }
         }).catch(e => {
             if (e) {
@@ -385,21 +385,18 @@ class ProfileHospitalScreen extends Component {
                         </Card> */}
 
                         {/** */}
-                        {this.state?.listDoctor?.length ?
-                            <Card style={styles.containerInfo}>
-                                <View
-                                    style={[styles.buttonProfile]}>
-                                    <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
-                                </View>
-                                <DoctorOfHospital idDoctor={profileHospital.id} />
-                            </Card> : null
-                        }
-
+                        <Card style={styles.containerInfo}>
+                            <View
+                                style={[styles.buttonProfile]}>
+                                <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
+                            </View>
+                            <DoctorOfHospital idDoctor={profileHospital.id} />
+                        </Card>
                     </View>
 
 
                 </ScrollView>
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }

@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import {
     View,
     StyleSheet,
@@ -9,15 +9,14 @@ import { connect } from "react-redux";
 import { Card } from 'native-base'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
-class DoctorOfHospital extends PureComponent {
+class DoctorOfHospital extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
             item: {},
             listDoctor: [],
             page: 0,
-            size: 20,
+            size: 50,
         };
     }
     componentDidMount() {
