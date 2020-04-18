@@ -28,6 +28,11 @@ class DoctorOfHospital extends Component {
         let idDoctor = this.props.idDoctor
         bookingDoctorProvider.getListDoctorWithHospital(idDoctor, page, size).then(res => {
             if (res && res.length) {
+                let index = res.findIndex(e => e.id == 56)
+                if (index > 0) {
+                    let data = res.splice(index, 1)
+                    res=[...data,...res]
+                }
                 this.formatData(res)
             } else {
                 this.formatData([])

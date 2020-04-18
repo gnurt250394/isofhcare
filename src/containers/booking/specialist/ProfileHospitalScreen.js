@@ -385,13 +385,14 @@ class ProfileHospitalScreen extends Component {
                         </Card> */}
 
                         {/** */}
-                        <Card style={styles.containerInfo}>
-                            <View
-                                style={[styles.buttonProfile]}>
-                                <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
-                            </View>
-                            <DoctorOfHospital idDoctor={profileHospital.id} />
-                        </Card>
+                        {profileHospital && profileHospital.id ?
+                            <Card style={styles.containerInfo}>
+                                <View
+                                    style={[styles.buttonProfile]}>
+                                    <Text style={styles.txtTitle}>BÁC SĨ, CHUYÊN GIA Y TẾ HÀNG ĐẦU</Text>
+                                </View>
+                                <DoctorOfHospital idDoctor={profileHospital.id} />
+                            </Card> : null}
                     </View>
 
 
