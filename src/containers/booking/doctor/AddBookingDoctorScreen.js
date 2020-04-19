@@ -568,6 +568,37 @@ class AddBookingDoctorScreen extends Component {
                 </View>
             )
     }
+    renderPromotion = (promotion) => {
+        let text = ''
+        if (promotion.type == "PERCENT") {
+            text = promotion.value + '%'
+        } else {
+            text = promotion.value.formatPrice() + 'đ'
+        }
+        return text
+    }
+    promotion = (service) => {
+        if(service && service.promotion && this.disablePromotion(service.promotion))
+        return (
+            <View style={styles.containerService} >
+                <View style={styles.flexRow}>
+                    <ScaleImage style={styles.image} height={17} source={require("@images/new/booking/ic_sale.png")} />
+                    <View style={styles.groupService}>
+                        <Text >Khuyến mại</Text>
+                            <View style={styles.containerPrice}>
+                                <Text style={styles.txtService} ></Text>
+                                <Text style={styles.txtPrice}>Giảm {this.renderPromotion(service.promotion)} </Text>
+                            </View>
+
+                    </View>
+                </View>
+
+
+            </View>
+        )
+        else
+        return null
+    }
     renderSelectTime = () => {
         return <TouchableOpacity style={styles.containerService}
             onPress={this.selectTime} >
@@ -684,7 +715,7 @@ class AddBookingDoctorScreen extends Component {
                             this.state.bookingError ?
                                 <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
                         }
-
+                        {this.promotion(detailSchedule.medicalService)}
 
                         <View style={[styles.article,]}>
                             <View style={styles.lineBetween} />
