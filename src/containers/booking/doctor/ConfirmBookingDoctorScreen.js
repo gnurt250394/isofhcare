@@ -336,7 +336,7 @@ class ConfirmBookingDoctorScreen extends Component {
                                     </View>
                                 </View> : null
                             }
-                            {service && service.promotion ?
+                            {service && service.promotion && this.disablePromotion(service.promotion) ?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>Khuyến mại:</Text>
                                     <View style={styles.containerServices}>
