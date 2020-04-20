@@ -557,7 +557,7 @@ class AddBookingDoctorScreen extends Component {
                             {hospital && hospital.name ?
                                 <View style={styles.containerPrice}>
                                     <Text style={styles.txtService} >{hospital.name}</Text>
-                                    <Text style={styles.txtPrice}>{this.pricePromotion(hospital).formatPrice()}đ </Text>
+                                    <Text style={styles.txtPrice}>{hospital.monetaryAmount.value.formatPrice()}đ </Text>
                                 </View>
                                 : null}
 
@@ -710,12 +710,12 @@ class AddBookingDoctorScreen extends Component {
                         />
 
                         {this.renderServices(detailSchedule.medicalService)}
+                        {this.promotion(detailSchedule.medicalService)}
                         {this.renderSelectTime()}
                         {
                             this.state.bookingError ?
                                 <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
                         }
-                        {this.promotion(detailSchedule.medicalService)}
 
                         <View style={[styles.article,]}>
                             <View style={styles.lineBetween} />
