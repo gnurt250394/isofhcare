@@ -45,11 +45,12 @@ class ListDoctorScreen extends Component {
     };
     getData = () => {
         const { page, size } = this.state
-        console.log('getData')
+
 
         bookingDoctorProvider.getListDoctor(page, size).then(res => {
             this.setState({ isLoading: false, refreshing: false })
             if (res && res.length > 0) {
+
                 this.formatData(res)
             } else {
                 this.formatData([])
@@ -61,11 +62,19 @@ class ListDoctorScreen extends Component {
         })
     }
     formatData = (data) => {
+
         if (data.length == 0) {
             if (this.state.page == 0) {
                 this.setState({ data })
             }
         } else {
+            let index = data.findIndex(e => e.id == 9)
+            if (index || index == 0) {
+                data.splice(index, 1)
+            }
+            let index2 = data.findIndex(e => e.id == 58)
+            let a = data.splice(index2, 1)[0]
+            data.push(a);
             if (this.state.page == 0) {
                 this.setState({ data })
             } else {
@@ -133,7 +142,7 @@ class ListDoctorScreen extends Component {
     search = async () => {
         try {
             let { keyword, page, size } = this.state
-            console.log('keyword: ', keyword);
+
             let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
@@ -319,7 +328,7 @@ const styles = StyleSheet.create({
         marginLeft: -10,
         fontWeight: 'bold',
         paddingLeft: 9,
-        color:'#000'
+        color: '#000'
     },
     groupSearch: {
         flexDirection: 'row',
