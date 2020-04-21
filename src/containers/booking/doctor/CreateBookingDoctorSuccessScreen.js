@@ -38,8 +38,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
         }
         return "";
     }
-    onCopyNumber = () => {
-        Clipboard.setString(constants.booking.guide.number)
+    onCopyNumber = (nummber) => {
+        Clipboard.setString(nummber)
         snackbar.show(constants.booking.copy_success, 'success')
     }
     onCopyContents = (codeBooking) => () => {
@@ -259,21 +259,21 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                     <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                                     <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
                                         style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
-                                            style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View>
+                                            style={styles.txBankName}>{booking.hospital.bank}</Text></View>
                                         <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
                                         <View style={styles.bankInfo}>
                                             <View style={styles.viewBankNumber}>
-                                                <Text style={styles.txNumber}>{constants.booking.guide.number}</Text>
+                                                <Text style={styles.txNumber}>{booking.hospital.accountNo}</Text>
                                             </View>
-                                            <TouchableOpacity onPress={this.onCopyNumber} style={styles.btnCopy}>
+                                            <TouchableOpacity onPress={() => this.onCopyNumber(booking.hospital.accountNo)} style={styles.btnCopy}>
                                                 <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                             </TouchableOpacity>
                                         </View>
                                         <View>
                                             <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
-                                                <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
-                                            {/* <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
-                                                <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View> */}
+                                                <Text style={styles.txBankName}>{booking.hospital.owner}</Text></View>
+                                            <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
+                                                <Text style={styles.txBankName}>{booking.hospital.branch}</Text></View>
                                             <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                         </View>
 

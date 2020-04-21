@@ -210,8 +210,8 @@ class DetailHistoryBookingScreen extends Component {
             default: return ''
         }
     }
-    onCopyNumber = () => {
-        Clipboard.setString(constants.booking.guide.number)
+    onCopyNumber = (accountNo) => {
+        Clipboard.setString(accountNo)
         snackbar.show(constants.booking.copy_success, 'success')
     }
     onCopyContents = (codeBooking) => {
@@ -547,27 +547,27 @@ class DetailHistoryBookingScreen extends Component {
                                 <React.Fragment>
                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.bank}:</Text>
-                                        <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>{constants.booking.guide.bank_name}</Text>
+                                        <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>{this.state.booking.hospital.bank}</Text>
                                     </View>
 
                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
-                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
-                                            {constants.booking.guide.number}
+                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyNumber(this.state.booking.hospital.accountNo)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                                            {this.state.booking.hospital.accountNo}
                                         </Text>
                                             <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
                                         </TouchableOpacity>
                                     </View>
-                                    {/* <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
                                         <Text style={[styles.txPrice, { color: 'red' }]}>
-                                            {constants.booking.guide.branch_name}
+                                            {this.state.booking.hospital.branch}
                                         </Text>
-                                    </View> */}
+                                    </View>
                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
                                         <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
-                                            {constants.booking.guide.name_account2}
+                                            {this.state.booking.hospital.owner}
                                         </Text>
                                     </View>
                                     <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
