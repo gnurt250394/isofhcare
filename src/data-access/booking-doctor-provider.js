@@ -188,9 +188,10 @@ module.exports = {
      * @param {object} room 
      */
     create(date, description, doctor, hospitals, items, patients, scheduleId, time, room, idUser, images, isOnline) {
+        console.log('hospitalssssssssssssssssssssssssss: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.userId || doctor.id, name: doctor.name, phone: doctor.telephone, academicDegree: doctor.academicDegree }
-            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '' }
+            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '', bank: hospitals && hospitals.transferInfo && hospitals.transferInfo.bank || '', accountNo: hospitals && hospitals.transferInfo && hospitals.transferInfo.accountNo || '', owner: hospitals && hospitals.transferInfo && hospitals.transferInfo.owner || '', branch: hospitals && hospitals.transferInfo && hospitals.transferInfo.branch || '', note: hospitals && hospitals.transferInfo && hospitals.transferInfo.note || '' }
             let services = [{ serviceId: items.id || '', name: items.name || '', price: items.monetaryAmount.value || 0, isOnline: isOnline }]
             room = {
                 "id": room.id,

@@ -32,6 +32,7 @@ class SelectDateTimeDoctorScreen extends Component {
         let service = this.props.navigation.state.params.service;
         let isOnline = this.props.navigation.getParam('isOnline') || false;
         let item = this.props.navigation.getParam('item') || {};
+        
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
         this.state = {
             service,
@@ -247,6 +248,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 let id = item && item.id
                 bookingDoctorProvider.detailDoctor(id).then(s => {
+                    
                     this.setState({ isLoading: false })
                     if (s) {
                         // this.getListSchedule(s.hospital.id, s.id)

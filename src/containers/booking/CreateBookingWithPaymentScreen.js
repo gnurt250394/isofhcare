@@ -23,7 +23,7 @@ class CreateBookingWithPaymentScreen extends Component {
         })
     }
     componentDidMount() {
-        
+
 
     }
     onCallHotline = () => {
@@ -72,7 +72,7 @@ class CreateBookingWithPaymentScreen extends Component {
         console.log('booking: ', booking);
         let service = this.props.navigation.state.params.service || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital ) {
+        if (!booking || !booking.profile || !booking.hospital) {
             this.props.navigation.pop();
             return null;
         }
@@ -173,35 +173,42 @@ class CreateBookingWithPaymentScreen extends Component {
                         </View>
                         <View style={styles.paymentInfo}>
                             <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
-                            <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
-                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View></View>
-                                <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
-                                <View style={styles.bankInfo}>
-                                    <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>{constants.booking.guide.number}</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={this.onCopyNumber} style={styles.btnCopy}>
-                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
-                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text>
+                            <View style={styles.paymentInfo}>
+                                <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
+                                <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
+                                    style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
+                                        style={styles.txBankName}>{booking.hospital.bank}</Text></View>
+                                    <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
+                                    <View style={styles.bankInfo}>
+                                        <View style={styles.viewBankNumber}>
+                                            <Text style={styles.txNumber}>{booking.hospital.accountNo}</Text>
                                         </View>
+                                        <TouchableOpacity onPress={() => this.onCopyNumber(booking.hospital.accountNo)} style={styles.btnCopy}>
+                                            <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
+                                        </TouchableOpacity>
                                     </View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
-                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View></View>
-                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
-                                </View>
+                                    <View>
+                                        <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
+                                            <Text style={styles.txBankName}>{booking.hospital.owner}</Text></View>
+                                        <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
+                                            <Text style={styles.txBankName}>{booking.hospital.branch}</Text></View>
+                                        <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
+                                    </View>
 
-                                <View style={styles.bankInfo}>
-                                    <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>{`DK ${booking.reference}`}</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={() => this.onCopyContents(booking.reference)} style={styles.btnCopy}>
-                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
-                                    </TouchableOpacity>
-                                </View></View>
+                                    <View style={styles.bankInfo}>
+                                        <View style={styles.viewBankNumber}>
+                                            <Text style={styles.txNumber}>{'DK ' + booking.reference}</Text>
+                                        </View>
+                                        <TouchableOpacity onPress={this.onCopyContents(booking.reference)} style={styles.btnCopy}>
+                                            <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
+                                        </TouchableOpacity>
+                                    </View></View>
+                                <Text style={styles.txStep1}>{constants.booking.guide.part_2}</Text>
+                                <View style={styles.viewBank}>
+                                    <Text style={styles.contentsPay}>{constants.booking.guide.notifi}</Text>
+                                    <Text style={styles.notePay}>{constants.booking.guide.notifi2}</Text>
+                                </View>
+                            </View>
                             <Text style={styles.txStep1}>{constants.booking.guide.part_2}</Text>
                             <View style={styles.viewBank}>
                                 <Text style={styles.contentsPay}>{constants.booking.guide.notifi}</Text>
