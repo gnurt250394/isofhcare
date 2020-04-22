@@ -69,12 +69,14 @@ class ListDoctorScreen extends Component {
             }
         } else {
             let index = data.findIndex(e => e.id == 9)
-            if (index || index == 0) {
+            if (index !== -1 || index == 0) {
                 data.splice(index, 1)
             }
             let index2 = data.findIndex(e => e.id == 58)
-            let a = data.splice(index2, 1)[0]
-            data.push(a);
+            if (index2 !== -1 || index2 == 0) {
+                let a = data.splice(index2, 1)[0]
+                data.push(a);
+            }
             if (this.state.page == 0) {
                 this.setState({ data })
             } else {
