@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
 	},
 	btnLogin: { backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
 	txlg: { color: '#FFF', fontSize: 17 },
-	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 80 },
+	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 30 },
 	txSignUp: { color: '#FFF', fontSize: 17 },
 	viewBottom: { height: 50 }
 });
