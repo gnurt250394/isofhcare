@@ -88,7 +88,7 @@ class ListDoctorScreen extends Component {
     }
     loadMore = () => {
         const { page, size, data, keyword } = this.state
-        if (data.length >= (page + 1) * size) {
+        if (data.length >= (page + 1) * size -1) {
             this.setState(preState => {
                 return {
                     page: preState.page + 1
