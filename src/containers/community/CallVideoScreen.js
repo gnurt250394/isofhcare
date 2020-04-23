@@ -18,6 +18,7 @@ import { each } from "underscore";
 import { StringeeCall, StringeeVideoView } from "stringee-react-native";
 import { connect } from "react-redux";
 import KeepAwake from 'react-native-keep-awake';
+import Timer from "./Timer";
 
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
@@ -207,34 +208,12 @@ class VideoCallScreen extends Component {
             });
         }
     }
-    countUpTimer = () => {
-        var sec = 0;
-        function pad(val) { return val > 9 ? val : "0" + val; }
-        this.countUp = setInterval(() => {
-            let warn = ''
-            let secon = pad(++sec % 60)
-            let minus = pad(parseInt(sec / 60))
-            if (minus >= 25) {
-                warn = 30 - minus
-                this.setState({
-                    warn
-                })
-            }
-            this.setState({
-                timer: {
-                    secon,
-                    minus
-                }
-            });
-        }, 1000);
-        this.timeout = setTimeout(this._onEndCallPress, 1800000)
-    }
+
     handleBackButton() {
         return true;
     }
     componentWillUnmount() {
         KeepAwake.deactivate();
-        if (this.countUp) clearInterval(this.countUp)
         if (this.timeout) clearTimeout(this.timeout)
         AppState.removeEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.removeAllListeners('hardwareBackPress')
@@ -264,7 +243,7 @@ class VideoCallScreen extends Component {
         this.setState({ callState: reason });
         switch (code) {
             case 2:
-                this.countUpTimer()
+                this.timeout = setTimeout(this._onEndCallPress, 1800000)
                 this.setState({ answered: true });
                 if (this.state.mediaConnected) {
                     this.setState({ callState: "Started" });
@@ -529,7 +508,7 @@ class VideoCallScreen extends Component {
                     )}
 
                 </View>
-                <View style={{
+                {/* <View style={{
                     flex: 1
                 }}>
                     <Text style={styles.userId}>{this.state.profile?.doctor?.academicDegree ? this.renderAcademic(this.state.profile.doctor.academicDegree) : ""}{this.state.profile?.doctor?.name || ""}</Text>
@@ -549,7 +528,12 @@ class VideoCallScreen extends Component {
                             }}>Thời gian gọi còn lại của bạn còn {this.state.warn} phút</Text>
                             : null
                     }
-                </View>
+                </View> */}
+                <Timer data={{
+                    profile: this.state.profile,
+                    mediaConnected: this.state.mediaConnected,
+                    callState: this.state.callState
+                }} />
                 {this.state.isShowOptionView ? (
                     <View style={styles.callOptionContainer}>
                         <TouchableOpacity onPress={this._onMutePress}>
