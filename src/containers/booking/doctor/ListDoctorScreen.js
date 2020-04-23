@@ -149,11 +149,15 @@ class ListDoctorScreen extends Component {
 
     }
     onSearch = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            type: TYPE.SEARCH
-        }, this.search)
+        if(this.state.keyword.trim()){
+            this.setState({
+                page: 0,
+                refreshing: true,
+                type: TYPE.SEARCH
+            }, this.search)
+        }else{
+            this.getData()
+        }
     }
     onRefress = () => {
         this.setState({
@@ -162,7 +166,7 @@ class ListDoctorScreen extends Component {
             keyword: '',
             item: {},
             type: ''
-        }, this.getData)
+        }, this.getData())
     }
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>

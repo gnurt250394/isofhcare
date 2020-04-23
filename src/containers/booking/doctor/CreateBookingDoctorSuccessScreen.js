@@ -254,7 +254,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
 
                         </View>
                         {
-                            paymentMethod == 6 ?
+                            booking.hospital.accountNo &&   paymentMethod == 6 ?
                                 <View style={styles.paymentInfo}>
                                     <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                                     <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
