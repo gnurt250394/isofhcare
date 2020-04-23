@@ -271,7 +271,7 @@ class DetailHistoryBookingScreen extends Component {
             ) {
                 return true
             } else {
-                return false
+                return true
             }
         }
     }
