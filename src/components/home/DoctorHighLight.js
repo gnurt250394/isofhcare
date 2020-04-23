@@ -54,7 +54,6 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
     }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
-        if (item.status == 'ACTIVE') {
             return (
                 <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                     {/* <Card style={{ borderRadius: 5, }}> */}
@@ -72,7 +71,6 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
 
                 </TouchableOpacity>
             )
-        }
     }
     if (data?.length) {
         return (
