@@ -440,28 +440,7 @@ class VideoCallScreen extends Component {
     endCallAndDismissView = () => {
         this.props.navigation.goBack();
     };
-    renderAcademic = (academicDegree) => {
-        if (academicDegree) {
-            switch (academicDegree) {
-                case 'BS': return 'BS.'
-                case 'ThS': return 'Ths.'
-                case 'TS': return 'TS.'
-                case 'PGS': return 'PGS.'
-                case 'GS': return 'GS.'
-                case 'BSCKI': return 'BSCKI.'
-                case 'BSCKII': return 'BSCKII.'
-                case 'GSTS': return 'GS.TS.'
-                case 'PGSTS': return 'PGS.TS.'
-                case 'ThsBS': return 'Ths.BS.'
-                case 'ThsBSCKII': return 'Ths.BSCKII.'
-                case 'TSBS': return 'TS.BS.'
-                default: return ''
-            }
-        }
-        else {
-            return ''
-        }
-    }
+   
     render() {
         return (
             <View style={styles.container}>

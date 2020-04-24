@@ -570,12 +570,12 @@ class DetailHistoryBookingScreen extends Component {
                                             {this.state.booking.hospital.owner}
                                         </Text>
                                     </View>
-                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                    {this.state.booking.hospital.accountNo && <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
                                         <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
                                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
                                             DK {this.state.booking.reference}
                                         </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
-                                    </View>
+                                    </View>}
                                     <View style={styles.between}></View>
                                 </React.Fragment>
                                 : null
