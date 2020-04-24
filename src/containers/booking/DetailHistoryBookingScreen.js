@@ -294,6 +294,7 @@ class DetailHistoryBookingScreen extends Component {
     }
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
+        debugger
         let isOnline = this.state.booking?.invoice?.services ? this.state.booking.invoice.services.find(e => e.isOnline == true) : null
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
@@ -575,13 +576,13 @@ class DetailHistoryBookingScreen extends Component {
                                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
                                             DK {this.state.booking.reference}
                                         </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
-                                    </View>}
+                                    </View> || null}
                                     <View style={styles.between}></View>
                                 </React.Fragment>
                                 : null
                         }
 
-                        <View style={styles.viewStatus}>
+                        {/* <View style={styles.viewStatus}>
                             <ScaledImage
                                 height={20}
                                 width={20}
@@ -589,7 +590,7 @@ class DetailHistoryBookingScreen extends Component {
                             />
                             <Text style={styles.txStatusLabel}>{constants.booking.status_booking}</Text>
                             {this.status()}
-                        </View>
+                        </View> */}
                         <View style={styles.between}></View>
 
 
