@@ -101,8 +101,8 @@ class AddBookingDoctorScreen extends Component {
                     multiple: true,
                     mediaType: 'photo',
                     maxFiles: 5,
-                    compressImageMaxWidth: 500,
-                    compressImageMaxHeight: 500
+                    compressImageMaxWidth: 1500,
+                    compressImageMaxHeight: 1500
                 }).then(images => {
                     let listImages = [];
                     if (images.length)
