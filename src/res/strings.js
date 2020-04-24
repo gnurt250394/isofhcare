@@ -2,6 +2,8 @@ let isofhcare_service = 'isofhcare/';
 // let wallet_services = 'wallet-services-test/'; //test
 let wallet_services = 'wallet-services-dev/'; //dev
 module.exports = {
+  route: '',
+  package_name: 'com.isofh.appisofhcaredev',
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",

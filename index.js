@@ -4,6 +4,7 @@
 
 import { AppRegistry } from 'react-native'
 import APP from './src'
+import bgMessage from '@components/bgMessage';
 import { name as appName } from './app.json';
 if (process.env.NODE_ENV !== 'development') {
     console.log = () => { }
@@ -11,3 +12,4 @@ if (process.env.NODE_ENV !== 'development') {
     console.error = () => { }
 }
 AppRegistry.registerComponent(appName, () => APP);
+AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessage); 

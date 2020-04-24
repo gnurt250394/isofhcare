@@ -19,6 +19,7 @@ let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
 import ReactNative, { Text, TextInput, Animated, StyleSheet } from 'react-native';
 import codePushUtils from '@utils/codepush-utils';
+import constants from '@resources/strings';
 import fonts from '@resources/fonts';
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -61,10 +62,11 @@ class Kernel extends Component {
     }
   }
   render() {
+    const RootApp = AppContainer(constants.route)
     return (
       <Provider store={store}>
         {/* <Root> */}
-        <AppContainer ref={navigatorRef => {
+        <RootApp ref={navigatorRef => {
           NavigationService.setTopLevelNavigator(navigatorRef);
         }}
           screenProps={{ state: store.getState() }}
