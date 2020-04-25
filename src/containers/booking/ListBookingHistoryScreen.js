@@ -205,31 +205,11 @@ class ListBookingHistoryScreen extends Component {
     getTime = (time) => {
         return parseInt(time.replace(':', ''), 10)
     }
-    getTimeOnline = (booking) => {
-        if (booking && booking.date && booking.time) {
-            let isOnline = booking.invoice.services.find(e => e.isOnline == true)
-            let date = new Date()
-            let dateBooking = new Date(booking.date)
-            let time = date.format('HH:mm')
-
-            let timeOnline = booking.time.split(':')
-            let secon = parseInt(timeOnline[1])
-            let minus = parseInt(timeOnline[0])
-            if (secon >= 30) {
-                secon = '00'
-                minus += 1
-            } else {
-                secon += 30
-            }
-            timeOnline[1] = secon.toString()
-            timeOnline[0] = minus.toString()
-
-            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':'))) {
-                return true
-            } else {
-                return false
-            }
-
+    getTimeOnline = (item) => {
+        if (item.timeDiff < 0 && item.timeDiff > (-30 * 60 * 1000)) {
+            return true
+        } else {
+            return false
         }
     }
     renderBookingOnline = (item) => {
@@ -245,8 +225,7 @@ class ListBookingHistoryScreen extends Component {
                     <View
                         style={[styles.containerDate,
                         this.getTimeOnline(item)
-                            && (item.status == 'NEW'
-                                || item.status == 'ACCEPTED'
+                            && (item.status == 'ACCEPTED'
                                 || item.status == 'CHECKIN') ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
                         ]}
                     >

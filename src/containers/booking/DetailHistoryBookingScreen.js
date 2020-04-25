@@ -7,7 +7,8 @@ import {
     ScrollView,
     StyleSheet,
     Clipboard,
-    Linking
+    Linking,
+    RefreshControl
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -32,7 +33,9 @@ class DetailHistoryBookingScreen extends Component {
         this.state = {
             id: id,
             value: 0,
-            booking: {}
+            booking: {},
+            isLoading: true,
+            refreshing: false
         };
     }
 
@@ -73,11 +76,12 @@ class DetailHistoryBookingScreen extends Component {
     }
     getData = () => {
         BookingDoctorProvider.getDetailBooking(this.state.id).then(res => {
+            this.setState({ isLoading: false, refreshing: false })
             if (res && res.id) {
                 this.setState({ booking: res })
             }
         }).catch(err => {
-
+            this.setState({ isLoading: false, refreshing: false })
         })
     }
     renderStatus = () => {
@@ -247,32 +251,10 @@ class DetailHistoryBookingScreen extends Component {
         return parseInt(time.replace(':', ''), 10)
     }
     getTimeOnline = () => {
-        const { booking } = this.state
-
-        if (booking && booking.date && booking.time) {
-            let date = new Date()
-            let dateBooking = new Date(booking.date)
-            let time = date.format('HH:mm')
-
-            let timeOnline = booking.time.split(':')
-            let secon = parseInt(timeOnline[1])
-            let minus = parseInt(timeOnline[0])
-            if (secon >= 30) {
-                secon = '00'
-                minus += 1
-            } else {
-                secon += 30
-            }
-            timeOnline[1] = secon.toString()
-            timeOnline[0] = minus.toString()
-            if (dateBooking.compareDate(date) == 0
-                && this.getTime(time) >= this.getTime(booking.time)
-                && this.getTime(time) <= this.getTime(timeOnline.join(':'))
-            ) {
-                return true
-            } else {
-                return true
-            }
+        if (this.state.booking.timeDiff < 0 && this.state.booking.timeDiff > (-30 * 60 * 1000)) {
+            return true
+        } else {
+            return true
         }
     }
     renderAcademic = (academicDegree) => {
@@ -292,8 +274,20 @@ class DetailHistoryBookingScreen extends Component {
             default: return ''
         }
     }
+    onRefresh = () => {
+        this.setState({ refreshing: true }, this.getData)
+    }
+    refreshControl = () => {
+        return (
+            <RefreshControl
+                onRefresh={this.onRefresh}
+                refreshing={this.state.refreshing}
+            />
+        )
+    }
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
+        debugger
         let isOnline = this.state.booking?.invoice?.services ? this.state.booking.invoice.services.find(e => e.isOnline == true) : null
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
@@ -302,9 +296,11 @@ class DetailHistoryBookingScreen extends Component {
                 title={constants.booking.details_booking}
             >
 
-                {this.state.booking && this.state.booking.patient && <ScrollView style={{
-                    backgroundColor: "#e6f7ff30"
-                }}>
+                {this.state.booking && this.state.booking.patient && <ScrollView
+                    refreshControl={this.refreshControl()}
+                    style={{
+                        backgroundColor: "#e6f7ff30"
+                    }}>
                     <View>
                         <View style={styles.viewName}>
                             <View style={styles.containerProfileName}>
@@ -575,13 +571,13 @@ class DetailHistoryBookingScreen extends Component {
                                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
                                             DK {this.state.booking.reference}
                                         </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
-                                    </View>}
+                                    </View> || null}
                                     <View style={styles.between}></View>
                                 </React.Fragment>
                                 : null
                         }
 
-                        <View style={styles.viewStatus}>
+                        {/* <View style={styles.viewStatus}>
                             <ScaledImage
                                 height={20}
                                 width={20}
@@ -589,7 +585,7 @@ class DetailHistoryBookingScreen extends Component {
                             />
                             <Text style={styles.txStatusLabel}>{constants.booking.status_booking}</Text>
                             {this.status()}
-                        </View>
+                        </View> */}
                         <View style={styles.between}></View>
 
 
