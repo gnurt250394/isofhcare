@@ -10,6 +10,7 @@ import serviceProvider from '@data-access/service-provider'
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
+    console.log('item: ', item);
     const userApp = useSelector((state) => state.userApp)
 
     const _text = useRef(null)
@@ -20,29 +21,56 @@ const ListOfServiceScreen = ({ navigation }) => {
         data: [],
     })
     const onSelected = () => {
-
-        item.hospital.address = item.hospital.contact.address
-        if (userApp.isLogin) {
-            navigation.navigate('addBooking1', {
-                hospital: item.hospital,
-                listServicesSelected: [item],
-                allowBooking: true,
-                disableService: true
-            })
-        }
-        else {
-
-            navigation.navigate("login", {
-                nextScreen: {
-                    screen: 'addBooking1', param: {
-                        hospital: item.hospital,
-                        listServicesSelected: [item],
-                        allowBooking: true,
-                        disableService: true
+        if(item && item.hospital){
+            item.hospital.address = item.hospital.contact.address
+        
+            if (userApp.isLogin) {
+                navigation.navigate('addBooking1', {
+                    hospital: item.hospital,
+                    listServicesSelected: [item],
+                    allowBooking: true,
+                    disableService: true
+                })
+            }
+            else {
+    
+                navigation.navigate("login", {
+                    nextScreen: {
+                        screen: 'addBooking1', param: {
+                            hospital: item.hospital,
+                            listServicesSelected: [item],
+                            allowBooking: true,
+                            disableService: true
+                        }
                     }
-                }
-            });
+                });
+            }
+        }else{
+            detail.hospital.address = detail.hospital.contact.address
+        
+            if (userApp.isLogin) {
+                navigation.navigate('addBooking1', {
+                    hospital: detail.hospital,
+                    listServicesSelected: [detail],
+                    allowBooking: true,
+                    disableService: true
+                })
+            }
+            else {
+    
+                navigation.navigate("login", {
+                    nextScreen: {
+                        screen: 'addBooking1', param: {
+                            hospital: detail.hospital,
+                            listServicesSelected: [detail],
+                            allowBooking: true,
+                            disableService: true
+                        }
+                    }
+                });
+            }
         }
+        
     }
 
     const getDetailService = async () => {
