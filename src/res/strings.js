@@ -4,7 +4,7 @@ let wallet_services = 'wallet-services-test/'; //test
 
 module.exports = {
   route: '',
-  package_name: 'com.isofh.appisofhcaredev',
+  package_name: 'com.isofh.appisofhcaretest',
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",
