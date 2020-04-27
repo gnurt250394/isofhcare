@@ -595,7 +595,7 @@ class DetailHistoryBookingScreen extends Component {
 
                     </View>
                     <View style={styles.end}></View>
-                </ScrollView>}
+                </ScrollView> || null}
                 <Modal
                     isVisible={this.state.isVisible}
                     onBackdropPress={this.onBackdropPress}
