@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
 export default HomeScreen;
 // function mapStateToProps(state) {
 //   return {
-//     userApp: state.userApp
+//     userApp: state.auth.userApp
 //   };
 // }
 // export default connect(mapStateToProps)(HomeScreen);

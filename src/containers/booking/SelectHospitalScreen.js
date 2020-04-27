@@ -391,7 +391,7 @@ class SelectHospitalScreen extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 const styles = StyleSheet.create({

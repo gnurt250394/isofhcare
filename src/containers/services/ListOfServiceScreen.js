@@ -10,8 +10,7 @@ import serviceProvider from '@data-access/service-provider'
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    console.log('item: ', item);
-    const userApp = useSelector((state) => state.userApp)
+    const userApp = useSelector((state) => state.auth.userApp)
 
     const _text = useRef(null)
     const [description, setDescription] = useState('')
@@ -102,11 +101,20 @@ const ListOfServiceScreen = ({ navigation }) => {
             disableBooking: true
         })
     }
-    const disablePromotion = (promotion) => {
+    disablePromotion = (promotion) => {
+        let dayOfWeek = {
+            0: 6,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 4,
+            6: 5
+        }
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        let isDayOfWeek = (promotion.dateRepeat | Math.pow(2, dayOfWeek[day.getDay()]))
         if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }

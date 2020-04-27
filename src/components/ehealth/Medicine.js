@@ -91,7 +91,7 @@ class Medicine extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
+        userApp: state.auth.userApp,
         ehealth: state.ehealth
     };
 }

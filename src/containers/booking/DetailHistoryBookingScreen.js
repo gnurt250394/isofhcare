@@ -287,7 +287,6 @@ class DetailHistoryBookingScreen extends Component {
     }
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
-        debugger
         let isOnline = this.state.booking?.invoice?.services ? this.state.booking.invoice.services.find(e => e.isOnline == true) : null
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
@@ -591,7 +590,7 @@ class DetailHistoryBookingScreen extends Component {
 
                     </View>
                     <View style={styles.end}></View>
-                </ScrollView>}
+                </ScrollView> || null}
                 <Modal
                     isVisible={this.state.isVisible}
                     onBackdropPress={this.onBackdropPress}
@@ -942,7 +941,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 export default connect(mapStateToProps)(DetailHistoryBookingScreen);
