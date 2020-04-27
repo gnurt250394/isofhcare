@@ -128,7 +128,7 @@ class InitialVideoCall extends Component {
   };
   renderAcademic = (doctor) => {
     let name = ''
-    if (doctor?.name && doctor?.academicDegree) {
+    if (doctor?.name || doctor?.academicDegree) {
       let academicDegree = ''
       switch (doctor?.academicDegree) {
         case 'BS': academicDegree = 'BS.'
