@@ -203,7 +203,12 @@ class InitialVideoCall extends Component {
       })
 
     } else {
+      VoipPushNotification.removeEventListener('register',()=>{
 
+      })
+      VoipPushNotification.removeEventListener('notification',()=>{
+
+      })
     }
 
   }
