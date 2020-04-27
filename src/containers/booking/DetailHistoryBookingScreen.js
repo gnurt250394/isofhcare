@@ -319,7 +319,8 @@ class DetailHistoryBookingScreen extends Component {
                             </View>
                             {
                                 isOnline ? (
-                                    this.getTimeOnline() ?
+                                    this.getTimeOnline() && (this.state.booking.status == 'ACCEPTED'
+                                        || this.state.booking.status == 'CHECKIN') ?
                                         <View style={[styles.flex, {
                                             borderLeftColor: '#00000050',
                                             borderLeftWidth: 1
