@@ -575,7 +575,7 @@ class DetailHistoryBookingScreen extends Component {
                                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
                                             DK {this.state.booking.reference}
                                         </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
-                                    </View>}
+                                    </View>|| null}
                                     <View style={styles.between}></View>
                                 </React.Fragment>
                                 : null
