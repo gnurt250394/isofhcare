@@ -27,7 +27,15 @@ class ListBookingHistoryScreen extends Component {
         };
     }
     componentDidMount() {
-        this.getListProfile()
+        this.onFocus = this.props.navigation.addListener('didFocus', () => {
+            this.setState({ isLoading: true }, this.getListProfile)
+        });
+    }
+    componentWillUnmount = () => {
+        if (this.onFocus) {
+            console.log('this.onFocus: ', this.onFocus);
+            this.onFocus.remove()
+        }
     }
     getListProfile = () => {
         profileProvider.getListProfile().then(s => {
@@ -97,106 +105,7 @@ class ListBookingHistoryScreen extends Component {
     onRefress = () => {
         this.setState({ refreshing: true, page: 0 }, this.getData)
     }
-    // onRefresh = () => {
-    //     if (!this.state.loading)
-    //         this.setState(
-    //             { refreshing: true, page: 1, finish: false, loading: true },
-    //             () => {
-    //                 this.onLoad();
-    //             }
-    //         );
-    // };
 
-
-
-    // onLoad() {
-    //     const { page, size } = this.state;
-    //     const toDate = new Date().format("yyyy-MM-dd HH:mm:ss");
-    //     this.setState({
-    //         loading: true,
-    //         refreshing: page == 1,
-    //         loadMore: page != 1
-    //     });
-    //     if (page == 1) {
-    //         bookingProvider.getByAuthor()
-    //             .then(s => {
-    //                 this.setState({
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false
-    //                 });
-    //                 if (s && s.code == 0) {
-    //                     var finish = false;
-    //                     if (s.data.bookings.length == 0) {
-    //                         finish = true;
-    //                         this.setState({
-    //                             finish: finish,
-    //                             data1: [],
-    //                         });
-    //                     }
-    //                     else {
-    //                         this.setState({
-    //                             data: s.data.bookings,
-    //                             finish: false,
-    //                             data1: s.data.bookings.filter((item, index) => {
-    //                                 return index < size
-    //                             })
-    //                         });
-    //                     }
-    //                 }
-    //             })
-    //             .catch(e => {
-    //                 this.setState({
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false
-    //                 });
-    //             })
-    //     } else {
-    //         setTimeout(() => {
-    //             this.setState({
-    //                 loading: true,
-    //                 refreshing: page == 1,
-    //                 loadMore: true
-    //             });
-    //             let data2 = this.state.data.filter((item, index) => {
-    //                 return index >= ((page - 1) * size) && index < (page * size);
-
-    //             })
-    //             if (!data2 && data2.length == 0) {
-    //                 this.setState({
-    //                     data1: [...this.state.data1, ...data2],
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false,
-    //                     finish: true
-    //                 })
-    //             } else {
-    //                 this.setState({
-    //                     data1: [...this.state.data1, ...data2],
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false,
-    //                     finish: false
-    //                 })
-    //             }
-    //         }, 100)
-    //     }
-    // }
-    // onLoadMore() {
-    //     if (!this.state.finish && !this.state.loading)
-    //         this.setState(
-    //             {
-    //                 loadMore: true,
-    //                 refreshing: false,
-    //                 loading: true,
-    //                 page: this.state.page + 1
-    //             },
-    //             () => {
-    //                 this.onLoad(this.state.page);
-    //             }
-    //         );
-    // }
     onClickItem = (item) => {
         this.props.navigation.navigate("detailsHistory", {
             id: item.id

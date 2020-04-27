@@ -38,130 +38,130 @@ class InitialVideoCall extends Component {
   }
 
   componentDidMount() {
+    RNCallKeepManager.setIsAppForeGround(true)
     this.getTokenAndConnect()
     this.checkPermistion()
-
   }
 
   checkPermistion = async () => {
     try {
       const result = await InCallManager.checkRecordPermission()
-      console.log('result: ', result);
-
       if (result !== 'granted') {
         await InCallManager.requestRecordPermission()
-
       }
     } catch (error) {
-      console.log('error: ', error);
-
     }
   }
   getTokenAndConnect = async () => {
     try {
       // await this.refs.client.connect(user2);
       let res = await UserProvider.getToken()
-      console.log('res: ', res);
       if (res.code == 0) {
         await this.refs.client.connect(res.data);
-
       }
     } catch (error) {
-      console.log('error: ', error);
-
     }
   }
   // Connection
-  _clientDidConnect = async ({ userId, projectId, isReconnecting }) => {
-    console.log('isReconnecting: ', isReconnecting);
-    console.log('projectId: ', projectId);
-    console.log("_clientDidConnect - " + userId);
+  registerEventPush = async () => {
     if (Platform.OS == "android") {
       await firebase.messaging().requestPermission()
       firebase.messaging().getToken().then(token => {
-        console.log('token: ', token);
+
         this.setState({ token })
-        this.refs.client.registerPush(
-          token,
-          __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
-          true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
-          (status, code, message) => {
-            console.log(message, 'meeee');
-          }
-        );
+        if (this.refs.client) {
+          this.refs.client.registerPush(
+            token,
+            __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
+            true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
+            (status, code, message) => {
+            }
+          );
+        }
+
       })
     } else {
       // debugger;
       VoipPushNotification.requestPermissions();
       VoipPushNotification.registerVoipToken();
       VoipPushNotification.addEventListener("register", token => {
-        console.log('token: ', token);
         // send token to your apn provider server
-        this.refs.client.registerPush(
-          token,
-          false, // isProduction: false trong quá trình development, true khi build release.
-          true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
-          (status, code, message) => {
-            console.log(message);
-          }
-        );
+        if (this.refs.client) {
+          this.refs.client.registerPush(
+            token,
+            __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
+            true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
+            (status, code, message) => {
+            }
+          );
+        }
       });
-
       VoipPushNotification.addEventListener('notification', (notification) => {
-        // console.log('notification: ', notification._data.data.map);
-        // --- when receive remote voip push, register your VoIP client, show local notification ... etc
-        //this.doRegisterOrSomething();
-
-        // --- This  is a boolean constant exported by this module
-        // --- you can use this constant to distinguish the app is launched by VoIP push notification or not
-        // console.log('VoipPushNotification.wakeupByPush: ', VoipPushNotification.wakeupByPush);
-        // if (AppState.currentState != 'active') {
-        //   // this.doSomething()
-        //   // if (notification._data.data.map.type == 'CALL_EVENT') {
-        //   // RNCallKeepManager.displayIncommingCall(notification._data.data.map.data.map.callId)
-
-        //   // }
-        //   // --- remember to set this static variable back to false
-        //   // --- since the constant are exported only at initialization time, and it will keep the same in the whole app
-        // }
-
-        /**
-         * Local Notification Payload
-         *
-         * - `alertBody` : The message displayed in the notification alert.
-         * - `alertAction` : The "action" displayed beneath an actionable notification. Defaults to "view";
-         * - `soundName` : The sound played when the notification is fired (optional).
-         * - `category`  : The category of this notification, required for actionable notifications (optional).
-         * - `userInfo`  : An optional object containing additional notification data.
-         */
-        // VoipPushNotification.presentLocalNotification({
-        //   alertBody: "hello! " + notification.getMessage()
-        // });
       });
     }
-
+  }
+  _clientDidConnect = async ({ userId, projectId, isReconnecting }) => {
+    
+    
+    
+    this.registerEventPush()
 
 
   };
 
   _clientDidDisConnect = (err) => {
-    console.log('err: ', err);
-    console.log("_clientDidDisConnect");
+    
+    
 
   };
 
   _clientDidFailWithError = (e) => {
-    console.log('e: ', e);
-    console.log("_clientDidFailWithError");
+    
+    
   };
 
   _clientRequestAccessToken = () => {
     this.getTokenAndConnect()
-    console.log("_clientRequestAccessToken");
+    
     // Token để kết nối tới Stringee server đã hết bạn. Bạn cần lấy token mới và gọi connect lại ở đây
     // this.refs.client.connect("NEW_TOKEN");
   };
-
+  renderAcademic = (doctor) => {
+    let name = ''
+    if (doctor?.name && doctor?.academicDegree) {
+      let academicDegree = ''
+      switch (doctor?.academicDegree) {
+        case 'BS': academicDegree = 'BS.'
+          break;
+        case 'ThS': academicDegree = 'Ths.'
+          break;
+        case 'TS': academicDegree = 'TS.'
+          break;
+        case 'PGS': academicDegree = 'PGS.'
+          break;
+        case 'GS': academicDegree = 'GS.'
+          break;
+        case 'BSCKI': academicDegree = 'BSCKI.'
+          break;
+        case 'BSCKII': academicDegree = 'BSCKII.'
+          break;
+        case 'GSTS': academicDegree = 'GS.TS.'
+          break;
+        case 'PGSTS': academicDegree = 'PGS.TS.'
+          break;
+        case 'ThsBS': academicDegree = 'Ths.BS.'
+          break;
+        case 'ThsBSCKII': academicDegree = 'Ths.BSCKII.'
+          break;
+        case 'TSBS': academicDegree = 'TS.BS.'
+          break;
+        default: academicDegree = ''
+          break;
+      }
+      name = academicDegree + doctor.name
+    }
+    return name
+  }
   // videoCall events
   _callIncomingCall = ({
     callId,
@@ -174,31 +174,16 @@ class InitialVideoCall extends Component {
     customDataFromYourServer
   }) => {
     let data = JSON.parse(customDataFromYourServer)
-    console.log('data: ', data);
-    // RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-    //   RNCallKeep.updateDisplay(callUUID, data?.doctor?.name || "Bác sĩ đang gọi", "")
-    //   RNCallKeepManager.UUID = callUUID
-    //   // you might want to do following things when receiving this event:
-    //   // - Start playing ringback if it is an outgoing call
-    // });
-    console.log(
-      "IncomingCallId-" +
-      callId +
-      " from-" +
-      from +
-      " to-" +
-      to +
-      " fromAlias-" +
-      fromAlias +
-      " toAlias-" +
-      toAlias +
-      " isVideoCall-" +
-      isVideoCall +
-      "callType-" +
-      callType +
-      "customDataFromYourServer-" +
-      customDataFromYourServer
-    );
+    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
+      
+      RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
+      RNCallKeepManager.UUID = callUUID
+    });
+    if (Platform.OS == 'android') {
+      RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
+      RNCallKeepManager.isAnswerSuccess = true
+      RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
+    }
     this.props.navigation.navigate("videoCall", {
       callId: callId,
       from: from,
