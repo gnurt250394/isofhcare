@@ -92,7 +92,6 @@ class RNCallKeepManager {
             RNCallKeep.displayIncomingCall(this.UUID, name)
         }
         else{
-            RNCallKeep.setAvailable(true);
         }
     }
 
