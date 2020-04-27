@@ -25,12 +25,9 @@ export default async (message) => {
             if (AppState.currentState != 'active') {
                 RNCallKeepManager.displayIncommingCall(data.callId)
                 RNCallKeepManager.isAnswerSuccess = true
-                const hasOutgoingCall = await RNCallKeep.hasOutgoingCall();
-                if (hasOutgoingCall) {
-                    RNCallKeepManager.setIsAppForeGround(false)
-                    LaunchApplication.open(constants.package_name)
+                RNCallKeepManager.setIsAppForeGround(false)
+                LaunchApplication.open(constants.package_name)
 
-                }
             }
         } catch (error) {
         }

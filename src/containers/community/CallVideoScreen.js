@@ -459,9 +459,12 @@ class VideoCallScreen extends Component {
                         RNCallKeepManager.setAnswerCall()
                         this.isAnswer = true
                     }
-                    setTimeout(() => {
-                        LaunchApplication.open(constants.package_name)
-                    }, 1000)
+                    // if(AppState.currentState !== 'active'){
+                    //     setTimeout(() => {
+                    //         LaunchApplication.open(constants.package_name)
+                    //     }, 1000)
+
+                    // }
 
                 }
                 RNCallKeepManager.isAnswerSuccess = true
