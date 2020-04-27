@@ -32,12 +32,12 @@ class SplashScreen extends Component {
 		console.disableYellowBox = true;
 		console.reportErrorsAsExceptions = false;
 
-		dataCache.read("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, (s) => {
-			dataCacheProvider.save("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, 0);
-			if (s == 1) {
-				snackbar.show("Ứng dụng của bạn vừa được cập nhật", "success");
-			}
-		});
+		// dataCache.read("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, (s) => {
+		// 	dataCache.save("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, 0);
+		// 	if (s == 1) {
+		// 		snackbar.show("Ứng dụng của bạn vừa được cập nhật", "success");
+		// 	}
+		// });
 
 		userProvider.getAccountStorage((s) => {
 			setTimeout(() => {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
-		userApp: state.userApp
+		userApp: state.auth.userApp
 	};
 }
 export default connect(mapStateToProps)(SplashScreen);

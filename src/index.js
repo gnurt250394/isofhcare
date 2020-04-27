@@ -1,16 +1,25 @@
 import React, { Component } from "react";
 import { Provider } from "react-redux";
-// import { Root } from "native-base";
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-// import appProvider from "@data-access/app-provider";
 import AppReducer from "@reducers";
 import { AppContainer } from "@navigators/AppNavigator";
-// import { NavigationActions, StackActions } from "react-navigation";
-// import userProvider from '@data-access/user-provider'
 import NavigationService from "@navigators/NavigationService";
+import { createStore, applyMiddleware, compose } from 'redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore, persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-community/async-storage';
+import thunk from 'redux-thunk';
+const persistConfig = {
+  key: 'persistKey',
+  // keyPrefix: 'x', // the redux-persist default `persist:` doesn't work with some file systems
+  storage: AsyncStorage,
+};
+const store = createStore(
+  persistReducer(persistConfig, AppReducer),
+  {},
+  compose(applyMiddleware(thunk)),
+);
+store.__PERSISTOR = persistStore(store);
 
-const store = createStore(AppReducer, applyMiddleware(thunk));
 import codePush from "react-native-code-push";
 // let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
 import { Alert } from 'react-native';
@@ -65,13 +74,15 @@ class Kernel extends Component {
     const RootApp = AppContainer(constants.route)
     return (
       <Provider store={store}>
-        {/* <Root> */}
-        <RootApp ref={navigatorRef => {
-          NavigationService.setTopLevelNavigator(navigatorRef);
-        }}
-          screenProps={{ state: store.getState() }}
-        />
-        {/* </Root> */}
+        <PersistGate loading={null} persistor={store.__PERSISTOR}>
+          {/* <Root> */}
+          <RootApp ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+            screenProps={{ state: store.getState() }}
+          />
+          {/* </Root> */}
+        </PersistGate>
         <FlashMessage floating={true} style={{ marginTop: 30 }} position="top" ref="myLocalFlashMessage" />
       </Provider>
     )
