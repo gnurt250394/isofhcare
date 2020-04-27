@@ -8,7 +8,6 @@ export function openVideoCallScreen(callId) {
     NavigationServices.navigate('videoCall', { callId })
 }
 class RNCallKeepManager {
-
     constructor() {
         this.UUID = ''
         this.callId = {}
@@ -16,20 +15,18 @@ class RNCallKeepManager {
         this.isAppForeground = false
         this.setupCallKeep()
     }
-
     setIsAppForeGround = value => {
         this.isAppForeground = value
     }
     onRNCallKitDidReceiveStartCallAction(callId) {
-        
         this.callId = callId
-        // Sự kiện gọi đi..có thể bắt đầu từ việc ấn call recents hoặc siri..
         openVideoCallScreen(callId)
 
     }
     setAnswerCall = () => {
         RNCallKeep.answerIncomingCall(this.UUID)
         RNCallKeep.setCurrentCallActive(this.UUID)
+        RNCallKeep.backToForeground()
     }
     prepareOpenVideoCall = () => {
         if (!this.isAppForeground) {
@@ -45,7 +42,6 @@ class RNCallKeepManager {
             this.setAnswerCall()
             this.isAnswer = true
         }
-        
     }
 
     setupCallKeep = () => {
@@ -85,17 +81,17 @@ class RNCallKeepManager {
     updateDisplay = ({ name = "", phone = "" }) => {
         RNCallKeep.updateDisplay(this.UUID, name, phone)
     }
+    
     displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
         if (!this.isAnswerSuccess) {
             this.callId = callId
-            this.UUID = uuid.v4();
-            RNCallKeep.displayIncomingCall(this.UUID, name)
-        }
-        else{
+            this.UUID = uuid.v4().toLowerCase();
+            RNCallKeep.displayIncomingCall(this.UUID, name, '', 'generic', false)
         }
     }
 
     endCall = () => {
+
         if (this.UUID)
             RNCallKeep.endAllCalls()
     }

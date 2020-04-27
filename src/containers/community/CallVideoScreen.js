@@ -69,6 +69,7 @@ const checkAndroidPermissions = () =>
 class VideoCallScreen extends Component {
     isAnswerSuccess = false
     isAnswer = false
+    backToForeground = false
     constructor(props) {
         super(props);
 
@@ -169,6 +170,12 @@ class VideoCallScreen extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState !== 'active' && this.isAnswerSuccess) {
+            if (!this.backToForeground) {
+                RNCallKeep.backToForeground()
+                setTimeout(() => {
+                    this.backToForeground = true
+                }, 5)
+            }
             // const fbNotification = new firebase.notifications.Notification()
             //     .setNotificationId(StringUtils.guid())
             //     .setBody("Bạn có đang có 1 cuộc gọi")
@@ -183,6 +190,7 @@ class VideoCallScreen extends Component {
         }
     }
     componentWillUnmount() {
+        soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
         AppState.removeEventListener('change', this._handleAppStateChange);
@@ -439,7 +447,6 @@ class VideoCallScreen extends Component {
     };
 
     _onAcceptCallPress = () => {
-        RNCallKeep.backToForeground()
         this.stringeeCall && this.stringeeCall.answer(
             this.state.callId,
             (status, code, message) => {
