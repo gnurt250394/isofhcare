@@ -6,7 +6,7 @@ import homeProvider from '@data-access/home-provider'
 import { useSelector } from 'react-redux'
 const NewsHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
-    const userApp = useSelector((state) => state.userApp)
+    const userApp = useSelector((state) => state.auth.userApp)
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listNewsCovid()

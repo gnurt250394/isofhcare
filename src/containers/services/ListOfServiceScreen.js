@@ -10,7 +10,7 @@ import serviceProvider from '@data-access/service-provider'
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
-    const userApp = useSelector((state) => state.userApp)
+    const userApp = useSelector((state) => state.auth.userApp)
 
     const _text = useRef(null)
     const [description, setDescription] = useState('')

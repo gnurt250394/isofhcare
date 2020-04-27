@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { AppRegistry } from "react-native";
 import {
     Text,
@@ -68,11 +68,11 @@ const checkAndroidPermissions = () =>
     });
 
 class VideoCallScreen extends Component {
-    isAnswerSuccess = false
+
     isAnswer = false
     constructor(props) {
         super(props);
-
+        this.isAnswerSuccess = createRef()
         this.callEventHandlers = {
             onChangeSignalingState: this._callDidChangeSignalingState,
             onChangeMediaState: this._callDidChangeMediaState,
@@ -113,7 +113,7 @@ class VideoCallScreen extends Component {
                 })
             }, 1000)
         }
-        if (!this.isAnswerSuccess) {
+        if (!this.isAnswerSuccess.current) {
             debugger
             this._onDeclinePress()
 
@@ -149,7 +149,7 @@ class VideoCallScreen extends Component {
         return { cameraStatus, contactsStatus };
     }
     _handleAppStateChange = (nextAppState) => {
-        if (nextAppState !== 'active' && this.isAnswerSuccess) {
+        if (nextAppState !== 'active' && this.isAnswerSuccess.current) {
             // const fbNotification = new firebase.notifications.Notification()
             //     .setNotificationId(StringUtils.guid())
             //     .setBody("Bạn có đang có 1 cuộc gọi")
@@ -252,7 +252,7 @@ class VideoCallScreen extends Component {
                 isShowOptionView: false,
                 isOutgoingCall: isOutgoingCall,
                 userId: from,
-                callState: "Đang kết nối...",
+                callState: "Đang gọi...",
                 isVideoCall: isVideoCall,
                 callId: callId
             });
@@ -336,7 +336,7 @@ class VideoCallScreen extends Component {
             case 4:
                 // end
                 soundUtils.play('not_listen.mp3')
-                this.setState({ callState: "Không trả lời" })
+                this.setState({ callState: "Kết thúc cuộc gọi" })
                 if (Platform.OS === "android") {
                     this.stringeeCall.hangup(
                         this.state.callId,
@@ -365,11 +365,14 @@ class VideoCallScreen extends Component {
                 // Connected
                 this.setState({ mediaConnected: true });
                 if (this.state.answered) {
+                    soundUtils.stop()
                     this.setState({ callState: "Started" });
                 }
                 break;
             case 1:
                 // Disconnected
+                soundUtils.stop()
+                this.setState({ callState: "Không có kết nối" });
                 break;
             default:
                 break;
@@ -412,12 +415,11 @@ class VideoCallScreen extends Component {
         this.stringeeCall.reject(
             this.state.callId,
             (status, code, message) => {
-                InCallManager.stopRingtone();
-                soundUtils.stop()
-                Vibration.cancel()
-                if (!this.state.answered) {
-                    this.props.navigation.navigate('home');
-                }
+                // InCallManager.stopRingtone();
+                // soundUtils.stop()
+                // Vibration.cancel()
+                //     this.props.navigation.navigate('home');
+                this.endCallAndDismissView()
             }
         );
     };
@@ -440,7 +442,6 @@ class VideoCallScreen extends Component {
         this.stringeeCall.answer(
             this.state.callId,
             (status, code, message) => {
-                console.log(message);
                 new Promise(() => {
                     this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
                         this.state.callId,
@@ -455,9 +456,13 @@ class VideoCallScreen extends Component {
 
                 Vibration.cancel()
                 InCallManager.stopRingtone();
+                console.log(message);
 
-                this.isAnswerSuccess = true;
-                // RNCallKeepManager.endCall()
+                this.isAnswerSuccess.current = true;
+                if (Platform.OS == 'android') {
+                    RNCallKeepManager.endCall()
+
+                }
                 KeepAwake.activate();
                 this.setState({
                     isShowOptionView: true,
@@ -535,6 +540,10 @@ class VideoCallScreen extends Component {
     endCallAndDismissView = () => {
         InCallManager.stopRingtone();
         Vibration.cancel()
+        if (Platform.OS == "android") {
+            RNCallKeepManager.endCall()
+
+        }
         setTimeout(() => {
             soundUtils.stop()
             this.props.navigation.navigate('home');
@@ -784,7 +793,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 export default connect(mapStateToProps)(VideoCallScreen)

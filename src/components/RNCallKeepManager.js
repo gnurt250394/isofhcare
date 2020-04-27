@@ -62,8 +62,11 @@ class RNCallKeepManager {
             console.error('initializeCallKeep error:', err.message);
         }
     }
-    
-   
+
+
+    answerIncomming = () => {
+        RNCallKeep.answerIncomingCall(this.UUID)
+    }
 
     updateDisplay = ({ name, phone }) => {
         console.log('name: ', name);
@@ -72,7 +75,7 @@ class RNCallKeepManager {
     displayIncommingCall = (callId) => {
         this.callId = callId
         this.UUID = uuid.v4();
-        // console.log('display incomming call', { UUID: this.UUID })
+        console.log('display incomming call', { UUID: this.UUID })
         RNCallKeep.displayIncomingCall(this.UUID, 'Bác sĩ đang gọi...', "", "generic", true)
     }
 

@@ -174,12 +174,13 @@ class InitialVideoCall extends Component {
     customDataFromYourServer
   }) => {
     let data = JSON.parse(customDataFromYourServer)
-    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      RNCallKeep.updateDisplay(callUUID, data?.doctor?.name || "Bác sĩ đang gọi", "")
-      RNCallKeepManager.UUID = callUUID
-      // you might want to do following things when receiving this event:
-      // - Start playing ringback if it is an outgoing call
-    });
+    console.log('data: ', data);
+    // RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
+    //   RNCallKeep.updateDisplay(callUUID, data?.doctor?.name || "Bác sĩ đang gọi", "")
+    //   RNCallKeepManager.UUID = callUUID
+    //   // you might want to do following things when receiving this event:
+    //   // - Start playing ringback if it is an outgoing call
+    // });
     console.log(
       "IncomingCallId-" +
       callId +
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (state) => {
   return {
-    userApp: state.userApp
+    userApp: state.auth.userApp
   }
 }
 

@@ -32,7 +32,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE"
             android:protectionLevel="signature" />
 
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
 
     <uses-permission android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -52,7 +52,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -144,7 +144,11 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </service>
         <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
-
+        <service android:name="com.isofh.service.PushNotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.isofh.appisofhcaredev.provider"

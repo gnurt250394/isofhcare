@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     // navigation: state.navigation,
-    userApp: state.userApp
+    userApp: state.auth.userApp
   };
 }
 export default connect(mapStateToProps)(AccountScreen);

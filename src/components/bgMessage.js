@@ -26,10 +26,8 @@ export default async (message) => {
                 console.log('AppState.currentState: ', AppState.currentState);
                 console.log('display callkeep from background')
                 RNCallKeepManager.displayIncommingCall(data.callId)
-                LaunchApplication.open(constants.package_name)
+                // LaunchApplication.open(constants.package_name)
                 console.log('LaunchApplication: ', LaunchApplication);
-
-
             }
         } catch (error) {
             console.log('error: ', error);

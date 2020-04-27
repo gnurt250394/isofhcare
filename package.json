@@ -107,6 +107,7 @@
     "react-redux": "^7.1.0",
     "realm": "^2.29.2",
     "redux": "^4.0.4",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rn-fetch-blob": "^0.10.16",
     "stringee-react-native": "^1.2.9"

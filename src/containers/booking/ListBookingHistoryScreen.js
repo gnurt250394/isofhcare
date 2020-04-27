@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
+        userApp: state.auth.userApp,
         booking: state.booking
     };
 }
