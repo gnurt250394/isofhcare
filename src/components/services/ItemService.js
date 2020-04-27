@@ -13,11 +13,20 @@ import constants from '@resources/strings'
 const { height } = Dimensions.get('window')
 const ItemService = ({ item, onPress }) => {
 
-    const disablePromotion = (promotion) => {
+    disablePromotion = (promotion) => {
+        let dayOfWeek = {
+            0: 6,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 4,
+            6: 5
+        }
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        let isDayOfWeek = (promotion.dateRepeat | Math.pow(2, dayOfWeek[day.getDay()]))
         if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }
@@ -32,7 +41,7 @@ const ItemService = ({ item, onPress }) => {
             // if (value.length > 5) {
             //     text = value.substring(0, value.length - 3) + 'K'
             // } else {
-                text = promotion.value.formatPrice() + 'đ'
+            text = promotion.value.formatPrice() + 'đ'
 
             // }
         }
@@ -115,7 +124,7 @@ const styles = StyleSheet.create({
     txtVoucher: {
         color: '#FFF',
         textAlign: 'center',
-        width:85
+        width: 85
     },
     txtPriceUnit: {
         color: '#00000050',
@@ -125,7 +134,7 @@ const styles = StyleSheet.create({
         color: '#00BA99',
         paddingRight: 10,
         fontWeight: 'bold',
-        paddingTop:10
+        paddingTop: 10
     },
     groupPrice: {
         flexDirection: 'row',
@@ -172,7 +181,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         elevation: 3,
         height: 180,
-        overflow:'hidden'
+        overflow: 'hidden'
     },
     flag: {
         position: 'absolute',
@@ -186,7 +195,7 @@ const styles = StyleSheet.create({
     flagTop: {
         // width: 50,
         paddingVertical: 10,
-        flexWrap:'wrap',
+        flexWrap: 'wrap',
         backgroundColor: '#ffac4d',
         alignItems: 'center',
         justifyContent: 'center'

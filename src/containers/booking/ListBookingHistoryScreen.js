@@ -27,7 +27,15 @@ class ListBookingHistoryScreen extends Component {
         };
     }
     componentDidMount() {
-        this.getListProfile()
+        this.onFocus = this.props.navigation.addListener('didFocus', () => {
+            this.setState({ isLoading: true }, this.getListProfile)
+        });
+    }
+    componentWillUnmount = () => {
+        if (this.onFocus) {
+            console.log('this.onFocus: ', this.onFocus);
+            this.onFocus.remove()
+        }
     }
     getListProfile = () => {
         profileProvider.getListProfile().then(s => {
@@ -97,106 +105,7 @@ class ListBookingHistoryScreen extends Component {
     onRefress = () => {
         this.setState({ refreshing: true, page: 0 }, this.getData)
     }
-    // onRefresh = () => {
-    //     if (!this.state.loading)
-    //         this.setState(
-    //             { refreshing: true, page: 1, finish: false, loading: true },
-    //             () => {
-    //                 this.onLoad();
-    //             }
-    //         );
-    // };
 
-
-
-    // onLoad() {
-    //     const { page, size } = this.state;
-    //     const toDate = new Date().format("yyyy-MM-dd HH:mm:ss");
-    //     this.setState({
-    //         loading: true,
-    //         refreshing: page == 1,
-    //         loadMore: page != 1
-    //     });
-    //     if (page == 1) {
-    //         bookingProvider.getByAuthor()
-    //             .then(s => {
-    //                 this.setState({
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false
-    //                 });
-    //                 if (s && s.code == 0) {
-    //                     var finish = false;
-    //                     if (s.data.bookings.length == 0) {
-    //                         finish = true;
-    //                         this.setState({
-    //                             finish: finish,
-    //                             data1: [],
-    //                         });
-    //                     }
-    //                     else {
-    //                         this.setState({
-    //                             data: s.data.bookings,
-    //                             finish: false,
-    //                             data1: s.data.bookings.filter((item, index) => {
-    //                                 return index < size
-    //                             })
-    //                         });
-    //                     }
-    //                 }
-    //             })
-    //             .catch(e => {
-    //                 this.setState({
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false
-    //                 });
-    //             })
-    //     } else {
-    //         setTimeout(() => {
-    //             this.setState({
-    //                 loading: true,
-    //                 refreshing: page == 1,
-    //                 loadMore: true
-    //             });
-    //             let data2 = this.state.data.filter((item, index) => {
-    //                 return index >= ((page - 1) * size) && index < (page * size);
-
-    //             })
-    //             if (!data2 && data2.length == 0) {
-    //                 this.setState({
-    //                     data1: [...this.state.data1, ...data2],
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false,
-    //                     finish: true
-    //                 })
-    //             } else {
-    //                 this.setState({
-    //                     data1: [...this.state.data1, ...data2],
-    //                     loading: false,
-    //                     refreshing: false,
-    //                     loadMore: false,
-    //                     finish: false
-    //                 })
-    //             }
-    //         }, 100)
-    //     }
-    // }
-    // onLoadMore() {
-    //     if (!this.state.finish && !this.state.loading)
-    //         this.setState(
-    //             {
-    //                 loadMore: true,
-    //                 refreshing: false,
-    //                 loading: true,
-    //                 page: this.state.page + 1
-    //             },
-    //             () => {
-    //                 this.onLoad(this.state.page);
-    //             }
-    //         );
-    // }
     onClickItem = (item) => {
         this.props.navigation.navigate("detailsHistory", {
             id: item.id
@@ -205,31 +114,11 @@ class ListBookingHistoryScreen extends Component {
     getTime = (time) => {
         return parseInt(time.replace(':', ''), 10)
     }
-    getTimeOnline = (booking) => {
-        if (booking && booking.date && booking.time) {
-            let isOnline = booking.invoice.services.find(e => e.isOnline == true)
-            let date = new Date()
-            let dateBooking = new Date(booking.date)
-            let time = date.format('HH:mm')
-
-            let timeOnline = booking.time.split(':')
-            let secon = parseInt(timeOnline[1])
-            let minus = parseInt(timeOnline[0])
-            if (secon >= 30) {
-                secon = '00'
-                minus += 1
-            } else {
-                secon += 30
-            }
-            timeOnline[1] = secon.toString()
-            timeOnline[0] = minus.toString()
-
-            if (dateBooking.compareDate(date) == 0 && this.getTime(time) >= this.getTime(booking.time) && this.getTime(time) <= this.getTime(timeOnline.join(':'))) {
-                return true
-            } else {
-                return false
-            }
-
+    getTimeOnline = (item) => {
+        if (item.timeDiff < 0 && item.timeDiff > (-30 * 60 * 1000)) {
+            return true
+        } else {
+            return false
         }
     }
     renderBookingOnline = (item) => {
@@ -245,8 +134,7 @@ class ListBookingHistoryScreen extends Component {
                     <View
                         style={[styles.containerDate,
                         this.getTimeOnline(item)
-                            && (item.status == 'NEW'
-                                || item.status == 'ACCEPTED'
+                            && (item.status == 'ACCEPTED'
                                 || item.status == 'CHECKIN') ? { backgroundColor: '#ffdab3' } : { backgroundColor: '#FFF' }
                         ]}
                     >
@@ -462,7 +350,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
+        userApp: state.auth.userApp,
         booking: state.booking
     };
 }

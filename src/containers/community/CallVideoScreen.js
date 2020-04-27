@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AppRegistry } from "react-native";
+import { AppRegistry, Vibration } from "react-native";
 import {
     Text,
     View,
@@ -10,19 +10,27 @@ import {
     Platform,
     Alert,
     PermissionsAndroid,
+    BackHandler,
     AppState,
-    DeviceEventEmitter
+    DeviceEventEmitter,
 } from "react-native";
 import { each } from "underscore";
-
+import firebase from 'react-native-firebase'
 import { StringeeCall, StringeeVideoView } from "stringee-react-native";
 import { connect } from "react-redux";
-import KeepAwake from 'react-native-keep-awake';
-import Timer from "./Timer";
-
+import RNCallKeep from 'react-native-callkeep'
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
-
+import StringUtils from 'mainam-react-native-string-utils'
+import uuid from "uuid";
+import InCallManager from 'react-native-incall-manager'
+import { request, check, PERMISSIONS, checkMultiple, requestMultiple } from 'react-native-permissions';
+import RNCallKeepManager from '@components/RNCallKeepManager'
+import LaunchApplication from 'react-native-launch-application';
+import constants from '@resources/strings'
+import KeepAwake from 'react-native-keep-awake';
+import Timer from "./Timer";
+import soundUtils from "@utils/sound-utils";
 const muteImg = require("@images/new/videoCall/mute.png");
 const muteImg_selected = require("@images/new/videoCall/mute_selected.png");
 
@@ -59,7 +67,8 @@ const checkAndroidPermissions = () =>
     });
 
 class VideoCallScreen extends Component {
-    isAnswerSuccess = true
+    isAnswerSuccess = false
+    isAnswer = false
     constructor(props) {
         super(props);
 
@@ -72,11 +81,36 @@ class VideoCallScreen extends Component {
             onReceiveCallInfo: this._didReceiveCallInfo,
             onHandleOnAnotherDevice: this._didHandleOnAnotherDevice
         };
+        RNCallKeepManager.setIsAppForeGround(true)
+        RNCallKeep.addEventListener('answerCall', this.answerCallEvent);
+        RNCallKeep.addEventListener('endCall', this.endCallEvent)
     }
+    answerCallEvent = () => {
+        this._onAcceptCallPress();
+    }
+    endCallEvent = () => {
+        RNCallKeepManager.isAnswerSuccess = false
+        setTimeout(() => {
+            new Promise(() => {
+                this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
+                    this.state.callId,
+                    true,
+                    (status, code, message) => {
+                        if (status) {
+                            this.setState({ isSpeaker: true });
+                        }
+                    }
+                );
+            })
+        }, 1000)
+        if (!this.isAnswerSuccess) {
+            this._onDeclinePress()
 
+        }
+    }
     state = {
         userId: "",
-        callState: "Outgoing call",
+        callState: "Đang kết nối...",
 
         isVideoCall: false,
         callId: "",
@@ -96,10 +130,43 @@ class VideoCallScreen extends Component {
 
         answered: false,
         mediaConnected: false,
-        timer: { minus: '00', secon: '00' },
         profile: this.props.navigation.getParam('profile', {})
     };
 
+    requestPermisstion = async () => {
+        if (Platform.OS == "ios") {
+
+            new Promise((resolve, reject) => {
+                requestMultiple([PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE]).then((statuses) => {
+                    
+                    
+                    if (statuses[PERMISSIONS.IOS.CAMERA] == 'granted' || statuses[PERMISSIONS.IOS.MICROPHONE] == "granted") {
+                        resolve()
+                    } else {
+                        reject()
+                    }
+                }).catch((error) => {
+                    reject(error)
+                })
+            })
+
+        } else {
+            return checkAndroidPermissions()
+        }
+    }
+    componentDidMount() {
+        AppState.addEventListener('change', this._handleAppStateChange);
+        DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
+        checkAndroidPermissions()
+            .then(() => {
+                this.makeOrAnswerCall();
+            })
+            .catch(error => {
+                this._onCancelPress()
+                // alert("You must grant permissions to make a call " + error);
+            });
+
+    }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState !== 'active' && this.isAnswerSuccess) {
             // const fbNotification = new firebase.notifications.Notification()
@@ -111,39 +178,37 @@ class VideoCallScreen extends Component {
             //     .android.setPriority(firebase.notifications.Android.Priority.High)
             //     .setSound("default")
             //     .setData({});
-            //     console.log('fbNotification: ', fbNotification);
+            //     
             // firebase.notifications().displayNotification(fbNotification)
         }
     }
+    componentWillUnmount() {
+        KeepAwake.deactivate();
+        if (this.timeout) clearTimeout(this.timeout)
+        AppState.removeEventListener('change', this._handleAppStateChange);
+        DeviceEventEmitter.removeAllListeners('hardwareBackPress')
 
-    componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
-        DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
+        RNCallKeep.removeEventListener("answerCall", this.answerCallEvent);
+        RNCallKeep.removeEventListener("endCall", this.endCallEvent);
 
-        if (Platform.OS === "android") {
-            checkAndroidPermissions()
-                .then(() => {
-                    this.makeOrAnswerCall();
-                })
-                .catch(error => {
-                    alert("You must grant permissions to make a call " + error);
-                });
-        } else {
-            this.makeOrAnswerCall();
-        }
     }
 
+    handleBackButton() {
+        return true;
+    }
+    static navigationOptions = {
+        gesturesEnabled: false,
+    };
     makeOrAnswerCall() {
         const { userApp } = this.props
-        const { params } = this.props.navigation.state;
+        const { params } = this.props?.navigation?.state || {};
         const isOutgoingCall = params ? params.isOutgoingCall : false;
         const from = userApp?.currentUser?.id || "";
         const to = params ? params.to : "";
         const isVideoCall = params ? params.isVideoCall : false;
         const profile = params ? params.profile : {};
-        console.log('profile: ', profile);
 
-        console.log("isVideoCall " + isVideoCall);
+
 
         if (isOutgoingCall) {
             const myObj = {
@@ -168,11 +233,10 @@ class VideoCallScreen extends Component {
             this.stringeeCall.makeCall(
                 parameters,
                 (status, code, message, callId, customDataFromYourServer) => {
-                    debugger;
                     this.setState({ callId: callId });
-                    // nó đang không nhảy vào đây
                     KeepAwake.activate();
                     this._onSpeakerPress()
+                    soundUtils.play('call_phone.mp3')
                     console.log(
                         "status-" +
                         status +
@@ -196,28 +260,27 @@ class VideoCallScreen extends Component {
                 isShowOptionView: false,
                 isOutgoingCall: isOutgoingCall,
                 userId: from,
-                callState: "Incoming call",
+                callState: "Đang kết nối...",
                 isVideoCall: isVideoCall,
                 callId: callId
             });
+            if (this.stringeeCall && this.stringeeCall.initAnswer) {
+                this.stringeeCall.initAnswer(callId, (status, code, message) => {
+                    // this.startSound()
+                });
+            }
 
-            this.stringeeCall.initAnswer(callId, (status, code, message) => {
-                console.log(message);
-                //no kho ban vao day à
-                // cái này để lắng nghe có cuộc gọi đến
-            });
         }
+
     }
 
-    handleBackButton() {
-        return true;
+    startSound = () => {
+        InCallManager.startRingtone()
+        Vibration.vibrate([0, 200, 700, 300], true)
     }
-    componentWillUnmount() {
-        KeepAwake.deactivate();
-        if (this.timeout) clearTimeout(this.timeout)
-        AppState.removeEventListener('change', this._handleAppStateChange);
-        DeviceEventEmitter.removeAllListeners('hardwareBackPress')
-
+    stopSound = () => {
+        InCallManager.stopRingtone()
+        Vibration.cancel()
     }
     // Signaling state
     _callDidChangeSignalingState = ({
@@ -228,7 +291,6 @@ class VideoCallScreen extends Component {
         sipReason
     }) => {
         console.log(
-            "_callDidChangeSignalingState" +
             "callId-" +
             callId +
             "code-" +
@@ -240,22 +302,24 @@ class VideoCallScreen extends Component {
             " sipReason-" +
             sipReason
         );
-        this.setState({ callState: reason });
         switch (code) {
+            case 0:
+                this.setState({ callState: "Đang gọi" });
+                break
             case 2:
-                this.timeout = setTimeout(this._onEndCallPress, 1800000)
                 this.setState({ answered: true });
+                soundUtils.stop()
                 if (this.state.mediaConnected) {
                     this.setState({ callState: "Started" });
                 }
                 break;
             case 3:
+                this.setState({ callState: 'Máy bận' })
                 // busy
                 if (Platform.OS === "android") {
-                    this.stringeeCall.hangup(
+                    this.stringeeCall && this.stringeeCall.hangup(
                         this.state.callId,
                         (status, code, message) => {
-                            console.log(message);
                             this.endCallAndDismissView();
                         }
                     );
@@ -265,11 +329,11 @@ class VideoCallScreen extends Component {
                 break;
             case 4:
                 // end
+                this.setState({ callState: 'Kết thúc cuộc gọi', mediaConnected: false })
                 if (Platform.OS === "android") {
-                    this.stringeeCall.hangup(
+                    this.stringeeCall && this.stringeeCall.hangup(
                         this.state.callId,
                         (status, code, message) => {
-                            console.log(message);
                             this.endCallAndDismissView();
                         }
                     );
@@ -285,13 +349,16 @@ class VideoCallScreen extends Component {
     // Media state
     _callDidChangeMediaState = ({ callId, code, description }) => {
         console.log(
-            "_callDidChangeMediaState" + "callId-" + callId + "code-" + code + " description-" + description
+            "callId-" + callId + "code-" + code + " description-" + description
         );
         switch (code) {
             case 0:
                 // Connected
+                this.timeout = setTimeout(this._onEndCallPress, 1800000)
+
                 this.setState({ mediaConnected: true });
                 if (this.state.answered) {
+                    soundUtils.stop()
                     this.setState({ callState: "Started" });
                 }
                 break;
@@ -304,21 +371,21 @@ class VideoCallScreen extends Component {
     };
 
     _callDidReceiveLocalStream = ({ callId }) => {
-        console.log("_callDidReceiveLocalStream " + callId);
+
         this.setState({ hasReceivedLocalStream: true });
     };
 
     _callDidReceiveRemoteStream = ({ callId }) => {
-        console.log("_callDidReceiveRemoteStream " + callId);
+
         this.setState({ hasReceivedRemoteStream: true });
     };
 
     _didReceiveDtmfDigit = ({ callId, dtmf }) => {
-        console.log("_didReceiveDtmfDigit " + callId + "***" + dtmf);
+
     };
 
     _didReceiveCallInfo = ({ callId, data }) => {
-        console.log("_didReceiveCallInfo " + callId + "***" + data);
+
     };
 
     _didHandleOnAnotherDevice = ({ callId, code, description }) => {
@@ -327,59 +394,95 @@ class VideoCallScreen extends Component {
         );
         if (code == 2 || code == 3 || code == 4) {
             // Answered || Busy || End
+            // this.setState({ callState: 'Máy bận' })
             this.endCallAndDismissView();
         }
     };
 
     // Action
     _onDeclinePress = () => {
-        console.log("_onDeclinePress");
-        this.stringeeCall.reject(
+
+        this.stringeeCall && this.stringeeCall.reject(
             this.state.callId,
             (status, code, message) => {
-                console.log(message);
+                // RNCallKeepManager.endCall()
+                soundUtils.stop()
+                if (!this.state.answered) {
+                    this.props.navigation.navigate('home');
+                }
+
+            }
+        );
+    };
+    _onCancelPress = () => {
+
+        this.stringeeCall && this.stringeeCall.reject(
+            this.state.callId,
+            (status, code, message) => {
+
                 this.endCallAndDismissView();
+
             }
         );
     };
 
     _onEndCallPress = () => {
-        console.log("_onEndCallPress" + this.callId);
-        this.stringeeCall.hangup(
+        
+
+        this.stringeeCall && this.stringeeCall.hangup(
             this.state.callId,
             (status, code, message) => {
-                console.log(message);
+                this.setState({ callState: 'Kết thúc cuộc gọi', mediaConnected: false })
                 this.endCallAndDismissView();
             }
         );
     };
 
     _onAcceptCallPress = () => {
-        console.log("_onAcceptCallPress");
-        this.stringeeCall.answer(
+        RNCallKeep.backToForeground()
+        this.stringeeCall && this.stringeeCall.answer(
             this.state.callId,
             (status, code, message) => {
-                console.log(message);
-                if (status) {
-                    this.setState({
-                        isShowOptionView: true,
-                        isShowDeclineBt: false,
-                        isShowEndBt: true,
-                        isShowAcceptBt: false
-                    });
-                } else {
-                    this.endCallAndDismissView();
+                new Promise(() => {
+                    this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
+                        this.state.callId,
+                        true,
+                        (status, code, message) => {
+                            if (status) {
+                                this.setState({ isSpeaker: true });
+                            }
+                        }
+                    );
+                })
+                if (Platform.OS == 'android') {
+                    if (!this.isAnswer) {
+                        RNCallKeepManager.setAnswerCall()
+                        this.isAnswer = true
+                    }
+                    setTimeout(() => {
+                        LaunchApplication.open(constants.package_name)
+                    }, 1000)
+
                 }
+                RNCallKeepManager.isAnswerSuccess = true
+                soundUtils.stop()
+                this.isAnswerSuccess = true;
+                KeepAwake.activate();
+                this.setState({
+                    isShowOptionView: true,
+                    isShowDeclineBt: false,
+                    isShowEndBt: true,
+                    isShowAcceptBt: false
+                });
             }
         );
     };
 
     _onMutePress = () => {
-        this.stringeeCall.mute(
+        this.stringeeCall && this.stringeeCall.mute(
             this.state.callId,
             !this.state.isMute,
             (status, code, message) => {
-                console.log("_onMutePress" + message);
                 if (status) {
                     this.setState({ isMute: !this.state.isMute });
                 }
@@ -388,7 +491,7 @@ class VideoCallScreen extends Component {
     };
 
     _onSpeakerPress = () => {
-        this.stringeeCall.setSpeakerphoneOn(
+        this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
             this.state.callId,
             !this.state.isSpeaker,
             (status, code, message) => {
@@ -398,11 +501,9 @@ class VideoCallScreen extends Component {
             }
         );
     };
-    static navigationOptions = {
-        gesturesEnabled: false,
-    };
+
     _onSwitchCameraPress = () => {
-        this.stringeeCall.switchCamera(
+        this.stringeeCall && this.stringeeCall.switchCamera(
             this.state.callId,
             (status, code, message) => { }
         );
@@ -410,7 +511,7 @@ class VideoCallScreen extends Component {
 
     _onVideoPress = () => {
         if (this.state.isVideoCall) {
-            this.stringeeCall.enableVideo(
+            this.stringeeCall && this.stringeeCall.enableVideo(
                 this.state.callId,
                 !this.state.isEnableVideo,
                 (status, code, message) => {
@@ -438,9 +539,15 @@ class VideoCallScreen extends Component {
     };
 
     endCallAndDismissView = () => {
-        this.props.navigation.goBack();
+        // this.stopSound()
+        setTimeout(() => {
+            RNCallKeepManager.endCall()
+            soundUtils.stop()
+            this.props.navigation.navigate('home');
+
+        }, 3000)
     };
-   
+
     render() {
         return (
             <View style={styles.container}>
@@ -456,11 +563,14 @@ class VideoCallScreen extends Component {
                         </View>
                     )}
 
+                {/* {
+                    this.state.mediaConnected && */}
                 <View style={{
                     paddingTop: 15,
                     marginBottom: 20,
                     alignSelf: 'flex-end'
                 }}>
+
 
                     {this.state.hasReceivedLocalStream &&
                         this.state.callId !== "" &&
@@ -487,27 +597,6 @@ class VideoCallScreen extends Component {
                     )}
 
                 </View>
-                {/* <View style={{
-                    flex: 1
-                }}>
-                    <Text style={styles.userId}>{this.state.profile?.doctor?.academicDegree ? this.renderAcademic(this.state.profile.doctor.academicDegree) : ""}{this.state.profile?.doctor?.name || ""}</Text>
-                    {
-                        this.state.callState == "Started" ?
-                            <Text style={styles.callState}>{this.state.timer.minus} : {this.state.timer.secon}</Text>
-                            :
-                            <Text style={styles.callState}>{this.state.callState}</Text>
-                    }
-                    {
-                        this.state.warn ?
-                            <Text style={{
-                                color: "#FFF",
-                                fontSize: 20,
-                                textAlign: 'center',
-                                paddingHorizontal: 20
-                            }}>Thời gian gọi còn lại của bạn còn {this.state.warn} phút</Text>
-                            : null
-                    }
-                </View> */}
                 <Timer data={{
                     profile: this.state.profile,
                     mediaConnected: this.state.mediaConnected,
@@ -534,7 +623,7 @@ class VideoCallScreen extends Component {
                 {this.state.isShowEndBt && (
                     <View style={styles.callActionContainerEnd}>
                         {this.state.isShowDeclineBt ? (
-                            <TouchableOpacity onPress={this._onDeclinePress}>
+                            <TouchableOpacity onPress={this._onCancelPress}>
                                 <Image
                                     source={require("@images/new/videoCall/end_call.png")}
                                     style={styles.button}
@@ -565,7 +654,7 @@ class VideoCallScreen extends Component {
                 {!this.state.isShowEndBt && (
                     <View style={styles.callActionContainer}>
                         {this.state.isShowDeclineBt ? (
-                            <TouchableOpacity onPress={this._onDeclinePress}>
+                            <TouchableOpacity onPress={this._onCancelPress}>
                                 <Image
                                     source={require("@images/new/videoCall/end_call.png")}
                                     style={styles.button}
@@ -605,6 +694,7 @@ class VideoCallScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        position: 'relative',
         alignItems: "center",
         backgroundColor: "#00A6AD",
     },
@@ -682,7 +772,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 export default connect(mapStateToProps)(VideoCallScreen)

@@ -306,17 +306,26 @@ class AddBookingDoctorScreen extends Component {
     }
 
     disablePromotion = (promotion) => {
+        let dayOfWeek = {
+            0: 6,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 4,
+            6: 5
+        }
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        let isDayOfWeek = (promotion.dateRepeat | Math.pow(2, dayOfWeek[day.getDay()]))
         if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }
         return false
     }
     pricePromotion = (item) => {
-        console.log('item: ', item);
+        
         let value = 0
         if (item?.promotion && this.disablePromotion(item.promotion)) {
             if (item?.promotion?.type == "PERCENT") {
@@ -324,7 +333,7 @@ class AddBookingDoctorScreen extends Component {
             } else {
 
                 value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
-                console.log('value: ', value);
+                
             }
         } else {
             value = item?.monetaryAmount?.value
@@ -340,7 +349,7 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-        console.log('detailSchedule: ', detailSchedule);
+        
         if (!this.props.userApp.isLogin) {
             this.props.navigation.replace("login", {
                 nextScreen: {
@@ -371,17 +380,17 @@ class AddBookingDoctorScreen extends Component {
         }
         var images = [];
         this.state.imageUris.forEach((item) => {
-            console.log('item: ', item);
+            
 
             images.push(item.url);
         });
         let img = images ? images : ''
 
-        console.log('img: ', img);
+        
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
         let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
-        console.log('detailSchedule: ', detailSchedule);
+        
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
@@ -524,7 +533,7 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     renderServices = (hospital) => {
-        console.log('hospital: ', hospital);
+        
         if (Array.isArray(hospital))
             return (
                 <View style={styles.containerService} >
@@ -578,26 +587,26 @@ class AddBookingDoctorScreen extends Component {
         return text
     }
     promotion = (service) => {
-        if(service && service.promotion && this.disablePromotion(service.promotion))
-        return (
-            <View style={styles.containerService} >
-                <View style={styles.flexRow}>
-                    <ScaleImage style={styles.image} height={17} source={require("@images/new/booking/ic_sale.png")} />
-                    <View style={styles.groupService}>
-                        <Text >Khuyến mại</Text>
+        if (service && service.promotion && this.disablePromotion(service.promotion))
+            return (
+                <View style={styles.containerService} >
+                    <View style={styles.flexRow}>
+                        <ScaleImage style={styles.image} height={17} source={require("@images/new/booking/ic_sale.png")} />
+                        <View style={styles.groupService}>
+                            <Text >Khuyến mại</Text>
                             <View style={styles.containerPrice}>
                                 <Text style={styles.txtService} ></Text>
                                 <Text style={styles.txtPrice}>Giảm {this.renderPromotion(service.promotion)} </Text>
                             </View>
 
+                        </View>
                     </View>
+
+
                 </View>
-
-
-            </View>
-        )
+            )
         else
-        return null
+            return null
     }
     renderSelectTime = () => {
         return <TouchableOpacity style={styles.containerService}
@@ -1104,7 +1113,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 export default connect(mapStateToProps)(AddBookingDoctorScreen);

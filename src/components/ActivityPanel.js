@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        navigation: state.navigation
+        navigation: state.auth.navigation
     }
 }
 export default connect(mapStateToProps, null, null, { forwardRef: true })(ActivityPanel);

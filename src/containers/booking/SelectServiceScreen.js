@@ -102,10 +102,19 @@ class SelectServiceScreen extends Component {
         this.setState({ listServiceSearch: listSearch });
     }
     disablePromotion = (promotion) => {
+        let dayOfWeek = {
+            0: 6,
+            1: 0,
+            2: 1,
+            3: 2,
+            4: 3,
+            5: 4,
+            6: 5
+        }
         let startDate = new Date(promotion.startDate)
         let endDate = new Date(promotion.endDate)
         let day = new Date()
-        let isDayOfWeek = (promotion.dateRepeat & Math.pow(2, day.getDay() - 1))
+        let isDayOfWeek = (promotion.dateRepeat | Math.pow(2, dayOfWeek[day.getDay()]))
         if (startDate < day && endDate > day && isDayOfWeek != 0) {
             return true
         }
@@ -368,7 +377,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.auth.userApp
     };
 }
 
