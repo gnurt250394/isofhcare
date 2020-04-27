@@ -89,7 +89,7 @@ class InitialVideoCall extends Component {
         if (this.refs.client) {
           this.refs.client.registerPush(
             token,
-            __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
+            false, // isProduction: false trong quá trình development, true khi build release.
             true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
             (status, code, message) => {
             }
