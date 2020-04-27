@@ -323,7 +323,7 @@ const handleCustomTransition = ({ scenes }) => {
 }
 
 
-const RootNavigator = createStackNavigator(
+const RootNavigator = (route = 'splash') => createStackNavigator(
   {
     splash: SplashScreen,
     qrcodeScanner: QRCodeScannerScreen,
@@ -454,5 +454,5 @@ const RootNavigator = createStackNavigator(
     transitionConfig: (nav) => handleCustomTransition(nav)
   }
 );
-let AppContainer = createAppContainer(RootNavigator)
+let AppContainer = (route) => createAppContainer(RootNavigator(route))
 export { AppContainer };
