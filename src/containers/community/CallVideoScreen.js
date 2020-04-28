@@ -139,8 +139,8 @@ class VideoCallScreen extends Component {
 
             new Promise((resolve, reject) => {
                 requestMultiple([PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE]).then((statuses) => {
-                    
-                    
+
+
                     if (statuses[PERMISSIONS.IOS.CAMERA] == 'granted' || statuses[PERMISSIONS.IOS.MICROPHONE] == "granted") {
                         resolve()
                     } else {
@@ -174,7 +174,7 @@ class VideoCallScreen extends Component {
                 RNCallKeep.backToForeground()
                 setTimeout(() => {
                     this.backToForeground = true
-                }, 5)
+                }, 100)
             }
             // const fbNotification = new firebase.notifications.Notification()
             //     .setNotificationId(StringUtils.guid())
@@ -415,6 +415,7 @@ class VideoCallScreen extends Component {
             (status, code, message) => {
                 // RNCallKeepManager.endCall()
                 soundUtils.stop()
+                RNCallKeepManager.isCallee = false
                 if (!this.state.answered) {
                     this.props.navigation.navigate('home');
                 }
@@ -435,7 +436,7 @@ class VideoCallScreen extends Component {
     };
 
     _onEndCallPress = () => {
-        
+
 
         this.stringeeCall && this.stringeeCall.hangup(
             this.state.callId,
@@ -550,12 +551,13 @@ class VideoCallScreen extends Component {
 
     endCallAndDismissView = () => {
         // this.stopSound()
+        RNCallKeepManager.isCallee = false
         setTimeout(() => {
             RNCallKeepManager.endCall()
             soundUtils.stop()
             this.props.navigation.navigate('home');
 
-        }, 3000)
+        }, 1000)
     };
 
     render() {

@@ -13,6 +13,7 @@ class RNCallKeepManager {
         this.callId = {}
         this.isAnswerSuccess = false
         this.isAppForeground = false
+        this.isCallee = false
         this.setupCallKeep()
     }
     setIsAppForeGround = value => {
