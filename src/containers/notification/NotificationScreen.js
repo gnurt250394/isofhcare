@@ -47,8 +47,17 @@ class NotificationScreen extends Component {
       );
   }
   componentDidMount() {
-    this.props.dispatch(redux.getUnreadNotificationCount());
-    this.onRefresh();
+    this.onFocus = this.props.navigation.addListener('didFocus', () => {
+      this.props.dispatch(redux.getUnreadNotificationCount());
+      this.onRefresh();
+    });
+
+  }
+  componentWillUnmount = () => {
+    if (this.onFocus) {
+      console.log('this.onFocus: ', this.onFocus);
+      this.onFocus.remove()
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.refreshNotification) {
