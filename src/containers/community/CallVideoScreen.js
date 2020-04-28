@@ -89,7 +89,12 @@ class VideoCallScreen extends Component {
     answerCallEvent = () => {
         this._onAcceptCallPress();
     }
-    endCallEvent = () => {
+    endCallEvent = ({ callUUid }) => {
+        console.log('callUUid: ', callUUid);
+        console.log('RNCallKeepManager.otherUUID: ', RNCallKeepManager.otherUUID);
+        if (callUUid == RNCallKeepManager.otherUUID) {
+            return
+        }
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
             new Promise(() => {
@@ -224,7 +229,7 @@ class VideoCallScreen extends Component {
                 to: to + "",
                 isVideoCall,
                 videoResolution: "HD",
-                customData: JSON.stringify(profile)
+                customData: (profile?.id || "") + ""
             };
 
             const parameters = JSON.stringify(myObj);

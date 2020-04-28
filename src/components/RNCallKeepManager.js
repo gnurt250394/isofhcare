@@ -14,6 +14,7 @@ class RNCallKeepManager {
         this.isAnswerSuccess = false
         this.isAppForeground = false
         this.isCallee = false
+        this.otherUUID = ''
         this.setupCallKeep()
     }
     setIsAppForeGround = value => {
@@ -82,7 +83,7 @@ class RNCallKeepManager {
     updateDisplay = ({ name = "", phone = "" }) => {
         RNCallKeep.updateDisplay(this.UUID, name, phone)
     }
-    
+
     displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
         if (!this.isAnswerSuccess) {
             this.callId = callId
