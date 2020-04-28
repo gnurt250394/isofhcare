@@ -3,7 +3,7 @@ let isofhcare_service = 'isofhcare/';
 let wallet_services = 'wallet-services/'; //release
 module.exports = {
   route: '',
-  package_name: 'com.isofh.appisofhcare',
+  package_name: 'com.isofh.isofhcare',
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",
