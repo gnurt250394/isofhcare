@@ -54,7 +54,7 @@ class NotificationBadge extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
+        userApp: state.auth.userApp,
         navigation: state.navigation
     };
 }

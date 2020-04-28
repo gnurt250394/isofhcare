@@ -175,10 +175,12 @@ class LoginScreen extends Component {
 		return (
 
 			<ActivityPanel
-				style={{ flex: 1 }}
+				// showBackgroundHeader={false}
 				hideActionbar={true}
 				showFullScreen={true}
-
+				transparent={true}
+				backgroundHeader={require('@images/new/account/img_bg_login.png')}
+				backgroundStyle={styles.imgBg}
 			>
 				<ImageBackground
 					style={styles.imgBg}
@@ -419,8 +421,8 @@ const styles = StyleSheet.create({
 	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
 	imgIsc: { alignSelf: 'center', },
 	placeholder: { fontSize: 16, fontWeight: '300' },
-	viewFogot: { flexDirection: 'row', marginTop: 10, alignSelf:"flex-end",flex:1 },
-	btnFogot: {  padding:5 },
+	viewFogot: { flexDirection: 'row', marginTop: 10, alignSelf: "flex-end", flex: 1 },
+	btnFogot: { padding: 5 },
 	txFogot: {
 		color: '#00A3FF',
 		paddingRight: 5,
@@ -434,7 +436,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
 	return {
-		userApp: state.userApp
+		userApp: state.auth.userApp
 	};
 }
 export default connect(mapStateToProps)(LoginScreen);
