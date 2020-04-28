@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
 } from "react-native";
-import { StringeeClient } from "stringee-react-native";
+import { StringeeClient, StringeeCall } from "stringee-react-native";
 import UserProvider from '@data-access/user-provider'
 import { connect } from "react-redux";
 import firebase from 'react-native-firebase'
@@ -101,28 +101,28 @@ class InitialVideoCall extends Component {
     }
   }
   _clientDidConnect = async ({ userId, projectId, isReconnecting }) => {
-    
-    
-    
+
+
+
     this.registerEventPush()
 
 
   };
 
   _clientDidDisConnect = (err) => {
-    
-    
+
+
 
   };
 
   _clientDidFailWithError = (e) => {
-    
-    
+
+
   };
 
   _clientRequestAccessToken = () => {
     this.getTokenAndConnect()
-    
+
     // Token để kết nối tới Stringee server đã hết bạn. Bạn cần lấy token mới và gọi connect lại ở đây
     // this.refs.client.connect("NEW_TOKEN");
   };
@@ -173,17 +173,27 @@ class InitialVideoCall extends Component {
     isVideoCall,
     customDataFromYourServer
   }) => {
+    if (RNCallKeepManager.isCallee) {
+      this.stringeeCall && this.stringeeCall.reject(
+        callId,
+        (status, code, message) => {
+          console.log('message: ', message);
+        }
+      );
+      return
+    }
     let data = JSON.parse(customDataFromYourServer)
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      
+
       RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
       RNCallKeepManager.UUID = callUUID
     });
     if (Platform.OS == 'android') {
       RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
-      RNCallKeepManager.isAnswerSuccess = true
       RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
     }
+    RNCallKeepManager.isAnswerSuccess = true
+    RNCallKeepManager.isCallee = true
     this.props.navigation.navigate("videoCall", {
       callId: callId,
       from: from,
@@ -203,10 +213,10 @@ class InitialVideoCall extends Component {
       })
 
     } else {
-      VoipPushNotification.removeEventListener('register',()=>{
+      VoipPushNotification.removeEventListener('register', () => {
 
       })
-      VoipPushNotification.removeEventListener('notification',()=>{
+      VoipPushNotification.removeEventListener('notification', () => {
 
       })
     }
@@ -217,30 +227,11 @@ class InitialVideoCall extends Component {
     return (
       <View>
         <StringeeClient ref="client" eventHandlers={this.clientEventHandlers} />
-
+        <StringeeCall
+          ref={ref => this.stringeeCall = ref}
+        />
       </View>
-      // <View style={styles.container}>
-      //   <Text style={styles.welcome}>
-      //     React Native wrapper for Stringee mobile SDK!
-      //   </Text>
 
-      //   <Text style={styles.info}>Logged in as: {this.state.myUserId}</Text>
-
-
-
-      //   <View style={styles.buttonView}>
-
-
-      //     <TouchableOpacity
-      //       style={styles.button}
-      //       onPress={this._onVideoCallButtonPress}
-      //     >
-      //       <Text style={styles.text}>Video videoCall</Text>
-      //     </TouchableOpacity>
-      //   </View>
-      //   <StringeeClient ref="client" eventHandlers={this.clientEventHandlers} />
-
-      // </View>
     );
   }
 }
