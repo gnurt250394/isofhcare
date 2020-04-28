@@ -90,11 +90,10 @@ class VideoCallScreen extends Component {
         this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
-        console.log('callUUid: ', callUUid);
-        console.log('RNCallKeepManager.otherUUID: ', RNCallKeepManager.otherUUID);
-        if (callUUid == RNCallKeepManager.otherUUID) {
-            return
-        }
+        // debugger
+        // if (callUUid && callUUid == RNCallKeepManager.otherUUID) {
+        //     return
+        // }
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
             new Promise(() => {
@@ -195,6 +194,7 @@ class VideoCallScreen extends Component {
         }
     }
     componentWillUnmount() {
+        RNCallKeepManager.isCallee = false
         soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
