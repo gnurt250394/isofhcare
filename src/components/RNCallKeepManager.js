@@ -13,7 +13,8 @@ class RNCallKeepManager {
         this.callId = {}
         this.isAnswerSuccess = false
         this.isAppForeground = false
-        this.isCallee = false
+        this.isCall = false
+        this.isCall2 = false
         this.otherUUID = ''
         this.setupCallKeep()
     }
@@ -92,11 +93,17 @@ class RNCallKeepManager {
         }
     }
 
+    rejectCall = () => {
+
+        if (this.UUID)
+            RNCallKeep.rejectCall(this.UUID)
+    }
     endCall = () => {
 
         if (this.UUID)
             RNCallKeep.endAllCalls()
     }
+
 
 }
 

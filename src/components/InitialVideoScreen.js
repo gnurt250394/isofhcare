@@ -165,32 +165,6 @@ class InitialVideoCall extends Component {
   }
 
 
-  goToCall = (callId = "", from = "", to = "", data = {}) => {
-    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      debugger
-      if (RNCallKeepManager.isCallee) {
-        console.log('RNCallKeepManager.isCallee: ', RNCallKeepManager.isCallee);
-        RNCallKeepManager.otherUUID = callUUID
-        RNCallKeep.endCall(callUUID)
-      } else {
-        RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
-        RNCallKeepManager.UUID = callUUID
-      }
-    });
-    if (Platform.OS == 'android') {
-      RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
-      RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
-    }
-
-    this.props.navigation.navigate("videoCall", {
-      callId: callId,
-      from: from,
-      to: to,
-      isOutgoingCall: false,
-      isVideoCall: true,
-      profile: data
-    });
-  }
   // videoCall events
   _callIncomingCall = ({
     callId,
@@ -206,16 +180,17 @@ class InitialVideoCall extends Component {
     console.log('customDataFromYourServer: ', customDataFromYourServer);
     const data = JSON.parse(customDataFromYourServer)
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      // debugger
-      // if (RNCallKeepManager.isCallee) {
-      //   RNCallKeepManager.otherUUID = callUUID
-      //   RNCallKeep.endCall(callUUID)
-      // } else {
-      RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
-      RNCallKeepManager.UUID = callUUID
-      // }
+      debugger
+      if (RNCallKeepManager.isCall2) {
+        RNCallKeepManager.otherUUID = callUUID
+        RNCallKeep.rejectCall(callUUID)
+      } else {
+        RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
+        RNCallKeepManager.UUID = callUUID
+        RNCallKeepManager.isCall2 = true
+      }
     });
-    if (RNCallKeepManager.isCallee) {
+    if (RNCallKeepManager.isCall) {
       this.stringeeCall && this.stringeeCall.reject(
         callId,
         (status, code, message) => {
@@ -237,16 +212,8 @@ class InitialVideoCall extends Component {
       isVideoCall: true,
       profile: data
     });
-    //   this.goToCall(callId, from, to, customDataFromYourServer || {})
-
-    // } catch (error) {
-    //   this.goToCall(callId, from, to, {})
-
-    // }
-    debugger
     RNCallKeepManager.isAnswerSuccess = true
-    RNCallKeepManager.isCallee = true
-    debugger
+    RNCallKeepManager.isCall = true
   };
   componentWillUnmount() {
     this.refs.client ? this.refs.client.disconnect() : null

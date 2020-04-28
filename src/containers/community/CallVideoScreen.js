@@ -90,10 +90,6 @@ class VideoCallScreen extends Component {
         this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
-        // debugger
-        // if (callUUid && callUUid == RNCallKeepManager.otherUUID) {
-        //     return
-        // }
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
             new Promise(() => {
@@ -174,12 +170,7 @@ class VideoCallScreen extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState !== 'active' && this.isAnswerSuccess) {
-            if (!this.backToForeground) {
-                RNCallKeep.backToForeground()
-                setTimeout(() => {
-                    this.backToForeground = true
-                }, 100)
-            }
+           
             // const fbNotification = new firebase.notifications.Notification()
             //     .setNotificationId(StringUtils.guid())
             //     .setBody("Bạn có đang có 1 cuộc gọi")
@@ -194,7 +185,8 @@ class VideoCallScreen extends Component {
         }
     }
     componentWillUnmount() {
-        RNCallKeepManager.isCallee = false
+        RNCallKeepManager.isCall = false
+        RNCallKeepManager.isCall2 = false
         soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
@@ -420,7 +412,7 @@ class VideoCallScreen extends Component {
             (status, code, message) => {
                 // RNCallKeepManager.endCall()
                 soundUtils.stop()
-                RNCallKeepManager.isCallee = false
+                RNCallKeepManager.isCall = false
                 if (!this.state.answered) {
                     this.props.navigation.navigate('home');
                 }
@@ -468,17 +460,7 @@ class VideoCallScreen extends Component {
                     );
                 })
                 if (Platform.OS == 'android') {
-                    if (!this.isAnswer) {
-                        RNCallKeepManager.setAnswerCall()
-                        this.isAnswer = true
-                    }
-                    // if(AppState.currentState !== 'active'){
-                    //     setTimeout(() => {
-                    //         LaunchApplication.open(constants.package_name)
-                    //     }, 1000)
-
-                    // }
-
+                    RNCallKeepManager.rejectCall()
                 }
                 RNCallKeepManager.isAnswerSuccess = true
                 soundUtils.stop()
@@ -556,7 +538,7 @@ class VideoCallScreen extends Component {
 
     endCallAndDismissView = () => {
         // this.stopSound()
-        RNCallKeepManager.isCallee = false
+        RNCallKeepManager.isCall = false
         setTimeout(() => {
             RNCallKeepManager.endCall()
             soundUtils.stop()
