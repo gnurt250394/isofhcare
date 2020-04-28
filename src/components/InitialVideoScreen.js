@@ -18,6 +18,7 @@ import reduxStore from '@redux-store'
 const iOS = Platform.OS === "ios" ? true : false;
 import RNCallKeep from "react-native-callkeep";
 import InCallManager from 'react-native-incall-manager';
+import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 import VoipPushNotification from 'react-native-voip-push-notification';
 class InitialVideoCall extends Component {
   constructor(props) {
@@ -162,6 +163,33 @@ class InitialVideoCall extends Component {
     }
     return name
   }
+
+
+  goToCall = (callId = "", from = "", to = "", data = {}) => {
+    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
+      // if (RNCallKeepManager.isCallee) {
+      //   console.log('RNCallKeepManager.isCallee: ', RNCallKeepManager.isCallee);
+      //   RNCallKeepManager.otherUUID = callUUID
+      //   RNCallKeep.rejectCall(callUUID)
+      // } else {
+        RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
+        RNCallKeepManager.UUID = callUUID
+      // }
+    });
+    if (Platform.OS == 'android') {
+      RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
+      RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
+    }
+
+    this.props.navigation.navigate("videoCall", {
+      callId: callId,
+      from: from,
+      to: to,
+      isOutgoingCall: false,
+      isVideoCall: true,
+      profile: data
+    });
+  }
   // videoCall events
   _callIncomingCall = ({
     callId,
@@ -173,36 +201,25 @@ class InitialVideoCall extends Component {
     isVideoCall,
     customDataFromYourServer
   }) => {
-    if (RNCallKeepManager.isCallee) {
-      this.stringeeCall && this.stringeeCall.reject(
-        callId,
-        (status, code, message) => {
-          console.log('message: ', message);
-        }
-      );
-      return
-    }
-    let data = JSON.parse(customDataFromYourServer)
-    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
+    try {
+      console.log('customDataFromYourServer: ', customDataFromYourServer);
+      if (RNCallKeepManager.isCallee) {
+        this.stringeeCall && this.stringeeCall.reject(
+          callId,
+          (status, code, message) => {
+            console.log('message: ', message);
+          }
+        );
+        return
+      }
+      this.goToCall(callId, from, to, customDataFromYourServer || {})
 
-      RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
-      RNCallKeepManager.UUID = callUUID
-    });
-    if (Platform.OS == 'android') {
-      RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
-      RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
+    } catch (error) {
+      this.goToCall(callId, from, to, {})
+
     }
     RNCallKeepManager.isAnswerSuccess = true
     RNCallKeepManager.isCallee = true
-    this.props.navigation.navigate("videoCall", {
-      callId: callId,
-      from: from,
-      to: to,
-      isOutgoingCall: false,
-      isVideoCall: isVideoCall,
-      profile: data
-    });
-
   };
   componentWillUnmount() {
     this.refs.client ? this.refs.client.disconnect() : null

@@ -28,7 +28,7 @@ class ListBookingHistoryScreen extends Component {
     }
     componentDidMount() {
         this.onFocus = this.props.navigation.addListener('didFocus', () => {
-            this.setState({ isLoading: true }, this.getListProfile)
+            this.getListProfile()
         });
     }
     componentWillUnmount = () => {
