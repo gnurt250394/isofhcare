@@ -8,7 +8,7 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 const DoctorHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
-    const userApp = useSelector((state) => state.userApp)
+    const userApp = useSelector((state) => state.auth.userApp)
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listDoctor()

@@ -323,7 +323,7 @@ const handleCustomTransition = ({ scenes }) => {
 }
 
 
-const RootNavigator = createStackNavigator(
+const RootNavigator = (route = 'splash') => createStackNavigator(
   {
     splash: SplashScreen,
     qrcodeScanner: QRCodeScannerScreen,
@@ -435,6 +435,7 @@ const RootNavigator = createStackNavigator(
     detailNewsHighlight: { screen: DetailNewHighLightScreen },
   },
   {
+    initialRouteName: route,
     headerMode: "none",
     // cardStyle: {
     //   backgroundColor: 'transparent', opacity: 1,
@@ -454,5 +455,5 @@ const RootNavigator = createStackNavigator(
     transitionConfig: (nav) => handleCustomTransition(nav)
   }
 );
-let AppContainer = createAppContainer(RootNavigator)
+let AppContainer = (route) => createAppContainer(RootNavigator(route))
 export { AppContainer };

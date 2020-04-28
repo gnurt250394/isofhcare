@@ -39,6 +39,8 @@ export default function Timer(props) {
 
         if (props.data.mediaConnected) {
             countUpTimer()
+        } else {
+
         }
 
         return () => {
