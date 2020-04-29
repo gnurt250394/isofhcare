@@ -88,6 +88,7 @@ class VideoCallScreen extends Component {
     }
     answerCallEvent = () => {
         RNCallKeepManager.isCall2 = true
+        RNCallKeepManager.isCall = true
         this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
