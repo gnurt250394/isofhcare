@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import {Dimensions, View, Text, KeyboardAvoidingView, ActivityIndicator, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import { Dimensions, View, Text, KeyboardAvoidingView, ActivityIndicator, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
@@ -15,6 +15,7 @@ import Field from "mainam-react-native-form-validate/Field";
 import HeaderBar from '@components/account/HeaderBar'
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import NavigationService from "@navigators/NavigationService";
 
 class ResetPasswordScreen extends Component {
     constructor(props) {
@@ -43,10 +44,11 @@ class ResetPasswordScreen extends Component {
                 isLoading: true,
                 disabled: true
             }, () => {
-                userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+                userProvider.forgotPassword(this.state.phone.trim(), 2).then(s => {
+                    console.log('s: sssss', s);
                     switch (s.code) {
                         case 0:
-                            this.props.navigation.navigate('verifyPhone', {
+                            NavigationService.navigate('verifyPhone', {
                                 phone: this.state.phone,
                                 verify: 2
                             })
@@ -55,7 +57,7 @@ class ResetPasswordScreen extends Component {
                             snackbar.show('Số điện thoại chưa được đăng ký', "danger");
                             break
                         case 6:
-                            this.props.navigation.navigate('verifyPhone', {
+                            NavigationService.navigate('verifyPhone', {
                                 phone: this.state.phone,
                                 verify: 2
                             })
@@ -63,6 +65,9 @@ class ResetPasswordScreen extends Component {
                     }
 
 
+                }).catch(err => {
+                    console.log('err: ', err);
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại.', 'danger')
                 })
                 this.setState({
                     isLoading: false,

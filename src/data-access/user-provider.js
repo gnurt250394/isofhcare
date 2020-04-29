@@ -26,23 +26,17 @@ module.exports = {
     // );
     datacacheProvider.save("");
   },
-  forgotPassword(email, type, callback) {
-    if (email) {
+  forgotPassword(email, type) {
+    return new Promise((resolve, reject) => {
       var body = {
         emailOrPhone: email,
         type
       };
-      client.requestApi(
-        "put",
-        constants.api.user.forgot_password,
-        body,
-        (s, e) => {
-          if (callback) callback(s, e);
-        }
-      );
-    } else {
-      if (callback) callback();
-    }
+      client.requestApi("put", constants.api.user.forgot_password, body, (s, e) => {
+        if (s) resolve(s);
+        reject(e);
+      });
+    })
   },
   confirmCode(phone, code, callback) {
     var body = {
