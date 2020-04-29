@@ -93,6 +93,12 @@ class InitialVideoCall extends Component {
             __DEV__ ? false : true, // isProduction: false trong quá trình development, true khi build release.
             true, // (iOS) isVoip: true nếu là kiểu Voip PushNotification. Hiện Stringee đang hỗ trợ kiểu này.
             (status, code, message) => {
+              if (status) {
+                this.setState({
+                  hasConnected: true,
+                  token
+                })
+              }
             }
           );
         }
@@ -177,18 +183,13 @@ class InitialVideoCall extends Component {
     customDataFromYourServer
   }) => {
     // try {
-    console.log('customDataFromYourServer: ',typeof customDataFromYourServer);
+    console.log('customDataFromYourServer: ', typeof customDataFromYourServer);
     const data = customDataFromYourServer ? JSON.parse(customDataFromYourServer) : {}
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      debugger
-      if (RNCallKeepManager.isCall2) {
-        RNCallKeepManager.otherUUID = callUUID
-        RNCallKeep.rejectCall(callUUID)
-      } else {
-        RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
-        RNCallKeepManager.UUID = callUUID
-      }
+      RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
+      RNCallKeepManager.UUID = callUUID
     });
+   
     if (RNCallKeepManager.isCall) {
       this.stringeeCall && this.stringeeCall.reject(
         callId,
