@@ -177,8 +177,8 @@ class InitialVideoCall extends Component {
     customDataFromYourServer
   }) => {
     // try {
-    console.log('customDataFromYourServer: ', customDataFromYourServer);
-    const data = JSON.parse(customDataFromYourServer)
+    console.log('customDataFromYourServer: ',typeof customDataFromYourServer);
+    const data = customDataFromYourServer ? JSON.parse(customDataFromYourServer) : {}
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
       debugger
       if (RNCallKeepManager.isCall2) {
@@ -187,7 +187,6 @@ class InitialVideoCall extends Component {
       } else {
         RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
         RNCallKeepManager.UUID = callUUID
-        RNCallKeepManager.isCall2 = true
       }
     });
     if (RNCallKeepManager.isCall) {
@@ -213,7 +212,6 @@ class InitialVideoCall extends Component {
       profile: data
     });
     RNCallKeepManager.isAnswerSuccess = true
-    RNCallKeepManager.isCall = true
   };
   componentWillUnmount() {
     this.refs.client ? this.refs.client.disconnect() : null
