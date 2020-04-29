@@ -87,12 +87,10 @@ class VideoCallScreen extends Component {
         RNCallKeep.addEventListener('endCall', this.endCallEvent)
     }
     answerCallEvent = () => {
-        RNCallKeepManager.isCall2 = true
         RNCallKeepManager.isCall = true
         this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
-        RNCallKeepManager.isCall2 = false
 
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
@@ -160,7 +158,7 @@ class VideoCallScreen extends Component {
         }
     }
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
         checkAndroidPermissions()
             .then(() => {
@@ -190,11 +188,10 @@ class VideoCallScreen extends Component {
     }
     componentWillUnmount() {
         RNCallKeepManager.isCall = false
-        RNCallKeepManager.isCall2 = false
         soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        // AppState.removeEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.removeAllListeners('hardwareBackPress')
 
         RNCallKeep.removeEventListener("answerCall", this.answerCallEvent);
@@ -243,6 +240,8 @@ class VideoCallScreen extends Component {
                 parameters,
                 (status, code, message, callId, customDataFromYourServer) => {
                     this.setState({ callId: callId });
+                    RNCallKeepManager.isCall = true
+                    this.isAnswerSuccess = true
                     KeepAwake.activate();
                     this._onSpeakerPress()
                     soundUtils.play('call_phone.mp3')
@@ -283,14 +282,7 @@ class VideoCallScreen extends Component {
 
     }
 
-    startSound = () => {
-        InCallManager.startRingtone()
-        Vibration.vibrate([0, 200, 700, 300], true)
-    }
-    stopSound = () => {
-        InCallManager.stopRingtone()
-        Vibration.cancel()
-    }
+   
     // Signaling state
     _callDidChangeSignalingState = ({
         callId,
@@ -452,17 +444,6 @@ class VideoCallScreen extends Component {
         this.stringeeCall && this.stringeeCall.answer(
             this.state.callId,
             (status, code, message) => {
-                new Promise(() => {
-                    this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
-                        this.state.callId,
-                        true,
-                        (status, code, message) => {
-                            if (status) {
-                                this.setState({ isSpeaker: true });
-                            }
-                        }
-                    );
-                })
                 if (Platform.OS == 'android') {
                     RNCallKeepManager.rejectCall()
                 }
