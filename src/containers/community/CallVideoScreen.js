@@ -87,9 +87,12 @@ class VideoCallScreen extends Component {
         RNCallKeep.addEventListener('endCall', this.endCallEvent)
     }
     answerCallEvent = () => {
+        RNCallKeepManager.isCall2 = true
         this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
+        RNCallKeepManager.isCall2 = false
+
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
             new Promise(() => {
@@ -170,7 +173,7 @@ class VideoCallScreen extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState !== 'active' && this.isAnswerSuccess) {
-           
+
             // const fbNotification = new firebase.notifications.Notification()
             //     .setNotificationId(StringUtils.guid())
             //     .setBody("Bạn có đang có 1 cuộc gọi")
