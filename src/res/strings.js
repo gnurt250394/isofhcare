@@ -153,7 +153,7 @@ module.exports = {
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
     action_otp_phone: "ACTION_OTP_PHONE",
     action_add_drug: 'ACTION_ADD_DRUG',
-    save_user_id:'SAVE_USER_ID'
+    save_user_id: 'SAVE_USER_ID'
   },
   colors: {
     breakline: "#c0c0c0",
@@ -921,7 +921,7 @@ module.exports = {
       create_booking: isofhcare_service + "appointment/v1/hospital",
       // pay_tranfer: isofhcare_service + 'booking/payTranfer',
       doctor: {
-        get_list_doctor: isofhcare_service + 'catalog/v1/doctors',
+        get_list_doctor: isofhcare_service + 'catalog/v1/doctor-availables',
         get_detail_doctor: isofhcare_service + 'catalog/v1/doctor',
         search_list_doctor: isofhcare_service + 'catalog/v1/doctor/search',
         get_detail_schedules: isofhcare_service + 'catalog/v1/schedule',
