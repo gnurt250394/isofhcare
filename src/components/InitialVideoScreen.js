@@ -212,7 +212,6 @@ class InitialVideoCall extends Component {
       profile: data
     });
     RNCallKeepManager.isAnswerSuccess = true
-    RNCallKeepManager.isCall = true
   };
   componentWillUnmount() {
     this.refs.client ? this.refs.client.disconnect() : null
