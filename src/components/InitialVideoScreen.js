@@ -187,7 +187,6 @@ class InitialVideoCall extends Component {
       } else {
         RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
         RNCallKeepManager.UUID = callUUID
-        RNCallKeepManager.isCall2 = true
       }
     });
     if (RNCallKeepManager.isCall) {
