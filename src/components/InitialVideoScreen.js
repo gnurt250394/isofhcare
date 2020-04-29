@@ -177,8 +177,8 @@ class InitialVideoCall extends Component {
     customDataFromYourServer
   }) => {
     // try {
-    console.log('customDataFromYourServer: ', customDataFromYourServer);
-    const data = JSON.parse(customDataFromYourServer)
+    console.log('customDataFromYourServer: ',typeof customDataFromYourServer);
+    const data = customDataFromYourServer ? JSON.parse(customDataFromYourServer) : {}
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
       debugger
       if (RNCallKeepManager.isCall2) {
