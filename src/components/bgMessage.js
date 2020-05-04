@@ -3,8 +3,8 @@ import { AppState, Linking } from 'react-native'
 import RNCallKeepManager from '@components/RNCallKeepManager'
 import LaunchApplication from 'react-native-launch-application';
 import constants from '@resources/strings'
-import StringUtils from 'mainam-react-native-string-utils'
 import RNCallKeep from 'react-native-callkeep'
+import StringUtils from 'mainam-react-native-string-utils'
 import NavigationService from '@navigators/NavigationService';
 export default async (message) => {
     if (message && message.data && message.data.type == "CALL_EVENT") {
@@ -23,16 +23,18 @@ export default async (message) => {
 
         try {
             if (AppState.currentState != 'active') {
+                RNCallKeepManager.setupCallKeep()
                 RNCallKeepManager.displayIncommingCall(data.callId)
                 RNCallKeepManager.isAnswerSuccess = true
-                RNCallKeepManager.setIsAppForeGround(false)
                 LaunchApplication.open(constants.package_name)
-
             }
         } catch (error) {
+
+
         }
 
     }
+    // handle your message
 
 
     return Promise.resolve();

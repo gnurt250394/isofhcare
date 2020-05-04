@@ -36,10 +36,10 @@ class InitialVideoCall extends Component {
       onRequestAccessToken: this._clientRequestAccessToken,
       onIncomingCall: this._callIncomingCall,
     };
+    RNCallKeepManager.setupCallKeep()
   }
 
   componentDidMount() {
-    RNCallKeepManager.setIsAppForeGround(true)
     this.getTokenAndConnect()
     this.checkPermistion()
   }
@@ -182,15 +182,14 @@ class InitialVideoCall extends Component {
     isVideoCall,
     customDataFromYourServer
   }) => {
-    // try {
-    console.log('customDataFromYourServer: ', typeof customDataFromYourServer);
+    console.log('customDataFromYourServer: ', customDataFromYourServer);
     const data = customDataFromYourServer ? JSON.parse(customDataFromYourServer) : {}
     RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
       RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
       RNCallKeepManager.UUID = callUUID
     });
-   
     if (RNCallKeepManager.isCall) {
+
       this.stringeeCall && this.stringeeCall.reject(
         callId,
         (status, code, message) => {
@@ -203,7 +202,7 @@ class InitialVideoCall extends Component {
       RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
       RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
     }
-
+    RNCallKeepManager.isAnswerSuccess = true
     this.props.navigation.navigate("videoCall", {
       callId: callId,
       from: from,
@@ -212,7 +211,7 @@ class InitialVideoCall extends Component {
       isVideoCall: true,
       profile: data
     });
-    RNCallKeepManager.isAnswerSuccess = true
+
   };
   componentWillUnmount() {
     this.refs.client ? this.refs.client.disconnect() : null
@@ -223,12 +222,7 @@ class InitialVideoCall extends Component {
       })
 
     } else {
-      VoipPushNotification.removeEventListener('register', () => {
-
-      })
-      VoipPushNotification.removeEventListener('notification', () => {
-
-      })
+      
     }
 
   }
