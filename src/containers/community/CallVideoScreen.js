@@ -84,11 +84,20 @@ class VideoCallScreen extends Component {
         };
         RNCallKeepManager.setIsAppForeGround(true)
         RNCallKeep.addEventListener('answerCall', this.answerCallEvent);
-        RNCallKeep.addEventListener('endCall', this.endCallEvent)
+        RNCallKeep.addEventListener('endCall', this.endCallEvent);
+        RNCallKeep.addEventListener(
+            "didActivateAudioSession",
+            this.onRNCallKitDidActivateAudioSession
+        );
+    }
+    onRNCallKitDidActivateAudioSession = (data) => {
+        // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
+        console.log("DID ACTIVE AUDIO");
+        this._onAcceptCallPress();
     }
     answerCallEvent = () => {
         RNCallKeepManager.isCall = true
-        this._onAcceptCallPress();
+        // this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
 
@@ -160,7 +169,7 @@ class VideoCallScreen extends Component {
     componentDidMount() {
         // AppState.addEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
-        checkAndroidPermissions()
+        this.requestPermisstion()
             .then(() => {
                 this.makeOrAnswerCall();
             })
@@ -196,7 +205,10 @@ class VideoCallScreen extends Component {
 
         RNCallKeep.removeEventListener("answerCall", this.answerCallEvent);
         RNCallKeep.removeEventListener("endCall", this.endCallEvent);
-
+        RNCallKeep.removeEventListener(
+            "didActivateAudioSession",
+            this.onRNCallKitDidActivateAudioSession
+        );
     }
 
     handleBackButton() {
@@ -282,7 +294,7 @@ class VideoCallScreen extends Component {
 
     }
 
-   
+
     // Signaling state
     _callDidChangeSignalingState = ({
         callId,
@@ -444,10 +456,23 @@ class VideoCallScreen extends Component {
         this.stringeeCall && this.stringeeCall.answer(
             this.state.callId,
             (status, code, message) => {
+                new Promise(() => {
+                    this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
+                        this.state.callId,
+                        true,
+                        (status, code, message) => {
+                            if (status) {
+                                this.setState({ isSpeaker: true });
+                            }
+                        }
+                    );
+                })
                 if (Platform.OS == 'android') {
                     RNCallKeepManager.rejectCall()
                 }
+                // this.stopSound()
                 RNCallKeepManager.isAnswerSuccess = true
+                RNCallKeepManager.isCall = true
                 soundUtils.stop()
                 this.isAnswerSuccess = true;
                 KeepAwake.activate();
@@ -522,10 +547,10 @@ class VideoCallScreen extends Component {
     };
 
     endCallAndDismissView = () => {
-        // this.stopSound()
+        RNCallKeepManager.endCall()
         RNCallKeepManager.isCall = false
+        // this.stopSound()
         setTimeout(() => {
-            RNCallKeepManager.endCall()
             soundUtils.stop()
             this.props.navigation.navigate('home');
 
