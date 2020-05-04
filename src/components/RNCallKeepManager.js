@@ -4,109 +4,108 @@ import LaunchApplication from 'react-native-launch-application';
 import { PermissionsAndroid } from 'react-native'
 import constants from '@resources/strings'
 import NavigationServices from '@navigators/NavigationService';
-export function openVideoCallScreen(callId) {
-    NavigationServices.navigate('videoCall', { callId })
+
+let UUID = ''
+let callId = {}
+let isAnswerSuccess = false
+let isAppForeground = false
+let isCall = false
+let isSetting = false
+const setIsAppForeGround = value => {
+    isAppForeground = value
 }
-class RNCallKeepManager {
-    constructor() {
-        this.UUID = ''
-        this.callId = {}
-        this.isAnswerSuccess = false
-        this.isAppForeground = false
-        this.isCall = false
-        this.isCall2 = false
-        this.otherUUID = ''
-        this.setupCallKeep()
-    }
-    setIsAppForeGround = value => {
-        this.isAppForeground = value
-    }
-    onRNCallKitDidReceiveStartCallAction(callId) {
-        this.callId = callId
-        openVideoCallScreen(callId)
+const setAnswerCall = () => {
+    RNCallKeep.answerIncomingCall(UUID)
+    RNCallKeep.setCurrentCallActive(UUID)
+    RNCallKeep.backToForeground()
+}
+// const prepareOpenVideoCall = () => {
+//     if (!isAppForeground) {
+//         LaunchApplication.open(constants.package_name)
+//         setTimeout(() => {
+//             openVideoCallScreen(callId)
+//         }, 1000)
+//     } else {
+//         openVideoCallScreen(callId)
+//     }
+//     isAppForeground = false
+//     if (!isAnswer) {
+//         setAnswerCall()
+//         isAnswer = true
+//     }
+// }
 
-    }
-    setAnswerCall = () => {
-        RNCallKeep.answerIncomingCall(this.UUID)
-        RNCallKeep.setCurrentCallActive(this.UUID)
-        RNCallKeep.backToForeground()
-    }
-    prepareOpenVideoCall = () => {
-        if (!this.isAppForeground) {
-            LaunchApplication.open(constants.package_name)
-            setTimeout(() => {
-                openVideoCallScreen(this.callId)
-            }, 1000)
-        } else {
-            openVideoCallScreen(this.callId)
-        }
-        this.isAppForeground = false
-        if (!this.isAnswer) {
-            this.setAnswerCall()
-            this.isAnswer = true
-        }
-    }
+const setupCallKeep = () => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            ios: {
+                appName: 'ISOFHCARE',
+            },
+            android: {
+                alertTitle: 'Thông báo',
+                alertDescription: 'Cho phép iSofhCare truy cập danh bạ điện thoại của bạn',
+                cancelButton: 'Huỷ',
+                okButton: 'Đồng ý',
+                imageName: 'ic_launcher',
+                // additionalPermissions: [PermissionsAndroid.PERMISSIONS.example]
+            }
+        };
 
-    setupCallKeep = () => {
-        new Promise((resolve, reject) => {
-            const options = {
-                ios: {
-                    appName: 'ISOFHCARE',
-                },
-                android: {
-                    alertTitle: 'Permissions required',
-                    alertDescription: 'Cho phép iSofhCare truy cập danh bạ điện thoại của bạn',
-                    cancelButton: 'Huỷ',
-                    okButton: 'Đồng ý',
-                    imageName: 'ic_launcher',
-                    // additionalPermissions: [PermissionsAndroid.PERMISSIONS.example]
-                }
-            };
-
+        if (!isSetting) {
+            console.log('isSetting: ', isSetting);
             RNCallKeep.setup(options).then(res => {
+                isSetting = true
                 resolve(res)
             }).catch(err => {
                 reject(err)
             })
-            // RNCallKeep.addEventListener('answerCall', this.answerCallEvent);
-            // RNCallKeep.addEventListener('endCall', this.endCallEvent)
-        })
 
-    }
-    answerCallEvent = () => {
-        this.prepareOpenVideoCall()
-    }
-    endCallEvent = () => {
-
-    }
-
-
-    updateDisplay = ({ name = "", phone = "" }) => {
-        RNCallKeep.updateDisplay(this.UUID, name, phone)
-    }
-
-    displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
-        if (!this.isAnswerSuccess) {
-            this.callId = callId
-            this.UUID = uuid.v4().toLowerCase();
-            RNCallKeep.displayIncomingCall(this.UUID, name, '', 'generic', false)
         }
-    }
-
-    rejectCall = () => {
-
-        if (this.UUID)
-            RNCallKeep.rejectCall(this.UUID)
-    }
-    endCall = () => {
-
-        if (this.UUID)
-            RNCallKeep.endAllCalls()
-    }
-
+        // RNCallKeep.addEventListener('answerCall', answerCallEvent);
+        // RNCallKeep.addEventListener('endCall', endCallEvent)
+    })
 
 }
 
-let manager = new RNCallKeepManager()
+const updateDisplay = ({ name = "", phone = "" }) => {
+    RNCallKeep.updateDisplay(UUID, name, phone)
+}
 
-export default manager
+const displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
+    if (!UUID) {
+        console.log('isAnswerSuccess: ', isAnswerSuccess);
+        callId = callId
+        UUID = uuid.v4().toLowerCase();
+        RNCallKeep.displayIncomingCall(UUID, name, '', 'generic', false)
+    }
+}
+
+const rejectCall = () => {
+
+    console.log('UUID: ', UUID);
+    if (UUID) {
+        RNCallKeep.rejectCall(UUID)
+    }
+}
+const endCall = () => {
+
+    RNCallKeep.endAllCalls()
+    if (UUID)
+        UUID = ''
+}
+
+
+export default {
+    setIsAppForeGround,
+    setupCallKeep,
+    updateDisplay,
+    displayIncommingCall,
+    rejectCall,
+    endCall,
+    setAnswerCall,
+    callId,
+    isCall,
+    isAnswerSuccess,
+    isAppForeground,
+    UUID
+}
