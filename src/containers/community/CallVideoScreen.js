@@ -84,15 +84,22 @@ class VideoCallScreen extends Component {
         };
         RNCallKeepManager.setIsAppForeGround(true)
         RNCallKeep.addEventListener('answerCall', this.answerCallEvent);
-        RNCallKeep.addEventListener('endCall', this.endCallEvent)
+        RNCallKeep.addEventListener('endCall', this.endCallEvent);
+        RNCallKeep.addEventListener(
+            "didActivateAudioSession",
+            this.onRNCallKitDidActivateAudioSession
+        );
     }
-    answerCallEvent = () => {
-        RNCallKeepManager.isCall2 = true
-        RNCallKeepManager.isCall = true
+    onRNCallKitDidActivateAudioSession = (data) => {
+        // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
+        console.log("DID ACTIVE AUDIO");
         this._onAcceptCallPress();
     }
+    answerCallEvent = () => {
+        RNCallKeepManager.isCall = true
+        // this._onAcceptCallPress();
+    }
     endCallEvent = ({ callUUid }) => {
-        RNCallKeepManager.isCall2 = false
 
         RNCallKeepManager.isAnswerSuccess = false
         setTimeout(() => {
@@ -160,9 +167,9 @@ class VideoCallScreen extends Component {
         }
     }
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
-        checkAndroidPermissions()
+        this.requestPermisstion()
             .then(() => {
                 this.makeOrAnswerCall();
             })
@@ -190,16 +197,18 @@ class VideoCallScreen extends Component {
     }
     componentWillUnmount() {
         RNCallKeepManager.isCall = false
-        RNCallKeepManager.isCall2 = false
         soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        // AppState.removeEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.removeAllListeners('hardwareBackPress')
 
         RNCallKeep.removeEventListener("answerCall", this.answerCallEvent);
         RNCallKeep.removeEventListener("endCall", this.endCallEvent);
-
+        RNCallKeep.removeEventListener(
+            "didActivateAudioSession",
+            this.onRNCallKitDidActivateAudioSession
+        );
     }
 
     handleBackButton() {
@@ -243,6 +252,8 @@ class VideoCallScreen extends Component {
                 parameters,
                 (status, code, message, callId, customDataFromYourServer) => {
                     this.setState({ callId: callId });
+                    RNCallKeepManager.isCall = true
+                    this.isAnswerSuccess = true
                     KeepAwake.activate();
                     this._onSpeakerPress()
                     soundUtils.play('call_phone.mp3')
@@ -283,14 +294,7 @@ class VideoCallScreen extends Component {
 
     }
 
-    startSound = () => {
-        InCallManager.startRingtone()
-        Vibration.vibrate([0, 200, 700, 300], true)
-    }
-    stopSound = () => {
-        InCallManager.stopRingtone()
-        Vibration.cancel()
-    }
+
     // Signaling state
     _callDidChangeSignalingState = ({
         callId,
@@ -466,7 +470,9 @@ class VideoCallScreen extends Component {
                 if (Platform.OS == 'android') {
                     RNCallKeepManager.rejectCall()
                 }
+                // this.stopSound()
                 RNCallKeepManager.isAnswerSuccess = true
+                RNCallKeepManager.isCall = true
                 soundUtils.stop()
                 this.isAnswerSuccess = true;
                 KeepAwake.activate();
@@ -541,10 +547,10 @@ class VideoCallScreen extends Component {
     };
 
     endCallAndDismissView = () => {
-        // this.stopSound()
+        RNCallKeepManager.endCall()
         RNCallKeepManager.isCall = false
+        // this.stopSound()
         setTimeout(() => {
-            RNCallKeepManager.endCall()
             soundUtils.stop()
             this.props.navigation.navigate('home');
 
