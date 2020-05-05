@@ -7,7 +7,6 @@ import NavigationServices from '@navigators/NavigationService';
 
 let UUID = ''
 let callId = {}
-let isAnswerSuccess = false
 let isAppForeground = false
 let isCall = false
 let isSetting = false
@@ -73,7 +72,6 @@ const updateDisplay = ({ name = "", phone = "" }) => {
 
 const displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
     if (!UUID) {
-        console.log('isAnswerSuccess: ', isAnswerSuccess);
         callId = callId
         UUID = uuid.v4().toLowerCase();
         RNCallKeep.displayIncomingCall(UUID, name, '', 'generic', false)
@@ -105,7 +103,6 @@ export default {
     setAnswerCall,
     callId,
     isCall,
-    isAnswerSuccess,
     isAppForeground,
     UUID
 }
