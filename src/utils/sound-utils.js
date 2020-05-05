@@ -1,18 +1,20 @@
 import Sound from 'react-native-sound';
 
 function play(uri) {
-    Sound.setMode('VideoChat')
+    // Sound.setMode('VideoChat')
     var sound = new Sound(uri, Sound.MAIN_BUNDLE, (error) => {
         if (error) {
             console.log('failed to load the sound', error);
             return;
         }
-        if (global.sound) global.sound.stop();
+        if (global.sound) {
+            global.sound.stop();
+            global.sound.release();
+        }
         global.sound = sound;
         sound.play((success) => {
             if (success) {
-                sound.setNumberOfLoops(-1);
-                sound.play()
+                play(uri);
                 console.log('successfully finished playing');
             } else {
                 console.log('playback failed due to audio decoding errors');
@@ -21,13 +23,14 @@ function play(uri) {
 
 
             }
+            sound.release()
         });
 
     });
 
 }
 function stop() {
-    if (global.sound){
+    if (global.sound) {
         global.sound.stop()
         global.sound.release();
     }
