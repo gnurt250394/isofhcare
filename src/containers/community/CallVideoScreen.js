@@ -8,26 +8,17 @@ import {
     Image,
     Dimensions,
     Platform,
-    Alert,
     PermissionsAndroid,
-    BackHandler,
-    AppState,
     DeviceEventEmitter,
 } from "react-native";
 import { each } from "underscore";
-import firebase from 'react-native-firebase'
 import { StringeeCall, StringeeVideoView } from "stringee-react-native";
 import { connect } from "react-redux";
 import RNCallKeep from 'react-native-callkeep'
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
-import StringUtils from 'mainam-react-native-string-utils'
-import uuid from "uuid";
-import InCallManager from 'react-native-incall-manager'
-import { request, check, PERMISSIONS, checkMultiple, requestMultiple } from 'react-native-permissions';
+import { PERMISSIONS, requestMultiple } from 'react-native-permissions';
 import RNCallKeepManager from '@components/RNCallKeepManager'
-import LaunchApplication from 'react-native-launch-application';
-import constants from '@resources/strings'
 import KeepAwake from 'react-native-keep-awake';
 import Timer from "./Timer";
 import soundUtils from "@utils/sound-utils";
@@ -97,24 +88,8 @@ class VideoCallScreen extends Component {
     }
     answerCallEvent = () => {
         RNCallKeepManager.isCall = true
-        // this._onAcceptCallPress();
     }
     endCallEvent = ({ callUUid }) => {
-
-        RNCallKeepManager.isAnswerSuccess = false
-        setTimeout(() => {
-            new Promise(() => {
-                this.stringeeCall && this.stringeeCall.setSpeakerphoneOn(
-                    this.state.callId,
-                    true,
-                    (status, code, message) => {
-                        if (status) {
-                            this.setState({ isSpeaker: true });
-                        }
-                    }
-                );
-            })
-        }, 1000)
         if (!this.isAnswerSuccess) {
             this._onDeclinePress()
 
@@ -124,7 +99,7 @@ class VideoCallScreen extends Component {
         userId: "",
         callState: "Đang kết nối...",
 
-        isVideoCall: false,
+        isVideoCall: true,
         callId: "",
 
         isMute: false,
@@ -167,40 +142,22 @@ class VideoCallScreen extends Component {
         }
     }
     componentDidMount() {
-        // AppState.addEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
         this.requestPermisstion()
             .then(() => {
                 this.makeOrAnswerCall();
             })
             .catch(error => {
-                this._onCancelPress()
+                this._onDeclinePress()
                 // alert("You must grant permissions to make a call " + error);
             });
 
-    }
-    _handleAppStateChange = (nextAppState) => {
-        if (nextAppState !== 'active' && this.isAnswerSuccess) {
-
-            // const fbNotification = new firebase.notifications.Notification()
-            //     .setNotificationId(StringUtils.guid())
-            //     .setBody("Bạn có đang có 1 cuộc gọi")
-            //     .setTitle('')
-            //     .android.setChannelId("isofhcare-master")
-            //     .android.setSmallIcon("ic_launcher")
-            //     .android.setPriority(firebase.notifications.Android.Priority.High)
-            //     .setSound("default")
-            //     .setData({});
-            //     
-            // firebase.notifications().displayNotification(fbNotification)
-        }
     }
     componentWillUnmount() {
         RNCallKeepManager.isCall = false
         soundUtils.stop()
         KeepAwake.deactivate();
         if (this.timeout) clearTimeout(this.timeout)
-        // AppState.removeEventListener('change', this._handleAppStateChange);
         DeviceEventEmitter.removeAllListeners('hardwareBackPress')
 
         RNCallKeep.removeEventListener("answerCall", this.answerCallEvent);
@@ -245,8 +202,6 @@ class VideoCallScreen extends Component {
                 isShowAcceptBt: false,
                 isShowOptionView: true,
                 isOutgoingCall: isOutgoingCall,
-                userId: to,
-                isVideoCall: isVideoCall
             });
             this.stringeeCall.makeCall(
                 parameters,
@@ -279,9 +234,7 @@ class VideoCallScreen extends Component {
                 isShowAcceptBt: true,
                 isShowOptionView: false,
                 isOutgoingCall: isOutgoingCall,
-                userId: from,
                 callState: "Đang kết nối...",
-                isVideoCall: isVideoCall,
                 callId: callId
             });
             if (this.stringeeCall && this.stringeeCall.initAnswer) {
@@ -414,22 +367,6 @@ class VideoCallScreen extends Component {
 
     // Action
     _onDeclinePress = () => {
-
-        this.stringeeCall && this.stringeeCall.reject(
-            this.state.callId,
-            (status, code, message) => {
-                // RNCallKeepManager.endCall()
-                soundUtils.stop()
-                RNCallKeepManager.isCall = false
-                if (!this.state.answered) {
-                    this.props.navigation.navigate('home');
-                }
-
-            }
-        );
-    };
-    _onCancelPress = () => {
-
         this.stringeeCall && this.stringeeCall.reject(
             this.state.callId,
             (status, code, message) => {
@@ -470,8 +407,6 @@ class VideoCallScreen extends Component {
                 if (Platform.OS == 'android') {
                     RNCallKeepManager.rejectCall()
                 }
-                // this.stopSound()
-                RNCallKeepManager.isAnswerSuccess = true
                 RNCallKeepManager.isCall = true
                 soundUtils.stop()
                 this.isAnswerSuccess = true;
@@ -632,7 +567,7 @@ class VideoCallScreen extends Component {
                 {this.state.isShowEndBt && (
                     <View style={styles.callActionContainerEnd}>
                         {this.state.isShowDeclineBt ? (
-                            <TouchableOpacity onPress={this._onCancelPress}>
+                            <TouchableOpacity onPress={this._onDeclinePress}>
                                 <Image
                                     source={require("@images/new/videoCall/end_call.png")}
                                     style={styles.button}
@@ -663,7 +598,7 @@ class VideoCallScreen extends Component {
                 {!this.state.isShowEndBt && (
                     <View style={styles.callActionContainer}>
                         {this.state.isShowDeclineBt ? (
-                            <TouchableOpacity onPress={this._onCancelPress}>
+                            <TouchableOpacity onPress={this._onDeclinePress}>
                                 <Image
                                     source={require("@images/new/videoCall/end_call.png")}
                                     style={styles.button}
