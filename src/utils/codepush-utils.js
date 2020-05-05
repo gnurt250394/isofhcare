@@ -3,19 +3,20 @@ import { Alert, Platform, Linking } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
 import constants from '@resources/strings';
 import dataCacheProvider from '@data-access/datacache-provider';
-import { getAppstoreAppVersion } from "react-native-appstore-version-checker";
+import { getAppstoreAppVersion, getAppstoreAppMetadata } from "react-native-appstore-version-checker";
 import DeviceInfo from 'react-native-device-info';
 const getVerstionAppstore = async () => {
     try {
         let bunndleId = DeviceInfo.getBundleId()
         let versionApp = DeviceInfo.getVersion();
-        let appVersion = await getAppstoreAppVersion(bunndleId, {
+        let option = Platform.OS == "ios" ? {
             jquerySelectors: {
                 version: "[itemprop='softwareVersion']"
             },
             typeOfId: "bundleId",
-        })
-        return appVersion > versionApp
+        } : undefined
+        let appVersion = await getAppstoreAppMetadata(bunndleId, option)
+        return appVersion?.version > versionApp
     } catch (error) {
         return false
 
@@ -47,7 +48,6 @@ function updateFromAppStore() {
 module.exports = {
     async checkupDate(silent) {
         let updateFromStore = await getVerstionAppstore()
-        console.log('updateFromStore: ', updateFromStore);
         if (updateFromStore) {
             updateFromAppStore()
         } else {
