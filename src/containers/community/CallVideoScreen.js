@@ -233,7 +233,7 @@ class VideoCallScreen extends Component {
                 from: from + "",
                 to: to + "",
                 isVideoCall,
-                videoResolution: "HD",
+                videoResolution: "NORMAL",
                 customData: (profile?.id || "") + ""
             };
 
