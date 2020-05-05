@@ -10,6 +10,8 @@ import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux';
+import NavigationService from "@navigators/NavigationService";
+
 class ItemDoctor extends Component {
     constructor(props) {
         super(props);
@@ -57,7 +59,7 @@ class ItemDoctor extends Component {
         }
         // this.setState({ isVisible: false }, () => {
         if (this.props.userApp.isLogin) {
-            this.props.navigation.navigate('selectTimeDoctor', {
+            NavigationService.navigate('selectTimeDoctor', {
                 item: item,
                 isNotHaveSchedule: true,
                 isOnline: true
@@ -67,7 +69,7 @@ class ItemDoctor extends Component {
         }
         else {
 
-            this.props.navigation.navigate("login", {
+            NavigationService.navigate("login", {
                 nextScreen: {
                     screen: 'selectTimeDoctor', param: {
                         item: item,
@@ -388,7 +390,9 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.auth.userApp
+        userApp: state.auth.userApp,
+        navigation: state.navigation
+
     };
 }
 export default connect(mapStateToProps)(withNavigation(ItemDoctor));

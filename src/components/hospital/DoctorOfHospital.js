@@ -8,6 +8,7 @@ import {
 import { connect } from "react-redux";
 import { Card } from 'native-base'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import { withNavigation } from 'react-navigation'
 import ItemDoctorOfHospital from "@components/booking/specialist/ItemDoctorOfHospital";
 class DoctorOfHospital extends PureComponent {
     constructor(props) {
@@ -55,6 +56,8 @@ class DoctorOfHospital extends PureComponent {
     }
 
     addBookingDoctor = (item) => () => {
+        // alert('dddd')
+        // return
         this.props.navigation.navigate('selectTimeDoctor', {
             item,
             isNotHaveSchedule: true,
@@ -349,4 +352,4 @@ function mapStateToProps(state) {
 
     };
 }
-export default connect(mapStateToProps)(DoctorOfHospital);
+export default connect(mapStateToProps)(withNavigation(DoctorOfHospital));
