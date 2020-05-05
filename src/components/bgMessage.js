@@ -25,7 +25,6 @@ export default async (message) => {
             if (AppState.currentState != 'active') {
                 RNCallKeepManager.setupCallKeep()
                 RNCallKeepManager.displayIncommingCall(data.callId)
-                RNCallKeepManager.isAnswerSuccess = true
                 LaunchApplication.open(constants.package_name)
             }
         } catch (error) {

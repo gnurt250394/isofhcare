@@ -202,7 +202,6 @@ class InitialVideoCall extends Component {
       RNCallKeepManager.displayIncommingCall(callId, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master")
       RNCallKeepManager.updateDisplay({ name: data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master" })
     }
-    RNCallKeepManager.isAnswerSuccess = true
     this.props.navigation.navigate("videoCall", {
       callId: callId,
       from: from,
