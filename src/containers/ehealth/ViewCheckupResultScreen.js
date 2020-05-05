@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.auth.userApp,
-        ehealth: state.ehealth
+        ehealth: state.auth.ehealth
     };
 }
 export default connect(mapStateToProps)(ViewCheckupResultScreen);
