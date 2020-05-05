@@ -5,6 +5,7 @@ import ImageLoad from "mainam-react-native-image-loader";
 import StarRating from 'react-native-star-rating';
 import Button from "@components/booking/doctor/Button";
 import { connect } from 'react-redux';
+import NavigationService from "@navigators/NavigationService";
 
 class ItemDoctorOfHospital extends Component {
     constructor(props) {
@@ -23,8 +24,9 @@ class ItemDoctorOfHospital extends Component {
     }
     onCallVideo = (item) => () => {
         // this.setState({ isVisible: false }, () => {
+        
         if (this.props.userApp.isLogin) {
-            this.props.navigation.navigate('selectTimeDoctor', {
+            NavigationService.navigate('selectTimeDoctor', {
                 item: item,
                 isNotHaveSchedule: true,
                 isOnline: true
@@ -34,7 +36,7 @@ class ItemDoctorOfHospital extends Component {
         }
         else {
 
-            this.props.navigation.navigate("login", {
+            NavigationService.navigate("login", {
                 nextScreen: {
                     screen: 'selectTimeDoctor', param: {
                         item: item,
