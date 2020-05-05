@@ -79,9 +79,9 @@ class SelectDateTimeDoctorScreen extends Component {
 
 
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + (8 * 60));
+            date.setMinutes(date.getMinutes() + (0 * 60));
             while (true) {
-                if (date.format("HH:mm") > "16:00")
+                if (date.format("HH:mm") > "23:00")
                     break;
 
                 if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
