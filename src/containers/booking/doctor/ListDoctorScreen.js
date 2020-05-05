@@ -11,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import { withNavigation } from 'react-navigation';
 
 const { width, height } = Dimensions.get('window')
 const TYPE = {
@@ -273,7 +274,7 @@ class ListDoctorScreen extends Component {
     }
 }
 
-export default ListDoctorScreen;
+export default withNavigation(ListDoctorScreen);
 
 
 const styles = StyleSheet.create({
