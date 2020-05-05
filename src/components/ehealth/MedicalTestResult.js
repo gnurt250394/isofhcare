@@ -284,7 +284,7 @@ class MedicalTestResult extends Component {
 function mapStateToProps(state) {
     return {
         userApp: state.auth.userApp,
-        ehealth: state.ehealth
+        ehealth: state.auth.ehealth
     };
 }
 const styles = StyleSheet.create({
