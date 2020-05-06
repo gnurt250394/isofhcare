@@ -8,18 +8,20 @@ import DeviceInfo from 'react-native-device-info';
 const getVerstionAppstore = async () => {
     try {
         let bunndleId = DeviceInfo.getBundleId()
+        let packageName = Platform.OS == 'android' ? bunndleId : '1428148423'
         let versionApp = DeviceInfo.getVersion();
-        let option = Platform.OS == "ios" ? {
-            jquerySelectors: {
-                version: "[itemprop='softwareVersion']"
-            },
-            typeOfId: "bundleId",
-        } : undefined
-        let appVersion = await getAppstoreAppMetadata(bunndleId, option)
+        // let option = Platform.OS == "ios" ? {
+        //     jquerySelectors: {
+        //         version: "[itemprop='softwareVersion']"
+        //     },
+        //     typeOfId: "id",
+        // } : undefined
+        let appVersion = await getAppstoreAppMetadata(packageName)
+        console.log('appVersion: ', appVersion);
         return appVersion?.version > versionApp
     } catch (error) {
         return false
-
+        
     }
 
 }
