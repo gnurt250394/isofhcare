@@ -939,7 +939,8 @@ module.exports = {
         get_list_booking: isofhcare_service + 'appointment/v1/patientId/histories',
         get_detail_booking: isofhcare_service + 'appointment/v1',
         get_list_schedules: isofhcare_service + 'work-time-hospital',
-        get_detail_hospital: isofhcare_service + 'catalog/v1/hospital'
+        get_detail_hospital: isofhcare_service + 'catalog/v1/hospital',
+        get_list_time_booking: isofhcare_service + 'catalog/v1/schedules/block-times'
       }
     },
     question: {

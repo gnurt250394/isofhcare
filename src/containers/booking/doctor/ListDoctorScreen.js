@@ -135,7 +135,7 @@ class ListDoctorScreen extends Component {
         try {
             let { keyword, page, size } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
