@@ -104,9 +104,9 @@ class DetailsDoctorScreen extends Component {
 
   onCallVideo = () => {
     // this.setState({ isVisible: false }, () => {
-      if(!this.state.profileDoctor.userId){
-        snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
-        return
+    if (!this.state.profileDoctor.userId) {
+      snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
+      return
     }
     if (this.props.userApp.isLogin) {
       this.props.navigation.navigate('selectTimeDoctor', {
@@ -255,21 +255,21 @@ class DetailsDoctorScreen extends Component {
   }
   renderAcademic = (academicDegree) => {
     switch (academicDegree) {
-        case 'BS': return 'BS'
-        case 'ThS': return 'Ths'
-        case 'TS': return 'TS'
-        case 'PGS': return 'PGS'
-        case 'GS': return 'GS'
-        case 'BSCKI': return 'BSCKI'
-        case 'BSCKII': return 'BSCKII'
-        case 'GSTS': return 'GS.TS'
-        case 'PGSTS': return 'PGS.TS'
-        case 'ThsBS': return 'Ths.BS'
-        case 'ThsBSCKII': return 'Ths.BSCKII'
-        case 'TSBS': return 'TS.BS'
-        default: return ''
+      case 'BS': return 'BS'
+      case 'ThS': return 'Ths'
+      case 'TS': return 'TS'
+      case 'PGS': return 'PGS'
+      case 'GS': return 'GS'
+      case 'BSCKI': return 'BSCKI'
+      case 'BSCKII': return 'BSCKII'
+      case 'GSTS': return 'GS.TS'
+      case 'PGSTS': return 'PGS.TS'
+      case 'ThsBS': return 'Ths.BS'
+      case 'ThsBSCKII': return 'Ths.BSCKII'
+      case 'TSBS': return 'TS.BS'
+      default: return ''
     }
-}
+  }
   render() {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
@@ -323,9 +323,9 @@ class DetailsDoctorScreen extends Component {
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
-                    <Button textStyle = {{textAlign:'center'}} label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
+                    <Button textStyle={{ textAlign: 'center' }} label={`Gọi khám\nonline`} style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
                     {!this.state.disableBooking ?
-                      <Button textStyle = {{textAlign:'center'}} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                      <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                       : <View style={{ flex: 1 }} />
                     }
                   </View>
@@ -380,6 +380,11 @@ class DetailsDoctorScreen extends Component {
                     null
                   }
                 </View>
+                <Text style={styles.colorBold}>Kinh nghiệm khám chữa bệnh:</Text>
+                {profileDoctor.overview ?
+                  <Text style={styles.txtPosition}>{profileDoctor.overview}</Text>
+                  : null
+                }
                 <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
                 {this.renderWorking()}
                 <View style={styles.flex}>
@@ -689,9 +694,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5
   },
-  viewItemBooking :{ flexDirection: 'row', alignItems: 'center', paddingRight: 20 },
-  txItemWorking:{ alignSelf: 'flex-start', },
-  contentWorking:{ fontSize: 14, textAlign: 'left',},
+  viewItemBooking: { flexDirection: 'row', alignItems: 'center', paddingRight: 20 },
+  txItemWorking: { alignSelf: 'flex-start', },
+  contentWorking: { fontSize: 14, textAlign: 'left', },
 });
 function mapStateToProps(state) {
   return {
