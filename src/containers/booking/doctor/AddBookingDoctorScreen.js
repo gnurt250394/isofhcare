@@ -33,7 +33,8 @@ class AddBookingDoctorScreen extends Component {
         let bookingDate = this.props.navigation.getParam('bookingDate', {})
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
-        let isOnline = this.props.navigation.getParam('isOnline', {})
+        let isOnline = this.props.navigation.getParam('isOnline', false)
+        console.log('isOnline: ', isOnline);
 
 
         this.state = {
@@ -325,7 +326,7 @@ class AddBookingDoctorScreen extends Component {
         return false
     }
     pricePromotion = (item) => {
-        
+
         let value = 0
         if (item?.promotion && this.disablePromotion(item.promotion)) {
             if (item?.promotion?.type == "PERCENT") {
@@ -333,7 +334,7 @@ class AddBookingDoctorScreen extends Component {
             } else {
 
                 value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
-                
+
             }
         } else {
             value = item?.monetaryAmount?.value
@@ -347,9 +348,9 @@ class AddBookingDoctorScreen extends Component {
 
     createBooking() {
         let { paymentMethod } = this.state
-        let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
+        let date = new Date(this.state.schedule.date).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-        
+
         if (!this.props.userApp.isLogin) {
             this.props.navigation.replace("login", {
                 nextScreen: {
@@ -358,6 +359,7 @@ class AddBookingDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: this.state.detailSchedule,
                         schedule: this.state.schedule,
+                        isOnline:this.state.isOnline
                     }
                 }
             });
@@ -380,17 +382,18 @@ class AddBookingDoctorScreen extends Component {
         }
         var images = [];
         this.state.imageUris.forEach((item) => {
-            
+
 
             images.push(item.url);
         });
         let img = images ? images : ''
 
-        
+
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
         let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
-        
+
+        console.log('this.state.isOnline: ', this.state.isOnline);
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
@@ -406,7 +409,7 @@ class AddBookingDoctorScreen extends Component {
                         patitent,
                         // this.getPaymentMethod(),
                         detailSchedule.id,
-                        schedule.label,
+                        schedule.time,
                         detailSchedule.room,
                         idUser,
                         img,
@@ -435,9 +438,13 @@ class AddBookingDoctorScreen extends Component {
                     }).catch(e => {
                         this.isChecking = true
                         this.setState({ isLoading: false });
+                        console.log('e.response: ', e.response);
                         if (e.response && e.response.data.error == 'Locked') {
                             snackbar.show(e.response.data.message, 'danger')
-                        } else {
+                        } else if (e.response && typeof e.response.data == 'string') {
+                            snackbar.show(e.response.data, 'danger')
+                        }
+                        else {
                             snackbar.show('Đặt khám không thành công', 'danger')
                         }
                     });
@@ -498,8 +505,8 @@ class AddBookingDoctorScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center'
             }}>
-                <Text style={{ textAlign: 'left', color: '#000', fontWeight: 'bold', paddingRight: 10, }}>{(new Date(this.state.schedule.key)).format("dd/MM/yyyy")}</Text>
-                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm")}</Text>
+                <Text style={{ textAlign: 'left', color: '#000', fontWeight: 'bold', paddingRight: 10, }}>{(new Date(this.state.schedule.date)).format("dd/MM/yyyy")}</Text>
+                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{this.state.schedule.time}</Text>
             </View>
         return <Text style={{ textAlign: 'left' }}>Chọn ngày và giờ</Text>;
     }
@@ -533,7 +540,7 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     renderServices = (hospital) => {
-        
+
         if (Array.isArray(hospital))
             return (
                 <View style={styles.containerService} >
