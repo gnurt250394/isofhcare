@@ -84,7 +84,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 if (date.format("HH:mm") > "21:00")
                     break;
 
-                if (date.format("HH:mm") < "12:00" || date.format("HH:mm") >= "13:30") {
+                if (date.format("HH:mm") < "12:00" || date.format("HH:mm") >= "13:00") {
 
                     let disabled = true;
                     let id;
