@@ -276,8 +276,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}/hospital/${doctorId}/doctor?page=${page}&size=20&sort=desc&properties=created`
+                // client.serviceSchedule +
+                `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}?page=0&size=20`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
@@ -374,6 +374,19 @@ module.exports = {
                 "get",
                 client.serviceBooking +
                 `${constants.api.booking.doctor.get_detail_booking}/${id}`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+    getListTimeBooking(doctorId, isOnline) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                `${constants.api.booking.doctor.get_list_time_booking}?doctorId=${doctorId}&isOnline=${isOnline}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
