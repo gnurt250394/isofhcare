@@ -32,7 +32,7 @@ class SelectDateTimeDoctorScreen extends Component {
         let service = this.props.navigation.state.params.service;
         let isOnline = this.props.navigation.getParam('isOnline') || false;
         let item = this.props.navigation.getParam('item') || {};
-        
+
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
         this.state = {
             service,
@@ -76,15 +76,15 @@ class SelectDateTimeDoctorScreen extends Component {
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
-
+            let today = new Date()
 
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + (8 * 60));
+            date.setMinutes(date.getMinutes() + (7 * 60));
             while (true) {
-                if (date.format("HH:mm") > "16:00")
+                if (date.format("HH:mm") > "21:00")
                     break;
 
-                if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
+                if (date.format("HH:mm") < "12:00" || date.format("HH:mm") >= "13:30") {
 
                     let disabled = true;
                     let id;
@@ -94,6 +94,11 @@ class SelectDateTimeDoctorScreen extends Component {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day)
                             let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
+                            if (date.compareDate(today) == 0 && date.format("HH:mm") < today.format('HH:mm')) {
+                                disabled = true
+                                id = listSchedules[i].id
+                                break
+                            }
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -248,7 +253,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 let id = item && item.id
                 bookingDoctorProvider.detailDoctor(id).then(s => {
-                    
+
                     this.setState({ isLoading: false })
                     if (s) {
                         // this.getListSchedule(s.hospital.id, s.id)
@@ -359,7 +364,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let selected = null;
             for (let key in obj) {
                 let dayOfWeek = this.getDayOfWeek(key)
-                if (new Date(key) <= new Date())
+                if ((new Date(key)).compareDate(new Date()) == -1)
                     continue;
                 let keyDate = new Date(key);
 
