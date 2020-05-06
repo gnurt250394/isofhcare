@@ -56,6 +56,8 @@ class ListBookingHistoryScreen extends Component {
                         }, () => {
                             this.getData()
                         })
+                    } else {
+                        this.setState({ isLoading: false })
                     }
                     break;
             }
