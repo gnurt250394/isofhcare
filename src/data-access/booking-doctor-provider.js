@@ -276,8 +276,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}/hospital/${doctorId}/doctor?page=${page}&size=20&sort=desc&properties=created`
+                // client.serviceSchedule +
+                `${constants.api.booking.doctor.get_list_schedules}?page=1&size=20&dayOfWeek=-1`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
