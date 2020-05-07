@@ -364,7 +364,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let selected = null;
             for (let key in obj) {
                 let dayOfWeek = this.getDayOfWeek(key)
-                if ((new Date(key)).compareDate(new Date()) == -1)
+                if (new Date(key) <= new Date())
                     continue;
                 let keyDate = new Date(key);
 
