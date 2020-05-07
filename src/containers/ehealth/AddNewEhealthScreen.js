@@ -99,6 +99,9 @@ class AddNewEhealthScreen extends Component {
                         this.props.navigation.replace('listProfile');
                         snackbar.show(constants.msg.ehealth.add_medical_records_success, 'success')
                         break
+                    default:
+                        snackbar.show(constants.msg.ehealth.medical_records_not_found, 'danger')
+                        break
                 }
                 this.setState({
                     valueCode: '',
@@ -154,7 +157,6 @@ class AddNewEhealthScreen extends Component {
                     <View style={styles.viewModal}>
                         <Text style={styles.titleModal}>{constants.ehealth.input_profile_code}</Text>
                         <TextInput
-                            multiline={true}
                             onChangeText={this.onChangeText('valueCode')}
                             value={this.state.valueCode}
                             style={styles.textInputCode}
@@ -221,7 +223,8 @@ const styles = StyleSheet.create({
         minWidth: '50%',
         maxWidth: '50%',
         marginTop: 30,
-        fontSize: 18
+        fontSize: 18,
+        paddingHorizontal:10
 
     },
     btnConfirm: {
