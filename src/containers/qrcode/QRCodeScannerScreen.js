@@ -9,14 +9,16 @@ import ImagePicker from 'mainam-react-native-select-image';
 // import jsQR from "jsqr";
 // import RNFetchBlob from 'rn-fetch-blob'
 import React, { Component } from 'react';
-import Permissions from 'react-native-permissions';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+
 import {
     AppRegistry,
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
-    Linking
+    Linking,
+    Platform
 } from 'react-native';
 // import QrcodeDecoder from 'qrcode-decoder';
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
@@ -28,7 +30,8 @@ class QRCodeScannerScreen extends Component {
         this.state = {
             isLoading: false,
             title: this.props.navigation.state.params.title,
-            textHelp: this.props.navigation.state.params.textHelp
+            textHelp: this.props.navigation.state.params.textHelp,
+            isAuthorizationChecked: false
         }
     }
 
@@ -57,9 +60,13 @@ class QRCodeScannerScreen extends Component {
         });
     }
     componentWillMount() {
-        Permissions.check('camera').then(response => {
+        let permistion = Platform.OS == 'android' ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA
+        check(permistion).then(response => {
             // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
             // alert(response);
+        }).catch(err => {
+            console.log('err: ', err);
+
         })
     }
     onChangeCamreraType = () => {
@@ -193,40 +200,40 @@ class QRCodeScannerScreen extends Component {
         return (
             <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || constants.title.scan_qr_code}
             >
-                <QRCodeScanner
-                    // reactivate={true}
-                    flashOn={this.state.flashOn}
-                    ref={(node) => { this.scanner = node }}
-                    showMarker={true}
-                    checkAndroid6Permissions={true}
-                    cameraType={this.state.front ? 'front' : 'back'}
-                    onRead={this.onSuccess.bind(this)}
-                    topContent={
+                    <QRCodeScanner
+                        // reactivate={true}
+                        flashOn={this.state.flashOn}
+                        ref={(node) => { this.scanner = node }}
+                        showMarker={true}
+                        checkAndroid6Permissions={true}
+                        cameraType={this.state.front ? 'front' : 'back'}
+                        onRead={this.onSuccess.bind(this)}
+                        topContent={
 
-                        <Text style={styles.centerText}>
-                            {this.state.textHelp || constants.qr_code.move_camera}</Text>
+                            <Text style={styles.centerText}>
+                                {this.state.textHelp || constants.qr_code.move_camera}</Text>
 
-                    }
-                    bottomContent={
-                        <View style={styles.containerBottom}>
-                            {/* <View style={{ flex: 1, alignItems: 'center' }}>
+                        }
+                        bottomContent={
+                            <View style={styles.containerBottom}>
+                                {/* <View style={{ flex: 1, alignItems: 'center' }}>
                                 <TouchableOpacity onPress={this.onSelectImage} style={{ width: 50, height: 50, backgroundColor: '#00000030', borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icon type="MaterialIcons" name="image" style={{ color: '#FFF' }}></Icon>
                                 </TouchableOpacity>
                             </View> */}
-                            <View style={styles.containerFlash}>
-                                <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
-                                    <Icon name="flashlight" style={{ color: this.state.flashOn ? '#FFF' : '#00000030' }}></Icon>
-                                </TouchableOpacity>
+                                <View style={styles.containerFlash}>
+                                    <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
+                                        <Icon name="flashlight" style={{ color: this.state.flashOn ? '#FFF' : '#00000030' }}></Icon>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.containerFlash}>
+                                    <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
+                                        <Icon type="MaterialCommunityIcons" name="camera" style={{ color: this.state.front ? '#FFF' : '#00000030' }}></Icon>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={styles.containerFlash}>
-                                <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
-                                    <Icon type="MaterialCommunityIcons" name="camera" style={{ color: this.state.front ? '#FFF' : '#00000030' }}></Icon>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    }
-                />
+                        }
+                    />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
