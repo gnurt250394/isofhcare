@@ -231,7 +231,7 @@ class ListDoctorScreen extends Component {
                         onSubmitEditing={this.onSearch}
                         returnKeyType='search'
                         style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
+                        placeholder={"Tìm kiếm theo triệu chứng, chuyên khoa"}
                         underlineColorAndroid={"transparent"} />
                     {
                         this.state.type == TYPE.SEARCH ?
