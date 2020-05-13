@@ -42,7 +42,8 @@ class SelectDateTimeDoctorScreen extends Component {
             profileDoctor: {},
             scheduleFinal: [],
             isOnline,
-            item
+            item,
+            listSchedule: []
         }
         this.days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     }
@@ -64,8 +65,32 @@ class SelectDateTimeDoctorScreen extends Component {
 
         return dayOfWeek
     }
+    convertDayOfWeek = (day) => {
+        let date = {
+            0: 7,
+        }
+        return date[day] || day
+    }
+    getTimeDate = (time) => {
 
+        let time1 = '21:00'
+        if (time) {
+            let hoursStart = time / 60;
+            let rhoursStart = Math.floor(hoursStart);
+            let minutesStart = (hoursStart - rhoursStart) * 60;
+            let rminutesStart = Math.floor(minutesStart);
+
+            if (rminutesStart < 10) {
+                time1 = rhoursStart + ":" + "0" + rminutesStart;
+            } else {
+                time1 = rhoursStart + ":" + rminutesStart;
+            }
+        }
+
+        return time1
+    }
     selectDay(day) {
+        const { listSchedule } = this.state
 
         let data = this.state.schedules[day].lock || [];
 
@@ -77,14 +102,16 @@ class SelectDateTimeDoctorScreen extends Component {
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
             let today = new Date()
-
+            let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
+            let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + (7 * 60));
+            date.setMinutes(date.getMinutes() + time?.workTimeHospital?.startTime || (7 * 60));
             while (true) {
-                if (date.format("HH:mm") > "21:00")
+                if (this.convertTimeToInt(date.format("HH:mm")) > this.convertTimeToInt(timeEnd)) {
                     break;
-
-                if (date.format("HH:mm") < "12:00" || date.format("HH:mm") >= "13:00") {
+                }
+                if (this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt("12:30")
+                    || this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt("13:00")) {
 
                     let disabled = true;
                     let id;
@@ -94,7 +121,7 @@ class SelectDateTimeDoctorScreen extends Component {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day)
                             let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
-                            if (date.compareDate(today) == 0 && date.format("HH:mm") < today.format('HH:mm')) {
+                            if (date.compareDate(today) == 0 && this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt(today.format('HH:mm'))) {
                                 disabled = true
                                 id = listSchedules[i].id
                                 break
@@ -108,16 +135,16 @@ class SelectDateTimeDoctorScreen extends Component {
                             }
 
                             if (listSchedules[i].parent && listSchedules[i].workTime.day == day
-                                && listSchedules[i].workTime.start <= date.format('HH:mm')
-                                && listSchedules[i].workTime.end > date.format('HH:mm')
+                                && this.convertTimeToInt(listSchedules[i].workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
+                                && this.convertTimeToInt(listSchedules[i].workTime.end) > this.convertTimeToInt(date.format('HH:mm'))
                             ) {
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
                                 break
                             }
-                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
-                                && listSchedules[i].workTime.end > date.format('HH:mm')
+                            if (this.convertTimeToInt(listSchedules[i].workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
+                                && this.convertTimeToInt(listSchedules[i].workTime.end) > this.convertTimeToInt(date.format('HH:mm'))
                                 && (((indexParent == -1) && listSchedules[i].workTime.day <= day
                                     && listSchedules[i].workTime.expired >= day && indexChilOfParent == -1 && listSchedules[i].workTime.repeat)
                                     || (!listSchedules[i].workTime.repeat && listSchedules[i].workTime.day == day))
@@ -282,14 +309,41 @@ class SelectDateTimeDoctorScreen extends Component {
         }
 
     }
-    componentDidMount() {
-        const { isOnline } = this.state
-        if (isOnline) {
-            this.getSchedusOnline()
-        } else {
+    getListSchedule = async () => {
+        try {
+            let res = await bookingDoctorProvider.get_list_schedules()
 
-            this.getDetailDoctor()
+            return res
+        } catch (error) {
+
         }
+
+    }
+    async componentDidMount() {
+        let res = await this.getListSchedule()
+        if (res.code == 0) {
+            this.setState({
+                listSchedule: res.data
+            }, () => {
+                const { isOnline } = this.state
+                if (isOnline) {
+                    this.getSchedusOnline()
+                } else {
+
+                    this.getDetailDoctor()
+                }
+            })
+        } else {
+            const { isOnline } = this.state
+            if (isOnline) {
+                this.getSchedusOnline()
+            } else {
+
+                this.getDetailDoctor()
+            }
+        }
+
+
 
     }
     timeStringToDate(time) {
@@ -321,6 +375,9 @@ class SelectDateTimeDoctorScreen extends Component {
         else {
             return ''
         }
+    }
+    convertTimeToInt = (time) => {
+        return time ? parseInt(time.replace(':', '')) : ''
     }
     generateSchedule(month) {
         try {
@@ -402,7 +459,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                 data.push(e)
                             }
                         })
-                        if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)) {
+                        if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
+                            || (keyDate.compareDate(new Date()) == 0 && this.convertTimeToInt(dataSchedules[i].workTime.end) < this.convertTimeToInt(new Date().format('HH:mm')))) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
@@ -607,12 +665,12 @@ class SelectDateTimeDoctorScreen extends Component {
 
     renderTimePicker(fromHour, toHour, label) {
         return (
-            (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
+            (this.state.listTime.filter(item => new Date(item.time).format("HH").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH").replace(':', "") < toHour.replace(':', "")).length) ?
                 <View style={styles.containerTimePicker}>
                     <Text style={styles.txtlabel}>{label}</Text>
                     <View style={styles.containerButtonTimePicker}>
                         {
-                            this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).map((item, index) => {
+                            this.state.listTime.filter(item => new Date(item.time).format("HH").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH").replace(':', "") < toHour.replace(':', "")).map((item, index) => {
                                 return <TouchableOpacity
                                     onPress={this.selectTime(item)}
                                     disabled={item.disabled}
@@ -760,8 +818,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                                 null
                                         }
 
-                                        {this.renderTimePicker(0, 12, "Buổi sáng")}
-                                        {this.renderTimePicker(12, 24, "Buổi chiều")}
+                                        {this.renderTimePicker('0:0', '12:30', "Buổi sáng")}
+                                        {this.renderTimePicker('12:00', '24:00', "Buổi chiều")}
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
