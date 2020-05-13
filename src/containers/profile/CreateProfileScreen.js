@@ -711,6 +711,8 @@ class CreateProfileScreen extends Component {
                 </KeyboardAwareScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
+                    locale="vi"
+                    titleIOS={"Chọn ngày tháng"}
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={this.onConfirmDate}
                     onCancel={this.onCancelDate}
