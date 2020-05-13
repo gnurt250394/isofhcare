@@ -937,7 +937,7 @@ module.exports = {
         get_doctor_specialists: isofhcare_service + 'catalog/v1/doctor/specialistId/specialization',
         get_list_booking: isofhcare_service + 'appointment/v1/patientId/histories',
         get_detail_booking: isofhcare_service + 'appointment/v1',
-        get_list_schedules: isofhcare_service + 'work-time-hospital',
+        get_list_schedules: isofhcare_service + 'work-time-hospital/search',
         get_detail_hospital: isofhcare_service + 'catalog/v1/hospital'
       }
     },
