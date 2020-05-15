@@ -72,6 +72,7 @@ class SelectDateTimeDoctorScreen extends Component {
         return date[day] || day
     }
     getTimeDate = (time) => {
+        
 
 
         let time1 = '21:00'
@@ -88,6 +89,7 @@ class SelectDateTimeDoctorScreen extends Component {
             } else {
                 time1 = rhoursStart + ":" + rminutesStart;
             }
+            
 
         }
 
@@ -109,7 +111,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
             let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + time?.workTimeHospital?.startTime || (7 * 60));
+            date.setMinutes(date.getMinutes() + time?.workTimeHospital?.startTime ?? (7 * 60));
             while (true) {
                 if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(timeEnd)) {
                     break;
