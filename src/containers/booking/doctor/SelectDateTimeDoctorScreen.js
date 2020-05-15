@@ -73,11 +73,14 @@ class SelectDateTimeDoctorScreen extends Component {
     }
     getTimeDate = (time) => {
 
+
         let time1 = '21:00'
         if (time) {
             let hoursStart = time / 60;
+
             let rhoursStart = Math.floor(hoursStart);
             let minutesStart = (hoursStart - rhoursStart) * 60;
+
             let rminutesStart = Math.floor(minutesStart);
 
             if (rminutesStart < 10) {
@@ -85,6 +88,7 @@ class SelectDateTimeDoctorScreen extends Component {
             } else {
                 time1 = rhoursStart + ":" + rminutesStart;
             }
+
         }
 
         return time1
@@ -102,13 +106,12 @@ class SelectDateTimeDoctorScreen extends Component {
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
             let today = new Date()
-            let block = 20
             let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
-            let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime)
+            let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + time?.workTimeHospital?.startTime || (7 * 60));
             while (true) {
-                if (this.convertTimeToInt(date.format("HH:mm")) > this.convertTimeToInt(timeEnd)) {
+                if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(timeEnd)) {
                     break;
                 }
                 if (this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt("12:30")
@@ -432,10 +435,13 @@ class SelectDateTimeDoctorScreen extends Component {
                 firstDay.setDate(firstDay.getDate() + 1)
             }
             let selected = null;
+            
             for (let key in obj) {
+                
+                
                 let dayOfWeek = this.getDayOfWeek(key)
-                if ((new Date(key)).compareDate(new Date()) == -1)
-                    continue;
+                if ((this.state.isOnline && (new Date(key)).compareDate(new Date()) == -1) || (!this.state.isOnline && (new Date(key)).compareDate(new Date()) == 0))
+                continue;
                 let keyDate = new Date(key);
 
                 if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
@@ -459,7 +465,8 @@ class SelectDateTimeDoctorScreen extends Component {
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key && dataSchedules[i].workTime.day != e)
                         let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
                         let dateLength = 0
-                        while (dateStart.format('HH:mm') < dataSchedules[i].workTime.end) {
+                        let timeEnd = dataSchedules[i].workTime.end == '24:00' ? "00:00" : dataSchedules[i].workTime.end
+                        while (dateStart.format('HH:mm') < timeEnd) {
                             if (dateStart.format("HH:mm") < "11:30" || dateStart.format("HH:mm") >= "13:30") {
                                 dateLength = dateLength + 1
                             }
@@ -473,7 +480,8 @@ class SelectDateTimeDoctorScreen extends Component {
                             }
                         })
                         if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
-                            || (keyDate.compareDate(new Date()) == 0 && this.convertTimeToInt(dataSchedules[i].workTime.end) < (this.convertTimeToInt(new Date().format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100)))) {
+                            || (keyDate.compareDate(new Date()) == 0
+                                && this.convertTimeToInt(dataSchedules[i].workTime.end) < (this.convertTimeToInt(new Date().format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100)))) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {

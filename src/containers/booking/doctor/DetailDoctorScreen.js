@@ -382,7 +382,7 @@ class DetailsDoctorScreen extends Component {
                 </View>
                 <Text style={styles.colorBold}>Giới thiệu ngắn gon bản thân:</Text>
                 {profileDoctor.overview ?
-                  <Text style={styles.colorBold}>{profileDoctor.overview}</Text>
+                  <Text style={styles.txtPosition}>{profileDoctor.overview}</Text>
                   : null
                 }
                 <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
