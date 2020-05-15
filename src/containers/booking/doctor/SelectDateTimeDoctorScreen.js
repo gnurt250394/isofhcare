@@ -102,6 +102,7 @@ class SelectDateTimeDoctorScreen extends Component {
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
             let today = new Date()
+            let block = 20
             let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
             let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
@@ -118,10 +119,11 @@ class SelectDateTimeDoctorScreen extends Component {
                     let maximumCapacity;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
+
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day)
                             let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
-                            if (date.compareDate(today) == 0 && this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt(today.format('HH:mm'))) {
+                            if (date.compareDate(today) == 0 && (this.convertTimeToInt(date.format("HH:mm"))) < (this.convertTimeToInt(today.format('HH:mm')) + (listSchedules[i].minimumCapacity * 100))) {
                                 disabled = true
                                 id = listSchedules[i].id
                                 break
@@ -154,6 +156,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                 id = listSchedules[i].id
                                 break;
                             }
+
                         }
                     }
 
@@ -175,7 +178,17 @@ class SelectDateTimeDoctorScreen extends Component {
                 //     date.setMinutes(date.getMinutes() + 15);
 
                 // }else{
-                date.setMinutes(date.getMinutes() + 30);
+                let objBlock = listSchedules.find((e, i) => e && e.workTime.dayOfTheWeek == dateOfWeek)
+                if (objBlock.blockTime == "BLOCK30") {
+                    date.setMinutes(date.getMinutes() + 30);
+                } else if (objBlock.blockTime == "BLOCK15") {
+                    date.setMinutes(date.getMinutes() + 15);
+                } else if (objBlock.blockTime == "BLOCK60") {
+                    date.setMinutes(date.getMinutes() + 60);
+                } else {
+                    date.setMinutes(date.getMinutes() + 30);
+
+                }
 
                 // }
 
@@ -460,7 +473,7 @@ class SelectDateTimeDoctorScreen extends Component {
                             }
                         })
                         if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
-                            || (keyDate.compareDate(new Date()) == 0 && this.convertTimeToInt(dataSchedules[i].workTime.end) < this.convertTimeToInt(new Date().format('HH:mm')))) {
+                            || (keyDate.compareDate(new Date()) == 0 && this.convertTimeToInt(dataSchedules[i].workTime.end) < (this.convertTimeToInt(new Date().format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100)))) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
