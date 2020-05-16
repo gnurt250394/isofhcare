@@ -380,7 +380,7 @@ class DetailsDoctorScreen extends Component {
                     null
                   }
                 </View>
-                <Text style={styles.colorBold}>Giới thiệu ngắn gon bản thân:</Text>
+                <Text style={styles.colorBold}>Kinh nghiệm khám chữa bệnh:</Text>
                 {profileDoctor.overview ?
                   <Text style={styles.txtPosition}>{profileDoctor.overview}</Text>
                   : null
