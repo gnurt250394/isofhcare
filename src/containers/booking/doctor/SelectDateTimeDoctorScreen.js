@@ -108,7 +108,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let date = new Date(day)
             let today = new Date()
             let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
-            let timeStart =typeof time?.workTimeHospital?.startTime != 'undefined' ? time?.workTimeHospital?.startTime : (7 * 60)
+            let timeStart = typeof time?.workTimeHospital?.startTime != 'undefined' ? time?.workTimeHospital?.startTime : (7 * 60)
             let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + timeStart);
@@ -403,7 +403,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let firstDay = month.getFirstDateOfMonth();
 
             let lastDay = month.getLastDateOfMonth();
-
+            let toDay = new Date()
             let obj = {};
             while (firstDay <= lastDay) {
                 let key = firstDay.format("yyyy-MM-dd");
@@ -412,7 +412,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 obj[key] = {}
 
-                if (new Date(key) <= new Date()
+                if (new Date(key) <= toDay
                     // || firstDay.getDay() == 6 
                     // || firstDay.getDay() == 0
                 ) {
@@ -442,9 +442,9 @@ class SelectDateTimeDoctorScreen extends Component {
 
 
                 let dayOfWeek = this.getDayOfWeek(key)
-                if ((this.state.isOnline && (new Date(key)).compareDate(new Date()) == -1)) {
+                if ((this.state.isOnline && (new Date(key)).compareDate(toDay) == -1)) {
                     continue;
-                } else if (!this.state.isOnline && (new Date(key)).compareDate(new Date()) <= 0) {
+                } else if (!this.state.isOnline && (new Date(key)).compareDate(toDay) <= 0) {
                     continue;
                 }
                 let keyDate = new Date(key);
@@ -483,8 +483,9 @@ class SelectDateTimeDoctorScreen extends Component {
                             }
                         })
                         if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
-                            || (keyDate.compareDate(new Date()) == 0
-                                && this.convertTimeToInt(dataSchedules[i].workTime.end) < (this.convertTimeToInt(new Date().format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100)))) {
+                            || (keyDate.compareDate(toDay) == 0
+                                && (this.convertTimeToInt(dataSchedules[i].workTime.end)) < (this.convertTimeToInt(new Date(toDay.setMinutes(toDay.getMinutes() + 30)).format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100))
+                            )) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
