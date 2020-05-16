@@ -72,7 +72,6 @@ class SelectDateTimeDoctorScreen extends Component {
         return date[day] || day
     }
     getTimeDate = (time) => {
-        
 
 
         let time1 = '21:00'
@@ -89,7 +88,7 @@ class SelectDateTimeDoctorScreen extends Component {
             } else {
                 time1 = rhoursStart + ":" + rminutesStart;
             }
-            
+
 
         }
 
@@ -109,9 +108,10 @@ class SelectDateTimeDoctorScreen extends Component {
             let date = new Date(day)
             let today = new Date()
             let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
+            let timeStart =typeof time?.workTimeHospital?.startTime != 'undefined' ? time?.workTimeHospital?.startTime : (7 * 60)
             let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.workTimeHospital?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + time?.workTimeHospital?.startTime ?? (7 * 60));
+            date.setMinutes(date.getMinutes() + timeStart);
             while (true) {
                 if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(timeEnd)) {
                     break;
@@ -437,17 +437,19 @@ class SelectDateTimeDoctorScreen extends Component {
                 firstDay.setDate(firstDay.getDate() + 1)
             }
             let selected = null;
-            
+
             for (let key in obj) {
-                
-                
+
+
                 let dayOfWeek = this.getDayOfWeek(key)
-                if ((this.state.isOnline && (new Date(key)).compareDate(new Date()) == -1) || (!this.state.isOnline && (new Date(key)).compareDate(new Date()) == 0))
-                continue;
+                if ((this.state.isOnline && (new Date(key)).compareDate(new Date()) == -1)) {
+                    continue;
+                } else if (!this.state.isOnline && (new Date(key)).compareDate(new Date()) <= 0) {
+                    continue;
+                }
                 let keyDate = new Date(key);
 
                 if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
-
                     let doctor = this.state.profileDoctor
                         && this.state.profileDoctor.academicDegree
                         && this.state.profileDoctor.name
@@ -463,7 +465,6 @@ class SelectDateTimeDoctorScreen extends Component {
                         && dataSchedules[i].workTime.expired >= key
                         && dataSchedules[i].workTime.repeat && key >= dataSchedules[i].workTime.day)
                         || (key == dataSchedules[i].workTime.day)) {
-
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key && dataSchedules[i].workTime.day != e)
                         let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
                         let dateLength = 0
