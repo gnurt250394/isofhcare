@@ -277,7 +277,7 @@ module.exports = {
             client.requestApi(
                 "get",
                 // client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_schedules}?page=1&size=20&dayOfWeek=-1`
+                `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}?page=0&size=20`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
