@@ -702,12 +702,13 @@ class SelectDateTimeDoctorScreen extends Component {
 
     renderTimePicker(fromHour, toHour, label) {
         return (
-            (this.state.listTime.filter(item => new Date(item.time).format("HH").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH").replace(':', "") < toHour.replace(':', "")).length) ?
+            (this.state.listTime.filter(item => new Date(item.time).format("HH:mm").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH:mm").replace(':', "") <= toHour.replace(':', "")).length) ?
                 <View style={styles.containerTimePicker}>
                     <Text style={styles.txtlabel}>{label}</Text>
                     <View style={styles.containerButtonTimePicker}>
                         {
-                            this.state.listTime.filter(item => new Date(item.time).format("HH").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH").replace(':', "") < toHour.replace(':', "")).map((item, index) => {
+                            this.state.listTime.filter(item => new Date(item.time).format("HH:mm").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH:mm").replace(':', "") <= toHour.replace(':', "")).map((item, index) => {
+                                console.log('item: ', item);
                                 return <TouchableOpacity
                                     onPress={this.selectTime(item)}
                                     disabled={item.disabled}
@@ -855,8 +856,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                                 null
                                         }
 
-                                        {this.renderTimePicker('0:0', '12:30', "Buổi sáng")}
-                                        {this.renderTimePicker('12:00', '24:00', "Buổi chiều")}
+                                        {this.renderTimePicker('0:0', '12:00', "Buổi sáng")}
+                                        {this.renderTimePicker('13:00', '24:00', "Buổi chiều")}
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
