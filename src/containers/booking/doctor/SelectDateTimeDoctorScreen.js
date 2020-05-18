@@ -107,9 +107,9 @@ class SelectDateTimeDoctorScreen extends Component {
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
             let today = new Date()
-            let time = listSchedule.find(e => e.workTimeHospital.dayOfWeek == this.convertDayOfWeek(date.getDay()))
-            let timeStart = typeof time?.workTimeHospital?.startTime != 'undefined' ? time?.workTimeHospital?.startTime : (7 * 60)
-            let timeEnd = this.getTimeDate(time?.workTimeHospital?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.workTimeHospital?.endTime)
+            let time = listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()))
+            let timeStart = typeof time?.startTime != 'undefined' ? time?.startTime : (7 * 60)
+            let timeEnd = this.getTimeDate(time?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + timeStart);
             while (true) {
@@ -329,30 +329,42 @@ class SelectDateTimeDoctorScreen extends Component {
     }
     getListSchedule = async () => {
         try {
-            let res = await bookingDoctorProvider.get_list_schedules()
-
+            const { item } = this.state
+            let hospitalId = item && item.hospital ? item.hospital.id : ""
+            let res = await bookingDoctorProvider.get_list_schedules(hospitalId)
             return res
         } catch (error) {
+
 
         }
 
     }
     async componentDidMount() {
-        let res = await this.getListSchedule()
-        if (res.code == 0) {
-            this.setState({
-                listSchedule: res.data
-            }, () => {
-                const { isOnline } = this.state
+        const { isOnline } = this.state
+        try {
+            let res = await this.getListSchedule()
+
+            if (res && res.length) {
+                this.setState({
+                    listSchedule: res
+                }, () => {
+                    if (isOnline) {
+                        this.getSchedusOnline()
+                    } else {
+
+                        this.getDetailDoctor()
+                    }
+                })
+            } else {
                 if (isOnline) {
                     this.getSchedusOnline()
                 } else {
 
                     this.getDetailDoctor()
                 }
-            })
-        } else {
-            const { isOnline } = this.state
+            }
+
+        } catch (error) {
             if (isOnline) {
                 this.getSchedusOnline()
             } else {
