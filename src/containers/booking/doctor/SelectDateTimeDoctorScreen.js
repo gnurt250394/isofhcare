@@ -74,6 +74,7 @@ class SelectDateTimeDoctorScreen extends Component {
     getTimeDate = (time) => {
 
 
+
         let time1 = '21:00'
         if (time) {
             let hoursStart = time / 60;
@@ -128,11 +129,6 @@ class SelectDateTimeDoctorScreen extends Component {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day)
                             let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
-                            if (date.compareDate(today) == 0 && (this.convertTimeToInt(date.format("HH:mm"))) < (this.convertTimeToInt(today.format('HH:mm')) + (listSchedules[i].minimumCapacity * 100))) {
-                                disabled = true
-                                id = listSchedules[i].id
-                                break
-                            }
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -145,6 +141,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                 && this.convertTimeToInt(listSchedules[i].workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
                                 && this.convertTimeToInt(listSchedules[i].workTime.end) > this.convertTimeToInt(date.format('HH:mm'))
                             ) {
+
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
@@ -156,10 +153,17 @@ class SelectDateTimeDoctorScreen extends Component {
                                     && listSchedules[i].workTime.expired >= day && indexChilOfParent == -1 && listSchedules[i].workTime.repeat)
                                     || (!listSchedules[i].workTime.repeat && listSchedules[i].workTime.day == day))
                             ) {
-                                maximumCapacity = listSchedules[i].maximumCapacity
-                                disabled = false
-                                id = listSchedules[i].id
-                                break;
+                                if (date.compareDate(today) == 0 && (this.convertTimeToInt(date.format("HH:mm"))) < (this.convertTimeToInt(today.format('HH:mm')) + (listSchedules[i].minimumCapacity * 100))) {
+                                    disabled = true
+                                    id = listSchedules[i].id
+                                    break
+                                } else {
+                                    maximumCapacity = listSchedules[i].maximumCapacity
+                                    disabled = false
+                                    id = listSchedules[i].id
+                                    break;
+                                }
+
                             }
 
                         }
@@ -493,10 +497,11 @@ class SelectDateTimeDoctorScreen extends Component {
                                 data.push(e)
                             }
                         })
+                        let timeEnd2 = this.timeStringToDate(dataSchedules[i].workTime.end)
                         if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
                             || (keyDate.compareDate(toDay) == 0
-                                && (this.convertTimeToInt(dataSchedules[i].workTime.end)) < (this.convertTimeToInt(new Date(toDay.setMinutes(toDay.getMinutes() + 30)).format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100))
-                            )) {
+                                && (this.convertTimeToInt(new Date(timeEnd2.setMinutes(timeEnd2.getMinutes() - 30)).format('HH:mm'))) < (this.convertTimeToInt((toDay).format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100))
+                                )) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
