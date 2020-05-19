@@ -91,7 +91,6 @@ class SelectDateTimeDoctorScreen extends Component {
 
 
         }
-
         return time1
     }
     selectDay(day) {
@@ -109,11 +108,12 @@ class SelectDateTimeDoctorScreen extends Component {
             let today = new Date()
             let time = listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()))
             let timeStart = typeof time?.startTime != 'undefined' ? time?.startTime : (7 * 60)
-            let timeEnd = this.getTimeDate(time?.endTime) == '24:00' ? "23:30" : this.getTimeDate(time?.endTime)
+            let objBlock = listSchedules.find((e, i) => e && e.workTime.dayOfTheWeek == dateOfWeek)
+            let timeEnd = this.getTimeDate(time?.endTime)
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + timeStart);
             while (true) {
-                if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(timeEnd)) {
+                if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(timeEnd) || this.convertDayOfWeek(date.getDay()) != time.dayOfWeek) {
                     break;
                 }
                 if (this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt("12:30")
@@ -183,7 +183,6 @@ class SelectDateTimeDoctorScreen extends Component {
                 //     date.setMinutes(date.getMinutes() + 15);
 
                 // }else{
-                let objBlock = listSchedules.find((e, i) => e && e.workTime.dayOfTheWeek == dateOfWeek)
                 if (objBlock.blockTime == "BLOCK30") {
                     date.setMinutes(date.getMinutes() + 30);
                 } else if (objBlock.blockTime == "BLOCK15") {
@@ -708,7 +707,6 @@ class SelectDateTimeDoctorScreen extends Component {
                     <View style={styles.containerButtonTimePicker}>
                         {
                             this.state.listTime.filter(item => new Date(item.time).format("HH:mm").replace(':', "") >= fromHour.replace(':', "") && new Date(item.time).format("HH:mm").replace(':', "") <= toHour.replace(':', "")).map((item, index) => {
-                                console.log('item: ', item);
                                 return <TouchableOpacity
                                     onPress={this.selectTime(item)}
                                     disabled={item.disabled}
