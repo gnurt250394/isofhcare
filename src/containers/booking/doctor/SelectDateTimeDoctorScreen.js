@@ -75,6 +75,9 @@ class SelectDateTimeDoctorScreen extends Component {
     getTimeDate = (time) => {
 
 
+            let rhoursStart = Math.floor(hoursStart);
+            let minutesStart = (hoursStart - rhoursStart) * 60;
+
         let time1 = '21:00'
         if (time) {
             let hoursStart = time / 60;
@@ -105,10 +108,11 @@ class SelectDateTimeDoctorScreen extends Component {
             bookingDoctorProvider.getListTimeBooking(item.id, isOnline).then(res => {
                 if (res && res.length) {
                     let group = res.map((item) => item.date).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
-                        let new_list = res.filter(itm => itm.date == item && itm.status == "AVAILABLE");
-                        return { date:item, value: new_list }
+                        let new_list = res.filter(itm => itm.date == item && itm.status != "MIN_CAPACITY");
+                        return { date: item, value: new_list }
                     });
-                    
+                    console.log('group: ', group);
+
                     this.setState({
                         listTimeBooking: group,
                         isLoading: false
@@ -225,8 +229,9 @@ class SelectDateTimeDoctorScreen extends Component {
             return res
         } catch (error) {
 
-
         }
+
+
 
     }
     async componentDidMount() {
@@ -350,7 +355,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     continue;
                 }
                 let objDate = this.state.listTimeBooking.find(e => {
-                    return e.date == key 
+                    return e.date == key && e.value.length
                 })
 
 
@@ -382,94 +387,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     obj[key].disabled = true;
                     obj[key].disableTouchEvent = true;
                 }
-                // let dayOfWeek = this.getDayOfWeek(key)
-                // if ((this.state.isOnline && (new Date(key)).compareDate(toDay) == -1)) {
-                //     continue;
-                // } else if (!this.state.isOnline && (new Date(key)).compareDate(toDay) <= 0) {
-                //     continue;
-                // }
-                // let keyDate = new Date(key);
-
-                // if (this.state.scheduleFinal && this.state.scheduleFinal.length == 0) {
-                //     let doctor = this.state.profileDoctor
-                //         && this.state.profileDoctor.academicDegree
-                //         && this.state.profileDoctor.name
-                //         ? this.renderAcademic(this.state.profileDoctor.academicDegree) + this.state.profileDoctor.name
-                //         : 'Bác sĩ'
-                //     snackbar.show(doctor + ' không có lịch làm việc trong thời gian này', 'danger')
-                // }
-
-                // let dataSchedules = this.state.scheduleFinal ? this.state.scheduleFinal : []
-                // for (let i = 0; i < dataSchedules.length; i++) {
-
-                //     if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
-                //         && dataSchedules[i].workTime.expired >= key
-                //         && dataSchedules[i].workTime.repeat && key >= dataSchedules[i].workTime.day)
-                //         || (key == dataSchedules[i].workTime.day)) {
-                //         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key && dataSchedules[i].workTime.day != e)
-                //         let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
-                //         let dateLength = 0
-                //         let timeEnd = dataSchedules[i].workTime.end == '24:00' ? "00:00" : dataSchedules[i].workTime.end
-                //         while (dateStart.format('HH:mm') < timeEnd) {
-                //             if (dateStart.format("HH:mm") < "11:30" || dateStart.format("HH:mm") >= "13:30") {
-                //                 dateLength = dateLength + 1
-                //             }
-                //             dateStart.setMinutes(dateStart.getMinutes() + 30)
-                //         }
-                //         let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key && e.lock)
-                //         let data = []
-                //         dataSchedules[i].timeSlots.forEach(e => {
-                //             if (e.date == key && e.lock) {
-                //                 data.push(e)
-                //             }
-                //         })
-                //         let timeEnd2 = this.timeStringToDate(dataSchedules[i].workTime.end)
-                //         if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)
-                //             || (keyDate.compareDate(toDay) == 0
-                //                 && (this.convertTimeToInt(new Date(timeEnd2.setMinutes(timeEnd2.getMinutes() - 30)).format('HH:mm'))) < (this.convertTimeToInt((toDay).format('HH:mm')) + (dataSchedules[i].minimumCapacity * 100))
-                //             )) {
-                //             obj[key].disabled = true;
-                //             obj[key].disableTouchEvent = true;
-                //         } else {
-                //             arrIndex.push(i)
-                //             obj[key].marked = true;
-                //             obj[key].noSchedule = true;
-                //             obj[key].disabled = false;
-                //             obj[key].disableTouchEvent = false;
-                //             obj[key].customStyles = {
-                //                 container: {
-                //                     backgroundColor: '#FFF',
-                //                     borderWidth: 1,
-                //                     borderColor: '#3161AD'
-                //                 }
-                //             }
-                //             if (arrIndex && arrIndex.length == 1) {
-                //                 selected = keyDate;
-                //                 obj[key].customStyles = {
-                //                     container: {
-                //                         backgroundColor: '#3161AD'
-                //                     },
-                //                     text: {
-                //                         color: '#FFF'
-                //                     }
-                //                 }
-                //             }
-                //             break;
-                //         }
-
-                //     }
-                //     else {
-                //         obj[key].customStyles = {
-                //             container: {
-                //                 backgroundColor: '#FFF',
-                //             }
-                //         }
-                //     }
-                //     // if ((dataSchedules[i].workTime.repeat || key != dataSchedules[i].workTime.day)
-                //     // ) {
-                //     //     break;
-                //     // }
-                // }
+               
             }
             if (selected) {
                 (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
@@ -555,11 +473,25 @@ class SelectDateTimeDoctorScreen extends Component {
     }
     selectTime = (item) => () => {
 
-
-        if (item.type == 0) {
-            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-            return;
+        switch (item.status) {
+            case "FULL":
+                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                return;
+            case "MIN_CAPACITY":
+                snackbar.show("Đã quá giờ đặt khám vui lòng chọn giờ khác", "danger");
+                return;
+            case "MAX_CAPACITY":
+                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                return;
+            case "AVAILABLE":
+                break;
+            default:
+                return;
         }
+        // if (item.type == 0) {
+        //     snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+        //     return;
+        // }
         let date = new Date(item.key)
 
         if (item.maximumCapacity < this.daysBetween(new Date(), date)) {
@@ -600,7 +532,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 bookingDoctorProvider.get_detail_schedules(this.state.schedule.scheduleId).then(res => {
                     this.setState({ isLoading: false })
                     this.props.navigation.navigate('addBookingDoctor', {
-                        profileDoctor: this.state.profileDoctor,
+                        profileDoctor: this.state.item,
                         bookingDate: this.state.bookingDate,
                         detailSchedule: res,
                         schedule: this.state.schedule,
@@ -619,13 +551,13 @@ class SelectDateTimeDoctorScreen extends Component {
 
     renderTimePicker(fromHour, toHour, label) {
         return (
-            (this.state.listTime.filter(item => item.status == "AVAILABLE" && item.time.replace(':', "") >= fromHour.replace(':', "") && item.time.replace(':', "") <= toHour.replace(':', "")).length) ?
+            (this.state.listTime.filter(item => item.status !== "MIN_CAPACITY" && item.time.replace(':', "") >= fromHour.replace(':', "") && item.time.replace(':', "") <= toHour.replace(':', "")).length) ?
                 <View style={styles.containerTimePicker}>
                     <Text style={styles.txtlabel}>{label}</Text>
                     <View style={styles.containerButtonTimePicker}>
                         {
                             this.state.listTime.filter(item => item.time.replace(':', "") >= fromHour.replace(':', "") && item.time.replace(':', "") <= toHour.replace(':', "")).map((item, index) => {
-                                if (item.status !== "AVAILABLE") {
+                                if (item.status == "MIN_CAPACITY") {
                                     return null
                                 }
                                 return <TouchableOpacity
@@ -730,7 +662,8 @@ class SelectDateTimeDoctorScreen extends Component {
         this.setState({ toggelMonthPicker: false });
     }
     render() {
-        const { profileDoctor } = this.state
+        const { profileDoctor, item } = this.state
+        console.log('item: ', item);
         return (<ActivityPanel
             isLoading={this.state.isLoading}
             transparent={true}
@@ -743,7 +676,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         keyboardDismissMode="on-drag">
 
                         <Card style={styles.containerCalendar}>
-                            <Text style={styles.txtTitleHeader}>{this.renderAcademic(profileDoctor.academicDegree)}{profileDoctor?.name}</Text>
+                            <Text style={styles.txtTitleHeader}>{this.renderAcademic(item.academicDegree)}{item?.name}</Text>
                             <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
                             <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
@@ -780,7 +713,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>{this.renderAcademic(profileDoctor.academicDegree)}{profileDoctor?.name} không có lịch làm việc trong thời gian này</Text>
+                                <Text style={styles.txtHelp}>{this.renderAcademic(item.academicDegree)}{item?.name} không có lịch làm việc trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
