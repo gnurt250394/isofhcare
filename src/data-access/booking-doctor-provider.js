@@ -381,12 +381,12 @@ module.exports = {
             );
         });
     },
-    getListTimeBooking(doctorId, isOnline) {
+    getListTimeBooking(doctorId, isOnline, fromDate, toDate) {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
                 client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_time_booking}?doctorId=${doctorId}&isOnline=${isOnline}`
+                `${constants.api.booking.doctor.get_list_time_booking}?doctorId=${doctorId}&isOnline=${isOnline}&fromDate=${fromDate}&toDate=${toDate}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
