@@ -75,7 +75,6 @@ class SelectDateTimeDoctorScreen extends Component {
     getTimeDate = (time) => {
 
 
-
         let time1 = '21:00'
         if (time) {
             let hoursStart = time / 60;
@@ -102,203 +101,50 @@ class SelectDateTimeDoctorScreen extends Component {
     }
     getListTimeBooking = () => {
         const { item, isOnline } = this.state
-        bookingDoctorProvider.getListTimeBooking(item.id, isOnline).then(res => {
-            if (res && res.length) {
-                let group = res.map((item) => item).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
-                    let new_list = res.filter(itm => itm.date == item.date);
-                    return { item: { date: item.date, status: item.status }, value: new_list }
-                });
-                this.setState({
-                    listTimeBooking: group
-                })
-            } else {
+        this.setState({ isLoading: true }, () => {
+            bookingDoctorProvider.getListTimeBooking(item.id, isOnline).then(res => {
+                if (res && res.length) {
+                    let group = res.map((item) => item.date).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
+                        let new_list = res.filter(itm => itm.date == item && itm.status == "AVAILABLE");
+                        return { date:item, value: new_list }
+                    });
+                    
+                    this.setState({
+                        listTimeBooking: group,
+                        isLoading: false
+                    }, () => {
+                        this.selectMonth(new Date())
+                    })
+                } else {
+                    this.setState({
+                        listTimeBooking: [],
+                        isLoading: false,
+                        scheduleError: '',
+                    }, () => {
+                        this.selectMonth(new Date())
+                    })
+                }
+
+            }).catch(err => {
                 this.setState({
                     listTimeBooking: [],
+                    isLoading: false,
                     scheduleError: ''
-                })
-            }
 
-        }).catch(err => {
-            this.setState({
-                listTimeBooking: [],
-                scheduleError: ''
+                }, () => {
+                    this.selectMonth(new Date())
+                })
 
             })
-
         })
+
     }
     selectDay(dateTimeString) {
-        let list = this.state.listTimeBooking.find(e => e.item.date == dateTimeString)
-        
+        let list = this.state.listTimeBooking.find(e => e.date == dateTimeString)
+
         this.setState({
             listTime: list.value
         })
-        // this.getListTimeBooking(day)
-        return
-        const { listSchedule } = this.state
-
-        let data = this.state.schedules[day].lock || [];
-
-        let listSchedules = this.state.scheduleFinal || []
-
-
-        let dateOfWeek = this.getDayOfWeek(day)
-        let listTime = [];
-        if (this.state.schedules[day].noSchedule) {
-            let date = new Date(day)
-            let today = new Date()
-            let time = listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()))
-            let timeStart = typeof time?.startTime != 'undefined' ? time?.startTime : (7 * 60)
-            let listBlock = listSchedules.filter(e => e.workTime.dayOfTheWeek == dateOfWeek).sort((a, b) => this.convertTimeToInt(a.workTime.start) - this.convertTimeToInt(b.workTime.start))
-            let timeEnd = this.getTimeDate(time?.endTime)
-            date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + this.getTimeBooking(listBlock[0].workTime.start));
-            while (true) {
-                if (this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt(listBlock[listBlock.length - 1].workTime.end) || this.convertDayOfWeek(date.getDay()) != time.dayOfWeek) {
-                    break;
-                }
-                let objBlock = listBlock.find((e, i) => e && e.workTime.dayOfTheWeek == dateOfWeek
-                    && this.convertTimeToInt(e.workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
-                    && this.convertTimeToInt(e.workTime.end) > this.convertTimeToInt(date.format('HH:mm')))
-                if (this.convertTimeToInt(date.format("HH:mm")) < this.convertTimeToInt("12:30")
-                    || this.convertTimeToInt(date.format("HH:mm")) >= this.convertTimeToInt("13:00")) {
-                    let disabled = true;
-                    let id;
-                    let maximumCapacity;
-                    for (let i = 0; i <= listBlock.length; i++) {
-                        if (listBlock[i] && listBlock[i].workTime.dayOfTheWeek == dateOfWeek) {
-                            let index = listBlock[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
-                            let indexParent = listBlock.findIndex(e => e.parent == listBlock[i].id && e.workTime.day == day)
-                            let indexChilOfParent = listBlock.findIndex(e => e.parent && e.parent == listBlock[i].parent && !e.workTime.repeat && e.workTime.day == day)
-                            if (index != -1) {
-                                if (listBlock[i].timeSlots[index].lock) {
-                                    disabled = true
-                                    id = listBlock[i].id
-                                    break
-                                }
-                            }
-                            if (listBlock[i].parent && listBlock[i].workTime.day == day
-                                && this.convertTimeToInt(listBlock[i].workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
-                                && this.convertTimeToInt(listBlock[i].workTime.end) > this.convertTimeToInt(date.format('HH:mm'))
-                            ) {
-
-                                maximumCapacity = listBlock[i].maximumCapacity
-                                disabled = false
-                                id = listBlock[i].id
-                                break
-                            }
-                            if (this.convertTimeToInt(listBlock[i].workTime.start) <= this.convertTimeToInt(date.format('HH:mm'))
-                                && this.convertTimeToInt(listBlock[i].workTime.end) > this.convertTimeToInt(date.format('HH:mm'))
-                                && (((indexParent == -1) && listBlock[i].workTime.day <= day
-                                    && listBlock[i].workTime.expired >= day && indexChilOfParent == -1 && listBlock[i].workTime.repeat)
-                                    || (!listBlock[i].workTime.repeat && listBlock[i].workTime.day == day))
-                            ) {
-                                if (date.compareDate(today) == 0 && (this.convertTimeToInt(date.format("HH:mm"))) < (this.convertTimeToInt(today.format('HH:mm')) + (listBlock[i].minimumCapacity * 100))) {
-                                    disabled = true
-                                    id = listBlock[i].id
-                                    break
-                                } else {
-                                    maximumCapacity = listBlock[i].maximumCapacity
-                                    disabled = false
-                                    id = listBlock[i].id
-                                    break;
-                                }
-
-                            }
-
-                        }
-                    }
-
-                    listTime.push({
-                        key: date.getTime(),
-                        schedule: {
-                        },
-                        id,
-                        maximumCapacity,
-                        time: date.getTime(),
-                        type: 3,
-                        label: date.format("HH:mm"),
-                        disabled,
-                        timeString: date.format("HH:mm:ss"),
-                    });
-
-                }
-
-                if (objBlock?.blockTime == "BLOCK30") {
-                    date.setMinutes(date.getMinutes() + 30);
-                } else if (objBlock?.blockTime == "BLOCK15") {
-                    date.setMinutes(date.getMinutes() + 15);
-                } else if (objBlock?.blockTime == "BLOCK60") {
-                    date.setMinutes(date.getMinutes() + 60);
-                } else {
-                    date.setMinutes(date.getMinutes() + 30);
-
-                }
-                // if(this.state.isOnline){
-                //     date.setMinutes(date.getMinutes() + 15);
-
-                // }else{
-
-                // }
-
-            }
-            this.setState({ listTime })
-
-        }
-        else {
-            data.forEach((item, index) => {
-                for (var key in item) {
-                    try {
-                        let time = this.getTime(key);
-                        label = time.format("HH") + "h" + time.format("mm");
-                        let schedule = {
-                            label,
-                            time,
-                            key: key,
-                            percent: 100
-                        }
-                        let schedules = ((item[key] || {}).detailSchedules || []);
-                        schedules.forEach((item2, index2) => {
-                            let detailSchedule = item2.detailSchedule;
-                            if (item2.numberCase && detailSchedule) {
-                                let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
-                                if (percent <= schedule.percent) {
-                                    schedule.percent = percent;
-                                    schedule.schedule = detailSchedule;
-                                    schedule.doctor = item2.doctorVendor;
-                                    schedule.numberSlot = item2.numberSlot || 0;
-                                    schedule.numberCase = item2.numberCase || 1;
-
-                                    let available = 100 - percent;
-                                    if (available == 0)
-                                        schedule.type = 0;
-                                    else
-                                        if (available < 30)
-                                            schedule.type = 1;
-                                        else
-                                            if (available < 70)
-                                                schedule.type = 2;
-                                            else
-                                                schedule.type = 3;
-                                }
-                            }
-                        });
-                        if (schedule.schedule) {
-                            listTime.push(schedule);
-                        }
-                    } catch (error) {
-
-                    }
-                }
-            });
-
-        }
-        this.setState({
-            listTime: listTime.sort((a, b) => {
-                return a.time - b.time
-            }),
-        }, () => {
-        });
     }
 
     getColor(item) {
@@ -384,39 +230,39 @@ class SelectDateTimeDoctorScreen extends Component {
 
     }
     async componentDidMount() {
-        this.getListTimeBooking()
-
-        const { isOnline } = this.state
         try {
-            let res = await this.getListSchedule()
+            this.getListTimeBooking()
 
-            if (res && res.length) {
-                this.setState({
-                    listSchedule: res
-                }, () => {
-                    if (isOnline) {
-                        this.getSchedusOnline()
-                    } else {
+            const { isOnline } = this.state
+            // let res = await this.getListSchedule()
 
-                        this.getDetailDoctor()
-                    }
-                })
-            } else {
-                if (isOnline) {
-                    this.getSchedusOnline()
-                } else {
+            // if (res && res.length) {
+            //     this.setState({
+            //         listSchedule: res
+            //     }, () => {
+            //         if (isOnline) {
+            //             this.getSchedusOnline()
+            //         } else {
 
-                    this.getDetailDoctor()
-                }
-            }
+            //             this.getDetailDoctor()
+            //         }
+            //     })
+            // } else {
+            //     if (isOnline) {
+            //         this.getSchedusOnline()
+            //     } else {
+
+            //         this.getDetailDoctor()
+            //     }
+            // }
 
         } catch (error) {
-            if (isOnline) {
-                this.getSchedusOnline()
-            } else {
+            // if (isOnline) {
+            //     this.getSchedusOnline()
+            // } else {
 
-                this.getDetailDoctor()
-            }
+            //     this.getDetailDoctor()
+            // }
         }
 
 
@@ -504,7 +350,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     continue;
                 }
                 let objDate = this.state.listTimeBooking.find(e => {
-                    return e.item.date == key && e.item.status == "AVAILABLE"
+                    return e.date == key 
                 })
 
 
@@ -627,11 +473,7 @@ class SelectDateTimeDoctorScreen extends Component {
             }
             if (selected) {
                 (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
-
-
-
             }
-
             this.setState({
                 dateString: selected ? selected.format("yyyy-MM-dd") : null,
                 bookingDate: selected,
