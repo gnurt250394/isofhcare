@@ -10,8 +10,7 @@ import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux';
-import NavigationService from "@navigators/NavigationService";
-
+import NavigationService from '@navigators/NavigationService'
 class ItemDoctor extends Component {
     constructor(props) {
         super(props);

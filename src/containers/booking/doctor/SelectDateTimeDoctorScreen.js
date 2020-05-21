@@ -75,8 +75,6 @@ class SelectDateTimeDoctorScreen extends Component {
     getTimeDate = (time) => {
 
 
-            let rhoursStart = Math.floor(hoursStart);
-            let minutesStart = (hoursStart - rhoursStart) * 60;
 
         let time1 = '21:00'
         if (time) {
@@ -102,10 +100,13 @@ class SelectDateTimeDoctorScreen extends Component {
         let time = (parseInt(m) / 60 + parseInt(h)) * 60
         return time
     }
-    getListTimeBooking = () => {
+    getListTimeBooking = (date) => {
+        console.log('date: ', date);
+        let fromDate = date.getFirstDateOfMonth().compareDate(new Date()) == -1 ? date.format('yyyy-MM-dd') : date.getFirstDateOfMonth().format('yyyy-MM-dd')
+        let toDate = date.getLastDateOfMonth().format('yyyy-MM-dd')
         const { item, isOnline } = this.state
         this.setState({ isLoading: true }, () => {
-            bookingDoctorProvider.getListTimeBooking(item.id, isOnline).then(res => {
+            bookingDoctorProvider.getListTimeBooking(item.id, isOnline, fromDate, toDate).then(res => {
                 if (res && res.length) {
                     let group = res.map((item) => item.date).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
                         let new_list = res.filter(itm => itm.date == item && itm.status != "MIN_CAPACITY");
@@ -117,7 +118,8 @@ class SelectDateTimeDoctorScreen extends Component {
                         listTimeBooking: group,
                         isLoading: false
                     }, () => {
-                        this.selectMonth(new Date())
+                        this.generateSchedule(date);
+
                     })
                 } else {
                     this.setState({
@@ -125,7 +127,8 @@ class SelectDateTimeDoctorScreen extends Component {
                         isLoading: false,
                         scheduleError: '',
                     }, () => {
-                        this.selectMonth(new Date())
+                        this.generateSchedule(date);
+
                     })
                 }
 
@@ -136,7 +139,8 @@ class SelectDateTimeDoctorScreen extends Component {
                     scheduleError: ''
 
                 }, () => {
-                    this.selectMonth(new Date())
+                    this.generateSchedule(date);
+
                 })
 
             })
@@ -229,14 +233,13 @@ class SelectDateTimeDoctorScreen extends Component {
             return res
         } catch (error) {
 
+
         }
-
-
 
     }
     async componentDidMount() {
         try {
-            this.getListTimeBooking()
+            this.selectMonth(new Date())
 
             const { isOnline } = this.state
             // let res = await this.getListSchedule()
@@ -457,10 +460,11 @@ class SelectDateTimeDoctorScreen extends Component {
         return obj;
     }
 
-    selectMonth(date) {
-        if (this.state.isNotHaveSchedule) {
-            this.generateSchedule(date);
-        }
+      selectMonth(date) {
+        this.getListTimeBooking(date)
+        // if (this.state.isNotHaveSchedule) {
+        //     this.generateSchedule(date);
+        // }
 
     }
     daysBetween = (date1, date2) => {
@@ -481,7 +485,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 snackbar.show("Đã quá giờ đặt khám vui lòng chọn giờ khác", "danger");
                 return;
             case "MAX_CAPACITY":
-                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                snackbar.show("Ngày đặt khám đang lớn hơn thời gian được đặt trước", "danger");
                 return;
             case "AVAILABLE":
                 break;

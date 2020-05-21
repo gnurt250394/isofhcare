@@ -393,6 +393,7 @@ class AddBookingDoctorScreen extends Component {
         let patitent = profile && profile.medicalRecords
         let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
 
+        console.log('this.state.isOnline: ', this.state.isOnline);
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
