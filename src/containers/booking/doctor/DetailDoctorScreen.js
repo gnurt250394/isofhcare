@@ -108,7 +108,7 @@ class DetailsDoctorScreen extends Component {
       snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
       return
     }
-    if (this.props.userApp.isLogin) {
+    // if (this.props.userApp.isLogin) {
       this.props.navigation.navigate('selectTimeDoctor', {
         item: this.state.profileDoctor,
         isNotHaveSchedule: true,
@@ -116,20 +116,20 @@ class DetailsDoctorScreen extends Component {
         isOnline: true
 
       })
-    }
-    else {
+    // }
+    // else {
 
-      this.props.navigation.navigate("login", {
-        nextScreen: {
-          screen: 'selectTimeDoctor', param: {
-            item: this.state.profileDoctor,
-            isNotHaveSchedule: true,
-            schedules: this.state.profileDoctor.schedules,
-            isOnline: true
-          }
-        }
-      });
-    }
+    //   this.props.navigation.navigate("login", {
+    //     nextScreen: {
+    //       screen: 'selectTimeDoctor', param: {
+    //         item: this.state.profileDoctor,
+    //         isNotHaveSchedule: true,
+    //         schedules: this.state.profileDoctor.schedules,
+    //         isOnline: true
+    //       }
+    //     }
+    //   });
+    // }
     // this.props.navigation.navigate("videoCall", {
     //   from: this.props.userApp.currentUser.id,
     //   to: this.state.item.userId,
