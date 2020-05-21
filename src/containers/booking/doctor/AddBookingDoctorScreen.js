@@ -33,7 +33,8 @@ class AddBookingDoctorScreen extends Component {
         let bookingDate = this.props.navigation.getParam('bookingDate', {})
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
-        let isOnline = this.props.navigation.getParam('isOnline', {})
+        let isOnline = this.props.navigation.getParam('isOnline', false)
+        console.log('isOnline: ', isOnline);
 
 
         this.state = {
@@ -358,6 +359,7 @@ class AddBookingDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: this.state.detailSchedule,
                         schedule: this.state.schedule,
+                        isOnline:this.state.isOnline
                     }
                 }
             });

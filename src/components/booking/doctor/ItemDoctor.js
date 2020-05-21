@@ -58,7 +58,7 @@ class ItemDoctor extends Component {
             return
         }
         // this.setState({ isVisible: false }, () => {
-        if (this.props.userApp.isLogin) {
+        // if (this.props.userApp.isLogin) {
             NavigationService.navigate('selectTimeDoctor', {
                 item: item,
                 isNotHaveSchedule: true,
@@ -66,21 +66,21 @@ class ItemDoctor extends Component {
 
                 // schedules: item.schedules
             })
-        }
-        else {
+        // }
+        // else {
 
-            NavigationService.navigate("login", {
-                nextScreen: {
-                    screen: 'selectTimeDoctor', param: {
-                        item: item,
-                        isNotHaveSchedule: true,
-                        isOnline: true
+        //     NavigationService.navigate("login", {
+        //         nextScreen: {
+        //             screen: 'selectTimeDoctor', param: {
+        //                 item: item,
+        //                 isNotHaveSchedule: true,
+        //                 isOnline: true
 
-                        // schedules: item.schedules
-                    }
-                }
-            });
-        }
+        //                 // schedules: item.schedules
+        //             }
+        //         }
+        //     });
+        // }
 
         // })
 
