@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Dimensions, FlatList, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -44,7 +44,9 @@ class SelectDateTimeDoctorScreen extends Component {
             isOnline,
             item,
             listSchedule: [],
-            listTimeBooking: []
+            listTimeBooking: [],
+            refreshing: false,
+            isLoading: true
         }
         this.days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     }
@@ -105,46 +107,49 @@ class SelectDateTimeDoctorScreen extends Component {
         let fromDate = date.getFirstDateOfMonth().compareDate(new Date()) == -1 ? date.format('yyyy-MM-dd') : date.getFirstDateOfMonth().format('yyyy-MM-dd')
         let toDate = date.getLastDateOfMonth().format('yyyy-MM-dd')
         const { item, isOnline } = this.state
-        this.setState({ isLoading: true }, () => {
-            bookingDoctorProvider.getListTimeBooking(item.id, isOnline, fromDate, toDate).then(res => {
-                if (res && res.length) {
-                    let group = res.map((item) => item.date).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
-                        let new_list = res.filter(itm => itm.date == item && itm.status != "MIN_CAPACITY");
-                        return { date: item, value: new_list }
-                    });
-                    console.log('group: ', group);
+        // this.setState({ isLoading: true }, () => {
+        bookingDoctorProvider.getListTimeBooking(item.id, isOnline, fromDate, toDate).then(res => {
+            if (res && res.length) {
+                let group = res.map((item) => item.date).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
+                    let new_list = res.filter(itm => itm.date == item && itm.status != "MIN_CAPACITY");
+                    return { date: item, value: new_list }
+                });
+                console.log('group: ', group);
 
-                    this.setState({
-                        listTimeBooking: group,
-                        isLoading: false
-                    }, () => {
-                        this.generateSchedule(date);
-
-                    })
-                } else {
-                    this.setState({
-                        listTimeBooking: [],
-                        isLoading: false,
-                        scheduleError: '',
-                    }, () => {
-                        this.generateSchedule(date);
-
-                    })
-                }
-
-            }).catch(err => {
                 this.setState({
-                    listTimeBooking: [],
+                    listTimeBooking: group,
                     isLoading: false,
-                    scheduleError: ''
-
+                    refreshing: false
                 }, () => {
                     this.generateSchedule(date);
 
                 })
+            } else {
+                this.setState({
+                    listTimeBooking: [],
+                    isLoading: false,
+                    refreshing: false,
+                    scheduleError: '',
+                }, () => {
+                    this.generateSchedule(date);
+
+                })
+            }
+
+        }).catch(err => {
+            this.setState({
+                listTimeBooking: [],
+                isLoading: false,
+                refreshing: false,
+                scheduleError: ''
+
+            }, () => {
+                this.generateSchedule(date);
 
             })
+
         })
+        // })
 
     }
     selectDay(dateTimeString) {
@@ -460,7 +465,7 @@ class SelectDateTimeDoctorScreen extends Component {
         return obj;
     }
 
-      selectMonth(date) {
+    selectMonth(date) {
         this.getListTimeBooking(date)
         // if (this.state.isNotHaveSchedule) {
         //     this.generateSchedule(date);
@@ -650,7 +655,7 @@ class SelectDateTimeDoctorScreen extends Component {
         }
     }
     onMonthChange = (month) => {
-        this.setState({ latestTime: new Date(month.dateString) }, () => {
+        this.setState({ latestTime: new Date(month.dateString), isLoading: true }, () => {
             this.selectMonth(month.dateString.toDateObject())
         })
     }
@@ -658,12 +663,23 @@ class SelectDateTimeDoctorScreen extends Component {
         this.setState({ toggelMonthPicker: true })
     }
     onConfirmDate = newDate => {
-        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+        this.setState({ latestTime: newDate, toggelMonthPicker: false, isLoading: true }, () => {
             this.selectMonth(newDate);
         })
     }
     onCancelDate = () => {
         this.setState({ toggelMonthPicker: false });
+    }
+    onRefresh = () => {
+        this.setState({ refreshing: true }, () => this.selectMonth(this.state.latestTime || new Date()))
+    }
+    refreshControl = () => {
+        return (
+            <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+            />
+        )
     }
     render() {
         const { profileDoctor, item } = this.state
@@ -676,6 +692,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 <View style={styles.container}>
                     <ScrollView
                         ref={ref => this.scroll = ref}
+                        refreshControl={this.refreshControl()}
                         keyboardShouldPersistTaps="handled"
                         keyboardDismissMode="on-drag">
 
