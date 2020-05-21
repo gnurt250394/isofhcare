@@ -381,7 +381,7 @@ module.exports = {
             );
         });
     },
-    getListTimeBooking(doctorId,isOnline) {
+    getListTimeBooking(doctorId, isOnline) {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
