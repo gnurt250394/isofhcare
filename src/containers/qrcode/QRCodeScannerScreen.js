@@ -9,7 +9,6 @@ import ImagePicker from 'mainam-react-native-select-image';
 // import jsQR from "jsqr";
 // import RNFetchBlob from 'rn-fetch-blob'
 import React, { Component } from 'react';
-import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import {
     AppRegistry,
@@ -60,14 +59,14 @@ class QRCodeScannerScreen extends Component {
         });
     }
     componentWillMount() {
-        let permistion = Platform.OS == 'android' ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA
-        check(permistion).then(response => {
-            // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-            // alert(response);
-        }).catch(err => {
-            console.log('err: ', err);
+        // let permistion = Platform.OS == 'android' ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA
+        // check(permistion).then(response => {
+        //     // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+        //     // alert(response);
+        // }).catch(err => {
+        //     console.log('err: ', err);
 
-        })
+        // })
     }
     onChangeCamreraType = () => {
         this.setState({

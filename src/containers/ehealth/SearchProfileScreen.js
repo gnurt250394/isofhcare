@@ -10,7 +10,7 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import stringUtils from 'mainam-react-native-string-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
-import historyProvider from '@data-access/history-provider';
+// import historyProvider from '@data-access/history-provider';
 import realmModel from '@models/realm-models';
 import Modal from '@components/modal';
 class SearchProfileScreen extends Component {
@@ -46,7 +46,7 @@ class SearchProfileScreen extends Component {
         let type = constants.key.history.user_ehealth
         const { USER_EHEALTH_HISTORY } = realmModel;
 
-        historyProvider.getListHistory(userId, USER_EHEALTH_HISTORY, this.getListHistoryCallback.bind(this));
+        // historyProvider.getListHistory(userId, USER_EHEALTH_HISTORY, this.getListHistoryCallback.bind(this));
 
     }
     getListHistoryCallback(data) {
@@ -144,7 +144,7 @@ class SearchProfileScreen extends Component {
         let dataId = item.user.id;
         let name = ''
         const { USER_EHEALTH_HISTORY } = realmModel;
-        historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
+        // historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
 
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
