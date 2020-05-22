@@ -487,10 +487,10 @@ class SelectDateTimeDoctorScreen extends Component {
                 snackbar.show("Đã kín lịch trong khung giờ này", "danger");
                 return;
             case "MIN_CAPACITY":
-                snackbar.show("Đã quá giờ đặt khám vui lòng chọn giờ khác", "danger");
+                snackbar.show(`Bạn chỉ được đặt lịch sau ${item.minimumCapacity} giờ`, "danger");
                 return;
             case "MAX_CAPACITY":
-                snackbar.show("Ngày đặt khám đang lớn hơn thời gian được đặt trước", "danger");
+                snackbar.show(`Bạn chỉ được đặt lịch trước ${item.maximumCapacity} ngày`, "danger");
                 return;
             case "AVAILABLE":
                 break;
