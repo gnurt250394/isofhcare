@@ -145,8 +145,8 @@ class ListDoctorScreen extends Component {
     search = async () => {
         try {
             let { keyword, page, size } = this.state
-
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
+            console.log('keyword: ', keyword);
+            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -242,7 +242,7 @@ class ListDoctorScreen extends Component {
                         onSubmitEditing={this.onSearch}
                         returnKeyType='search'
                         style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
+                        placeholder={"Tìm kiếm theo triệu chứng, chuyên khoa"}
                         underlineColorAndroid={"transparent"} />
                     {
                         this.state.type == TYPE.SEARCH ?

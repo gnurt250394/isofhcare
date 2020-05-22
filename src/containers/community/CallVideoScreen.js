@@ -122,21 +122,24 @@ class VideoCallScreen extends Component {
 
     requestPermisstion = async () => {
         if (Platform.OS == "ios") {
-
-            new Promise((resolve, reject) => {
-                requestMultiple([PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE]).then((statuses) => {
-
-
-                    if (statuses[PERMISSIONS.IOS.CAMERA] == 'granted' || statuses[PERMISSIONS.IOS.MICROPHONE] == "granted") {
-                        resolve()
-                    } else {
-                        reject()
-                    }
-                }).catch((error) => {
-                    reject(error)
+            let PERMISSIONS_CAMERA_IOS = "camera"
+            let PERMISSIONS_MICROPHONE_IOS = "microphone"
+            let PERMISSIONS_STATUS = "authorized"
+            return new Promise((resolve, reject) => {
+              Promise.all([Permistions.request(PERMISSIONS_CAMERA_IOS), Permistions.request(PERMISSIONS_MICROPHONE_IOS)])
+                .then(res => {
+                  if (res[0] == PERMISSIONS_STATUS) {
+                    resolve(res)
+                  } else {
+                    reject()
+        
+                  }
+                }).catch(err => {
+                  reject()
                 })
+        
             })
-
+        
         } else {
             return checkAndroidPermissions()
         }
