@@ -64,7 +64,6 @@
 		CA98403168704E97BFCEEC1A /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B3D2031E0C4EB6B725487B /* FontAwesome5_Solid.ttf */; };
 		DDB82CEF646146B4B70C4C9B /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F47CBB19F8B94A89892F82D5 /* Muli-Bold.ttf */; };
 		DEBB88B662EC410E814E3DBF /* Muli-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4745B0063A147B49D4A5940 /* Muli-Light.ttf */; };
-		EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CEFF60ED3204A238F04E5CC /* libRealmReact.a */; };
 		F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE74A3067B053986DA0AD248 /* libPods-APP.a */; };
 		F5C94AA9ADC8437FAAF546A6 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */; };
 /* End PBXBuildFile section */
@@ -189,13 +188,6 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
-		0CC780CF230BF7A200809AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 071F6799564941F7BE3760FA /* RealmReact.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F60690131CA2766F0003FB26;
-			remoteInfo = RealmReact;
-		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -223,7 +215,6 @@
 		00E356EE1AD99517003FC87E /* APPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* APPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APPTests.m; sourceTree = "<group>"; };
-		071F6799564941F7BE3760FA /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		0B0E7228B4594C3F9A64610B /* Muli-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-SemiBold.ttf"; path = "../src/res/fonts/Muli-SemiBold.ttf"; sourceTree = "<group>"; };
 		0C32A875232A305C001D5ECC /* libQBImagePickerController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libQBImagePickerController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C53A4DB23151F0800D68E52 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
@@ -265,7 +256,6 @@
 		5591DB9A5EBA42FEAD885980 /* Muli-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-VariableFont_wght.ttf"; path = "../src/res/fonts/Muli-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		5C0979753D5040ABB0742327 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		61B2ADBB99CE46C49480FDFD /* Muli-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-ExtraBold.ttf"; path = "../src/res/fonts/Muli-ExtraBold.ttf"; sourceTree = "<group>"; };
-		6CEFF60ED3204A238F04E5CC /* libRealmReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRealmReact.a; sourceTree = "<group>"; };
 		7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		84F0479BB34140D392391591 /* libReactNativeGetLocationLibrary.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeGetLocationLibrary.a; sourceTree = "<group>"; };
 		87FF6F9401DF40E6B9073A43 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -309,7 +299,6 @@
 			files = (
 				0C32A876232A305C001D5ECC /* libQBImagePickerController.a in Frameworks */,
 				F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */,
-				EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */,
 				3B2D67992AFD48C49F98B2DA /* libc++.tbd in Frameworks */,
 				662576A94D1240E99C2081DB /* libz.tbd in Frameworks */,
 			);
@@ -375,18 +364,9 @@
 		0CC780CA230BF7A200809AD8 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				6CEFF60ED3204A238F04E5CC /* libRealmReact.a */,
 				84F0479BB34140D392391591 /* libReactNativeGetLocationLibrary.a */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		0CC780CC230BF7A200809AD8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0CC780D0230BF7A200809AD8 /* libRealmReact.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		13B07FAE1A68108700A75B9A /* APP */ = {
@@ -425,7 +405,6 @@
 			isa = PBXGroup;
 			children = (
 				0C53A4DB23151F0800D68E52 /* React.xcodeproj */,
-				071F6799564941F7BE3760FA /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -649,10 +628,6 @@
 					ProductGroup = 0C53A4DC23151F0800D68E52 /* Products */;
 					ProjectRef = 0C53A4DB23151F0800D68E52 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = 0CC780CC230BF7A200809AD8 /* Products */;
-					ProjectRef = 071F6799564941F7BE3760FA /* RealmReact.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -775,13 +750,6 @@
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
 			remoteRef = 0C53A50C23151F0800D68E52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0CC780D0230BF7A200809AD8 /* libRealmReact.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRealmReact.a;
-			remoteRef = 0CC780CF230BF7A200809AD8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
