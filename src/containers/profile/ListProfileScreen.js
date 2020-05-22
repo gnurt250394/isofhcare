@@ -27,7 +27,6 @@ class ListProfileScreen extends Component {
         };
     }
     onShowOptions = (id, permission, medicalRelatedId) => {
-        console.log('permission: ', permission);
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
@@ -301,13 +300,14 @@ class ListProfileScreen extends Component {
                     onScroll={(e) => {
                         if (e.nativeEvent.contentOffset.y > 0) {
                             if (this.top < e.nativeEvent.contentOffset.y) {
-                                console.log('down');
+                                
+                                // Platform.os == 'ios' && 
                                 if (this.buttonAddShow) {
-                                    this.buttonAddShow = false;
-                                    this.buttonAdd.slideInUp(2000);
+                                    this.buttonAddShow = true
+                                    this.buttonAdd.slideInUp(1000);
                                 }
                             } else {
-                                console.log('up');
+
                                 if (!this.buttonAddShow) {
                                     this.buttonAddShow = true;
                                     this.buttonAdd.slideOutDown(2000);
@@ -315,13 +315,15 @@ class ListProfileScreen extends Component {
                             }
                         }
                         else {
-                            console.log('up');
                             if (!this.buttonAddShow) {
                                 this.buttonAddShow = true;
                                 this.buttonAdd.fadeOutLeft(2000);
                             }
                         }
                         this.top = e.nativeEvent.contentOffset.y
+
+
+
                     }}
                     showsVerticalScrollIndicator={false}
                     data={this.state.data}
