@@ -64,7 +64,6 @@
 		CA98403168704E97BFCEEC1A /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B3D2031E0C4EB6B725487B /* FontAwesome5_Solid.ttf */; };
 		DDB82CEF646146B4B70C4C9B /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F47CBB19F8B94A89892F82D5 /* Muli-Bold.ttf */; };
 		DEBB88B662EC410E814E3DBF /* Muli-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4745B0063A147B49D4A5940 /* Muli-Light.ttf */; };
-		EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CEFF60ED3204A238F04E5CC /* libRealmReact.a */; };
 		F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE74A3067B053986DA0AD248 /* libPods-APP.a */; };
 		F5C94AA9ADC8437FAAF546A6 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */; };
 /* End PBXBuildFile section */
@@ -223,7 +222,6 @@
 		00E356EE1AD99517003FC87E /* APPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* APPTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APPTests.m; sourceTree = "<group>"; };
-		071F6799564941F7BE3760FA /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		0B0E7228B4594C3F9A64610B /* Muli-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-SemiBold.ttf"; path = "../src/res/fonts/Muli-SemiBold.ttf"; sourceTree = "<group>"; };
 		0C32A875232A305C001D5ECC /* libQBImagePickerController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libQBImagePickerController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C53A4DB23151F0800D68E52 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
@@ -309,7 +307,6 @@
 			files = (
 				0C32A876232A305C001D5ECC /* libQBImagePickerController.a in Frameworks */,
 				F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */,
-				EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */,
 				3B2D67992AFD48C49F98B2DA /* libc++.tbd in Frameworks */,
 				662576A94D1240E99C2081DB /* libz.tbd in Frameworks */,
 			);
@@ -879,7 +876,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1106,7 +1103,6 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
@@ -1135,7 +1131,6 @@
 				COPY_PHASE_STRIP = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
@@ -1176,7 +1171,6 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
@@ -1221,7 +1215,6 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
@@ -1261,7 +1254,6 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
@@ -1298,7 +1290,6 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
@@ -1334,7 +1325,6 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
@@ -1370,7 +1360,6 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-get-location/ios/ReactNativeGetLocationLibrary",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
