@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 
-const Realm = require('realm');
+// const Realm = require('realm');
 import realmModel from '@models/realm-models';
 import { resolve } from 'uri-js';
 module.exports = {
