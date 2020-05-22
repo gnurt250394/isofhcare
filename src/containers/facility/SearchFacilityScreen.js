@@ -6,7 +6,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
-const Realm = require('realm');
+// const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
 import TopSpecialist from '@components/specialist/TopSearch';
 import TopFacility from '@components/facility/TopFacility';
