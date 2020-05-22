@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from "@components/ActivityPanel";
 import { Card } from 'native-base';
@@ -27,7 +27,7 @@ class ListProfileScreen extends Component {
         };
     }
     onShowOptions = (id, permission, medicalRelatedId) => {
-        console.log('permission: ', permission);
+        
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
@@ -299,29 +299,34 @@ class ListProfileScreen extends Component {
             >
                 <FlatList
                     onScroll={(e) => {
+                        
                         if (e.nativeEvent.contentOffset.y > 0) {
                             if (this.top < e.nativeEvent.contentOffset.y) {
-                                console.log('down');
+                                
+                                    // Platform.os == 'ios' && 
                                 if (this.buttonAddShow) {
-                                    this.buttonAddShow = false;
-                                    this.buttonAdd.slideInUp(2000);
+                                    this.buttonAddShow = Platform.OS == 'ios' ? true : false;
+                                    this.buttonAdd.slideInUp(1000);
                                 }
                             } else {
-                                console.log('up');
+                                
                                 if (!this.buttonAddShow) {
                                     this.buttonAddShow = true;
-                                    this.buttonAdd.slideOutDown(2000);
+                                    this.buttonAdd.slideOutDown(1000);
                                 }
                             }
                         }
                         else {
-                            console.log('up');
+                            
                             if (!this.buttonAddShow) {
                                 this.buttonAddShow = true;
-                                this.buttonAdd.fadeOutLeft(2000);
+                                this.buttonAdd.fadeOutLeft(1000);
                             }
                         }
                         this.top = e.nativeEvent.contentOffset.y
+                        
+                        
+
                     }}
                     showsVerticalScrollIndicator={false}
                     data={this.state.data}
@@ -358,7 +363,7 @@ class ListProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
                 />
-                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerButtonAdd}>
+                <Animatable.View ref={ref => this.buttonAdd = ref}  animation={"rotate"} style={styles.containerButtonAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
                             <ScaledImage height={25} source={require('@images/new/profile/ic_add.png')}></ScaledImage>
