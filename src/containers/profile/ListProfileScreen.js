@@ -27,7 +27,7 @@ class ListProfileScreen extends Component {
         };
     }
     onShowOptions = (id, permission, medicalRelatedId) => {
-        
+
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
@@ -303,13 +303,13 @@ class ListProfileScreen extends Component {
                         if (e.nativeEvent.contentOffset.y > 0) {
                             if (this.top < e.nativeEvent.contentOffset.y) {
                                 
-                                    // Platform.os == 'ios' && 
+                                // Platform.os == 'ios' && 
                                 if (this.buttonAddShow) {
-                                    this.buttonAddShow = Platform.OS == 'ios' ? true : false;
+                                    this.buttonAddShow = true
                                     this.buttonAdd.slideInUp(1000);
                                 }
                             } else {
-                                
+
                                 if (!this.buttonAddShow) {
                                     this.buttonAddShow = true;
                                     this.buttonAdd.slideOutDown(1000);
@@ -317,15 +317,15 @@ class ListProfileScreen extends Component {
                             }
                         }
                         else {
-                            
+
                             if (!this.buttonAddShow) {
                                 this.buttonAddShow = true;
                                 this.buttonAdd.fadeOutLeft(1000);
                             }
                         }
                         this.top = e.nativeEvent.contentOffset.y
-                        
-                        
+
+
 
                     }}
                     showsVerticalScrollIndicator={false}
@@ -363,7 +363,7 @@ class ListProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
                 />
-                <Animatable.View ref={ref => this.buttonAdd = ref}  animation={"rotate"} style={styles.containerButtonAdd}>
+                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerButtonAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
                             <ScaledImage height={25} source={require('@images/new/profile/ic_add.png')}></ScaledImage>
