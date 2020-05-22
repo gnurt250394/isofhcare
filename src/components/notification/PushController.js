@@ -146,28 +146,28 @@ class PushController extends Component {
                 const type = notificationOpen.notification.data.type
                 console.log('type: ', type);
                 switch (type) {
-                    case 1:
+                    case "1":
                         this.openQuestion(id);
                         break;
-                    case 2:
+                    case "2":
                         this.openQuestion(id);
                         break;
-                    case 4:
+                    case "4":
                         this.openBooking(id);
                         break;
-                    case 5:
+                    case "5":
                         this.openTicket(id);
                         break;
-                    case 6:
+                    case "6":
                         this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
-                    case 7:
+                    case "7":
                         this.openListProfile()
                         break
-                    case 10:
+                    case "10":
                         this.openBooking(id);
                         break;
-                    case -1:
+                    case "-1":
                         break;
                     case 'NEWS': {
                         NavigationService.navigate('detailNewsHighlight', { item: { id } })
@@ -260,7 +260,7 @@ class PushController extends Component {
         });
     }
     openBooking(id) {
-        this.props.navigation.navigate("detailsHistory", {
+        NavigationService.navigate("detailsHistory", {
             id
         });
     }
@@ -269,7 +269,7 @@ class PushController extends Component {
             return;
         questionProvider.detail(id).then(s => {
             if (s && s.data) {
-                this.props.navigation.navigate("detailQuestion", { post: s.data })
+                NavigationService.navigate("detailQuestion", { post: s.data })
             }
             else {
                 snackbar.show("Lỗi, bài viết không tồn tại", "danger");
