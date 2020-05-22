@@ -188,13 +188,6 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
-		0CC780CF230BF7A200809AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 071F6799564941F7BE3760FA /* RealmReact.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F60690131CA2766F0003FB26;
-			remoteInfo = RealmReact;
-		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -263,7 +256,6 @@
 		5591DB9A5EBA42FEAD885980 /* Muli-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-VariableFont_wght.ttf"; path = "../src/res/fonts/Muli-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		5C0979753D5040ABB0742327 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		61B2ADBB99CE46C49480FDFD /* Muli-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-ExtraBold.ttf"; path = "../src/res/fonts/Muli-ExtraBold.ttf"; sourceTree = "<group>"; };
-		6CEFF60ED3204A238F04E5CC /* libRealmReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRealmReact.a; sourceTree = "<group>"; };
 		7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		84F0479BB34140D392391591 /* libReactNativeGetLocationLibrary.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeGetLocationLibrary.a; sourceTree = "<group>"; };
 		87FF6F9401DF40E6B9073A43 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -372,18 +364,9 @@
 		0CC780CA230BF7A200809AD8 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				6CEFF60ED3204A238F04E5CC /* libRealmReact.a */,
 				84F0479BB34140D392391591 /* libReactNativeGetLocationLibrary.a */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		0CC780CC230BF7A200809AD8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0CC780D0230BF7A200809AD8 /* libRealmReact.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		13B07FAE1A68108700A75B9A /* APP */ = {
@@ -422,7 +405,6 @@
 			isa = PBXGroup;
 			children = (
 				0C53A4DB23151F0800D68E52 /* React.xcodeproj */,
-				071F6799564941F7BE3760FA /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -646,10 +628,6 @@
 					ProductGroup = 0C53A4DC23151F0800D68E52 /* Products */;
 					ProjectRef = 0C53A4DB23151F0800D68E52 /* React.xcodeproj */;
 				},
-				{
-					ProductGroup = 0CC780CC230BF7A200809AD8 /* Products */;
-					ProjectRef = 071F6799564941F7BE3760FA /* RealmReact.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -772,13 +750,6 @@
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
 			remoteRef = 0C53A50C23151F0800D68E52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0CC780D0230BF7A200809AD8 /* libRealmReact.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRealmReact.a;
-			remoteRef = 0CC780CF230BF7A200809AD8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
