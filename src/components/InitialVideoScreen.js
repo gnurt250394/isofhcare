@@ -41,7 +41,7 @@ class InitialVideoCall extends Component {
 
   componentDidMount() {
     this.getTokenAndConnect()
-    this.checkPermistion()
+    // this.checkPermistion()
   }
 
   checkPermistion = async () => {
