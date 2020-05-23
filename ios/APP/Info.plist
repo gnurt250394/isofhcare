@@ -64,7 +64,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>88</string>
+	<string>89</string>
 	<key>CodePushDeploymentKey</key>
 	<string>9OM3k719UBeR8rqQjwBsxUevuXYKSJbqbqu--S</string>
 	<key>FacebookAppID</key>
@@ -113,7 +113,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Cho phép quyền sử dụng địa chỉ để cập nhật vị trí hiện tại của bạn.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Cho phép iSofH Care truy cập mcrô của thiết bị này để ghi âm.</string>
+	<string>Cho phép iSofH Care truy cập mcrô của thiết bị này để ghi âm hoặc thực hiện cuộc gọi cho ứng dụng.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Ứng dụng này yêu cầu truy cập vào chuyển động.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
