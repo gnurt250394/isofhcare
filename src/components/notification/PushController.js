@@ -96,7 +96,7 @@ class PushController extends Component {
             let title = "";
             if (Platform.OS == 'ios') {
                 body = notification.title;
-                title = "iSofhCare";
+                title = "iSofHcare";
             } else {
                 title = notification.title;
                 body = "";
@@ -174,15 +174,15 @@ class PushController extends Component {
                         break
                     }
                     case 'MEDICAL_SERVICE': {
-                        NavigationService.navigate('listOfServices', { item: { id }  })
+                        NavigationService.navigate('listOfServices', { item: { id } })
                         break
                     }
                     case 'HOSPITAL': {
-                        NavigationService.navigate('profileHospital', { item: { id }  })
+                        NavigationService.navigate('profileHospital', { item: { id } })
                         break
                     }
                     case 'DOCTOR': {
-                        NavigationService.navigate('detailsDoctor', { item: { id }  })
+                        NavigationService.navigate('detailsDoctor', { item: { id } })
                         break
                     }
 
@@ -310,19 +310,19 @@ class PushController extends Component {
                         this.openBooking(id);
                         break;
                     case 'NEWS': {
-                        NavigationService.navigate('detailNewsHighlight', { item: { id }  })
+                        NavigationService.navigate('detailNewsHighlight', { item: { id } })
                         break
                     }
                     case "MEDICAL_SERVICE": {
-                        NavigationService.navigate('listOfServices', { item: { id }  })
+                        NavigationService.navigate('listOfServices', { item: { id } })
                         break
                     }
                     case 'HOSPITAL': {
-                        NavigationService.navigate('profileHospital', { item: { id }  })
+                        NavigationService.navigate('profileHospital', { item: { id } })
                         break
                     }
                     case 'DOCTOR': {
-                        NavigationService.navigate('detailsDoctor', { item: { id }  })
+                        NavigationService.navigate('detailsDoctor', { item: { id } })
                         break
                     }
                 }
