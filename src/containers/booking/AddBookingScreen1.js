@@ -171,6 +171,7 @@ class AddBookingScreen extends Component {
             this.props.navigation.navigate("selectHospital", {
                 hospital: this.state.hospital,
                 onSelected: (hospital) => {
+                    console.log('hospital: ', hospital);
                     let hospitalError = hospital ? "" : this.state.hospitalError;
 
                     if (!hospital || !this.state.hospital || hospital.id != this.state.hospital.id) {
