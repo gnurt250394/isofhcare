@@ -56,7 +56,7 @@ target 'APP' do
   pod 'Firebase/Messaging', '~> 6.2.0'
   pod 'Firebase/Core', '~> 6.2.0'
 
-
+  pod 'Facebook-iOS-SDK'
   # react-native-maps
   rn_maps_path = '../node_modules/react-native-maps'  
   # react-native-maps dependencies
