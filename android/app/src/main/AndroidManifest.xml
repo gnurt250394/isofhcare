@@ -80,6 +80,9 @@ xmlns:tools="http://schemas.android.com/tools"
                     android:scheme="payoo" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.facebook.sdk.CodelessDebugLogEnabled"
+            android:value="true" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
