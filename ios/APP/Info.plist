@@ -74,7 +74,9 @@
 	<key>CodePushDeploymentKey</key>
 	<string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
 	<key>FacebookAppID</key>
-	<string>457683741386685</string>
+	<string>187875142367413</string>
+	<key>FacebookCodelessDebugLogEnabled</key>
+	<true/>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
