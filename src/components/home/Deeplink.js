@@ -3,15 +3,14 @@ import { View, Text, Linking } from 'react-native'
 import NavigationService from '@navigators/NavigationService'
 import queryString from 'query-string';
 const Deeplink = () => {
-    
+
     useEffect(() => {
-        
+
         if (Platform.OS === 'android') {
             Linking.getInitialURL().then(url => {
                 navigate(url);
             });
         } else {
-            
             Linking.addEventListener('url', handleOpenURL);
         }
         return () => {
@@ -26,16 +25,17 @@ const Deeplink = () => {
         const route = url.replace(/.*?:\/\//g, '');
         const route1 = queryString.parseUrl(route);
         const routeName = route1.url;
-        const query = route1.query;
+        const { data } = route1.query;
+        let data2 = data ? JSON.parse(data) : {}
         switch (routeName) {
             case 'doctor':
-                NavigationService.navigate('listDoctor', { id: query?.id })
+                NavigationService.navigate('listDoctor', { id: data2?.id })
                 break;
             case 'service':
-                NavigationService.navigate('listOfServices', { item: { id: query?.id } })
+                NavigationService.navigate('listOfServices', { item: { id: data2?.id } })
                 break;
             case 'hospital':
-                NavigationService.navigate('addBooking1', { hospital: { id: query?.id, name: decodeURIComponent(query?.name) } })
+                NavigationService.navigate('addBooking1', { hospital: { id: data2?.id, name: data2?.name } })
                 break;
             default:
                 break;
