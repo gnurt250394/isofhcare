@@ -39,6 +39,7 @@ import DoctorHighLight from "@components/home/DoctorHighLight";
 import HospitalHighLight from "@components/home/HospitalHighLight";
 import NewsHighLight from "@components/home/NewsHighLight";
 import InitialVideoCall from "@components/InitialVideoScreen";
+import Deeplink from "@components/home/Deeplink";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -405,6 +406,7 @@ class HomeScreen extends Component {
             : null
         }
         <PushController />
+        <Deeplink/>
       </ActivityPanel>
     );
   }
