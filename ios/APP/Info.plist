@@ -25,6 +25,12 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>isofhcare</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -64,11 +70,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>89</string>
+	<string>91</string>
 	<key>CodePushDeploymentKey</key>
 	<string>d_e1VVGMtjxvsGkWkKShQsZLyChcSJOdItZ-r</string>
 	<key>FacebookAppID</key>
-	<string>457683741386685</string>
+	<string>187875142367413</string>
+	<key>FacebookCodelessDebugLogEnabled</key>
+	<true/>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
