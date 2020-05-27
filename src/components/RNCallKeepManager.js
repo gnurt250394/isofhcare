@@ -42,7 +42,7 @@ const setupCallKeep = () => {
             },
             android: {
                 alertTitle: 'Thông báo',
-                alertDescription: 'Cho phép iSofHcare truy cập danh bạ điện thoại của bạn',
+                alertDescription: 'Cho phép iSofHcare truy cập cuộc gọi của bạn',
                 cancelButton: 'Huỷ',
                 okButton: 'Đồng ý',
                 imageName: 'ic_launcher',
