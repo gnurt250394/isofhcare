@@ -1,6 +1,6 @@
 import uuid from 'uuid'
 import RNCallKeep from 'react-native-callkeep';
-import LaunchApplication from 'react-native-launch-application';
+// import LaunchApplication from 'react-native-launch-application';
 import { PermissionsAndroid } from 'react-native'
 import constants from '@resources/strings'
 import NavigationServices from '@navigators/NavigationService';
