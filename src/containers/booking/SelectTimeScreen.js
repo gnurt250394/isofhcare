@@ -187,7 +187,9 @@ class SelectTimeScreen extends Component {
 
             } catch (error) {
                 this.setState({ isLoading: false })
-
+                let dateNew = new Date()
+                dateNew.setDate(dateNew.getDate() + 1)
+                this.selectMonth(dateNew);
             }
         })
 
