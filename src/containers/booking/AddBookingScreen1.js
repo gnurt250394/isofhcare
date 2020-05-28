@@ -324,7 +324,16 @@ class AddBookingScreen extends Component {
 
                     const { userApp } = this.props
 
-                    let services = this.state.listServicesSelected.map(e => ({ price: this.pricePromotion(e), serviceId: e.id, name: e.name }));
+                    let services = this.state.listServicesSelected.map(e => {
+                        return ({
+                            price: e.monetaryAmount.value,
+                            serviceId: e.id,
+                            name: e.name,
+                            promotionTitle: e.promotion && this.disablePromotion(e.promotion) ? e?.promotion?.title : null,
+                            promotionType: e.promotion && this.disablePromotion(e.promotion) ? e?.promotion?.type : null,
+                            promotionValue: e.promotion && this.disablePromotion(e.promotion) ? e?.promotion?.value : null
+                        })
+                    });
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
                     let idUser = this.props.userApp.currentUser.id
                     bookingProvider.createBooking(
@@ -341,15 +350,6 @@ class AddBookingScreen extends Component {
                             if (s && s.id) {
                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
                                 this.props.navigation.navigate("confirmBooking", {
-                                    serviceType: this.state.serviceType,
-                                    service: services,
-                                    profile: this.state.profile,
-                                    hospital: this.state.hospital,
-                                    bookingDate: this.state.bookingDate,
-                                    schedule: this.state.schedule,
-                                    reason: reason,
-                                    images: img,
-                                    contact: this.state.contact,
                                     booking: s
                                 });
                             } else {
