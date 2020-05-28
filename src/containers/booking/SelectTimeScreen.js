@@ -12,6 +12,7 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
 import constants from '@resources/strings';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
@@ -29,43 +30,49 @@ class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
         let service = this.props.navigation.state.params.service;
+        let hospital = this.props.navigation.state.params.hospital;
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
 
         this.state = {
             service,
             listTime: [],
-            isNotHaveSchedule
+            isNotHaveSchedule,
+            hospital,
+            listSchedule: []
         }
     }
     getTime(yourDateString) {
         var yourDate = new Date(yourDateString);
         try {
-            console.log(yourDateString, yourDate, yourDate.getTimezoneOffset());
+
             // yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
             yourDate.setMinutes(yourDate.getMinutes());
-            console.log(yourDate);
+
         } catch (error) {
-            console.log(error);
+
         }
         return yourDate;
     }
 
     selectDay(day) {
+
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
         this.setState({
             allowBooking: false
         })
         if (this.state.schedules[day].noSchedule) {
-            let date = new Date(new Date(day).format("yyyy-MM-dd"));
-            // console.log(date);
+            let date = new Date(new Date(day));
+            let objDate = this.state.listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()))
+
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-            date.setMinutes(date.getMinutes() + (8 * 60));
+            date.setMinutes(date.getMinutes() + (objDate.startTime || objDate.startTime == 0) ? objDate.startTime : (8 * 60));
+            let endTime = this.getTimeDate(objDate.endTime)
             while (true) {
-                if (date.format("HH:mm") > "16:00")
+                if (date.format("HH:mm") > endTime || date.compareDate(new Date(day)) != 0)
                     break;
-                console.log(date);
-                if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
+
+                if (this.getTimeBooking(date.format("HH:mm")) < this.getTimeBooking("12:30") || this.getTimeBooking(date.format("HH:mm")) >= this.getTimeBooking("13:00")) {
                     listTime.push({
                         key: date.getTime(),
                         schedule: {
@@ -126,7 +133,7 @@ class SelectTimeScreen extends Component {
                     }
                 }
             });
-            console.log(listTime);
+
         }
         this.setState({
             listTime: listTime.sort((a, b) => {
@@ -145,11 +152,54 @@ class SelectTimeScreen extends Component {
             return "#efd100";
         return "#02c39a";
     }
+    getTimeDate = (time) => {
+        let time1 = '21:00'
+        if (time) {
+            let hoursStart = time / 60;
+            let rhoursStart = Math.floor(hoursStart);
+            let minutesStart = (hoursStart - rhoursStart) * 60;
+            let rminutesStart = Math.floor(minutesStart);
+            if (rminutesStart < 10) {
+                time1 = rhoursStart + ":" + "0" + rminutesStart;
+            } else {
+                time1 = rhoursStart + ":" + rminutesStart;
+            }
+        }
+        return time1
+    }
+    getListSchedule = async () => {
+        this.setState({ isLoading: true }, async () => {
+            try {
+                const { hospital } = this.state
+                let hospitalId = hospital && hospital.id ? hospital.id : ""
+                let res = await bookingDoctorProvider.get_list_schedules(hospitalId)
 
+                if (res) {
+                    this.setState({
+                        listSchedule: res,
+                        isLoading: false
+                    }, () => {
+                        let dateNew = new Date()
+                        dateNew.setDate(dateNew.getDate() + 1)
+                        this.selectMonth(dateNew);
+                    })
+                }
+
+            } catch (error) {
+                this.setState({ isLoading: false })
+
+            }
+        })
+
+    }
     componentDidMount() {
-        let dateNew = new Date()
-        dateNew.setDate(dateNew.getDate() + 1)
-        this.selectMonth(dateNew);
+        this.getListSchedule()
+    }
+    convertDayOfWeek = (day) => {
+        let date = {
+            0: 7,
+        }
+        return date[day] || day
     }
     generateSchedule(month) {
         let firstDay = month.getFirstDateOfMonth();
@@ -160,7 +210,7 @@ class SelectTimeScreen extends Component {
             obj[key] = {}
             if (new Date(key) <= new Date()
                 // || firstDay.getDay() == 6 
-               ) {
+            ) {
                 obj[key].disabled = true;
                 obj[key].disableTouchEvent = true;
             } else {
@@ -175,8 +225,16 @@ class SelectTimeScreen extends Component {
         }
         let selected = null;
         for (let key in obj) {
+            let dateKey = new Date(key)
             if (obj[key].disabled)
                 continue;
+            let objDate = this.state.listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(dateKey.getDay()))
+            if (!objDate) {
+                obj[key].disabled = true;
+                obj[key].disableTouchEvent = true;
+                obj[key].marked = false;
+                continue;
+            }
             let keyDate = new Date(key);
             if (keyDate > new Date() && (selected == null || keyDate < selected)) {
                 selected = keyDate;
@@ -243,7 +301,7 @@ class SelectTimeScreen extends Component {
             if (this.state.service && this.state.service.length) {
                 let service = this.state.service[0];
                 this.setState({ isLoading: true }, () => {
-                    console.log(this.state.service);
+
 
                     scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
                         this.setState({ isLoading: false }, () => {
@@ -293,17 +351,19 @@ class SelectTimeScreen extends Component {
             this.setState({ scheduleError: constants.msg.booking.please_select_date_and_time });
         }
     }
-
+    getTimeBooking = (date) => {
+        let [h, m] = date.split(':')
+        let time = (parseInt(m) / 60 + parseInt(h)) * 60
+        return time
+    }
     renderTimePicker(fromHour, toHour, label) {
-        console.log(this.state.schedule, this.state.listTime, 'this.state.listTime')
-
         return (
-            (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
+            (this.state.listTime.filter(item => this.getTimeBooking(item.label) >= this.getTimeBooking(fromHour) && this.getTimeBooking(item.label) <= this.getTimeBooking(toHour)).length) ?
                 <View style={{ marginTop: 10 }}>
                     <Text style={styles.txtLabel}>{label}</Text>
                     <View style={styles.containerListTime}>
                         {
-                            this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).map((item, index) => {
+                            this.state.listTime.filter(item => this.getTimeBooking(item.label) >= this.getTimeBooking(fromHour) && this.getTimeBooking(item.label) <= this.getTimeBooking(toHour)).map((item, index) => {
                                 return <TouchableOpacity onPress={this.selectTime(item)} key={index} style={[styles.buttonSelectDateTime,
                                 {
                                     borderColor: this.getColor(item)
@@ -389,12 +449,14 @@ class SelectTimeScreen extends Component {
                                                 <Text style={styles.txtPleaseSelectSchedule}>{constants.msg.booking.please_select_schedule}</Text>
                                         }
 
-                                        {this.renderTimePicker(0, 12, "Sáng")}
-                                        {this.renderTimePicker(12, 24, "Chiều")}
+                                        {this.renderTimePicker("0:0", "12:00", "Sáng")}
+                                        {this.renderTimePicker("13:00", "24:00", "Chiều")}
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{constants.msg.booking.date_not_schedule}</Text> : null
                                 :
-                                <Text style={styles.txtPleaseSchedule}>{constants.msg.booking.please_select_schedule}</Text>
+                                this.state.listSchedule.length ?
+                                    <Text style={styles.txtPleaseSchedule}>{constants.msg.booking.please_select_schedule}</Text>
+                                    : <Text style={styles.errorStyle}>Cơ sở y tế không có lịch làm việc vào thời gian này</Text>
                         }
 
                     </ScrollView>
