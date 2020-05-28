@@ -1,7 +1,7 @@
 import firebase from 'react-native-firebase';
-import { AppState, Linking } from 'react-native'
+import { AppState, Linking, NativeModules } from 'react-native'
 import RNCallKeepManager from '@components/RNCallKeepManager'
-import LaunchApplication from 'react-native-launch-application';
+const LaunchApplication = NativeModules.LaunchApplication;
 import constants from '@resources/strings'
 import RNCallKeep from 'react-native-callkeep'
 import StringUtils from 'mainam-react-native-string-utils'

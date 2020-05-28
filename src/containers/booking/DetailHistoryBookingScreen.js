@@ -90,6 +90,7 @@ class DetailHistoryBookingScreen extends Component {
             case 'VNPAY': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_VNPAY}</Text>;
             case 'PAYOO': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
             case 'BANK_TRANSFER': return <Text style={styles.paymentHospital}>Chuyển khoản trực tiếp</Text>;
+            case 'MOMO': return <Text style={styles.paymentHospital}>Thanh toán momo</Text>;
             // case 0:
             //     return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
             // case 1:

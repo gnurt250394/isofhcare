@@ -14,6 +14,7 @@ import { NativeModules } from 'react-native';
 import constants from '@resources/strings';
 import voucherProvider from '@data-access/voucher-provider'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import ButtonPayment from '@components/booking/ButtonPayment';
 
 var PayooModule = NativeModules.PayooModule;
 
@@ -573,7 +574,7 @@ class ConfirmBookingScreen extends Component {
     //         snackbar.show(constants.msg.app.not_internet, "danger");
     //     })
     // }
-    createBooking() {
+    createBooking = (phonenumber, momoToken) => {
         const { booking } = this.state
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
@@ -581,16 +582,7 @@ class ConfirmBookingScreen extends Component {
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
-                if (this.state.voucher && this.state.voucher.code) {
-                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id)
-                    if (!dataVoucher) {
-                        this.setState({ isLoading: false, voucher: {} }, () => {
-                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
-                        })
-                        return
-                    }
-                }
-                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
+                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
 
                     this.setState({ isLoading: false })
                     if (res) {
@@ -680,7 +672,7 @@ class ConfirmBookingScreen extends Component {
         if (priceFinal < priceVoucher) {
             return 0
         }
-        return (priceFinal - priceVoucher).formatPrice()
+        return (priceFinal - priceVoucher)
     }
     selectPaymentmethod = (paymentMethod) => () => {
         this.setState({ paymentMethod })
@@ -764,7 +756,7 @@ class ConfirmBookingScreen extends Component {
                                     <View style={styles.row}>
                                         <Text style={[styles.text5]}>{constants.booking.sum_price}: <Text
                                             style={styles.txtPriceService}
-                                            numberOfLines={1}>{this.getPriceSecive()}đ</Text></Text>
+                                            numberOfLines={1}>{this.getPriceSecive().formatPrice()}đ</Text></Text>
                                     </View>
                                 </View> : null
                             }
@@ -800,24 +792,24 @@ class ConfirmBookingScreen extends Component {
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.VNPAY}</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(3)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 3 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
-                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO}</Text>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.MOMO}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(5)}>
+                                {/* <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(5)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 5 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_installment}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(4)}>
+                                </TouchableOpacity> */}
+                                {/* <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(4)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 4 &&
                                             <View style={styles.isSelected}></View>
@@ -837,9 +829,19 @@ class ConfirmBookingScreen extends Component {
                     </TouchableOpacity>
                     <View style={styles.end} />
                 </ScrollView>
-                <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
+                <ButtonPayment
+                    price={this.getPriceSecive()}
+                    voucher={this.state.voucher}
+                    onPress={this.createBooking}
+                    paymentMethod={this.state.paymentMethod}
+                    allowBooking={this.state.allowBooking}
+                    title="Xác nhận"
+                    booking={this.state.booking}
+                    createBooking={this.createBooking}
+                />
+                {/* <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
                     <Text style={styles.btntext}>{constants.actionSheet.confirm}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </ActivityPanel>
         );
     }
