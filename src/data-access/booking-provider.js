@@ -2,7 +2,7 @@ import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "@resources/strings";
 
-module.exports = {
+export default {
   getListBooking(profileId, hospitalId) {
     return new Promise((resolve, reject) => {
       if (hospitalId)
@@ -153,6 +153,7 @@ module.exports = {
      */
 
   createBooking(date, description, hospitals, items, patientUser, time, idUser, images) {
+    console.log('items: ', items);
     return new Promise((resolve, reject) => {
       let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || hospitals.contact && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '', bank: hospitals && hospitals.transferInfo && hospitals.transferInfo.bank || '', accountNo: hospitals && hospitals.transferInfo && hospitals.transferInfo.accountNo || '', owner: hospitals && hospitals.transferInfo && hospitals.transferInfo.owner || '', branch: hospitals && hospitals.transferInfo && hospitals.transferInfo.branch || '', note: hospitals && hospitals.transferInfo && hospitals.transferInfo.note || ''  }
       console.log('hospital: ', hospitals);

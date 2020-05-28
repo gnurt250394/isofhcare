@@ -99,7 +99,7 @@ class PushController extends Component {
                 title = "iSofhCare";
             } else {
                 title = notification.title;
-                body = "";
+                body = notification.body;
             }
 
             let fbNotification = null;
@@ -165,6 +165,8 @@ class PushController extends Component {
                         this.openListProfile()
                         break
                     case "10":
+                    case "12":
+                    case "13":
                         this.openBooking(id);
                         break;
                     case "-1":
