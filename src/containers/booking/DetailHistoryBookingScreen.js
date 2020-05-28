@@ -84,12 +84,24 @@ class DetailHistoryBookingScreen extends Component {
             this.setState({ isLoading: false, refreshing: false })
         })
     }
+    renderStatusPayment = () => {
+        switch (this.state.booking.invoice.status) {
+            case "NEW": return "Chưa thanh toán"
+            case "PAYING": return "Đang thanh toán"
+            case "PAID": return "Đã thanh toán"
+            case "REFUND": return "Hoàn tiền"
+            case "PENDING": return ""
+            default: return ""
+        }
+
+    }
     renderStatus = () => {
         switch (this.state.booking.invoice.payment) {
             case 'CASH': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_CSYT}</Text>;
             case 'VNPAY': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_VNPAY}</Text>;
             case 'PAYOO': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
             case 'BANK_TRANSFER': return <Text style={styles.paymentHospital}>Chuyển khoản trực tiếp</Text>;
+            case 'MOMO': return <Text style={styles.paymentHospital}>{constants.payment.MOMO}</Text>;
             // case 0:
             //     return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
             // case 1:
@@ -223,12 +235,30 @@ class DetailHistoryBookingScreen extends Component {
         snackbar.show(constants.booking.copy_success, 'success')
 
     }
+    pricePromotion = (item) => {
+        console.log('item: ', item);
+        let value = 0
+        if (item?.promotionValue) {
+            if (item?.promotionType == "PERCENT") {
+                value = (item.price - (item.price * (item.promotionValue / 100) || 0))
+            } else {
+                value = ((item?.price - item?.promotionValue) || 0)
+            }
+        } else {
+            value = item?.price
+        }
+
+        if (value < 0) {
+            return 0
+        }
+        return value
+    }
     getPrice = () => {
         let voucherPrice = 0
         if (this.state.booking.invoice && this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount) {
             voucherPrice = this.state.booking.invoice.voucher.discount
         }
-        let price = this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0)
+        let price = this.state.booking.invoice.services.reduce((start, item) => start + this.pricePromotion(item), 0)
         let total = price - voucherPrice
         return (total > 0 ? total : 0).formatPrice()
     }
@@ -276,6 +306,21 @@ class DetailHistoryBookingScreen extends Component {
     }
     onRefresh = () => {
         this.setState({ refreshing: true }, this.getData)
+    }
+    onPayment = () => {
+        if (this.state.booking.discriminatorType == "DOCTOR_APPOINTMENT") {
+            let isOnline = this.state.booking?.invoice?.services ? this.state.booking.invoice.services.find(e => e.isOnline == true) : false
+            console.log('this.state.booking: ', this.state.booking);
+            this.props.navigation.navigate("confirmBookingDoctor", {
+                booking: this.state.booking,
+                isOnline
+            });
+
+        } else {
+            this.props.navigation.navigate("confirmBooking", {
+                booking: this.state.booking
+            });
+        }
     }
     refreshControl = () => {
         return (
@@ -390,11 +435,31 @@ class DetailHistoryBookingScreen extends Component {
                                 <View>
                                     {
                                         this.state.booking.invoice.services.map((item, index) => {
-                                            return <View key={index}>
-                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
-                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
+                                            return <View>
+                                                <View key={index}>
+                                                    <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignSelf: 'flex-end'
+                                                    }}>
+                                                        {
+                                                            item.promotionValue ?
+                                                                <Text style={[styles.txInfoService, styles.price, { textDecorationLine: 'line-through' }]}>{item.price.formatPrice()}đ</Text>
+                                                                : null
+                                                        }
+                                                        <Text style={[styles.txInfoService, styles.price, { color: '#000' }]}>{this.pricePromotion(item).formatPrice()}đ</Text>
+                                                    </View>
+
+                                                </View>
+
                                             </View>
                                         })
+                                    }
+                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
+                                        <View >
+                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
+                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
+                                        </View> : null
                                     }
                                     {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
                                         <View >
@@ -519,6 +584,30 @@ class DetailHistoryBookingScreen extends Component {
                             <Text style={styles.txPayment}>{constants.booking.payment_methods}</Text>
                             {this.renderStatus()}
                         </View>
+                        {
+                            this.state.booking.invoice.payment != "CASH" ?
+                                <View style={styles.viewPayment}>
+                                    <ScaledImage
+                                        height={19}
+                                        width={19}
+                                        source={require("@images/ic_transfer.png")}
+                                    />
+                                    <Text style={styles.txPayment}>Trạng thái</Text>
+                                    <Text>{this.renderStatusPayment()}</Text>
+                                </View>
+                                : null
+
+
+                        }
+                        {
+                            this.state.booking.invoice.payment == "NONE" ?
+                                <TouchableOpacity
+                                    onPress={this.onPayment}
+                                    style={styles.buttonPayment}>
+                                    <Text style={styles.txtPayment}>Thanh toán</Text>
+                                </TouchableOpacity>
+                                : null
+                        }
                         {/** barcode */}
                         <View style={styles.viewBaCode}>
                             <ScaledImage
@@ -630,6 +719,17 @@ class DetailHistoryBookingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtPayment: {
+        color: '#FFF',
+        fontWeight: 'bold'
+    },
+    buttonPayment: {
+        padding: 10,
+        backgroundColor: '#00CBA7',
+        borderRadius: 5,
+        alignSelf: 'center',
+        marginTop: 10,
+    },
     txtBookingCall: {
         color: '#FFF',
         paddingLeft: 10,

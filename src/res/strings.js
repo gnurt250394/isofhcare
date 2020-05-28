@@ -107,6 +107,16 @@ module.exports = {
     quantity_voucher: 'Số lần sử dụng',
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?'
   },
+  momo_config: {
+    enviroment: "0",                    //"0": SANBOX , "1": PRODUCTION
+    action: 'gettoken',                 // DO NOT EDIT
+    partner: 'merchant',                // DO NOT EDIT
+    app_scheme: 'momocomu20200526',      // get from info account in web momo 
+    partner_name: 'Bệnh viện Phổi TW',
+    partner_code: 'MOMOCOMU20200526',
+    partner_label: 'Người nhận',
+    order_label: 'Mã khám bệnh',
+  },
   qr_code: {
     move_camera: 'Di chuyển camera đến vùng chứa mã QR để quét',
     flash_only_behind: 'Đèn flash chỉ hoạt động với camera sau'
@@ -537,10 +547,17 @@ module.exports = {
       none_image: 'Không có ảnh nào'
     }
   },
+  PAYMENT_METHOD: {
+    VNPAY: "VNPAY",
+    CASH: "CASH",
+    MOMO: "MOMO",
+    //PAYOO: "PAYOO";
+    BANK_TRANSFER: "BANK_TRANSFER"
+  },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
     VNPAY: 'VNPAY',
-    PAYOO: 'PAYOO',
+    MOMO: 'Thanh toán qua ví MoMo',
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT'
