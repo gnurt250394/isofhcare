@@ -25,15 +25,15 @@ class CreateBookingDoctorSuccessScreen extends Component {
 
     getPaymentMethod(paymentMethod) {
         switch (paymentMethod) {
-            case 1:
+            case constants.PAYMENT_METHOD.VNPAY:
                 return constants.payment.VNPAY;
-            case 2:
+            case constants.PAYMENT_METHOD.CASH:
                 return constants.payment.pay_later;
-            case 3:
-                return constants.payment.PAYOO;
-            case 4:
-                return constants.payment.PAYOO_convenient_shop;
-            case 6:
+            case constants.PAYMENT_METHOD.MOMO:
+                return constants.payment.MOMO;
+            // case constants.PAYMENT_METHOD.VNPAY:
+            //     return constants.payment.PAYOO_convenient_shop;
+            case constants.PAYMENT_METHOD.BANK_TRANSFER:
                 return constants.payment.direct_transfer;
         }
         return "";
@@ -82,40 +82,18 @@ class CreateBookingDoctorSuccessScreen extends Component {
             return ''
         }
     }
-    disablePromotion = (promotion) => {
-        let dayOfWeek = {
-            0: 6,
-            1: 0,
-            2: 1,
-            3: 2,
-            4: 3,
-            5: 4,
-            6: 5
-        }
-        let startDate = new Date(promotion.startDate)
-        let endDate = new Date(promotion.endDate)
-        let day = new Date()
-        let isDayOfWeek = (promotion.dateRepeat | Math.pow(2, dayOfWeek[day.getDay()]))
-        if (startDate < day && endDate > day && isDayOfWeek != 0) {
-            return true
-        }
-        return false
-    }
     pricePromotion = (item) => {
-        console.log('item: ', item);
-        let value = 0
-        if (item?.promotion && this.disablePromotion(item.promotion)) {
-            if (item?.promotion?.type == "PERCENT") {
-                value = (item.monetaryAmount.value - (item.monetaryAmount.value * (item.promotion.value / 100) || 0))
-            } else {
 
-                value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
-                console.log('value: ', value);
+        let value = 0
+        if (item?.promotionValue) {
+            if (item?.promotionType == "PERCENT") {
+                value = (item.price - (item.price * (item.promotionValue / 100) || 0))
+            } else {
+                value = ((item?.price - item?.promotionValue) || 0)
             }
         } else {
-            value = item?.monetaryAmount?.value
+            value = item?.price
         }
-
         if (value < 0) {
             return 0
         }
@@ -123,32 +101,30 @@ class CreateBookingDoctorSuccessScreen extends Component {
     }
     renderPromotion = (promotion) => {
         let text = ''
-        if (promotion.type == "PERCENT") {
-            text = promotion.value + '%'
+        if (promotion.promotionType == "PERCENT") {
+            text = promotion.promotionValue + '%'
         } else {
             // let value = (promotion?.value || 0).toString()
             // if (value.length > 5) {
             //     text = value.substring(0, value.length - 3) + 'K'
             // } else {
-            text = promotion.value.formatPrice() + 'đ'
+            text = promotion.promotionValue.formatPrice() + 'đ'
 
             // }
         }
         return text
     }
     render() {
-        let detailSchedule = this.props.navigation.getParam('detailSchedule');
-        let bookingDate = this.props.navigation.getParam('bookingDate');
         let booking = this.props.navigation.getParam('booking');
-        console.log('booking: aa', booking);
-        let service = detailSchedule.medicalService || [];
+
+        let service = booking.invoice.services[0] || [];
         let voucher = this.props.navigation.getParam('voucher');
-        let paymentMethod = this.props.navigation.getParam('paymentMethod');
+        let paymentMethod = booking.invoice.payment
         // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
         //     this.props.navigation.pop();
         //     return null;
         // }
-        let bookingTime = new Date(bookingDate)
+        let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -182,7 +158,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bác sĩ:</Text>
-                                <Text style={styles.text}>{this.renderAcademic(detailSchedule.doctor.academicDegree)} {detailSchedule.doctor.name}</Text>
+                                <Text style={styles.text}>{this.renderAcademic(booking.doctor.academicDegree)} {booking.doctor.name}</Text>
                             </View>
                             <View style={styles.between} />
                             <View style={styles.row}>
@@ -198,24 +174,24 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 <Text style={styles.txtAddressBooking}>{booking.hospital.checkInPlace}</Text>
                             </View>
                             <View style={styles.between} />
-                            {service && service.name ?
+                            {service && service.serviceName ?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>{constants.booking.services}:</Text>
                                     <View style={styles.containerServices}>
                                         <View style={styles.flex}>
-                                            <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text>
-                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>({parseInt(service.monetaryAmount.value).formatPrice()}đ) </Text>
+                                            <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.serviceName}</Text>
+                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>({parseInt(service.price).formatPrice()}đ) </Text>
                                         </View>
                                     </View>
                                 </View> : null
                             }
-                            {service && service.promotion && this.disablePromotion(service.promotion)?
+                            {service && service.promotionValue ?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>Khuyến mại:</Text>
                                     <View style={styles.containerServices}>
                                         <View style={styles.flex}>
                                             {/* <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text> */}
-                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>Giảm {this.renderPromotion(service.promotion)}</Text>
+                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>Giảm {this.renderPromotion(service)}</Text>
                                         </View>
                                     </View>
                                 </View> : null
@@ -238,7 +214,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 : null
                             }
                             {
-                                service && service.monetaryAmount && service.monetaryAmount.value ?
+                                service && service.price ?
                                     <View style={styles.row}>
                                         <Text style={styles.txtTotalPrice}>{constants.booking.sum_price}:</Text>
                                         <Text style={[styles.text, { color: "#d0021b", fontStyle: 'italic' }]}>{this.getPrice(service, voucher)}đ </Text>
@@ -263,7 +239,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
 
                         </View>
                         {
-                            booking.hospital.accountNo &&   paymentMethod == 6 ?
+                            booking.hospital.accountNo && paymentMethod == 6 ?
                                 <View style={styles.paymentInfo}>
                                     <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                                     <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
