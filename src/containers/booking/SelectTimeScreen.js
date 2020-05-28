@@ -55,7 +55,6 @@ class SelectTimeScreen extends Component {
     }
 
     selectDay(day) {
-        
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
         this.setState({
@@ -64,7 +63,6 @@ class SelectTimeScreen extends Component {
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(new Date(day));
             let objDate = this.state.listSchedule.find(e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()))
-            
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (objDate.startTime || objDate.startTime == 0) ? objDate.startTime : (8 * 60));
             let endTime = this.getTimeDate(objDate.endTime)
@@ -168,31 +166,38 @@ class SelectTimeScreen extends Component {
         return time1
     }
     getListSchedule = async () => {
-        try {
-            const { hospital } = this.state
-            let hospitalId = hospital && hospital.id ? hospital.id : ""
-            let res = await bookingDoctorProvider.get_list_schedules(hospitalId)
-            
-            if (res) {
-                this.setState({
-                    listSchedule: res
-                }, () => {
-                    let dateNew = new Date()
-                    dateNew.setDate(dateNew.getDate() + 1)
-                    this.selectMonth(dateNew);
-                })
+        this.setState({ isLoading: true }, async () => {
+            try {
+                const { hospital } = this.state
+                let hospitalId = hospital && hospital.id ? hospital.id : ""
+                let res = await bookingDoctorProvider.get_list_schedules(hospitalId)
+
+                if (res) {
+                    this.setState({
+                        listSchedule: res,
+                        isLoading: false
+                    }, () => {
+                        let dateNew = new Date()
+                        dateNew.setDate(dateNew.getDate() + 1)
+                        this.selectMonth(dateNew);
+                    })
+                }
+
+            } catch (error) {
+                this.setState({ isLoading: false })
+
             }
-        } catch (error) {
-
-
-        }
+        })
 
     }
     componentDidMount() {
         this.getListSchedule()
-        let dateNew = new Date()
-        dateNew.setDate(dateNew.getDate() + 1)
-        this.selectMonth(dateNew);
+    }
+    convertDayOfWeek = (day) => {
+        let date = {
+            0: 7,
+        }
+        return date[day] || day
     }
     convertDayOfWeek = (day) => {
         let date = {
@@ -453,7 +458,9 @@ class SelectTimeScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{constants.msg.booking.date_not_schedule}</Text> : null
                                 :
-                                <Text style={styles.txtPleaseSchedule}>{constants.msg.booking.please_select_schedule}</Text>
+                                this.state.listSchedule.length ?
+                                    <Text style={styles.txtPleaseSchedule}>{constants.msg.booking.please_select_schedule}</Text>
+                                    : <Text style={styles.errorStyle}>Cơ sở y tế không có lịch làm việc vào thời gian này</Text>
                         }
 
                     </ScrollView>
