@@ -28,7 +28,7 @@ class ListBookingHistoryScreen extends Component {
     }
     componentDidMount() {
         this.onFocus = this.props.navigation.addListener('didFocus', () => {
-            this.getListProfile()
+            this.setState({page:0},this.getListProfile)
         });
     }
     componentWillUnmount = () => {
@@ -179,7 +179,7 @@ class ListBookingHistoryScreen extends Component {
                             flexShrink: 1
                         }}>
 
-                            {item.status ? this.renderStatus(item.status) : null}
+                            {item ? this.renderStatus(item) : null}
                             {isOnline ? this.renderBookingOnline(item) : null}
 
                         </View>
@@ -188,31 +188,36 @@ class ListBookingHistoryScreen extends Component {
             </TouchableOpacity>
         );
     };
-    renderStatus = status => {
-        switch (status) {
-            case 'NEW':
-                return (
-                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Chờ duyệt</Text>
-                );
-            case 'ACCEPTED':
-                return (
-                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã duyệt</Text>
+    renderStatus = item => {
+        if (item.invoice.payment == "NONE") {
+            return <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Chưa thanh toán</Text>
+        } else {
+            switch (item.status) {
+                case 'NEW':
+                    return (
+                        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Chờ duyệt</Text>
+                    );
+                case 'ACCEPTED':
+                    return (
+                        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã duyệt</Text>
+                    )
+                case 'CHECKIN': return (
+                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã check-in</Text>
                 )
-            case 'CHECKIN': return (
-                <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã check-in</Text>
-            )
-            case 'CANCELED': return (
-                <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Đã hủy</Text>
-            )
-            case 'COMPLETED': return (
-                <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Hoàn thành khám</Text>
-            )
-            case 'REJECTED': return (
-                <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Từ chối đặt khám</Text>
-            )
+                case 'CANCELED': return (
+                    <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Đã hủy</Text>
+                )
+                case 'COMPLETED': return (
+                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Hoàn thành khám</Text>
+                )
+                case 'REJECTED': return (
+                    <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Từ chối đặt khám</Text>
+                )
 
 
+            }
         }
+
     };
     listEmpty = () => {
         return (
