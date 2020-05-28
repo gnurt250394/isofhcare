@@ -31,15 +31,15 @@ class CreateBookingWithPaymentScreen extends Component {
     }
     getPaymentMethod(booking) {
         switch (booking.payment) {
-            case 1:
+            case constants.PAYMENT_METHOD.VNPAY:
                 return constants.payment.VNPAY;
-            case 2:
+            case constants.PAYMENT_METHOD.CASH:
                 return constants.payment.pay_later;
-            case 3:
-                return constants.payment.PAYOO;
-            case 4:
-                return constants.payment.PAYOO_convenient_shop;
-            case 6:
+            case constants.PAYMENT_METHOD.MOMO:
+                return constants.payment.MOMO;
+            // case constants.PAYMENT_METHOD.VNPAY:
+            //     return constants.payment.PAYOO_convenient_shop;
+            case constants.PAYMENT_METHOD.BANK_TRANSFER:
                 return constants.payment.direct_transfer;
         }
         return "";
