@@ -1,22 +1,39 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import constants from '@resources/strings'
 
 class ListPaymentMethodScreen extends Component {
     constructor(props) {
         super(props);
+        let isOnline = this.props.navigation.getParam('isOnline', false)
         this.state = {
             data: [
                 // { id: 1, value: 1, name: 'VNPAY' },
                 { id: 2, value: 2, name: 'Thanh toán sau tại CSYT' },
-                // { id: 3, value: 3, name: 'PAYOO' },
+                { id: 3, value: 3, name: 'Ví MoMo' },
                 // { id: 4, value: 4, name: 'PAYOO - cửa hàng tiện ích' },
                 // { id: 5, value: 5, name: 'PAYOO - trả góp 0%' },
                 // { id: 6, value: 6, name: 'Chuyển khoản trực tiếp' },
-            ]
+            ],
+            isOnline
         };
     }
+    componentDidMount() {
+        if (this.state.isOnline) {
+            this.setState({
+                data: [
+                    // { id: 1, value: 1, name: 'VNPAY' },
+                    // { id: 2, value: 2, name: 'Thanh toán sau tại CSYT' },
+                    { id: 3, value: 3, name: 'Ví MoMo' },
+                    // { id: 4, value: 4, name: 'PAYOO - cửa hàng tiện ích' },
+                    // { id: 5, value: 5, name: 'PAYOO - trả góp 0%' },
+                    { id: 6, value: 6, name: 'Chuyển khoản trực tiếp' },
+                ]
+            })
+        }
+    }
+
     onSelected = (item) => () => {
         let onItemSelected = ((this.props.navigation.state || {}).params || {}).onItemSelected
         this.props.navigation.pop()
