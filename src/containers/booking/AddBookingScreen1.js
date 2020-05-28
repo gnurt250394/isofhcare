@@ -421,10 +421,14 @@ class AddBookingScreen extends Component {
         })
     }
     selectDateTime = () => {
-
+        if (!this.state.hospital) {
+            snackbar.show(constants.msg.booking.please_select_location, "danger");
+            return;
+        }
         this.props.navigation.navigate("selectTime", {
             service: this.state.listServicesSelected,
             isNotHaveSchedule: true,
+            hospital: this.state.hospital,
             onSelected: this.onSelectDateTime
         });
     }
@@ -573,7 +577,7 @@ class AddBookingScreen extends Component {
                                     <Text style={[styles.errorStyle]}>{this.state.servicesError}</Text> : null
                             }
                             <View style={styles.border}></View>
-                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectDateTime}>
+                            <TouchableOpacity style={styles.mucdichkham} disabled={this.state.disableService} onPress={this.selectDateTime}>
                                 <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingTime.png")} />
                                 <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
                                 <View style={styles.ktq}>{this.renderBookingTime()}</View>
