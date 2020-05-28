@@ -55,6 +55,7 @@ class SelectTimeScreen extends Component {
     }
 
     selectDay(day) {
+
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
         this.setState({
@@ -185,19 +186,15 @@ class SelectTimeScreen extends Component {
 
             } catch (error) {
                 this.setState({ isLoading: false })
-
+                let dateNew = new Date()
+                dateNew.setDate(dateNew.getDate() + 1)
+                this.selectMonth(dateNew);
             }
         })
 
     }
     componentDidMount() {
         this.getListSchedule()
-    }
-    convertDayOfWeek = (day) => {
-        let date = {
-            0: 7,
-        }
-        return date[day] || day
     }
     convertDayOfWeek = (day) => {
         let date = {
