@@ -54,7 +54,7 @@ module.exports = {
             client.requestApi(
                 "get",
                 client.serviceSchedule +
-                constants.api.booking.doctor.get_detail_doctor + `/hospital/${idHospital}/top/?page=${page}&size=${size}&sort=desc&properties=created`,
+                constants.api.booking.doctor.get_detail_doctor + `/hospital/${idHospital}/top/?page=${page}&size=${size}`,
                 {},
                 (s, e) => {
                     if (s) resolve(s);
