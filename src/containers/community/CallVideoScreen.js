@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import RNCallKeep from 'react-native-callkeep'
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
-import { PERMISSIONS, requestMultiple } from 'react-native-permissions';
+import Permistions from 'react-native-permissions';
 import RNCallKeepManager from '@components/RNCallKeepManager'
 import KeepAwake from 'react-native-keep-awake';
 import Timer from "./Timer";
@@ -80,6 +80,49 @@ class VideoCallScreen extends Component {
             "didActivateAudioSession",
             this.onRNCallKitDidActivateAudioSession
         );
+        RNCallKeep.addEventListener('didDisplayIncomingCall', this.onDidDisplayIncomingCall);
+    }
+    renderAcademic = (doctor) => {
+        let name = ''
+        if (doctor?.name || doctor?.academicDegree) {
+            let academicDegree = ''
+            switch (doctor?.academicDegree) {
+                case 'BS': academicDegree = 'BS.'
+                    break;
+                case 'ThS': academicDegree = 'Ths.'
+                    break;
+                case 'TS': academicDegree = 'TS.'
+                    break;
+                case 'PGS': academicDegree = 'PGS.'
+                    break;
+                case 'GS': academicDegree = 'GS.'
+                    break;
+                case 'BSCKI': academicDegree = 'BSCKI.'
+                    break;
+                case 'BSCKII': academicDegree = 'BSCKII.'
+                    break;
+                case 'GSTS': academicDegree = 'GS.TS.'
+                    break;
+                case 'PGSTS': academicDegree = 'PGS.TS.'
+                    break;
+                case 'ThsBS': academicDegree = 'Ths.BS.'
+                    break;
+                case 'ThsBSCKII': academicDegree = 'Ths.BSCKII.'
+                    break;
+                case 'TSBS': academicDegree = 'TS.BS.'
+                    break;
+                default: academicDegree = ''
+                    break;
+            }
+            name = academicDegree + doctor.name
+        }
+        return name
+    }
+    onDidDisplayIncomingCall = ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
+        RNCallKeep.updateDisplay(callUUID, this.state.profile?.doctor ? this.renderAcademic(this.state.profile?.doctor) : "Bác sĩ iSofhCare master", "")
+        if (this.isAnswerSuccess) {
+            RNCallKeep.reportEndCallWithUUID(callUUID, 1)
+        }
     }
     onRNCallKitDidActivateAudioSession = (data) => {
         // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
@@ -126,20 +169,20 @@ class VideoCallScreen extends Component {
             let PERMISSIONS_MICROPHONE_IOS = "microphone"
             let PERMISSIONS_STATUS = "authorized"
             return new Promise((resolve, reject) => {
-              Promise.all([Permistions.request(PERMISSIONS_CAMERA_IOS), Permistions.request(PERMISSIONS_MICROPHONE_IOS)])
-                .then(res => {
-                  if (res[0] == PERMISSIONS_STATUS) {
-                    resolve(res)
-                  } else {
-                    reject()
-        
-                  }
-                }).catch(err => {
-                  reject()
-                })
-        
+                Promise.all([Permistions.request(PERMISSIONS_CAMERA_IOS), Permistions.request(PERMISSIONS_MICROPHONE_IOS)])
+                    .then(res => {
+                        if (res[0] == PERMISSIONS_STATUS) {
+                            resolve(res)
+                        } else {
+                            reject()
+
+                        }
+                    }).catch(err => {
+                        reject()
+                    })
+
             })
-        
+
         } else {
             return checkAndroidPermissions()
         }
@@ -169,6 +212,7 @@ class VideoCallScreen extends Component {
             "didActivateAudioSession",
             this.onRNCallKitDidActivateAudioSession
         );
+        RNCallKeep.removeEventListener('didDisplayIncomingCall', this.onDidDisplayIncomingCall);
     }
 
     handleBackButton() {
