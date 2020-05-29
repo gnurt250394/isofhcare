@@ -97,49 +97,44 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 }
 
 
+/* Add PushKit delegate method */
+
+// --- Handle updated push credentials
 - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(PKPushType)type {
   // Register VoIP push token (a property of PKPushCredentials) with server
   [RNVoipPushNotificationManager didUpdatePushCredentials:credentials forType:(NSString *)type];
-  NSString *token = [[credentials.token description] stringByTrimmingCharactersInSet: [NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-  token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
-  NSLog(token);
 }
-
-- (void)pushRegistry:(PKPushRegistry *)registry didInvalidatePushTokenForType:(PKPushType)type
-{
-  // --- The system calls this method when a previously provided push token is no longer valid for use. No action is necessary on your part to reregister the push type. Instead, use this method to notify your server not to send push notifications using the matching push token.
-}
-
 
 // --- Handle incoming pushes (for ios <= 10)
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type {
+  NSLog(@"didReceiveIncomingPushWithPayload không complete");
   [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
 }
 
 // --- Handle incoming pushes (for ios >= 11)
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)(void))completion {
+  NSLog(@" didReceiveIncomingPushWithPayload có complete");
+    NSString *uuid = [[NSUUID UUID] UUIDString];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:uuid forKey:@"uuid"];
   
-  // --- Process the received push
-  [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
-
-  // --- NOTE: apple forced us to invoke callkit ASAP when we receive voip push
-  // --- see: react-native-callkeep
-
-  // --- Retrieve information from your voip push payload
-//  NSString *uuid = payload.dictionaryPayload[@"data"][@"map"][@"data"][@"map"][@"callId"];
-////  payload.dictionaryPayload[@"uuid"];
-//  NSString *callerName = [NSString stringWithFormat:@"%@ (Connecting...)", payload.dictionaryPayload[@"callerName"]];
-//  NSString *handle = payload.dictionaryPayload[@"handle"];
-
-   NSUUID *uuid = [NSUUID UUID];
-   NSString *uuid2 = [uuid UUIDString];
-//   NSString *uuid = payload.dictionaryPayload[@"data"][@"map"][@"data"][@"map"][@"callId"];
-   NSString *callerName = @"Người dùng iSofHcare";
-   NSString *handle = @"";
-  
-  // --- You should make sure to report to callkit BEFORE execute `completion()`
-  [RNCallKeep reportNewIncomingCall:uuid2 handle:handle handleType:@"generic" hasVideo:false localizedCallerName:callerName fromPushKit: YES];
+       NSString *callerName = @"Người dùng iSofHcare";
+       NSString *handle = @"";
+        
+  if ([[CXCallObserver alloc] init].calls.count == 0) {
+    // --- Process the received push
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"voipRemoteNotificationReceived" object:self userInfo:dict];
     
+    // --- You should make sure to report to callkit BEFORE execute `completion()`
+    [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:nil];
+    NSLog(@" didReceiveIncomingPushWithPayload có Gọi nhé");
+  } else {
+    // Show fake call
+    NSLog(@" show fake call");
+   [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:nil];
+    [RNCallKeep endCallWithUUID:uuid reason:1];
+  }
+  
   completion();
 }
 
