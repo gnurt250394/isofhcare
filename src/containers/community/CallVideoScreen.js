@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import RNCallKeep from 'react-native-callkeep'
 var height = Dimensions.get("screen").height;
 var width = Dimensions.get("window").width;
-import { PERMISSIONS, requestMultiple } from 'react-native-permissions';
+import Permistions from 'react-native-permissions';
 import RNCallKeepManager from '@components/RNCallKeepManager'
 import KeepAwake from 'react-native-keep-awake';
 import Timer from "./Timer";
