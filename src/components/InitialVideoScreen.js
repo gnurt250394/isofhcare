@@ -184,12 +184,7 @@ class InitialVideoCall extends Component {
   }) => {
     console.log('customDataFromYourServer: ', customDataFromYourServer);
     const data = customDataFromYourServer ? JSON.parse(customDataFromYourServer) : {}
-    RNCallKeep.addEventListener('didDisplayIncomingCall', ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-      RNCallKeep.updateDisplay(callUUID, data?.doctor ? this.renderAcademic(data?.doctor) : "Bác sĩ iSofhCare master", "")
-      RNCallKeepManager.UUID = callUUID
-    });
     if (RNCallKeepManager.isCall) {
-
       this.stringeeCall && this.stringeeCall.reject(
         callId,
         (status, code, message) => {
