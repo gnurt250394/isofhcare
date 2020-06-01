@@ -50,8 +50,9 @@ module.exports = {
         let type = 2
         let roleId = -1
         let style = -1
+        let name = queryString && queryString.isPhoneNumber() ? 'phone' : 'name'
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.ehealth.search_profile_user}?page=${page}&size=${size}&queryString=${queryString}&active=${active}&specialistId=${specialistId}&type=${type}&roleId=${roleId}&style=${style}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.ehealth.search_profile_user}?page=${page}&size=${size}&${name}=${queryString}&active=${active}&specialistId=${specialistId}&type=${type}&roleId=${roleId}&style=${style}`, {}, (s, e) => {
                 if (s) {
                     resolve(s);
                 }
