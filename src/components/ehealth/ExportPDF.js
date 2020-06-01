@@ -9,7 +9,8 @@ import resultUtils from '@ehealth/utils/result-utils';
 import RNPrint from 'react-native-print';
 class ExportPDF extends Component {
     renderResult(result, hospital) {
-        
+        console.log('result: ', result);
+
         if (result?.Profile?.IsContract) {
 
         }
@@ -30,6 +31,7 @@ class ExportPDF extends Component {
                 resultHuyetHoc: result?.ListResulHuyetHoc,
                 resultKhac: result?.ListResulOther
             }
+        console.log('resultMedicalTest: ', resultMedicalTest);
         var profile = result?.Profile;
         var div = "";
         if (resultCheckup && resultCheckup?.length > 0) {
@@ -199,9 +201,9 @@ class ExportPDF extends Component {
         for (var i = 0; i < result.length; i++) {
             var item = result[i];
             if (item?.value?.ListMedical && item?.value?.ListMedical?.length > 0) {
-                if (item.value.ListMedical.every(e => (!e?.SummaryResult && (e?.Image?.length == 0 || !e?.Image)))) {
-                    continue
-                }
+                // if (item.value.ListMedical.every(e => ((!e?.SummaryResult && !e?.Image )|| e.ServiceName))) {
+                //     continue
+                // }
                 div += this.renderMedItem(booking, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }.bold{font-weight:bold; color: red}</style><div class='pagebreak'></div>";
             }
@@ -273,7 +275,7 @@ class ExportPDF extends Component {
     renderMedItem(booking, profile, result, hospital) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking, hospital);
-        if (result.value.ListMedical.every(e => (e?.SummaryResult || (e?.Image?.length != 0)))) {
+        if (result.value.ListMedical.every(e => (e?.SummaryResult || (e?.Image && e?.Image?.length != 0)))) {
             div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Kết quả xét nghiệm </div>"
             div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + (profile?.PatientName || '') + "</span> <br />"
             div += "<style>.resultMedical {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .resultMedical th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .resultMedical .serviceName{font-weight: bold } .resultMedical td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
@@ -794,7 +796,7 @@ class ExportPDF extends Component {
 
 
     async exportPdf(option, finish) {
-        
+
         if (!option)
             if (finish)
                 setTimeout(function () {
