@@ -66,11 +66,10 @@ import com.microsoft.codepush.react.CodePush;
     SoLoader.init(this, /* native exopackage */ false);
   }
 
-  @Override
-  public String getFileProviderAuthority() {
-         return "com.isofh.appisofhcare.provider";
-  }
-
+ @Override
+     public String getFileProviderAuthority() {
+            return BuildConfig.APPLICATION_ID + ".provider";
+     }
   // @Override
   // protected void attachBaseContext(Context base) {
   //   super.attachBaseContext(base);
