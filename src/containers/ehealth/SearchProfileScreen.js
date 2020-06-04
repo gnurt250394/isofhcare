@@ -27,8 +27,10 @@ class SearchProfileScreen extends Component {
             finish: false,
             loading: false,
             status: '',
-            isSearch: false
-
+            isSearch: false,
+            showSearch: true,
+            searching: false,
+            listProfileSearch: []
         }
     }
     componentDidMount() {
@@ -74,13 +76,13 @@ class SearchProfileScreen extends Component {
         })
     }
     searchTextChange = (s) => {
-        this.setState({ searchValue: s });
+        this.setState({ searchValue: s, searching: true });
     }
     onRefreshList = () => {
         console.log('onRefreshList')
         if (!this.state.loading)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true, isSearch: true },
+                { refreshing: true, page: 1, finish: false, loading: true, isSearch: true, searching: false },
                 () => {
                     this.onSearch();
                 }
@@ -99,8 +101,8 @@ class SearchProfileScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         });
-        let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase().unsignText().split(' ').join('') : ''
-        console.log(queryString)
+        let queryString = this.state.searchValue?.trim().toLowerCase() ?? ''
+
         ehealthProvider.search(page, size, queryString).then(s => {
             this.setState({
                 refreshing: false,
@@ -218,7 +220,7 @@ class SearchProfileScreen extends Component {
     headerComponent = () => {
         return (
             !this.state.refreshing &&
-                (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
+                (this.state.listProfileSearch.length == 0 && this.state.page == 1 && !this.state.searching) ?
                 <View style={styles.viewHeader}>
                     <ScaleImage source={require("@images/empty_result.png")} width={120} />
                     <Text
@@ -238,7 +240,7 @@ class SearchProfileScreen extends Component {
                     backgroundColor: '#02C39A',
                     borderBottomWidth: 0
                 }}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+                isLoading={this.state.isLoading} showFullScreen={true}
             >
                 {
                     this.state.showSearch ?
@@ -258,24 +260,25 @@ class SearchProfileScreen extends Component {
                         </View>
                         : null
                 }
-                {
+                {/* {
                     !this.state.searchValue && !this.state.isSearch ? (
                         <View style={styles.viewTxSearch}><Text style={styles.txtSearch}>{constants.ehealth.lastSearch}</Text></View>
 
                     ) : null
-                }
+                } */}
                 <FlatList
                     style={styles.flatList}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
                     keyExtractor={this.keyExtractor}
                     extraData={this.state}
-                    ListHeaderComponent={this.headerComponent}
+                    // ListHeaderComponent={this.headerComponent}
                     onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}
                     onEndReachedThreshold={this.state.isSearch ? 1 : -1}
                     ListFooterComponent={this.footerComponent}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
+                    ListEmptyComponent={this.headerComponent}
                 />
                 {
                     this.state.loadMore ?
@@ -305,7 +308,8 @@ const styles = StyleSheet.create({
         height: 55,
         justifyContent: 'center', alignItems: 'center',
         backgroundColor: constants.colors.actionbar_color,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderColor: '#A5A5A5', borderBottomWidth: 0.7
     },
     textInput: {
         flex: 1,
@@ -346,7 +350,7 @@ const styles = StyleSheet.create({
     scaledImage: { width: 30, height: 30 },
     textName: { fontWeight: '200', fontSize: 15, marginLeft: 10 },
     activity: { paddingLeft: 20 },
-    titleStyle: { marginRight: 0, color: '#fff' },
+    titleStyle: { color: '#fff' },
     txSearch: {
         backgroundColor: constants.colors.actionbar_title_color,
         padding: 7,
