@@ -51,17 +51,17 @@ class SearchProfileScreen extends Component {
     }
     getListHistoryCallback(data) {
         try {
-            //     console.log(data);
+            //     
             //   for(let i = 0; i< data.length;i++){
-            //       console.log(data[i],'dataaaaaaa');
+            //       
             //   }
             let arr = data.map(item => JSON.parse(item.data));
-            console.log(arr);
+
             this.setState({
                 listProfileSearch: arr
             })
         } catch (error) {
-            console.log(error, 'error');
+
             this.setState({
                 listProfileSearch: []
             });
@@ -77,7 +77,7 @@ class SearchProfileScreen extends Component {
         this.setState({ searchValue: s });
     }
     onRefreshList = () => {
-        console.log('onRefreshList')
+
         if (!this.state.loading)
             this.setState(
                 { refreshing: true, page: 1, finish: false, loading: true, isSearch: true },
@@ -94,13 +94,14 @@ class SearchProfileScreen extends Component {
         // });
         // this.setState({ listProfileSearch: listSearch });
         const { page, size } = this.state;
+
         this.setState({
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         });
-        let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase().unsignText().split(' ').join('') : ''
-        console.log(queryString)
+        let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase() : ''
+
         ehealthProvider.search(page, size, queryString).then(s => {
             this.setState({
                 refreshing: false,
@@ -230,6 +231,7 @@ class SearchProfileScreen extends Component {
     }
     footerComponent = () => <View style={styles.viewFooter} />
     render() {
+
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text style={styles.cancelEhealth}>{constants.ehealth.cancel}</Text></TouchableOpacity>}
@@ -249,7 +251,8 @@ class SearchProfileScreen extends Component {
                                 placeholder={constants.ehealth.inputKeyword}
                                 onChangeText={this.searchTextChange}
                                 returnKeyType="search"
-                                onSubmitEditing={this.onRefreshList} />
+                                onSubmitEditing={this.onRefreshList}
+                            />
                             <TouchableOpacity style={styles.txSearch} onPress={this.onRefreshList}>
                                 <Text style={{
                                     fontWeight: 'bold', color: '#FFF'
