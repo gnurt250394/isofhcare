@@ -100,7 +100,7 @@ class SearchProfileScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         });
-        let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase() : ''
+        let queryString = this.state.searchValue?.trim().toLowerCase() ?? ''
 
         ehealthProvider.search(page, size, queryString).then(s => {
             this.setState({
