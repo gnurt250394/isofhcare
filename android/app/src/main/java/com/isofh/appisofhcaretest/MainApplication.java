@@ -67,7 +67,7 @@ import com.microsoft.codepush.react.CodePush;
 
  @Override
      public String getFileProviderAuthority() {
-            return "com.isofh.appisofhcaredev.provider";
+            return "com.isofh.appisofhcaretest.provider";
      }
   // @Override
   // protected void attachBaseContext(Context base) {
