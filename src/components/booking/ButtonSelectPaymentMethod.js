@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
     ckeck: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft: 20,
-        marginTop: 20,
-        paddingHorizontal: 10
+        paddingVertical:15,
+        paddingHorizontal: 15,
+        borderBottomWidth:1,
+        borderBottomColor:'#00000020'
     },
     ckeckthanhtoan: {
 
