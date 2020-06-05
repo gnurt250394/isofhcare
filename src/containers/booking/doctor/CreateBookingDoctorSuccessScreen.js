@@ -30,7 +30,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
             case 2:
                 return constants.payment.pay_later;
             case 3:
-                return constants.payment.PAYOO;
+                return "Ví MOMO";
             case 4:
                 return constants.payment.PAYOO_convenient_shop;
             case 6:

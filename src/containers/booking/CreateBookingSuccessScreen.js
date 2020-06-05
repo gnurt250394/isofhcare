@@ -30,7 +30,7 @@ class CreateBookingSuccessScreen extends Component {
             case 2:
                 return constants.booking.payment_csyt; // thanh toán tại CSYT
             case 3:
-                return constants.payment.PAYOO;
+                return "Ví MOMO";
             case 4:
                 return constants.booking.status.payment_payoo2; // payoo cửa hàng tiện ích
             case 5:

@@ -241,17 +241,21 @@ module.exports = {
         });
     },
 
-    confirmBooking(id, paymentMethod, voucher) {
+    confirmBooking(id, paymentMethod, voucher, phonenumber, momoToken) {
+        let data = {}
+        data.voucher = {
+            "code": voucher.code ? voucher.code : '',
+            "discount": voucher.price ? voucher.price : 0,
+            "id": voucher.id ? voucher.id : ''
+        }
+        if (phonenumber) data.phoneNumber = phonenumber
+        if (momoToken) data.appData = momoToken
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "post",
                 client.serviceBooking +
                 constants.api.booking.doctor.get_detail_booking + '/' + id + '/payment/' + paymentMethod,
-                {
-                    "code": voucher.code ? voucher.code : '',
-                    "discount": voucher.price ? voucher.price : 0,
-                    "id": voucher.id ? voucher.id : ''
-                }, (s, e) => {
+                data, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
                 }
