@@ -547,10 +547,17 @@ module.exports = {
       none_image: 'Không có ảnh nào'
     }
   },
+  PAYMENT_METHOD: {
+    VNPAY: "VNPAY",
+    CASH: "CASH",
+    MOMO: "MOMO",
+    //PAYOO: "PAYOO";
+    BANK_TRANSFER: "BANK_TRANSFER"
+  },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
     VNPAY: 'VNPAY',
-    MOMO: 'Ví momo',
+    MOMO: 'Thanh toán qua ví MoMo',
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT'

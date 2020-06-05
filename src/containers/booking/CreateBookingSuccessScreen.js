@@ -24,24 +24,41 @@ class CreateBookingSuccessScreen extends Component {
 
     getPaymentMethod(booking) {
         console.log('booking: ', booking);
-        switch (booking.payment) {
-            case 1:
+        switch (booking.invoice.payment) {
+            case constants.PAYMENT_METHOD.VNPAY:
                 return constants.payment.VNPAY;
-            case 2:
+            case constants.PAYMENT_METHOD.CASH:
                 return constants.booking.payment_csyt; // thanh toán tại CSYT
-            case 3:
-                return "Ví MOMO";
-            case 4:
-                return constants.booking.status.payment_payoo2; // payoo cửa hàng tiện ích
-            case 5:
-                return constants.booking.status.payment_payoo3 // payoo trả góp 0%
+            case constants.PAYMENT_METHOD.MOMO:
+                return constants.payment.MOMO;
+            // case constants.PAYMENT_METHOD.VNPAY:
+            //     return constants.booking.status.payment_payoo2; // payoo cửa hàng tiện ích
+            // case constants.PAYMENT_METHOD.VNPAY:
+            //     return constants.booking.status.payment_payoo3 // payoo trả góp 0%
         }
         return "";
+    }
+    pricePromotion = (item) => {
+        let value = 0
+        if (item?.promotionValue) {
+            if (item?.promotionType == "PERCENT") {
+                value = (item.price - (item.price * (item.promotionValue / 100) || 0))
+            } else {
+                value = ((item?.price - item?.promotionValue) || 0)
+            }
+        } else {
+            value = item?.price
+        }
+
+        if (value < 0) {
+            return 0
+        }
+        return value
     }
     getPriceSecive = (service, voucher) => {
         let priceVoucher = voucher && voucher.price ? voucher.price : 0
         let priceFinal = service.reduce((start, item) => {
-            return start + parseInt(item.price)
+            return start + this.pricePromotion(item)
         }, 0)
         if (priceVoucher > priceFinal) {
             return 0
@@ -71,12 +88,13 @@ class CreateBookingSuccessScreen extends Component {
     }
     render() {
         let booking = this.props.navigation.state.params.booking;
-        let service = this.props.navigation.state.params.service || [];
+        console.log('booking: ', booking);
+        let service = booking.invoice.services || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital) {
-            this.props.navigation.pop();
-            return null;
-        }
+        // if (!booking || !booking.patient || !booking.hospital) {
+        //     this.props.navigation.pop();
+        //     return null;
+        // }
         let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
@@ -138,8 +156,19 @@ class CreateBookingSuccessScreen extends Component {
                                     <View style={styles.containerPrice}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={styles.flex}>
-                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.name}</Text>
-                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.price).formatPrice()}đ)</Text>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.serviceName}</Text>
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                    alignSelf: 'flex-end',
+                                                    paddingBottom:5
+                                                }}>
+                                                    {item.promotionValue?
+                                                    <Text style={[styles.text, { textDecorationLine: 'line-through',color:'#00000060' }]}>({parseInt(item.price).formatPrice()}đ)</Text>
+                                                    :null
+                                                    }
+                                                    <Text style={[styles.text, ]}>({this.pricePromotion(item).formatPrice()}đ)</Text>
+
+                                                </View>
                                             </View>
                                         })}
                                         {voucher && voucher.price ?
@@ -156,39 +185,11 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
-                                booking.payment == 1 && <View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_no}</Text>
-                                        <TouchableOpacity style={styles.btnCopy} onPress={() => this.onPressCode(booking.transactionCode)}><Text style={styles.text}>{booking.transactionCode ? booking.transactionCode : ""}</Text></TouchableOpacity>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_date}</Text>
-                                        <Text style={styles.text}>{this.renderVnPayDate(booking.vnPayDate)}</Text>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_status}</Text>
-                                        <Text style={styles.text}>{constants.booking.payment_vnpay_success}</Text>
-                                    </View>
-                                </View>
-                            }
-                            {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.sum_price}:</Text>
                                         <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
                                     </View> : null
-                            }
-                            {
-                                booking.payment == 4 && <View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.code_payment}</Text>
-                                        <Text style={styles.text}>{booking.online_transactions && booking.online_transactions.length ? booking.online_transactions[0].bill_ref_code : ""}</Text>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_duration}</Text>
-                                        <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
-                                    </View>
-                                </View>
                             }
                         </View>
                         {/* <View style={styles.view2}>
@@ -323,10 +324,10 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'right',
-        flex: 1,
         fontSize: 13,
         fontWeight: "bold",
         color: "#000000",
+        paddingLeft: 10
     },
     view1: {
         marginTop: 10,
