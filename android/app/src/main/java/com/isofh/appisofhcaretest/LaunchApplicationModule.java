@@ -1,5 +1,5 @@
 
-package com.isofh.appisofhcaredev;
+package com.isofh.appisofhcaretest;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;

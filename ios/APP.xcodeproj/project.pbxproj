@@ -1207,7 +1207,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "a85727cc-7f0e-4e39-81ab-abf948e917c6";
-				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user distribution dev branch";
+				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development dev branch";
 				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
