@@ -72,12 +72,8 @@
 /* config momo sdk **/
 /*iOS 9 or newest*/
 -(BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
- BOOL handled = [RCTLinkingManager application:application openURL:url options:options];
-  if(handled){
-    return handled;
-  }
-  [RNMomosdk handleOpenUrl:url];
-  return YES;
+    [RNMomosdk handleOpenUrl:url];
+    return YES;
 }
 
 /*iOS 8 or lower*/
@@ -85,12 +81,8 @@
              openURL:(NSURL *)url
    sourceApplication:(NSString *)sourceApplication
           annotation:(id)annotation;{
-  if([RCTLinkingManager application:application openURL:url
-                  sourceApplication:sourceApplication annotation:annotation]){
+    [RNMomosdk handleOpenUrl:url];
     return YES;
-  };
-  [RNMomosdk handleOpenUrl:url];
-  return YES;
 }
 
 

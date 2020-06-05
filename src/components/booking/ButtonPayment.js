@@ -114,19 +114,19 @@ const ButtonPayment = ({
             }
             console.log('paymentMethod: ', paymentMethod);
             switch (paymentMethod) {
-                case 1: // 'VNPAY'
+                case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
                     break
-                case 2: // 'Thanh toán sau tại CSYT'
+                case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
                     createBooking()
                     break
-                case 3: // 'Ví MoMo'
+                case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
                     requestPaymentMomo()
                     break
-                case 4: //'PAYOO - cửa hàng tiện ích'
-                    break
-                case 5: // 'PAYOO - trả góp 0%'
-                    break
-                case 6: //'Chuyển khoản trực tiếp'
+                // case constants.PAYMENT_METHOD.VNPAY: //'PAYOO - cửa hàng tiện ích'
+                //     break
+                // case constants.PAYMENT_METHOD.VNPAY: // 'PAYOO - trả góp 0%'
+                //     break
+                case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
                     createBooking()
                     break
                 default:
