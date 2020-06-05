@@ -23,7 +23,6 @@
 #import "RNCallKeep.h"
 #import <PushKit/PushKit.h>                    /* <------ add this line */
 #import "RNVoipPushNotificationManager.h"
-
 /* config momo sdk**/
 #import "RNMomosdk.h"
 
@@ -72,7 +71,11 @@
 
 /* config momo sdk **/
 /*iOS 9 or newest*/
--(BOOL)application:(UIApplication *)app openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
+-(BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
+ BOOL handled = [RCTLinkingManager application:application openURL:url options:options];
+  if(handled){
+    return handled;
+  }
   [RNMomosdk handleOpenUrl:url];
   return YES;
 }
@@ -82,6 +85,10 @@
              openURL:(NSURL *)url
    sourceApplication:(NSString *)sourceApplication
           annotation:(id)annotation;{
+  if([RCTLinkingManager application:application openURL:url
+                  sourceApplication:sourceApplication annotation:annotation]){
+    return YES;
+  };
   [RNMomosdk handleOpenUrl:url];
   return YES;
 }
