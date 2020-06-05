@@ -43,6 +43,7 @@ import com.microsoft.codepush.react.CodePush;
       // packages.add(new RNCViewPagerPackage());
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new RNFirebaseMessagingPackage());
+      packages.add(new LaunchApplicationPackage());
       // packages.add(new RNFirebaseAuthPackage());
       return packages;
     }

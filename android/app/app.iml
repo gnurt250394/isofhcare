@@ -133,6 +133,7 @@
     <orderEntry type="library" name="Gradle: com.android.installreferrer:installreferrer:1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.react:react-native:0.61.5@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.material:material:1.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.momo-wallet:mobile-sdk:1.0.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-auth:17.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth:17.0.0@aar" level="project" />
@@ -216,44 +217,44 @@
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout:1.1.3@aar" level="project" />
     <orderEntry type="library" name="Gradle: me.relex:photodraweeview:1.0.0@aar" level="project" />
     <orderEntry type="module" module-name="mainam-react-native-payoo" />
-    <orderEntry type="module" module-name="android-@react-native-community_art" />
-    <orderEntry type="module" module-name="android-@react-native-community_viewpager" />
-    <orderEntry type="module" module-name="android-mainam-react-native-location-switch" />
-    <orderEntry type="module" module-name="android-mainam-react-native-photo-viewer" />
-    <orderEntry type="module" module-name="android-react-native-firebase" />
-    <orderEntry type="module" module-name="android-react-native-launch-application" />
-    <orderEntry type="module" module-name="android-react-native-webview" />
-    <orderEntry type="module" module-name="android-appcenter" />
-    <orderEntry type="module" module-name="android-appcenter-analytics" />
-    <orderEntry type="module" module-name="android-appcenter-crashes" />
-    <orderEntry type="module" module-name="android-@react-native-community_async-storage" />
-    <orderEntry type="module" module-name="android-@react-native-community_netinfo" />
-    <orderEntry type="module" module-name="android-react-native-appstore-version-checker" />
+    <orderEntry type="module" module-name="@react-native-community_art" />
+    <orderEntry type="module" module-name="@react-native-community_viewpager" />
+    <orderEntry type="module" module-name="mainam-react-native-location-switch" />
+    <orderEntry type="module" module-name="mainam-react-native-photo-viewer" />
+    <orderEntry type="module" module-name="react-native-firebase" />
+    <orderEntry type="module" module-name="react-native-momosdk-android-react-native-momosdk" />
+    <orderEntry type="module" module-name="react-native-webview" />
+    <orderEntry type="module" module-name="appcenter" />
+    <orderEntry type="module" module-name="appcenter-analytics" />
+    <orderEntry type="module" module-name="appcenter-crashes" />
+    <orderEntry type="module" module-name="@react-native-community_async-storage" />
+    <orderEntry type="module" module-name="@react-native-community_netinfo" />
+    <orderEntry type="module" module-name="react-native-appstore-version-checker" />
     <orderEntry type="module" module-name="react-native-callkeep" />
-    <orderEntry type="module" module-name="android-react-native-camera" />
-    <orderEntry type="module" module-name="app-react-native-code-push" />
-    <orderEntry type="module" module-name="android-react-native-device-info" />
-    <orderEntry type="module" module-name="android-react-native-fs" />
-    <orderEntry type="module" module-name="android-react-native-gesture-handler" />
+    <orderEntry type="module" module-name="react-native-camera" />
+    <orderEntry type="module" module-name="react-native-code-push" />
+    <orderEntry type="module" module-name="react-native-device-info" />
+    <orderEntry type="module" module-name="react-native-fs" />
+    <orderEntry type="module" module-name="react-native-gesture-handler" />
     <orderEntry type="module" module-name="react-native-get-location" />
-    <orderEntry type="module" module-name="android-react-native-google-places" />
-    <orderEntry type="module" module-name="android-react-native-html-to-pdf" />
+    <orderEntry type="module" module-name="react-native-google-places" />
+    <orderEntry type="module" module-name="react-native-html-to-pdf" />
     <orderEntry type="module" module-name="react-native-image-crop-picker" />
-    <orderEntry type="module" module-name="android-react-native-image-resizer" />
-    <orderEntry type="module" module-name="android-react-native-incall-manager" />
-    <orderEntry type="module" module-name="android-react-native-keep-awake" />
-    <orderEntry type="module" module-name="android-react-native-linear-gradient" />
-    <orderEntry type="module" module-name="android-react-native-location" />
-    <orderEntry type="module" module-name="android-react-native-maps" />
+    <orderEntry type="module" module-name="react-native-image-resizer" />
+    <orderEntry type="module" module-name="react-native-incall-manager" />
+    <orderEntry type="module" module-name="react-native-keep-awake" />
+    <orderEntry type="module" module-name="react-native-linear-gradient" />
+    <orderEntry type="module" module-name="react-native-location" />
+    <orderEntry type="module" module-name="react-native-maps" />
     <orderEntry type="module" module-name="react-native-print" />
-    <orderEntry type="module" module-name="android-react-native-screens" />
+    <orderEntry type="module" module-name="react-native-screens" />
     <orderEntry type="module" module-name="react-native-share" />
     <orderEntry type="module" module-name="react-native-sms" />
-    <orderEntry type="module" module-name="android-react-native-sound" />
-    <orderEntry type="module" module-name="android-react-native-svg" />
-    <orderEntry type="module" module-name="android-react-native-vector-icons" />
-    <orderEntry type="module" module-name="node_modules-react-native-wheel-picker-android" />
-    <orderEntry type="module" module-name="android-rn-fetch-blob" />
-    <orderEntry type="module" module-name="android-stringee-react-native" />
+    <orderEntry type="module" module-name="react-native-sound" />
+    <orderEntry type="module" module-name="react-native-svg" />
+    <orderEntry type="module" module-name="react-native-vector-icons" />
+    <orderEntry type="module" module-name="react-native-wheel-picker-android" />
+    <orderEntry type="module" module-name="rn-fetch-blob" />
+    <orderEntry type="module" module-name="stringee-react-native" />
   </component>
 </module>

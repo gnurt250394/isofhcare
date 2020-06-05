@@ -9,7 +9,8 @@ import Modal from "@components/modal";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
-import voucherProvider from '@data-access/voucher-provider'
+
+import ButtonPayment from '@components/booking/ButtonPayment';
 
 class ConfirmBookingDoctorScreen extends Component {
     constructor(props) {
@@ -50,21 +51,22 @@ class ConfirmBookingDoctorScreen extends Component {
         this.props.navigation.pop();
     }
     getPrice = (service, voucher) => {
-        console.log('service: ', service);
+
         let price = voucher && voucher.price ? voucher.price : 0
         let promotionPrice = 0
         promotionPrice = this.pricePromotion(service) - price
         if (promotionPrice < 0) {
             return 0
         }
-        return (promotionPrice).formatPrice()
+        return (promotionPrice)
     }
     onSelectPaymentMethod = (paymentMethod) => {
         this.setState({ paymentMethod })
     }
     setlectPaymentMethod = () => {
         this.props.navigation.navigate('listPaymentMethod', {
-            onItemSelected: this.onSelectPaymentMethod
+            onItemSelected: this.onSelectPaymentMethod,
+            isOnline: this.state.isOnline
         })
     }
     getPaymentMethod() {
@@ -75,6 +77,7 @@ class ConfirmBookingDoctorScreen extends Component {
             case 2:
                 return "CASH";
             case 3:
+                return "MOMO"
             case 5:
             // return "PAYOO";
             case 4:
@@ -85,84 +88,49 @@ class ConfirmBookingDoctorScreen extends Component {
     }
     renderPaymentMethod = () => {
         const { paymentMethod } = this.state
-
         switch (paymentMethod) {
             case 1: return 'VNPAY'
             case 2: return 'Thanh toán sau tại CSYT'
-            case 3: return 'PAYOO'
+            case 3: return 'Ví MoMo'
             case 4: return 'PAYOO - cửa hàng tiện ích'
             case 5: return 'PAYOO - trả góp 0%'
             case 6: return 'Chuyển khoản trực tiếp'
             default:
         }
     }
-    confirmVoucher = async (voucher, idBooking) => {
-        try {
-            let idHospital = this.state.booking.hospital.id
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
-            return data.code == 0;
-        } catch (error) {
 
-            return false;
-        }
-    }
-    createBooking = () => {
+    createBooking = (phonenumber, momoToken) => {
         const { bookingDate, booking, detailSchedule } = this.state
-        if (this.isChecking) {
-            this.isChecking = false
-            this.setState({ isLoading: true }, async () => {
-                if (this.state.voucher && this.state.voucher.code) {
+        this.setState({ isLoading: true }, async () => {
 
-                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
-                    if (!dataVoucher) {
-                        this.isChecking = true
-                        this.setState({ isLoading: false }, () => {
-                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
-                        });
-                        return
-                    }
-                }
-                bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
-                    this.setState({ isLoading: false })
-                    if (res) {
-                        snackbar.show('Đặt khám thành công', 'success')
-                        this.props.navigation.navigate("homeTab", {
-                            navigate: {
-                                screen: "createBookingDoctorSuccess",
-                                params: {
-                                    detailSchedule: this.state.detailSchedule,
-                                    voucher: this.state.voucher,
-                                    booking: this.state.booking,
-                                    bookingDate: this.state.bookingDate,
-                                    paymentMethod: this.state.paymentMethod,
-                                    isOnline: this.state.isOnline
-                                }
+            bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
+                this.setState({ isLoading: false })
+                if (res) {
+                    snackbar.show('Đặt khám thành công', 'success')
+                    this.props.navigation.navigate("homeTab", {
+                        navigate: {
+                            screen: "createBookingDoctorSuccess",
+                            params: {
+                                detailSchedule: this.state.detailSchedule,
+                                voucher: this.state.voucher,
+                                booking: this.state.booking,
+                                bookingDate: this.state.bookingDate,
+                                paymentMethod: this.state.paymentMethod,
+                                isOnline: this.state.isOnline
                             }
-                        });
-                    }
-                }).catch(err => {
-                    this.isChecking = true
-                    this.setState({ isLoading: false })
+                        }
+                    });
+                }
 
-                })
+            }).catch(err => {
+                this.setState({ isLoading: false })
 
             })
 
-        }
-    }
-    renderPaymentMethod = () => {
-        const { paymentMethod } = this.state
+        })
 
-        switch (paymentMethod) {
-            case 1: return 'VNPAY'
-            case 2: return 'Thanh toán sau tại CSYT'
-            case 3: return 'PAYOO'
-            case 4: return 'PAYOO - cửa hàng tiện ích'
-            case 5: return 'PAYOO - trả góp 0%'
-            case 6: return 'Chuyển khoản trực tiếp'
-            default:
-        }
     }
+
     componentWillReceiveProps = (props) => {
         if (props && props.navigation && props.navigation.getParam('voucher')) {
             this.setState({ voucher: props.navigation.getParam('voucher') })
@@ -236,7 +204,7 @@ class ConfirmBookingDoctorScreen extends Component {
         return false
     }
     pricePromotion = (item) => {
-        console.log('item: ', item);
+
         let value = 0
         if (item?.promotion && this.disablePromotion(item.promotion)) {
             if (item?.promotion?.type == "PERCENT") {
@@ -244,7 +212,7 @@ class ConfirmBookingDoctorScreen extends Component {
             } else {
 
                 value = ((item?.monetaryAmount?.value - item?.promotion?.value) || 0)
-                console.log('value: ', value);
+
             }
         } else {
             value = item?.monetaryAmount?.value
@@ -260,31 +228,14 @@ class ConfirmBookingDoctorScreen extends Component {
         if (promotion.type == "PERCENT") {
             text = promotion.value + '%'
         } else {
-            // let value = (promotion?.value || 0).toString()
-            // if (value.length > 5) {
-            //     text = value.substring(0, value.length - 3) + 'K'
-            // } else {
             text = promotion.value.formatPrice() + 'đ'
-
-            // }
         }
         return text
     }
     render() {
-        // let detailSchedule = this.props.navigation.getParam('detailSchedule');
-        // let bookingDate = this.props.navigation.getParam('bookingDate');
-        // let booking = this.props.navigation.getParam('booking');
-        const { booking, bookingDate, detailSchedule, voucher } = this.state
-
+        const { booking, bookingDate, detailSchedule, voucher, paymentMethod, isOnline } = this.state
         let service = detailSchedule.medicalService || [];
-
-        // let voucher = this.state;
-        // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
-        //     this.props.navigation.pop();
-        //     return null;
-        // }
         let bookingTime = new Date(bookingDate)
-        console.log(booking, 'âsđá')
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -405,13 +356,13 @@ class ConfirmBookingDoctorScreen extends Component {
                                 service && service.monetaryAmount && service.monetaryAmount.value ?
                                     <View style={styles.containerVoucher}>
                                         <Text style={styles.txtSumPrice}>Tổng tiền</Text>
-                                        <Text style={styles.sumPrice}>{this.getPrice(service, voucher)}đ</Text>
+                                        <Text style={styles.sumPrice}>{this.getPrice(service, voucher).formatPrice()}đ</Text>
                                     </View> : null
                             }
                         </View>
                         {/** Payment Method */}
                         <View>
-                            <TouchableOpacity disabled={this.state.isOnline} style={styles.buttonPayment}
+                            <TouchableOpacity style={styles.buttonPayment}
                                 onPress={this.setlectPaymentMethod}
                             >
                                 <ScaleImage style={styles.image} source={require("@images/new/booking/ic_price.png")} width={18} />
@@ -428,11 +379,17 @@ class ConfirmBookingDoctorScreen extends Component {
                         </View>
 
                         <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text>
-
+                        <ButtonPayment
+                            booking={booking}
+                            price={this.getPrice(service, voucher)}
+                            voucher={voucher}
+                            paymentMethod={paymentMethod}
+                            allowBooking={this.state.allowBooking}
+                            title="Hoàn thành"
+                            createBooking={this.createBooking}
+                        />
                         <View style={styles.btn}>
-                            <TouchableOpacity onPress={this.createBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                                <Text style={styles.datkham}>Hoàn thành</Text>
-                            </TouchableOpacity>
+
                         </View>
                     </ScrollView>
                 </View>
