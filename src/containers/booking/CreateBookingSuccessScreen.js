@@ -163,10 +163,10 @@ class CreateBookingSuccessScreen extends Component {
                                                     paddingBottom:5
                                                 }}>
                                                     {item.promotionValue?
-                                                    <Text style={[styles.text, { textDecorationLine: 'line-through',color:'#00000060' }]}>({parseInt(item.price).formatPrice()}đ)</Text>
+                                                    <Text style={[styles.text, { textDecorationLine: 'line-through',color:'#00000060',flex:0 }]}>({parseInt(item.price).formatPrice()}đ)</Text>
                                                     :null
                                                     }
-                                                    <Text style={[styles.text, ]}>({this.pricePromotion(item).formatPrice()}đ)</Text>
+                                                    <Text style={[styles.text,{flex:0} ]}>({this.pricePromotion(item).formatPrice()}đ)</Text>
 
                                                 </View>
                                             </View>
@@ -327,7 +327,8 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "bold",
         color: "#000000",
-        paddingLeft: 10
+        paddingLeft: 10,
+        flex:1
     },
     view1: {
         marginTop: 10,
