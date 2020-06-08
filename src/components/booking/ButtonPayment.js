@@ -22,7 +22,7 @@ const ButtonPayment = ({
     useEffect(() => {
         EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
             try {
-                console.log("<MoMoPay>Listen.Event::" ,response);
+                console.log("<MoMoPay>Listen.Event::", response);
                 if (response && response.status == 0) {
                     //SUCCESS: continue to submit momoToken,phonenumber to server
                     let fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
@@ -54,15 +54,13 @@ const ButtonPayment = ({
         jsonData.enviroment = constants.momo_config.enviroment; //SANBOX OR PRODUCTION
         jsonData.action = constants.momo_config.action;
         jsonData.partner = constants.momo_config.partner;
-        jsonData.merchantname = constants.momo_config.partner_name; //edit your merchantname here
         jsonData.merchantcode = constants.momo_config.partner_code; //edit your merchantcode here
+        jsonData.merchantname = constants.momo_config.partner_name; //edit your merchantname here
         jsonData.merchantnamelabel = constants.momo_config.partner_label;
-        jsonData.description = "Thanh toán dịch vụ iSofHcare";
-        // jsonData.fee = 20000;
-        jsonData.amount = price || 0;//order total amount
+        jsonData.description = `Thanh toán cho mã đặt khám ${booking?.reference}`;
+        jsonData.amount = parseInt(price) || 0;//order total amount
         jsonData.orderId = booking?.reference;
         jsonData.orderLabel = constants.momo_config.order_label;
-        jsonData.extra = "hahaha";
         jsonData.appScheme = constants.momo_config.app_scheme;// iOS App Only , match with Schemes Indentify from your  Info.plist > key URL types > URL Schemes
         console.log("data_request_payment " + JSON.stringify(jsonData));
         if (Platform.OS === 'android') {
@@ -103,35 +101,35 @@ const ButtonPayment = ({
     const onPress = async () => {
         // if (isChecking.current) {
         //     isChecking.current = false
-            console.log(1111)
-            if (voucher && voucher.code) {
-                let dataVoucher = await confirmVoucher(voucher, booking.id);
-                if (!dataVoucher) {
-                    isChecking.current = true
-                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
-                    return
-                }
+        console.log(1111)
+        if (voucher && voucher.code) {
+            let dataVoucher = await confirmVoucher(voucher, booking.id);
+            if (!dataVoucher) {
+                isChecking.current = true
+                snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                return
             }
-            console.log('paymentMethod: ', paymentMethod);
-            switch (paymentMethod) {
-                case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
-                    break
-                case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
-                    createBooking()
-                    break
-                case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
-                    requestPaymentMomo()
-                    break
-                // case constants.PAYMENT_METHOD.VNPAY: //'PAYOO - cửa hàng tiện ích'
-                //     break
-                // case constants.PAYMENT_METHOD.VNPAY: // 'PAYOO - trả góp 0%'
-                //     break
-                case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
-                    createBooking()
-                    break
-                default:
-                    break;
-            }
+        }
+        console.log('paymentMethod: ', paymentMethod);
+        switch (paymentMethod) {
+            case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
+                break
+            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
+                createBooking()
+                break
+            case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
+                requestPaymentMomo()
+                break
+            // case constants.PAYMENT_METHOD.VNPAY: //'PAYOO - cửa hàng tiện ích'
+            //     break
+            // case constants.PAYMENT_METHOD.VNPAY: // 'PAYOO - trả góp 0%'
+            //     break
+            case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
+                createBooking()
+                break
+            default:
+                break;
+        }
         // }
 
     }
