@@ -90,7 +90,7 @@ const ButtonPayment = ({
     }
     const confirmVoucher = async (voucher, idBooking) => {
         try {
-            let idHospital = state.booking.hospital.id
+            let idHospital = booking.hospital.id
             let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
             return data.code == 0;
         } catch (error) {
