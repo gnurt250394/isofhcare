@@ -20,10 +20,11 @@ class ConfirmBookingDoctorScreen extends Component {
         let bookingDate = this.props.navigation.getParam('bookingDate');
         let booking = this.props.navigation.getParam('booking');
         let isOnline = this.props.navigation.getParam('isOnline');
+        let paymentMethod = this.props.navigation.getParam('paymentMethod');
         this.state = {
             isVisible: false,
             isOnline,
-            paymentMethod: isOnline ? constants.PAYMENT_METHOD.CASH : constants.PAYMENT_METHOD.CASH,
+            paymentMethod: (paymentMethod != constants.PAYMENT_METHOD.NONE && typeof paymentMethod != 'undefined') ? paymentMethod : (isOnline ? constants.PAYMENT_METHOD.BANK_TRANSFER : constants.PAYMENT_METHOD.CASH),
             booking,
             bookingDate,
             detailSchedule,

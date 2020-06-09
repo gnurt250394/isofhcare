@@ -169,9 +169,6 @@ class PushController extends Component {
                     case "13":
                         this.openBooking(id);
                         break;
-                    case "12":
-                        this.openBooking(id);
-                        break;
                     case "-1":
                         break;
                     case 'NEWS': {

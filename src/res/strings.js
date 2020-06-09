@@ -553,7 +553,8 @@ module.exports = {
     CASH: "CASH",
     MOMO: "MOMO",
     //PAYOO: "PAYOO";
-    BANK_TRANSFER: "BANK_TRANSFER"
+    BANK_TRANSFER: "BANK_TRANSFER",
+    NONE:"NONE"
   },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',

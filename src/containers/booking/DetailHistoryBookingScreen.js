@@ -313,12 +313,14 @@ class DetailHistoryBookingScreen extends Component {
             console.log('this.state.booking: ', this.state.booking);
             this.props.navigation.navigate("confirmBookingDoctor", {
                 booking: this.state.booking,
-                isOnline
+                isOnline,
+                paymentMethod:this.state.booking.invoice.payment
             });
 
         } else {
             this.props.navigation.navigate("confirmBooking", {
-                booking: this.state.booking
+                booking: this.state.booking,
+                paymentMethod:this.state.booking.invoice.payment
             });
         }
     }
@@ -600,7 +602,7 @@ class DetailHistoryBookingScreen extends Component {
 
                         }
                         {
-                            this.state.booking.invoice.payment == "NONE" ?
+                            this.state.booking.invoice.payment == constants.PAYMENT_METHOD.NONE || (this.state.booking.invoice.payment == constants.PAYMENT_METHOD.MOMO && this.state.booking.invoice.status == "NEW") ?
                                 <TouchableOpacity
                                     onPress={this.onPayment}
                                     style={styles.buttonPayment}>

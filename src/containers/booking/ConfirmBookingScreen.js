@@ -23,12 +23,13 @@ class ConfirmBookingScreen extends Component {
     constructor(props) {
         super(props);
         let booking = this.props.navigation.state.params.booking;
+        let paymentMethod = this.props.navigation.state.params.paymentMethod;
         if (!booking) {
             snackbar.show(constants.booking.booking_not_found, "danger");
             this.props.navigation.pop();
         }
         this.state = {
-            paymentMethod: constants.PAYMENT_METHOD.CASH,
+            paymentMethod: (paymentMethod != constants.PAYMENT_METHOD.NONE && typeof paymentMethod != 'undefined') ? paymentMethod : constants.PAYMENT_METHOD.CASH,
             booking,
             voucher: {},
         }
