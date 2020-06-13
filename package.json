@@ -24,6 +24,7 @@
     "@react-native-community/cli-platform-android": "^2.9.0",
     "@react-native-community/cli-platform-ios": "^2.9.0",
     "@react-native-community/netinfo": "^4.1.5",
+    "@react-native-community/toolbar-android": "^0.1.0-rc.2",
     "@react-native-community/viewpager": "^3.3.0",
     "appcenter": "^2.2.0",
     "appcenter-analytics": "^2.2.0",
@@ -79,6 +80,7 @@
     "react-native-image-viewing": "0.1.7",
     "react-native-incall-manager": "^3.2.7",
     "react-native-keep-awake": "^4.0.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-location": "^2.5.0",
@@ -103,6 +105,7 @@
     "react-native-table-component": "^1.2.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-voip-push-notification": "^2.0.0",
+    "react-native-webrtc": "^1.75.3",
     "react-native-webview": "^6.9.0",
     "react-native-wheel-picker-android": "^2.0.5",
     "react-navigation": "^3.11.1",
@@ -112,7 +115,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rn-fetch-blob": "^0.10.16",
-    "stringee-react-native": "^1.2.9"
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
