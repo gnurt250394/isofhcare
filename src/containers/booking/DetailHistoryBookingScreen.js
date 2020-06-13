@@ -25,6 +25,7 @@ import stylemodal from "@styles/modal-style";
 import constants from "@resources/strings";
 import Barcode from 'mainam-react-native-barcode'
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
+import CallManager from "@components/community/CallManager";
 class DetailHistoryBookingScreen extends Component {
     constructor(props) {
         super(props);
@@ -268,13 +269,14 @@ class DetailHistoryBookingScreen extends Component {
         );
     }
     onCallVideo = () => {
-        this.props.navigation.navigate("videoCall", {
-            from: this.props.userApp?.currentUser?.id || "",
-            to: this.state.booking?.doctor?.id || "",
-            isOutgoingCall: true,
-            isVideoCall: true,
-            profile: this.state.booking
-        });
+        CallManager.startCall(this.state.booking, true)
+        // this.props.navigation.navigate("videoCall", {
+        //     from: this.props.userApp?.currentUser?.id || "",
+        //     to: this.state.booking?.doctor?.id || "",
+        //     isOutgoingCall: true,
+        //     isVideoCall: true,
+        //     profile: this.state.booking
+        // });
     }
     onBackdropPress = () => this.setState({ isVisible: false })
     getTime = (time) => {
@@ -314,13 +316,13 @@ class DetailHistoryBookingScreen extends Component {
             this.props.navigation.navigate("confirmBookingDoctor", {
                 booking: this.state.booking,
                 isOnline,
-                paymentMethod:this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment
             });
 
         } else {
             this.props.navigation.navigate("confirmBooking", {
                 booking: this.state.booking,
-                paymentMethod:this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment
             });
         }
     }

@@ -1,15 +1,17 @@
 import firebase from 'react-native-firebase';
 import { AppState, Linking, NativeModules } from 'react-native'
-import RNCallKeepManager from '@components/RNCallKeepManager'
+// import RNCallKeepManager from '@components/RNCallKeepManager'
 const LaunchApplication = NativeModules.LaunchApplication;
 import constants from '@resources/strings'
 import RNCallKeep from 'react-native-callkeep'
 import StringUtils from 'mainam-react-native-string-utils'
 import NavigationService from '@navigators/NavigationService';
 export default async (message) => {
+    console.log('message: ', message);
     if (message && message.data && message.data.type == "CALL_EVENT") {
         constants.route = 'home'
         let data = JSON.parse(message.data.data)
+        console.log('data: ', data);
         // const fbNotification = new firebase.notifications.Notification()
         //     .setNotificationId(StringUtils.guid())
         //     .setBody("Bạn có đang có 1 cuộc gọi")
@@ -23,11 +25,14 @@ export default async (message) => {
 
         try {
             if (AppState.currentState != 'active') {
-                RNCallKeepManager.setupCallKeep()
-                RNCallKeepManager.displayIncommingCall(data.callId)
+                // RNCallKeepManager.setupCallKeep()
+                // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+                console.log('LaunchApplication: ', LaunchApplication);
+                LaunchApplication.unlock()
                 LaunchApplication.open(constants.package_name)
             }
         } catch (error) {
+            console.log('error: ========>', error);
 
 
         }
