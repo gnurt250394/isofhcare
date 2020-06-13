@@ -27,7 +27,7 @@ import firebase from 'react-native-firebase';
 import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import NavigationService from "@navigators/NavigationService";
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -122,7 +122,7 @@ class LoginScreen extends Component {
 									this.nextScreen.param
 								);
 							} else {
-								this.props.navigation.navigate("home", { showDraw: false });
+								NavigationService.reset("home", { showDraw: false });
 							}
 							break;
 						case 4:
@@ -170,6 +170,9 @@ class LoginScreen extends Component {
 		Linking.openURL(
 			'tel:1900299983'
 		);
+	}
+	goHome=()=>{
+		this.props.navigation.navigate('home')
 	}
 	render() {
 		return (
@@ -289,6 +292,12 @@ class LoginScreen extends Component {
 						{/* </KeyboardAvoidingView> */}
 						<TouchableOpacity onPress={this.register.bind(this)} style={styles.btnSignUp} >
 							<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.goHome} style={{
+							alignSelf:'center',
+							padding:30
+						}} >
+							<Text style={[styles.txSignUp,{textDecorationLine:'underline'}]}>{"Về trang chủ"}</Text>
 						</TouchableOpacity>
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
