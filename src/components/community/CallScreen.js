@@ -160,7 +160,7 @@ function CallScreen({}, ref) {
     // showModal();
   };
   const endCallEvent = ({callUUid}) => {
-    rejectCall();
+    if (!state.isAnswerSuccess) rejectCall();
   };
   const addEventCallKeep = () => {
     RNCallKeep.addEventListener('answerCall', answerCallEvent);
@@ -198,32 +198,25 @@ function CallScreen({}, ref) {
   const onOffer = async (data, callback) => {
     console.log('data: ', data);
     try {
-      if (state.isAnswerSuccess) {
-        callback(true);
-      } else {
-        callback(false);
-        debugger;
-        // if (Platform.OS == 'android') {
-        // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
-        showModal();
-        startSound();
-        // }
-        UUID.current = data.UUID;
-        socketId2.current = data.from;
-        setState({data2: data, isAnswer: true, booking: data.booking});
-        if (!localPC.current) {
-          await initCall(localStream.current);
-        }
-        if (!localStream.current) {
-          startLocalStream();
-        }
-        await localPC.current.setRemoteDescription(
-          new RTCSessionDescription(data.sdp),
-        );
+      debugger;
+      // if (Platform.OS == 'android') {
+      // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+      showModal();
+      startSound();
+      // }
+      UUID.current = data.UUID;
+      socketId2.current = data.from;
+      setState({data2: data, isAnswer: true, booking: data.booking});
+      if (!localPC.current) {
+        await initCall(localStream.current);
       }
-    } catch (error) {
-      closeStreams();
-    }
+      if (!localStream.current) {
+        startLocalStream();
+      }
+      await localPC.current.setRemoteDescription(
+        new RTCSessionDescription(data.sdp),
+      );
+    } catch (error) {}
   };
 
   function updateBandwidthRestriction(sdp, bandwidth) {
@@ -293,13 +286,14 @@ function CallScreen({}, ref) {
           }
         });
         socket.current.on(constants.socket_type.LEAVE, data => {
-          if (data.status && data.code == 1) {
+          if (data.status && data.code == 1 && !state.isAnswerSuccess) {
             setState({callStatus: 'Máy bận'});
+            setTimeout(closeStreams, 1500);
           } else {
             setState({callStatus: 'Kết thúc cuộc gọi'});
+            closeStreams();
           }
-          setState({isAnswerSuccess: false});
-          setTimeout(closeStreams, 1500);
+          setState({statusCall: true});
         });
 
         addEventCallKeep();
@@ -329,7 +323,7 @@ function CallScreen({}, ref) {
       }
       removeEvent();
     };
-  }, []);
+  }, [userApp.isLogin]);
   const handleGetUserMediaError = e => {
     switch (e.name) {
       case 'NotFoundError':
@@ -400,11 +394,6 @@ function CallScreen({}, ref) {
       // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
       const configuration = {
         iceServers: [
-          // { url: 'stun:stun.l.google.com:19302' },
-          // { url: 'stun:stun1.l.google.com:19302' },
-          // { url: 'stun:stun2.l.google.com:19302' },
-          // { url: 'stun:stun3.l.google.com:19302' },
-          // { url: 'stun:stun4.l.google.com:19302' },
           {
             url: 'turn:numb.viagenie.ca',
             username: 'gnurt250394@gmail.com',
@@ -660,6 +649,7 @@ function CallScreen({}, ref) {
     soundUtils.stop();
     stopSound();
     setState({
+      isAnswerSuccess: false,
       makeCall: false,
       isVisible: false,
       callStatus: '',
@@ -668,7 +658,7 @@ function CallScreen({}, ref) {
     setIsSpeak(true);
     setIsMuted(false);
     if (UUID.current) {
-      RNCallKeep.reportEndCallWithUUID(UUID.current, 1);
+      RNCallKeep.endCall(UUID.current, 1);
     }
   };
   const toggleSpeaker = () => {
@@ -677,11 +667,10 @@ function CallScreen({}, ref) {
   };
   const rejectCall = () => {
     // RNCallKeepManager.endCall()
-    setState({isAnswerSuccess: false});
     let type =
-      state.isAnswerSuccess || state.makeCall
-        ? constants.socket_type.LEAVE
-        : constants.socket_type.REJECT;
+    state.isAnswerSuccess || state.makeCall
+    ? constants.socket_type.LEAVE
+    : constants.socket_type.REJECT;
     onSend(constants.socket_type.LEAVE, {to: socketId2.current, type});
     closeStreams();
   };
