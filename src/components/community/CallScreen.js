@@ -156,10 +156,7 @@ function CallScreen({}, ref) {
     createAnswer();
   };
   const answerCallEvent = () => {
-    if (Platform.OS == 'android' && !state.makeCall) {
-      RNCallKeep.reportEndCallWithUUID(UUID.current, 1);
-      RNCallKeep.backToForeground();
-    }
+    setState({isAnswerSuccess: true});
     showModal();
   };
   const endCallEvent = ({callUUid}) => {
@@ -581,7 +578,6 @@ function CallScreen({}, ref) {
       Vibration.cancel();
       const answer = await localPC.current.createAnswer();
       console.log(`Answer from remotePC: ${answer.sdp}`);
-      answerCallEvent();
       // answer.sdp = handle_offer_sdp(answer)
       // answer.sdp = BandwidthHandler.setOpusAttributes(answer.sdp, {
       //     'stereo': 0, // to disable stereo (to force mono audio)
@@ -594,7 +590,9 @@ function CallScreen({}, ref) {
       //     'maxptime': 3
       // });
       await localPC.current.setLocalDescription(answer);
-      setState({isAnswerSuccess: true});
+      if (Platform.OS == 'android') {
+        setState({isAnswerSuccess: true});
+      }
       onTimeOut();
 
       onSend(constants.socket_type.ANSWER, {
