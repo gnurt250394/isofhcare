@@ -374,7 +374,7 @@ const RootNavigator = (route = 'splash') => createStackNavigator(
     detailQuestion: { screen: DetailQuestionScreen },
     detailsProfile: { screen: ProfileInfo },
     detailsDoctor: { screen: DetailsDoctorScreen },
-    videoCall: { screen: VideoCallScreen },
+    // videoCall: { screen: VideoCallScreen },
     // booking navigation
     addBooking: AddBookingScreen,
     addBooking1: AddBookingScreen1,
@@ -446,6 +446,7 @@ const RootNavigator = (route = 'splash') => createStackNavigator(
     historyCumulative: { screen: HistoryCumulativeScreen },
   },
   {
+    initialRouteName: route,
     headerMode: "none",
     // cardStyle: {
     //   backgroundColor: 'transparent', opacity: 1,
