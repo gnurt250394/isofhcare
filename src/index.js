@@ -43,6 +43,7 @@ Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
 import FlashMessage from "react-native-flash-message";
 import InputPhone from '@components/account/InputPhone'
+import SocketProvider from "@data-access/socket-provider";
 
 
 class Kernel extends Component {
@@ -89,6 +90,7 @@ class Kernel extends Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={store.__PERSISTOR}>
+        <SocketProvider>
           {/* <Root> */}
           <RootApp ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
@@ -96,6 +98,7 @@ class Kernel extends Component {
             screenProps={{ state: store.getState() }}
           />
           {/* </Root> */}
+          </SocketProvider>
         </PersistGate>
         <FlashMessage floating={true} style={{ marginTop: 30 }} position="top" ref="myLocalFlashMessage" />
         <InputPhone></InputPhone>
