@@ -92,6 +92,15 @@ module.exports = {
   facebook: 'Facebook',
   gmail: 'Gmail',
   not_found: 'Hiện tại chưa có dữ liệu',
+  socket_type: {
+    OFFER: "OFFER",
+    ANSWER: "ANSWER",
+    CANDIDATE: "CANDIDATE",
+    LEAVE: "LEAVE",
+    REJECT: "REJECT",
+    DELINE: "DELINE",
+    DISCONNECT: "DISCONNECT",
+  },
   voucher: {
     use_now: 'SỬ DỤNG NGAY',
     input_voucher: 'NHẬP MÃ ƯU ĐÃI',
@@ -554,7 +563,7 @@ module.exports = {
     MOMO: "MOMO",
     //PAYOO: "PAYOO";
     BANK_TRANSFER: "BANK_TRANSFER",
-    NONE:"NONE"
+    NONE: "NONE"
   },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',

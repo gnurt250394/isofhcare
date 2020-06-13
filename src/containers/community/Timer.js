@@ -81,12 +81,12 @@ export default function Timer(props) {
         <View style={{
             flex: 1
         }}>
-            <Text style={styles.userId}>{state.profile?.doctor?.academicDegree ? renderAcademic(state.profile.doctor.academicDegree) : ""}{state.profile?.doctor?.name || ""}</Text>
+            <Text style={styles.userId}>{state.booking?.doctor?.academicDegree ? renderAcademic(state.booking.doctor.academicDegree) : ""}{state.booking?.doctor?.name || ""}</Text>
             {
                 state.mediaConnected ?
                     <Text style={styles.callState}>{state.time?.toDateObject().format("mm:ss")}</Text>
                     :
-                    <Text style={styles.callState}>{state.callState}</Text>
+                    null
             }
             {
                 state.warn ?
