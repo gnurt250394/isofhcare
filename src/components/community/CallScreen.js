@@ -157,7 +157,7 @@ function CallScreen({}, ref) {
   };
   const answerCallEvent = () => {
     setState({isAnswerSuccess: true});
-    showModal();
+    // showModal();
   };
   const endCallEvent = ({callUUid}) => {
     rejectCall();
@@ -195,27 +195,32 @@ function CallScreen({}, ref) {
     InCallManager.stop();
     Vibration.cancel();
   };
-  const onOffer = async data => {
+  const onOffer = async (data, callback) => {
     console.log('data: ', data);
     try {
-      debugger;
-      if (Platform.OS == 'android') {
+      if (state.isAnswerSuccess) {
+        callback(true);
+      } else {
+        callback(false);
+        debugger;
+        // if (Platform.OS == 'android') {
         // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
         showModal();
         startSound();
+        // }
+        UUID.current = data.UUID;
+        socketId2.current = data.from;
+        setState({data2: data, isAnswer: true, booking: data.booking});
+        if (!localPC.current) {
+          await initCall(localStream.current);
+        }
+        if (!localStream.current) {
+          startLocalStream();
+        }
+        await localPC.current.setRemoteDescription(
+          new RTCSessionDescription(data.sdp),
+        );
       }
-      UUID.current = data.UUID;
-      socketId2.current = data.from;
-      setState({data2: data, isAnswer: true, booking: data.booking});
-      if (!localPC.current) {
-        await initCall(localStream.current);
-      }
-      if (!localStream.current) {
-        startLocalStream();
-      }
-      await localPC.current.setRemoteDescription(
-        new RTCSessionDescription(data.sdp),
-      );
     } catch (error) {
       closeStreams();
     }
@@ -254,6 +259,10 @@ function CallScreen({}, ref) {
         socket.current = await socketProvider.connectSocket(userApp.loginToken);
         socket.current.on('connect', onConnected);
         socket.current.on(constants.socket_type.OFFER, onOffer);
+        socket.current.on(constants.socket_type.CHECKING, (data, callback) => {
+          console.log('data: 112211', data);
+          callback({status: state.isAnswerSuccess, id: socket.current.id});
+        });
         socket.current.on(constants.socket_type.ANSWER, async data => {
           debugger;
           console.log('localPC, setRemoteDescription');
@@ -289,6 +298,7 @@ function CallScreen({}, ref) {
           } else {
             setState({callStatus: 'Kết thúc cuộc gọi'});
           }
+          setState({isAnswerSuccess: false});
           setTimeout(closeStreams, 1500);
         });
 
@@ -320,6 +330,25 @@ function CallScreen({}, ref) {
       removeEvent();
     };
   }, []);
+  const handleGetUserMediaError = e => {
+    switch (e.name) {
+      case 'NotFoundError':
+        alert(
+          'Unable to open your call because no camera and/or microphone' +
+            'were found.',
+        );
+        break;
+      case 'SecurityError':
+      case 'PermissionDeniedError':
+        // Do nothing; this is the same as the user canceling the call.
+        break;
+      default:
+        alert('Error opening your camera and/or microphone: ' + e.message);
+        break;
+    }
+
+    closeStreams();
+  };
   const startLocalStream = async init => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -359,6 +388,7 @@ function CallScreen({}, ref) {
         localStream.current = newStream;
       } catch (error) {
         reject();
+        handleGetUserMediaError(error);
         console.log('error: ', error);
         debugger;
       }
@@ -431,16 +461,16 @@ function CallScreen({}, ref) {
             setState({statusCall: true});
             break;
           case 'failed':
-            if (localPC.current.restartIce) {
-              localPC.current.restartIce();
-            } else {
-              try {
-                let offer = await localPC.current.createOffer({
-                  iceRestart: true,
-                });
-                onCreateOfferSuccess(offer);
-              } catch (error) {}
-            }
+            // if (localPC.current.restartIce) {
+            //   localPC.current.restartIce();
+            // } else {
+            //   try {
+            //     let offer = await localPC.current.createOffer({
+            //       iceRestart: true,
+            //     });
+            //     onCreateOfferSuccess(offer);
+            //   } catch (error) {}
+            // }
             break;
           case 'connected':
             setState({statusCall: true});
@@ -590,9 +620,7 @@ function CallScreen({}, ref) {
       //     'maxptime': 3
       // });
       await localPC.current.setLocalDescription(answer);
-      if (Platform.OS == 'android') {
-        setState({isAnswerSuccess: true});
-      }
+      setState({isAnswerSuccess: true});
       onTimeOut();
 
       onSend(constants.socket_type.ANSWER, {
@@ -602,7 +630,6 @@ function CallScreen({}, ref) {
       });
     } catch (error) {
       debugger;
-      closeStreams();
       console.log('error: ', error);
     }
   };
@@ -633,7 +660,6 @@ function CallScreen({}, ref) {
     soundUtils.stop();
     stopSound();
     setState({
-      isAnswerSuccess: false,
       makeCall: false,
       isVisible: false,
       callStatus: '',
@@ -651,6 +677,7 @@ function CallScreen({}, ref) {
   };
   const rejectCall = () => {
     // RNCallKeepManager.endCall()
+    setState({isAnswerSuccess: false});
     let type =
       state.isAnswerSuccess || state.makeCall
         ? constants.socket_type.LEAVE
@@ -707,7 +734,7 @@ function CallScreen({}, ref) {
         {state.callStatus && !state.isAnswerSuccess ? (
           <Text style={styles.statusCall}>{state.callStatus}</Text>
         ) : null}
-        {!state.statusCall && remoteStream ? (
+        {!state.statusCall && remoteStream && state.isAnswerSuccess ? (
           <Text style={styles.textWarning}>
             Kết nối bị gián đoạn vui lòng di chuyển đến khu vực có tín hiệu tốt
             để có cuộc gọi ổn định

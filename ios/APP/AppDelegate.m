@@ -113,27 +113,32 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 
 // --- Handle incoming pushes (for ios >= 11)
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)(void))completion {
-  NSLog(@" didReceiveIncomingPushWithPayload có complete %@",payload.dictionaryPayload[@"data"][@"name"]);
-    NSString *uuid =payload.dictionaryPayload[@"data"][@"UUID"];
-    NSString *callerName = payload.dictionaryPayload[@"data"][@"name"];
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:uuid forKey:@"uuid"];
-  
-//       NSString *callerName = @"Người dùng iSofHcare";
-       NSString *handle = @"";
+  if([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
+  {
+      //App is in foreground. Act on it.
+    NSLog(@" didReceiveIncomingPushWithPayload có complete %@",payload.dictionaryPayload[@"data"][@"name"]);
+        NSString *uuid =payload.dictionaryPayload[@"data"][@"UUID"];
+        NSString *callerName = payload.dictionaryPayload[@"data"][@"name"];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+        [dict setObject:uuid forKey:@"uuid"];
+      
+    //       NSString *callerName = @"Người dùng iSofHcare";
+           NSString *handle = @"";
+            
+      if ([[CXCallObserver alloc] init].calls.count == 0) {
+        // --- Process the received push
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"voipRemoteNotificationReceived" object:self userInfo:dict];
         
-  if ([[CXCallObserver alloc] init].calls.count == 0) {
-    // --- Process the received push
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"voipRemoteNotificationReceived" object:self userInfo:dict];
-    
-    // --- You should make sure to report to callkit BEFORE execute `completion()`
-    [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:payload.dictionaryPayload[@"data"]];
-    NSLog(@" didReceiveIncomingPushWithPayload có Gọi nhé");
-  } else {
-    // Show fake call
-    NSLog(@" show fake call");
-   [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:nil];
-    [RNCallKeep endCallWithUUID:uuid reason:1];
+        // --- You should make sure to report to callkit BEFORE execute `completion()`
+        [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:payload.dictionaryPayload[@"data"]];
+        NSLog(@" didReceiveIncomingPushWithPayload có Gọi nhé");
+      } else {
+        // Show fake call
+        NSLog(@" show fake call");
+       [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:true localizedCallerName:callerName fromPushKit: YES payload:nil];
+        [RNCallKeep endCallWithUUID:uuid reason:1];
+      }
+      
   }
   
   completion();
