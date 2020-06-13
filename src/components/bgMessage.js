@@ -7,6 +7,7 @@ import RNCallKeep from 'react-native-callkeep'
 import StringUtils from 'mainam-react-native-string-utils'
 import NavigationService from '@navigators/NavigationService';
 export default async (message) => {
+    console.log('message: ', message);
     if (message && message.data && message.data.type == "CALL_EVENT") {
         constants.route = 'home'
         let data = JSON.parse(message.data.data)
