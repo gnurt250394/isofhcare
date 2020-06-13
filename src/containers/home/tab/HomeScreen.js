@@ -38,8 +38,10 @@ import CategoryHighLight from "@components/home/CategoryHighLight";
 import DoctorHighLight from "@components/home/DoctorHighLight";
 import HospitalHighLight from "@components/home/HospitalHighLight";
 import NewsHighLight from "@components/home/NewsHighLight";
-import InitialVideoCall from "@components/InitialVideoScreen";
+// import InitialVideoCall from "@components/InitialVideoScreen";
 import Deeplink from "@components/home/Deeplink";
+import CallScreen from "@components/community/CallScreen";
+import CallManager from "@components/community/CallManager";
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -187,12 +189,15 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
+    CallManager.register(this.callRef);
+
   }
 
 
   componentWillUnmount() {
     // AppState.removeEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
+    CallManager.unregister(this.callRef);
   }
   handleHardwareBack = () => {
     this.props.navigation.pop();
@@ -402,11 +407,11 @@ class HomeScreen extends Component {
         </View>
         {
           this.props.userApp.isLogin ?
-            <InitialVideoCall {...this.props} />
+            <CallScreen ref={ref => this.callRef = ref} />
             : null
         }
         <PushController />
-        <Deeplink/>
+        <Deeplink />
       </ActivityPanel>
     );
   }
@@ -587,7 +592,7 @@ const styles = StyleSheet.create({
 
 
 function mapStateToProps(state) {
-  
+
   return {
     userApp: state.auth.userApp
   };
