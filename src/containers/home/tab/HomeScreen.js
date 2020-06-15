@@ -160,10 +160,11 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/homev2/ic_more_info.png"),
-          text: "Nhiều hơn",
+          icon: require("@images/new/homev2/ic_icd.png"),
+          text: "ICD Bệnh",
           onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
+            this.props.navigation.navigate("searchIcd");
+
             // this.props.navigation.navigate("videoCall", {
             //   from: this.props.userApp?.currentUser?.id || "",
             //   to: 5640,

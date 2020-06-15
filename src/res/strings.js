@@ -1075,6 +1075,9 @@ module.exports = {
       search_drug: isofhcare_service + 'pharmacy/v1/medicine/search',
       search_by_name: '/v1/search?expression=',
       delete_address: isofhcare_service + 'orders/v1/addresses/'
+    },
+    icd: {
+      search: isofhcare_service + 'catalog/v1/diseases/search'
     }
   }
 };
