@@ -221,7 +221,7 @@ class SearchIcdScreen extends Component {
                         underlineColorAndroid={"transparent"} />
                     {
                         this.state.type == TYPE.SEARCH ?
-                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
+                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefresh}>
                                 <ScaleImage source={require('@images/ic_close.png')} height={16} />
                             </TouchableOpacity>
                             :
