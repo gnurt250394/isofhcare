@@ -207,7 +207,7 @@ class ConfirmBookingDoctorScreen extends Component {
         let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
-                // hideBackButton={true}
+                hideBackButton={true}
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
