@@ -45,7 +45,7 @@ class ItemHospital extends Component {
     renderAcademic = (academicDegree) => {
         switch (academicDegree) {
             case 'BS': return 'BS'
-            case 'ThS': return 'Ths'
+            case 'ThS': return 'ThS'
             case 'TS': return 'TS'
             case 'PGS': return 'PGS'
             case 'GS': return 'GS'
@@ -53,8 +53,8 @@ class ItemHospital extends Component {
             case 'BSCKII': return 'BSCKII'
             case 'GSTS': return 'GS.TS'
             case 'PGSTS': return 'PGS.TS'
-            case 'ThsBS': return 'Ths.BS'
-            case 'ThsBSCKII': return 'Ths.BSCKII'
+            case 'ThsBS': return 'ThS.BS'
+            case 'ThsBSCKII': return 'ThS.BSCKII'
             case 'TSBS': return 'TS.BS'
             default: return ''
         }
@@ -95,7 +95,7 @@ class ItemHospital extends Component {
 
                         </View>
                         <View style={styles.paddingLeft5}>
-                            <Text style={styles.txtNameDoctor}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '.' : ''}{item.name}</Text>
+                            <Text style={styles.txtNameDoctor}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '. ' : ''}{item.name}</Text>
                             <Text numberOfLines={1} style={styles.txtHospitalName} >{item.contact.address}</Text>
                             <View style={styles.containerButton}>
                                 <View style={{
@@ -105,7 +105,7 @@ class ItemHospital extends Component {
                                     <ScaleImage source={require('@images/ic_location.png')} height={18} style={styles.icLocation} />
                                     <Text style={styles.txtLocation}>km</Text>
                                 </View>
-                                <Button textStyle = {{textAlign:'center'}} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
+                                <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>
                     </View>
