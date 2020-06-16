@@ -10,7 +10,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
     const getServiceHighLight = async () => {
         try {
             let res = await homeProvider.listNewsCovid()
-            
+
             if (res?.code == 200) {
                 setData(res.data.news)
             } else {
@@ -18,7 +18,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
 
             }
         } catch (error) {
-            
+
             setData([])
 
         }
@@ -53,7 +53,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
-                    <Text style={styles.txAds}>CẬP NHẬT THÔNG TIN COVID - 19</Text>
+                    <Text style={styles.txAds}>Tin tức y tế</Text>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
