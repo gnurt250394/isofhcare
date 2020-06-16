@@ -170,13 +170,13 @@ class SearchIcdScreen extends Component {
                 <TouchableOpacity disabled={!(item.children && item.children.length)} style={styles.btn} onPress={() => this.onShowDetails(index)}>
                     <View style={styles.viewCode}>
                         <Text style={styles.txCode}>
-                            {item.chapterCode}
+                            {item.typeCode}
                         </Text>
                     </View>
                     <View style={styles.viewName}>
                         <View style={styles.viewTxName}>
-                            <Text style={styles.txName}>{item.chapterName}</Text>
-                            <Text style={styles.txNameEn}>{item.chapterEnName}</Text>
+                            <Text style={styles.txName}>{item.diseaseName}</Text>
+                            <Text style={styles.txNameEn}>{item.diseaseEnName}</Text>
                         </View>
                         {item.children && item.children.length ? <ScaledImage height={10} source={require('@images/new/icd/ic_right.png')}></ScaledImage> : <View></View>}
                     </View>
@@ -189,7 +189,7 @@ class SearchIcdScreen extends Component {
                             </View>
                             <View style={styles.viewTxNameDetails}>
                                 <Text style={styles.txNameDetails}>
-                                    {obj.diseaseCodeMinistry}</Text>
+                                    {obj.diseaseName}</Text>
                                 <Text style={styles.txNameEnDetails}>
                                     {obj.diseaseEnName}</Text>
                             </View>
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         flex: 1,
-        padding: 10
+        // padding: 10
     },
     containerFilte: {
         flexDirection: 'row',
@@ -400,12 +400,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 6,
-        width: '100%',
         justifyContent: 'flex-start',
         backgroundColor: '#E8EBF1',
         marginTop: 10,
         flex: 1,
-
+        marginHorizontal: 10
     },
     groupProfile: {
         flexDirection: 'row',
@@ -421,7 +420,6 @@ const styles = StyleSheet.create({
         padding: 15,
         borderTopLeftRadius: 6,
         borderBottomLeftRadius: 6,
-        width: '30%'
     },
     txCode: {
         color: '#FFFFFF',
@@ -450,20 +448,19 @@ const styles = StyleSheet.create({
         color: '#00000050'
     },
     viewCodeDetails: {
-        justifyContent: 'flex-start',
+        // justifyContent: 'flex-start',
         alignItems: 'center',
-        alignSelf: 'flex-start',
+        // alignSelf: 'flex-start',
         height: '100%',
-        padding: 15,
+        padding: 10,
         borderTopLeftRadius: 6,
         borderBottomLeftRadius: 6,
-        width: '30%'
     },
     viewCard: {
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 6,
-        width: '90%',
+        marginHorizontal: 10,
         justifyContent: 'flex-start',
         backgroundColor: '#fff',
         marginTop: 5,
