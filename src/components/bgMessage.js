@@ -11,6 +11,7 @@ export default async (message) => {
     if (message && message.data && message.data.type == "CALL_EVENT") {
         constants.route = 'home'
         let data = JSON.parse(message.data.data)
+        console.log('data: ', data);
         // const fbNotification = new firebase.notifications.Notification()
         //     .setNotificationId(StringUtils.guid())
         //     .setBody("Bạn có đang có 1 cuộc gọi")
@@ -25,7 +26,7 @@ export default async (message) => {
         try {
             if (AppState.currentState != 'active') {
                 RNCallKeepManager.setupCallKeep()
-                RNCallKeepManager.displayIncommingCall(data.callId)
+                RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
                 LaunchApplication.open(constants.package_name)
             }
         } catch (error) {
