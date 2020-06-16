@@ -11,6 +11,7 @@ import firebase from 'react-native-firebase'
 import RNCallKeepManager from '@components/RNCallKeepManager'
 import RNCallKeep from 'react-native-callkeep'
 import Timer from '@containers/community/Timer';
+import DeviceInfo from 'react-native-device-info'
 const { width, height } = Dimensions.get('screen')
 
 var qvgaConstraints = {
@@ -32,7 +33,7 @@ var hdConstraints = {
 };
 function CallScreen({ }, ref) {
     // const [localStream, setLocalStream] = useState();
-    const [state, _setState] = useState({ booking: {}, id: '', isAnswer: false, isAnswerSuccess: false, makeCall: false, isVisible: false });
+    const [state, _setState] = useState({ statusCall: true, booking: {}, id: '', isAnswer: false, isAnswerSuccess: false, makeCall: false, isVisible: false });
     const [remoteStream, setRemoteStream] = useState();
     const [isMuted, setIsMuted] = useState(false);
     const [isSpeak, setIsSpeak] = useState(true);
@@ -74,7 +75,7 @@ function CallScreen({ }, ref) {
                 VoipPushNotification.registerVoipToken();
                 VoipPushNotification.addEventListener("register", token => {
                     // send token to your apn provider server
-                    onSend('connectFirebase', { token, id: userApp.currentUser.id, platform: "ios" })
+                    onSend('connectFirebase', { token, id: userApp.currentUser.id, platform: "ios", packageName: DeviceInfo.getBundleId() })
                 });
                 VoipPushNotification.addEventListener('notification', (notification) => {
                 });
@@ -250,11 +251,17 @@ function CallScreen({ }, ref) {
         const configuration = {
             iceServers: [
                 // { url: 'stun:stun.l.google.com:19302' },
-                { url: 'stun:stun1.l.google.com:19302' },
+                // { url: 'stun:stun1.l.google.com:19302' },
                 // { url: 'stun:stun2.l.google.com:19302' },
                 // { url: 'stun:stun3.l.google.com:19302' },
                 // { url: 'stun:stun4.l.google.com:19302' },
+                {
+                    url: 'turn:numb.viagenie.ca',
+                    username: 'gnurt250394@gmail.com',
+                    credential: 'trung123'
+                },
             ],
+            iceTransportPolicy: 'public',
         };
         localPC.current = new RTCPeerConnection(configuration);
         // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
@@ -287,14 +294,38 @@ function CallScreen({ }, ref) {
                 * On Ice Connection State Change
                 */
 
-        localPC.current.oniceconnectionstatechange = event => {
+        localPC.current.oniceconnectionstatechange = async (event) => {
             console.log('event: oniceconnectionstatechange', event);
             console.log('event: iceConnectionState', event.target.iceConnectionState);
-            if (event.target.iceConnectionState === 'completed') {
-                setTimeout(() => {
-                    getStats();
-                }, 1000);
+            switch (event.target.iceConnectionState) {
+                case 'completed':
+                    setState({ statusCall: true })
+                    break;
+                case 'failed':
+                    if (localPC.current.restartIce) {
+                        localPC.current.restartIce();
+                    } else {
+                        try {
+                            if (state.makeCall == true) {
+                                let offer = await localPC.current.createOffer({ iceRestart: true })
+                                onCreateOfferSuccess(offer)
+                            }
+                        } catch (error) {
+
+                        }
+
+                    }
+                    break;
+                case 'connected':
+                    setState({ statusCall: true })
+                    break;
+                case 'disconnected':
+                    setState({ statusCall: false })
+                    break;
+                default:
+                    break;
             }
+
 
         };
 
@@ -349,6 +380,14 @@ function CallScreen({ }, ref) {
         }
         return new_sdp; //return the new sdp
     }
+    const onCreateOfferSuccess = async (offer, booking) => {
+        console.log('Offer from localPC, setLocalDescription');
+        await localPC.current.setLocalDescription(offer);
+        console.log('remotePC, setRemoteDescription');
+        onSend(constants.socket_type.OFFER, { booking, to: socketId2.current, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
+            debugger
+        })
+    }
     const startCall = async (booking, isOffer) => {
         debugger
         try {
@@ -373,12 +412,13 @@ function CallScreen({ }, ref) {
                 //     'usedtx': 1, // use dtx
                 //     'maxptime': 3
                 // });
-                console.log('Offer from localPC, setLocalDescription');
-                await localPC.current.setLocalDescription(offer);
-                console.log('remotePC, setRemoteDescription');
-                onSend(constants.socket_type.OFFER, { booking, to: booking?.doctor?.id, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
-                    debugger
-                })
+                onCreateOfferSuccess(offer, booking)
+                // console.log('Offer from localPC, setLocalDescription');
+                // await localPC.current.setLocalDescription(offer);
+                // console.log('remotePC, setRemoteDescription');
+                // onSend(constants.socket_type.OFFER, { booking, to: booking?.doctor?.id, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
+                //     debugger
+                // })
             }
         } catch (err) {
             debugger
@@ -409,6 +449,7 @@ function CallScreen({ }, ref) {
             await localPC.current.setLocalDescription(answer);
             setState({ isAnswerSuccess: true })
             onSend(constants.socket_type.ANSWER, { to: socketId2.current, sdp: localPC.current.localDescription })
+            console.log('socketId2.current: ', socketId2.current);
         } catch (error) {
             debugger
             console.log('error: ', error);
@@ -452,13 +493,11 @@ function CallScreen({ }, ref) {
     };
     const toggleSpeaker = () => {
         setIsSpeak(!isSpeak)
-        console.log('isSpeak: ', isSpeak);
         InCallManager.setForceSpeakerphoneOn(!isSpeak);
 
     }
     const rejectCall = () => {
         let type = state.isAnswerSuccess || state.makeCall ? constants.socket_type.LEAVE : constants.socket_type.REJECT
-        console.log('type: ', type);
         onSend(constants.socket_type.LEAVE, { to: socketId2.current, type })
         closeStreams()
     }
@@ -471,7 +510,10 @@ function CallScreen({ }, ref) {
             <View style={styles.container}>
                 <StatusBar translucent={true} backgroundColor={'transparent'} />
                 <View style={[styles.rtcview, { height, ...StyleSheet.absoluteFillObject, zIndex: 0 }]}>
-                    {remoteStream && <RTCView style={styles.rtc} zOrder={-1} objectFit="cover" streamURL={remoteStream.toURL()} />}
+                    {remoteStream ?
+                        <RTCView style={styles.rtc} zOrder={-1} objectFit="cover" streamURL={remoteStream.toURL()} />
+                        : null
+                    }
                 </View>
 
                 {localPC.current ?
@@ -488,11 +530,14 @@ function CallScreen({ }, ref) {
                     booking: state.booking,
                     mediaConnected: state.isAnswerSuccess,
                 }} />
+                {!state.statusCall && remoteStream ?
+                    <Text style={styles.textWarning}>Kết nối bị gián đoạn vui lòng di chuyển đến khu vực có tín hiệu tốt để có cuộc gọi ổn định</Text>
+                    : null}
                 <View style={{
                     flex: 1,
                     justifyContent: 'flex-end'
                 }}>
-                    {localStream.current && (state.isAnswer || state.makeCall) && (
+                    {localStream.current && (state.isAnswerSuccess || state.makeCall) && (
                         <View style={styles.toggleButtons}>
                             <TouchableOpacity onPress={toggleMute} style={{ padding: 10 }}>
                                 {isMuted ?
@@ -535,6 +580,12 @@ function CallScreen({ }, ref) {
 }
 
 const styles = StyleSheet.create({
+    textWarning: {
+        color: '#FFF',
+        textAlign: 'center',
+        flex: 1,
+        paddingHorizontal: 10
+    },
     groupLocalSteam: {
         height: '30%',
         width: '40%',
