@@ -13,11 +13,11 @@ const connectSocket = async (token) => {
                     transports: ['websocket'], query: {
                         token: token,
                     },
-                    upgrade: false,
+                    upgrade: true,
                     reconnection:true,
                     autoConnect:true,
                     timeout:30000,
-
+                    rememberUpgrade:true
                 })
                 socket.connect()
                 resolve(socket)

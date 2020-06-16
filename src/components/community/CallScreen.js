@@ -12,6 +12,7 @@ import RNCallKeepManager from '@components/RNCallKeepManager'
 import RNCallKeep from 'react-native-callkeep'
 import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info'
+import soundUtils from '@utils/sound-utils';
 const { width, height } = Dimensions.get('screen')
 
 var qvgaConstraints = {
@@ -69,8 +70,8 @@ function CallScreen({ }, ref) {
     }
     const onConnected = async (data2) => {
         try {
+            RNCallKeepManager.setupCallKeep()
             if (Platform.OS == 'ios') {
-                RNCallKeepManager.setupCallKeep()
                 VoipPushNotification.requestPermissions();
                 VoipPushNotification.registerVoipToken();
                 VoipPushNotification.addEventListener("register", token => {
@@ -93,7 +94,6 @@ function CallScreen({ }, ref) {
     }
     const onDidDisplayIncomingCall = ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
         console.log('payload: ', payload);
-        UUID.current = callUUID
         // RNCallKeep.updateDisplay(callUUID, state.profile?.doctor ? renderAcademic(state.profile?.doctor) : "Bác sĩ iSofhCare master", "")
         // if (isAnswerSuccess) {
         //     RNCallKeep.reportEndCallWithUUID(callUUID, 1)
@@ -107,6 +107,9 @@ function CallScreen({ }, ref) {
         createAnswer()
     }
     const answerCallEvent = () => {
+        if (Platform.OS == "android" && !state.makeCall)
+            RNCallKeep.reportEndCallWithUUID(UUID.current, 1)
+        RNCallKeep.backToForeground()
     }
     const endCallEvent = ({ callUUid }) => {
         rejectCall()
@@ -125,10 +128,13 @@ function CallScreen({ }, ref) {
         RNCallKeep.removeEventListener('didDisplayIncomingCall', onDidDisplayIncomingCall);
     }
     const onOffer = async (data) => {
+        console.log('data: ', data);
         debugger
         if (Platform.OS == 'android') {
+            RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
             showModal()
         }
+        UUID.current = data.UUID
         socketId2.current = data.from
         setState({ data2: data, isAnswer: true, booking: data.booking })
         if (!localPC.current) {
@@ -136,6 +142,22 @@ function CallScreen({ }, ref) {
         }
         await localPC.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
     }
+
+    function updateBandwidthRestriction(sdp, bandwidth) {
+        let modifier = 'AS';
+        if (sdp.indexOf('b=' + modifier + ':') === -1) {
+            // insert b= after c= line.
+            sdp = sdp.replace(/c=IN (.*)\r\n/, 'c=IN $1\r\nb=' + modifier + ':' + bandwidth + '\r\n');
+        } else {
+            sdp = sdp.replace(new RegExp('b=' + modifier + ':.*\r\n'), 'b=' + modifier + ':' + bandwidth + '\r\n');
+        }
+        return sdp;
+    }
+
+    function removeBandwidthRestriction(sdp) {
+        return sdp.replace(/b=AS:.*\r\n/, '').replace(/b=TIAS:.*\r\n/, '');
+    }
+
     useEffect(() => {
         const didmount = async () => {
             try {
@@ -148,11 +170,17 @@ function CallScreen({ }, ref) {
                     debugger
                     console.log('localPC, setRemoteDescription');
                     setState({ isAnswerSuccess: true })
-                    await localPC.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                    soundUtils.stop()
+                    await localPC.current.setRemoteDescription({
+                        type: data.sdp.type,
+                        sdp: updateBandwidthRestriction(data.sdp.sdp, 0)
+                    })
+                    console.log('updateBandwidthRestriction(data.sdp.sdp, 0): ', updateBandwidthRestriction(data.sdp.sdp, 0));
                 });
                 socket.current.on(constants.socket_type.CANDIDATE, data => {
                     debugger
-                    localPC.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    if (data.candidate)
+                        localPC.current.addIceCandidate(new RTCIceCandidate(data.candidate));
                 });
                 socket.current.on(constants.socket_type.LEAVE, socketId => {
                     closeStreams(socketId);
@@ -322,6 +350,9 @@ function CallScreen({ }, ref) {
                 case 'disconnected':
                     setState({ statusCall: false })
                     break;
+                case 'closed':
+                    closeStreams()
+                    break;
                 default:
                     break;
             }
@@ -384,6 +415,7 @@ function CallScreen({ }, ref) {
         console.log('Offer from localPC, setLocalDescription');
         await localPC.current.setLocalDescription(offer);
         console.log('remotePC, setRemoteDescription');
+        soundUtils.play('call_phone.mp3');
         onSend(constants.socket_type.OFFER, { booking, to: socketId2.current, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
             debugger
         })
@@ -434,6 +466,7 @@ function CallScreen({ }, ref) {
             InCallManager.start({ media: "video" });
             const answer = await localPC.current.createAnswer();
             console.log(`Answer from remotePC: ${answer.sdp}`);
+            answerCallEvent()
             // answer.sdp = handle_offer_sdp(answer)
 
             // answer.sdp = BandwidthHandler.setOpusAttributes(answer.sdp, {
@@ -465,7 +498,7 @@ function CallScreen({ }, ref) {
     // Mutes the local's outgoing audio
     const toggleMute = () => {
         debugger
-        if (!remoteStream) return;
+        // if (!remoteStream) return;
         localStream.current.getAudioTracks().forEach(track => {
             console.log(track.enabled ? 'muting' : 'unmuting', ' local track', track);
             track.enabled = !track.enabled;
@@ -480,6 +513,7 @@ function CallScreen({ }, ref) {
             localPC.current.close();
             localPC.current = null
         }
+        soundUtils.stop();
         InCallManager.stop();
         setState({ isAnswerSuccess: false, makeCall: false, isVisible: false })
         setIsSpeak(true)
@@ -492,11 +526,12 @@ function CallScreen({ }, ref) {
 
     };
     const toggleSpeaker = () => {
-        setIsSpeak(!isSpeak)
+        setIsSpeak(state => ({ isSpeak: !state.isSpeak }))
         InCallManager.setForceSpeakerphoneOn(!isSpeak);
 
     }
     const rejectCall = () => {
+        RNCallKeepManager.endCall()
         let type = state.isAnswerSuccess || state.makeCall ? constants.socket_type.LEAVE : constants.socket_type.REJECT
         onSend(constants.socket_type.LEAVE, { to: socketId2.current, type })
         closeStreams()
@@ -527,7 +562,7 @@ function CallScreen({ }, ref) {
                     </TouchableOpacity>
                 </View>
                 <Timer data={{
-                    booking: state.booking,
+                    booking: state.booking ? state.booking : state.data2,
                     mediaConnected: state.isAnswerSuccess,
                 }} />
                 {!state.statusCall && remoteStream ?
