@@ -43,6 +43,36 @@ class AccountScreen extends Component {
       callback();
     }
   }
+  getDetailUser = async () => {
+    try {
+      let res = await userProvider.detail(this.props.userApp.currentUser.id)
+      console.log('res: ', res);
+      if (res.code == 0) {
+        let user = res.data.user
+        user.bookingNumberHospital = res.data.bookingNumberHospital;
+        user.bookingStatus = res.data.bookingStatus;
+        if (JSON.stringify(user) != JSON.stringify(this.props.userApp.currentUser))
+          this.props.dispatch(redux.userLogin(user));
+
+      }
+    } catch (error) {
+      console.log('error: ', error);
+
+    }
+  }
+  componentDidMount() {
+    if (this.props.userApp.isLogin) {
+      this.onFocus = this.props.navigation.addListener('didFocus', () => {
+        this.getDetailUser()
+      });
+    }
+
+  }
+  componentWillUnmount = () => {
+    if (this.onFocus) {
+      this.onFocus.remove()
+    }
+  }
   selectImage() {
     if (this.imagePicker) {
       this.imagePicker.open(true, 200, 200, image => {
@@ -213,36 +243,42 @@ class AccountScreen extends Component {
 
           {this.props.userApp.isLogin ? (
             <View>
-              {/* <TouchableOpacity
-                style={[styles.itemMenu, { marginTop: 40 }]}
+              <TouchableOpacity
+                style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
                 onPress={() => {
-                  this.props.navigation.navigate("emptyScreen", {
-                    title: "Kích hoạt ví"
-                  });
+                  this.props.navigation.navigate("code");
                 }}
               >
-                <Text style={[styles.itemText, { fontWeight: "bold" }]}>
-                  Kích hoạt ví IsofhCare
-              </Text>
-                <ScaledImage style={{ tintColor: '#008D6F' }}
-                  source={require("@images/new/ic_menu_wallet.png")}
-                  width={24}
-                  height={24}
+                <ScaledImage
+                  source={require("@images/new/account/ic_qrCode.png")}
+                  width={22}
+                  height={22}
                 />
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-              style={[styles.itemMenu]}
-              onPress={() => {
-                this.props.navigation.navigate("ehealth");
-              }}
-            >
-              <Text style={styles.itemText}>Y bạ điện tử</Text>
-              <ScaledImage
-                source={require("@images/new/ic_menu_ehealth.png")}
-                width={24}
-                height={24}
-              />
-            </TouchableOpacity> */}
+                <Text style={styles.itemText}>Mã iSofHcare</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.itemMenu, styles.bottomLine]}
+                onPress={() => {
+                  this.props.navigation.navigate("historyCumulative");
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_coin.png")}
+                  width={22}
+                  height={22}
+                />
+                <Text style={styles.itemText}>Lịch sử tích luỹ điểm</Text>
+                <View style={styles.containerCoin}>
+                  <Text style={styles.txtCoin}>{this.props.userApp?.currentUser?.accumulatedPoint}</Text>
+                  <ScaledImage
+                    source={require("@images/new/account/ic_coin.png")}
+                    width={20}
+                    height={20}
+                  />
+                </View>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
                 onPress={() => {
@@ -501,6 +537,26 @@ class AccountScreen extends Component {
 }
 const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
+  txtCoin: {
+    color: '#FF8A00',
+    paddingHorizontal: 5
+  },
+  containerCoin: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#FF8A00',
+    borderWidth: 0.7,
+    padding: 3,
+    paddingRight: 5,
+    borderRadius: 15,
+    marginRight: 10
+  },
+  bottomLine: {
+    borderTopColor: "#00000011",
+    borderTopWidth: 1,
+    borderBottomColor: '#00000011',
+    borderBottomWidth: 1
+  },
   icon: {},
   btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
   popup: {
