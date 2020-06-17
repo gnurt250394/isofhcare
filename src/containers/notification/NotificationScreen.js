@@ -158,10 +158,12 @@ class NotificationScreen extends Component {
           case 7:
             NavigationService.navigate('listProfileUser')
             break
-          case 10: {
-            this.openBooking(data.id);
-            break
-          }
+          case 10:
+          case 12:
+          case 13:
+            this.openBooking(id);
+            break;
+
           case 'NEWS': {
             NavigationService.navigate('detailNewsHighlight', { item: data })
             break
