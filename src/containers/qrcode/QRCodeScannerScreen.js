@@ -35,6 +35,7 @@ class QRCodeScannerScreen extends Component {
     }
 
     onSuccess(e) {
+        console.log('e: ', e);
         this.setState({ isLoading: true }, () => {
             if (this.props.navigation.state.params.onCheckData);
             this.props.navigation.state.params.onCheckData(e.data).then(s => {
