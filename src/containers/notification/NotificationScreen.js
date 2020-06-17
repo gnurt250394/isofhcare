@@ -161,7 +161,7 @@ class NotificationScreen extends Component {
           case 10:
           case 12:
           case 13:
-            this.openBooking(id);
+            this.openBooking(data.id);
             break;
 
           case 'NEWS': {
