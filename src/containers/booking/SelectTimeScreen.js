@@ -209,7 +209,7 @@ class SelectTimeScreen extends Component {
         while (firstDay <= lastDay) {
             let key = firstDay.format("yyyy-MM-dd");;
             obj[key] = {}
-            if (new Date(key) <= new Date()
+            if ((new Date(key)).compareDate(new Date()) <= 0
                 // || firstDay.getDay() == 6 
             ) {
                 obj[key].disabled = true;
