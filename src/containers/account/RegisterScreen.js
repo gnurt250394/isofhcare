@@ -58,6 +58,7 @@ class RegisterScreen extends Component {
     user.secureTextPass2Entry = true
     user.phone = phone
     user.disabled = false
+    user.isofhcareCode = ""
     this.state = user
     this.showPass = this.showPass.bind(this);
     this.showPassConfirm = this.showPassConfirm.bind(this);
@@ -94,6 +95,20 @@ class RegisterScreen extends Component {
   //   });
   // }
   ////
+  onScanQrCode = () => {
+    this.props.navigation.navigate("qrcodeScanner", {
+      title: 'Quét mã giới thiệu',
+      textHelp: "Di chuyển camera đến vùng chứa mã giới thiệu để quét",
+      onCheckData: data => {
+        return new Promise((resolve, reject) => {
+          this.setState({ isofhcareCode: data }, () => {
+            resolve()
+          })
+          console.log('data: ', data);
+        });
+      }
+    })
+  }
   onRegiter = () => {
     Keyboard.dismiss();
     if (!this.form.isValid()) {
@@ -102,12 +117,13 @@ class RegisterScreen extends Component {
     let name = this.state.fullname
     let phone = this.state.phone
     let password = this.state.password
+    let isofhcareCode = this.state.isofhcareCode
     connectionUtils.isConnected().then(s => {
       this.setState({
         isLoading: true,
         disabled: true
       }, () => {
-        userProvider.register(name, phone, password).then(res => {
+        userProvider.register(name, phone, password, isofhcareCode).then(res => {
           if (res.code == 0) {
             this.setState({
               isLoading: false,
@@ -119,8 +135,7 @@ class RegisterScreen extends Component {
               verify: 1,
               nextScreen: this.nextScreen
             })
-            return
-          } if (res.code == 13) {
+          } else if (res.code == 13) {
             this.setState({
               isLoading: false,
               disabled: false
@@ -131,11 +146,11 @@ class RegisterScreen extends Component {
               verify: 1,
               nextScreen: this.nextScreen
             })
-            return
-          }
-          else {
+          } else {
             switch (res.code) {
               case 2: snackbar.show('Số điện thoại đã được đăng ký', 'danger')
+                break
+              case 404: snackbar.show(res?.message, 'danger')
                 break
               default: snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
@@ -147,13 +162,16 @@ class RegisterScreen extends Component {
           }
 
         }).catch(e => {
-          snackbar.show(constants.msg.app.not_internet, "danger");
+          snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         });
       })
 
     }
 
-    )
+    ).catch(err => {
+      snackbar.show(constants.msg.app.not_internet, "danger");
+
+    })
 
   }
 
@@ -217,7 +235,7 @@ class RegisterScreen extends Component {
             <View style={{ flex: 1, padding: 20 }}>
               <View
                 style={{
-                  marginTop: 60,
+                  marginTop: 50,
                   justifyContent: "center",
                   alignItems: "center"
                 }}
@@ -328,6 +346,47 @@ class RegisterScreen extends Component {
                     this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
+                <View style={[{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                },]}>
+                  <Field style={[styles.inputPass, { flex: 1 }]}>
+                    <TextField
+                      getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value}
+                        inputStyle={[styles.textInputStyle]}
+                        labelStyle={styles.labelStyle}
+                        placeholder={'Nhập mã giới thiệu'}
+                        placeholderTextColor='#000'
+                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                      onChangeText={s => {
+                        this.setState({ isofhcareCode: s });
+                      }}
+                      errorStyle={styles.errorStyle}
+                      value={this.state.isofhcareCode}
+                      autoCapitalize={"none"}
+                    />
+
+                  </Field>
+                  <TouchableOpacity
+                    onPress={this.onScanQrCode}
+                    style={{
+                      backgroundColor: 'rgb(2,195,154)',
+                      height: 42,
+                      alignSelf: 'flex-end',
+                      paddingHorizontal: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginLeft: 10,
+                      borderRadius: 5
+
+                    }}>
+                    <Text style={{
+                      color: '#fff',
+                      fontWeight: 'bold'
+                    }}>Quét mã</Text>
+                  </TouchableOpacity>
+                </View>
               </Form>
               <View style={{ backgroundColor: '#fff' }}>
                 <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
@@ -378,18 +437,18 @@ const styles = StyleSheet.create({
   textInputStyle: {
     color: "#000",
     fontWeight: "300",
-    height: 51,
+    height: 43,
     marginLeft: 0,
     borderWidth: 1,
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 6,
     borderColor: '#CCCCCC',
-    fontSize: 20,
+    fontSize: 16,
     paddingLeft: 15,
     paddingRight: 45,
   },
-  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
+  labelStyle: { paddingTop: 5, color: '#53657B', fontSize: 16 },
   btnEye: {
     position: "absolute",
     right: 25,
