@@ -24,6 +24,7 @@ class ConfirmBookingScreen extends Component {
         super(props);
         let booking = this.props.navigation.state.params.booking;
         let paymentMethod = this.props.navigation.state.params.paymentMethod;
+        let disabled = this.props.navigation.state.params.disabled;
         if (!booking) {
             snackbar.show(constants.booking.booking_not_found, "danger");
             this.props.navigation.pop();
@@ -32,6 +33,7 @@ class ConfirmBookingScreen extends Component {
             paymentMethod: (paymentMethod != constants.PAYMENT_METHOD.NONE && typeof paymentMethod != 'undefined') ? paymentMethod : constants.PAYMENT_METHOD.CASH,
             booking,
             voucher: {},
+            disabled
         }
     }
     componentDidMount() {
@@ -401,11 +403,21 @@ class ConfirmBookingScreen extends Component {
             });
         }
     }
+
     createBooking = (phonenumber, momoToken) => {
         const { booking } = this.state
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
+                if (this.state.voucher && this.state.voucher.code) {
+                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                    if (!dataVoucher) {
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                        });
+                        return
+                    }
+                }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
                     console.log('res: ', res);
 
@@ -517,7 +529,7 @@ class ConfirmBookingScreen extends Component {
         this.setState({ paymentMethod })
     }
     render() {
-        const { booking } = this.state
+        const { booking, disabled } = this.state
         return (
             <ActivityPanel style={styles.AcPanel} title={constants.title.verification_booking}
                 isLoading={this.state.isLoading} >
@@ -529,7 +541,7 @@ class ConfirmBookingScreen extends Component {
                             :
                             <View></View>}
                     </View>
-                    {this.addVoucher()}
+                    {!disabled ? this.addVoucher() : null}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
                             <View style={styles.containerServiceType}>
@@ -651,7 +663,7 @@ class ConfirmBookingScreen extends Component {
                     onPress={this.createBooking}
                     paymentMethod={this.state.paymentMethod}
                     allowBooking={this.state.allowBooking}
-                    title="Xác nhận"
+                    title="Thanh toán"
                     booking={this.state.booking}
                     createBooking={this.createBooking}
                 />

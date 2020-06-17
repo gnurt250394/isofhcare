@@ -291,24 +291,26 @@ class PushController extends Component {
                 console.log('type: ', type);
 
                 switch (type) {
-                    case 2:
+                    case '2':
                         this.openQuestion(id);
                         break;
-                    case 4:
+                    case '4':
                         this.openBooking(id);
                         break;
-                    case 5:
+                    case '5':
                         setTimeout(() => {
                             this.openTicket(id);
                         }, 4000);
                         break;
-                    case 6:
+                    case '6':
                         this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
-                    case 7:
+                    case '7':
                         this.openListProfile()
                         break
-                    case 10:
+                    case "10":
+                    case "12":
+                    case "13":
                         this.openBooking(id);
                         break;
                     case 'NEWS': {
