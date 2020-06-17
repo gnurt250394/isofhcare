@@ -149,6 +149,8 @@ import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen'
 // import VideoCallScreen from '@containers/community/CallVideoScreen';
 //icd
 import SearchIcdScreen from '@containers/icd/SearchIcdScreen';
+import CodeScreen from '@containers/code/CodeScreen';
+import HistoryCumulativeScreen from '@containers/code/HistoryCumulativeScreen';
 
 
 const ProfileNavigation = createStackNavigator({
@@ -438,7 +440,9 @@ const RootNavigator = (route = 'splash') => createStackNavigator(
     listOfServices: { screen: ListOfServiceScreen },
     detailNewsHighlight: { screen: DetailNewHighLightScreen },
     //icd
-    searchIcd: { screen: SearchIcdScreen }
+    searchIcd: { screen: SearchIcdScreen },
+    code: { screen: CodeScreen },
+    historyCumulative: { screen: HistoryCumulativeScreen },
   },
   {
     headerMode: "none",
