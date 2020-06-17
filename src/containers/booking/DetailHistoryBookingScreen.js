@@ -316,13 +316,15 @@ class DetailHistoryBookingScreen extends Component {
             this.props.navigation.navigate("confirmBookingDoctor", {
                 booking: this.state.booking,
                 isOnline,
-                paymentMethod: this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment,
+                disabled: true
             });
 
         } else {
             this.props.navigation.navigate("confirmBooking", {
                 booking: this.state.booking,
-                paymentMethod: this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment,
+                disabled: true
             });
         }
     }
