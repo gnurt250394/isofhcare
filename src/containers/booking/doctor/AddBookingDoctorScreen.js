@@ -561,7 +561,7 @@ class AddBookingDoctorScreen extends Component {
         const { profileDoctor, profile, hospital, detailSchedule, isOnline } = this.state
         const services = hospital.services || []
         return (
-            <ActivityPanel title={isOnline ? "Thông tin lịch gọi" : "Đặt Khám"}
+            <ActivityPanel title={isOnline ? "Thông tin lịch gọi" : "Thông tin đặt khám"}
                 isLoading={this.state.isLoading} >
                 <View style={{ backgroundColor: 'rgba(225,225,225,0.3)', flex: 1 }}>
                     <KeyboardAwareScrollView>
@@ -729,7 +729,7 @@ class AddBookingDoctorScreen extends Component {
                     </KeyboardAwareScrollView>
                     <View style={styles.btn}>
                         <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                            <Text style={styles.datkham}>{isOnline ? "Đặt lịch gọi" : 'Đặt khám'}</Text>
+                            <Text style={styles.datkham}>{isOnline ? "Đặt lịch gọi" : 'Đặt lịch khám'}</Text>
                         </TouchableOpacity>
                     </View>
 
