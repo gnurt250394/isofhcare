@@ -316,13 +316,15 @@ class DetailHistoryBookingScreen extends Component {
             this.props.navigation.navigate("confirmBookingDoctor", {
                 booking: this.state.booking,
                 isOnline,
-                paymentMethod: this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment,
+                disabled: true
             });
 
         } else {
             this.props.navigation.navigate("confirmBooking", {
                 booking: this.state.booking,
-                paymentMethod: this.state.booking.invoice.payment
+                paymentMethod: this.state.booking.invoice.payment,
+                disabled: true
             });
         }
     }
@@ -465,12 +467,6 @@ class DetailHistoryBookingScreen extends Component {
                                             <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
                                         </View> : null
                                     }
-                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
-                                        <View >
-                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
-                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
-                                        </View> : null
-                                    }
                                 </View>
                             </View> : null
                         }
@@ -603,15 +599,7 @@ class DetailHistoryBookingScreen extends Component {
 
 
                         }
-                        {
-                            this.state.booking.invoice.payment == constants.PAYMENT_METHOD.NONE || (this.state.booking.invoice.payment == constants.PAYMENT_METHOD.MOMO && this.state.booking.invoice.status == "NEW") ?
-                                <TouchableOpacity
-                                    onPress={this.onPayment}
-                                    style={styles.buttonPayment}>
-                                    <Text style={styles.txtPayment}>Thanh toán</Text>
-                                </TouchableOpacity>
-                                : null
-                        }
+
                         {/** barcode */}
                         <View style={styles.viewBaCode}>
                             <ScaledImage
@@ -685,6 +673,15 @@ class DetailHistoryBookingScreen extends Component {
                     </View>
                     <View style={styles.end}></View>
                 </ScrollView> || null}
+                {
+                    this.state.booking?.invoice?.payment == constants.PAYMENT_METHOD.NONE || (this.state.booking?.invoice?.payment == constants.PAYMENT_METHOD.MOMO && this.state.booking?.invoice?.status == "NEW") ?
+                        <TouchableOpacity
+                            onPress={this.onPayment}
+                            style={styles.buttonPayment}>
+                            <Text style={styles.txtPayment}>Thanh toán</Text>
+                        </TouchableOpacity>
+                        : null
+                }
                 <Modal
                     isVisible={this.state.isVisible}
                     onBackdropPress={this.onBackdropPress}
@@ -725,14 +722,16 @@ class DetailHistoryBookingScreen extends Component {
 const styles = StyleSheet.create({
     txtPayment: {
         color: '#FFF',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize:16
     },
     buttonPayment: {
-        padding: 10,
+        padding: 15,
         backgroundColor: '#00CBA7',
         borderRadius: 5,
         alignSelf: 'center',
-        marginTop: 10,
+        marginVertical: 10,
+        paddingHorizontal:20
     },
     txtBookingCall: {
         color: '#FFF',
