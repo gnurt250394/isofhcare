@@ -8,7 +8,7 @@ const os = Platform.select({
   ios: 2,
   android: 2
 });
-module.exports = {
+export default {
   deviceId: "",
   deviceToken: "",
   getAccountStorage(callback) {
@@ -60,7 +60,7 @@ module.exports = {
     })
 
   },
-  changePassword(id, passwordOld, passwordNew, ) {
+  changePassword(id, passwordOld, passwordNew,) {
     return new Promise((resolve, reject) => {
       var body = {
         passwordOld: passwordOld.toMd5(),
@@ -211,6 +211,7 @@ module.exports = {
     name,
     phone,
     password,
+    isofhcareCode
   ) {
     return new Promise((resolve, reject) => {
       // reject({});
@@ -221,6 +222,7 @@ module.exports = {
           phone: phone,
           role: 1,
         },
+        isofhcareCode,
         // applicationId: "457683741386685",
         socialType: 1,
         device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
@@ -304,6 +306,19 @@ module.exports = {
       client.requestApi(
         "get",
         constants.api.user.check_used_phone + "/" + phone,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        }
+      );
+    });
+  },
+  getListAccumulations(page = 0, size = 20) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        "get",
+        constants.api.user.get_accumulations + `?page=${page}&size=${size}`,
         {},
         (s, e) => {
           if (s) resolve(s);
