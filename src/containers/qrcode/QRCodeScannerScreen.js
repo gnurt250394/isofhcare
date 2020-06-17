@@ -23,6 +23,7 @@ import {
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { Icon } from 'native-base';
+import { withNavigationFocus } from 'react-navigation'
 class QRCodeScannerScreen extends Component {
     constructor(props) {
         super(props);
@@ -35,6 +36,7 @@ class QRCodeScannerScreen extends Component {
     }
 
     onSuccess(e) {
+        console.log('e: ', e);
         this.setState({ isLoading: true }, () => {
             if (this.props.navigation.state.params.onCheckData);
             this.props.navigation.state.params.onCheckData(e.data).then(s => {
@@ -196,9 +198,11 @@ class QRCodeScannerScreen extends Component {
         // }
     }
     render() {
+        const { isFocused } = this.props
         return (
             <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || constants.title.scan_qr_code}
             >
+                {isFocused &&
                     <QRCodeScanner
                         // reactivate={true}
                         flashOn={this.state.flashOn}
@@ -222,17 +226,17 @@ class QRCodeScannerScreen extends Component {
                             </View> */}
                                 <View style={styles.containerFlash}>
                                     <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
-                                        <Icon name="flashlight" style={{ color: this.state.flashOn ? '#FFF' : '#00000030' }}></Icon>
+                                        <ScaledImage source={require("@images/ic_flash.png")} height={19} width={19} style={{ tintColor: this.state.flashOn ? '#FFF' : '#00000030' }} />
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.containerFlash}>
                                     <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
-                                        <Icon type="MaterialCommunityIcons" name="camera" style={{ color: this.state.front ? '#FFF' : '#00000030' }}></Icon>
+                                        <ScaledImage source={require("@images/ic_camera.png")} height={19} width={19} style={{ tintColor: this.state.front ? '#FFF' : '#00000030' }} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         }
-                    />
+                    />}
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
@@ -276,4 +280,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default QRCodeScannerScreen;
+export default withNavigationFocus(QRCodeScannerScreen);
