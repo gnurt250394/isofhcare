@@ -21,6 +21,7 @@ class ConfirmBookingDoctorScreen extends Component {
         let booking = this.props.navigation.getParam('booking');
         let isOnline = this.props.navigation.getParam('isOnline');
         let paymentMethod = this.props.navigation.getParam('paymentMethod');
+        let disabled = this.props.navigation.getParam('disabled');
         this.state = {
             isVisible: false,
             isOnline,
@@ -28,7 +29,8 @@ class ConfirmBookingDoctorScreen extends Component {
             booking,
             bookingDate,
             detailSchedule,
-            voucher: {}
+            voucher: {},
+            disabled
         }
         this.isChecking = true
     }
@@ -202,12 +204,12 @@ class ConfirmBookingDoctorScreen extends Component {
         this.setState({ paymentMethod })
     }
     render() {
-        const { booking, bookingDate, detailSchedule, voucher, paymentMethod, isOnline } = this.state
+        const { booking, bookingDate, detailSchedule, voucher, paymentMethod, isOnline, disabled } = this.state
         let service = booking.invoice.services[0] || [];
         let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
-                hideBackButton={true}
+                hideBackButton={disabled ? false : true}
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
@@ -288,27 +290,30 @@ class ConfirmBookingDoctorScreen extends Component {
 
 
                         </View>
-                        <TouchableOpacity
-                            onPress={this.goVoucher}
-                            style={styles.btnVoucher}
-                        >
-                            <View style={styles.flex}>
-                                <Text style={styles.txtLabelVoucher}>Mã ưu đãi</Text>
-                                {this.state.voucher && this.state.voucher.price ?
-                                    <Text style={[{
-                                        color: '#00CBA7',
-                                        fontWeight: 'bold'
-                                    }, styles.flex]}>{`GIẢM ${this.state.voucher.price.formatPrice()}đ KHI ĐẶT KHÁM`}</Text>
-                                    : null
-                                }
+                        {!disabled ?
+                            <TouchableOpacity
+                                onPress={this.goVoucher}
+                                style={styles.btnVoucher}
+                            >
+                                <View style={styles.flex}>
+                                    <Text style={styles.txtLabelVoucher}>Mã ưu đãi</Text>
+                                    {this.state.voucher && this.state.voucher.price ?
+                                        <Text style={[{
+                                            color: '#00CBA7',
+                                            fontWeight: 'bold'
+                                        }, styles.flex]}>{`GIẢM ${this.state.voucher.price.formatPrice()}đ KHI ĐẶT KHÁM`}</Text>
+                                        : null
+                                    }
 
-                            </View>
-                            <View style={styles.flexRowCenter}>
-                                <Text style={styles.txtChange}>Chọn hoặc nhập mã</Text>
-                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                                </View>
+                                <View style={styles.flexRowCenter}>
+                                    <Text style={styles.txtChange}>Chọn hoặc nhập mã</Text>
+                                    <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
 
-                            </View>
-                        </TouchableOpacity>
+                                </View>
+                            </TouchableOpacity>
+                            : null
+                        }
                         {/** sum Price */}
                         <View style={styles.containerPriveVoucher}>
                             {
@@ -378,7 +383,7 @@ class ConfirmBookingDoctorScreen extends Component {
                             voucher={voucher}
                             paymentMethod={paymentMethod}
                             allowBooking={this.state.allowBooking}
-                            title="Hoàn thành"
+                            title="Thanh toán"
                             createBooking={this.createBooking}
                         />
                         <View style={styles.btn}>
