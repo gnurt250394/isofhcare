@@ -201,14 +201,6 @@ function CallScreen({ }, ref) {
             }
         }
         didmount()
-        InCallManager.requestRecordPermission().then(res => {
-            console.log('res: ', res);
-            if (res == 'granted') {
-
-            }
-        }).catch(err => {
-
-        })
         return () => {
             socket.current.disconnect();
             removeEvent()
