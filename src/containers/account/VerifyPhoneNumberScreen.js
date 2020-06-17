@@ -102,7 +102,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                     switch (verify) {
                         case 1:
                             {
-                                userProvider.forgotPassword(this.state.phone.trim(), 4, (s, e) => {
+                                userProvider.forgotPassword(this.state.phone.trim(), 4).then((s) => {
                                     this.setState({
                                         disabled: false
                                     })
@@ -122,16 +122,18 @@ class VerifyPhoneNumberScreen extends React.Component {
                                     else {
                                         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                     }
-                                    if (e) {
-                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                        return
-                                    }
+
+                                }).catch(err => {
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    this.setState({
+                                        disabled: false
+                                    })
                                 })
                             }
                             break
                         case 2:
                             {
-                                userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+                                userProvider.forgotPassword(this.state.phone.trim(), 2).then((s) => {
                                     this.setState({
                                         disabled: false
                                     })
@@ -151,10 +153,12 @@ class VerifyPhoneNumberScreen extends React.Component {
                                     else {
                                         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                     }
-                                    if (e) {
-                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                        return
-                                    }
+
+                                }).catch(err => {
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    this.setState({
+                                        disabled: false
+                                    })
                                 })
                             }
                             break
@@ -181,6 +185,9 @@ class VerifyPhoneNumberScreen extends React.Component {
                                         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                     }
                                 }).catch(err => {
+                                    this.setState({
+                                        disabled: false
+                                    })
                                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                 })
                             }
@@ -431,14 +438,14 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         textAlign: 'center',
-        width:'100%',
-        flex:1
+        width: '100%',
+        flex: 1
     },
     inputStyle: {
         borderBottomWidth: 4,
         borderColor: '#3161AD',
         width: 38,
-        height:42,
+        height: 42,
         alignItems: 'center',
         textAlign: 'center',
     },
