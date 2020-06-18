@@ -78,13 +78,12 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
-    confirmVoucher = async (voucher, idBooking, idHospital) => {
+    confirmVoucher = async (voucher, booking) => {
         try {
-            let idHospital = this.state.hospital.id
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
+            let idHospital = booking.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, booking.id, idHospital);
             return data.code == 0;
         } catch (error) {
-
             return false;
         }
     }
@@ -410,7 +409,7 @@ class ConfirmBookingScreen extends Component {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
                 if (this.state.voucher && this.state.voucher.code) {
-                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                     if (!dataVoucher) {
                         this.setState({ isLoading: false }, () => {
                             snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
@@ -419,7 +418,7 @@ class ConfirmBookingScreen extends Component {
                     }
                 }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
-                    console.log('res: ', res);
+                    
 
                     this.setState({ isLoading: false })
                     if (res) {

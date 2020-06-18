@@ -9,6 +9,7 @@ import Modal from "@components/modal";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import voucherProvider from '@data-access/voucher-provider'
 
 import ButtonPayment from '@components/booking/ButtonPayment';
 import ButtonSelectPaymentMethod from '@components/booking/ButtonSelectPaymentMethod';
@@ -90,12 +91,15 @@ class ConfirmBookingDoctorScreen extends Component {
                 return "BANK_TRANSFER";
         }
     }
-    confirmVoucher = async (voucher, idBooking, idHospital) => {
+    confirmVoucher = async (voucher, booking) => {
+        console.log('voucher: ', voucher);
         try {
-            let idHospital = this.state.hospital.id
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
+            let idHospital = booking.hospital.id
+            console.log('idHospital: ', idHospital);
+            let data = await voucherProvider.selectVoucher(voucher.id, booking.id, idHospital);
             return data.code == 0;
         } catch (error) {
+            console.log('error: ', error);
 
             return false;
         }
@@ -104,7 +108,9 @@ class ConfirmBookingDoctorScreen extends Component {
         const { bookingDate, booking, detailSchedule } = this.state
         this.setState({ isLoading: true }, async () => {
             if (this.state.voucher && this.state.voucher.code) {
-                let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
+                console.log('this.state.voucher: ', this.state.voucher);
+                console.log('dataVoucher: ', dataVoucher);
                 if (!dataVoucher) {
                     this.setState({ isLoading: false }, () => {
                         snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
