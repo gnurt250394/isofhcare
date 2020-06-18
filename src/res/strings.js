@@ -904,7 +904,8 @@ module.exports = {
       re_send_otp: isofhcare_service + 'user/registration',
       get_user_details: isofhcare_service + '/user',
       resetPw: isofhcare_service + 'user/replace-password',
-      get_token: isofhcare_service + 'user/call/access-token'
+      get_token: isofhcare_service + 'user/call/access-token',
+      get_accumulations: isofhcare_service + 'user/accumulations',
 
 
     },
