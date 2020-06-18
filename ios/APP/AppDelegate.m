@@ -126,7 +126,7 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 // --- Handle incoming pushes (for ios >= 11)
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)(void))completion {
   NSLog(@" didReceiveIncomingPushWithPayload có complete %@",payload.dictionaryPayload[@"data"][@"name"]);
-    NSString *uuid = [[NSUUID UUID] UUIDString];
+    NSString *uuid =payload.dictionaryPayload[@"data"][@"UUID"];
     NSString *callerName = payload.dictionaryPayload[@"data"][@"name"];
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:uuid forKey:@"uuid"];

@@ -473,7 +473,7 @@ function CallScreen({ }, ref) {
             // });
             await localPC.current.setLocalDescription(answer);
             setState({ isAnswerSuccess: true })
-            onSend(constants.socket_type.ANSWER, { to: socketId2.current, sdp: localPC.current.localDescription })
+            onSend(constants.socket_type.ANSWER, { to: socketId2.current, from: userApp.currentUser.id, sdp: localPC.current.localDescription })
             console.log('socketId2.current: ', socketId2.current);
         } catch (error) {
             debugger
