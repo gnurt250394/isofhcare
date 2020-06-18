@@ -403,11 +403,21 @@ class ConfirmBookingScreen extends Component {
             });
         }
     }
+
     createBooking = (phonenumber, momoToken) => {
         const { booking } = this.state
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
+                if (this.state.voucher && this.state.voucher.code) {
+                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                    if (!dataVoucher) {
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                        });
+                        return
+                    }
+                }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
                     console.log('res: ', res);
 

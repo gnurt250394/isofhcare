@@ -88,29 +88,10 @@ const ButtonPayment = ({
             }
         } catch (ex) { }
     }
-    const confirmVoucher = async (voucher, idBooking) => {
-        try {
-            let idHospital = booking.hospital.id
-            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
-            return data.code == 0;
-        } catch (error) {
 
-            return false;
-        }
-    }
     const onPress = async () => {
         // if (isChecking.current) {
         //     isChecking.current = false
-        console.log(1111)
-        if (voucher && voucher.code) {
-            let dataVoucher = await confirmVoucher(voucher, booking.id);
-            if (!dataVoucher) {
-                isChecking.current = true
-                snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
-                return
-            }
-        }
-        console.log('paymentMethod: ', paymentMethod);
         switch (paymentMethod) {
             case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
                 break

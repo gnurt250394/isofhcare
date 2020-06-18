@@ -90,11 +90,28 @@ class ConfirmBookingDoctorScreen extends Component {
                 return "BANK_TRANSFER";
         }
     }
+    confirmVoucher = async (voucher, idBooking, idHospital) => {
+        try {
+            let idHospital = this.state.hospital.id
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking, idHospital);
+            return data.code == 0;
+        } catch (error) {
 
+            return false;
+        }
+    }
     createBooking = (phonenumber, momoToken) => {
         const { bookingDate, booking, detailSchedule } = this.state
         this.setState({ isLoading: true }, async () => {
-
+            if (this.state.voucher && this.state.voucher.code) {
+                let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                if (!dataVoucher) {
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                    });
+                    return
+                }
+            }
             bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
                 this.setState({ isLoading: false })
                 if (res) {
