@@ -18,8 +18,8 @@ const HistoryCumulativeScreen = () => {
             let res = await userProvider.getListAccumulations(state.page, state.size)
             setState({ isLoading: false, refreshing: false })
             if (res?.code == 0) {
-                let group = res.data.content.map((item) => item.createdDate).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
-                    let new_list = res.data.content.filter(itm => itm.createdDate == item);
+                let group = res.data.content.map((item) => item.createdDate.toDateObject("-").format('dd/MM/yyyy')).filter((item, i, ar) => ar.indexOf(item) === i).map(item => {
+                    let new_list = res.data.content.filter(itm => itm.createdDate.toDateObject("-").format('dd/MM/yyyy') == item);
                     return { title: item, data: new_list }
                 });
                 setState({ data: group, list: res.data.content })
@@ -53,7 +53,7 @@ const HistoryCumulativeScreen = () => {
                 />
                 <View style={styles.containerItem}>
                     <Text style={styles.title}>{item.description}</Text>
-                    <Text style={styles.txtTime}>{item.createdDate.toDateObject().format('HH:mm')}</Text>
+                    <Text style={styles.txtTime}>{item.createdDate.toDateObject("-").format('HH:mm')}</Text>
                 </View>
                 <Text style={{ color: '#00BA99' }}>{item.point > 0 ? "+" : ""} {item.point}</Text>
             </Card>)
@@ -89,7 +89,7 @@ const HistoryCumulativeScreen = () => {
                 keyExtractor={(item, index) => item + index}
                 renderItem={({ item }) => <Item item={item} />}
                 renderSectionHeader={({ section: { title } }) => (
-                    <Text style={styles.header}>Ngày {title.toDateObject().format('dd/MM/yyyy')}</Text>
+                    <Text style={styles.header}>Ngày {title}</Text>
                 )}
             />
 
