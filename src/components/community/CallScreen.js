@@ -502,7 +502,7 @@ function CallScreen({ }, ref) {
         }
     };
     const toggleSpeaker = () => {
-        setIsSpeak(state => ({ isSpeak: !state.isSpeak }))
+        setIsSpeak(state => !state)
         InCallManager.setForceSpeakerphoneOn(!isSpeak);
 
     }
