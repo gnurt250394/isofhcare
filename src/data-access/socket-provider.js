@@ -14,12 +14,14 @@ const connectSocket = async (token) => {
                         token: token,
                     },
                     upgrade: true,
-                    reconnection:true,
-                    autoConnect:true,
-                    timeout:30000,
-                    rememberUpgrade:true
+                    reconnection: true,
+                    autoConnect: true,
+                    timeout: 30000,
+                    rememberUpgrade: true
                 })
-                socket.connect()
+                if (!socket.connected) {
+                    socket.connect()
+                }
                 resolve(socket)
 
             }

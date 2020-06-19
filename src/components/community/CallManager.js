@@ -16,7 +16,7 @@ class CallManager {
   }
 
   unregister(_ref) {
-    if (!!this._defaultCall && this._defaultCall._id === _ref._id) {
+    if (!!this._defaultCall) {
       this._defaultCall = null;
     }
   }
