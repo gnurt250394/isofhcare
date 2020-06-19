@@ -99,6 +99,7 @@ module.exports = {
     REJECT: "REJECT",
     DELINE: "DELINE",
     DISCONNECT: "DISCONNECT",
+    CONNECT: 'connectFirebase'
   },
   voucher: {
     use_now: 'SỬ DỤNG NGAY',

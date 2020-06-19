@@ -33,30 +33,27 @@ var hdConstraints = {
     minFrameRate: 30,
 };
 function CallScreen({ }, ref) {
-    // const [localStream, setLocalStream] = useState();
     const [state, _setState] = useState({ statusCall: true, booking: {}, id: '', isAnswer: false, isAnswerSuccess: false, makeCall: false, isVisible: false });
     const [remoteStream, setRemoteStream] = useState();
     const [isMuted, setIsMuted] = useState(false);
     const [isSpeak, setIsSpeak] = useState(true);
     const socket = useRef()
     const UUID = useRef()
+    const timeout = useRef()
     const localStream = useRef()
     const socketId = useRef("")
     const socketId2 = useRef("")
+    const tokenFirebase = useRef("")
     const localPC = useRef()
     const userApp = useSelector(state => state.auth.userApp)
-    console.log('userApp: 111', userApp);
     const hideModal = () => {
         setState({ isVisible: false });
     };
-
     const showModal = () => {
         setState({ isVisible: true });
     };
     useImperativeHandle(ref, () => ({
-        startCall: (id, isOffer) => startCall(id, isOffer),
-        showModal: () => showModal(),
-        hideModal: () => hideModal(),
+        startCall: (booking, isOffer) => startCall(booking, isOffer),
     }), [])
     const setState = (data = { id: '', isAnswer: false }) => {
         _setState(state => {
@@ -76,7 +73,8 @@ function CallScreen({ }, ref) {
                 VoipPushNotification.registerVoipToken();
                 VoipPushNotification.addEventListener("register", token => {
                     // send token to your apn provider server
-                    onSend('connectFirebase', { token, id: userApp.currentUser.id, platform: "ios", packageName: DeviceInfo.getBundleId() })
+                    tokenFirebase.current = token
+                    onSend(constants.socket_type.CONNECT, { token, id: userApp.currentUser.id, platform: "ios", packageName: DeviceInfo.getBundleId() })
                 });
                 VoipPushNotification.addEventListener('notification', (notification) => {
                 });
@@ -84,7 +82,7 @@ function CallScreen({ }, ref) {
             } else {
                 let token = await firebase.messaging().getToken()
                 console.log('token: ', token);
-                onSend('connectFirebase', { token, id: userApp.currentUser.id, platform: "android" })
+                onSend(constants.socket_type.CONNECT, { token, id: userApp.currentUser.id, platform: "android" })
 
             }
         } catch (error) {
@@ -93,12 +91,6 @@ function CallScreen({ }, ref) {
 
     }
     const onDidDisplayIncomingCall = ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-        console.log('payload: ', payload);
-        // RNCallKeep.updateDisplay(callUUID, state.profile?.doctor ? renderAcademic(state.profile?.doctor) : "Bác sĩ iSofhCare master", "")
-        // if (isAnswerSuccess) {
-        //     RNCallKeep.reportEndCallWithUUID(callUUID, 1)
-        // }
-        showModal();
 
     }
     const onRNCallKitDidActivateAudioSession = (data) => {
@@ -107,9 +99,11 @@ function CallScreen({ }, ref) {
         createAnswer()
     }
     const answerCallEvent = () => {
-        if (Platform.OS == "android" && !state.makeCall)
+        if (Platform.OS == "android" && !state.makeCall) {
             RNCallKeep.reportEndCallWithUUID(UUID.current, 1)
-        RNCallKeep.backToForeground()
+            RNCallKeep.backToForeground()
+        }
+        showModal();
     }
     const endCallEvent = ({ callUUid }) => {
         rejectCall()
@@ -121,7 +115,6 @@ function CallScreen({ }, ref) {
         RNCallKeep.addEventListener('didDisplayIncomingCall', onDidDisplayIncomingCall);
     }
     const removeEvent = () => {
-
         RNCallKeep.removeEventListener("answerCall", answerCallEvent);
         RNCallKeep.removeEventListener("endCall", endCallEvent);
         RNCallKeep.removeEventListener("didActivateAudioSession", onRNCallKitDidActivateAudioSession);
@@ -129,18 +122,23 @@ function CallScreen({ }, ref) {
     }
     const onOffer = async (data) => {
         console.log('data: ', data);
-        debugger
-        if (Platform.OS == 'android') {
-            RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
-            showModal()
+        try {
+            debugger
+            if (Platform.OS == 'android') {
+                RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+                // showModal()
+            }
+            UUID.current = data.UUID
+            socketId2.current = data.from
+            setState({ data2: data, isAnswer: true, booking: data.booking })
+            if (!localPC.current) {
+                await initCall(localStream.current)
+            }
+            await localPC.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
+        } catch (error) {
+            closeStreams()
         }
-        UUID.current = data.UUID
-        socketId2.current = data.from
-        setState({ data2: data, isAnswer: true, booking: data.booking })
-        if (!localPC.current) {
-            await initCall(localStream.current)
-        }
-        await localPC.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
     }
 
     function updateBandwidthRestriction(sdp, bandwidth) {
@@ -157,19 +155,24 @@ function CallScreen({ }, ref) {
     function removeBandwidthRestriction(sdp) {
         return sdp.replace(/b=AS:.*\r\n/, '').replace(/b=TIAS:.*\r\n/, '');
     }
+    const onTimeOut = () => {
+        timeout.current = setTimeout(() => {
+            rejectCall()
+        }, 30 * 60 * 1000);
+    }
 
     useEffect(() => {
         const didmount = async () => {
             try {
+                await startLocalStream(true)
                 socket.current = await socketProvider.connectSocket(userApp.loginToken)
-                console.log('socket.current: ', socket.current);
                 socket.current.on('connect', onConnected);
-                setState({ id: userApp.currentUser.id })
                 socket.current.on(constants.socket_type.OFFER, onOffer)
                 socket.current.on(constants.socket_type.ANSWER, async (data) => {
                     debugger
                     console.log('localPC, setRemoteDescription');
                     setState({ isAnswerSuccess: true })
+                    onTimeOut()
                     soundUtils.stop()
                     await localPC.current.setRemoteDescription({
                         type: data.sdp.type,
@@ -191,181 +194,173 @@ function CallScreen({ }, ref) {
                 socket.current.on(constants.socket_type.DELINE, socketId => {
                     closeStreams(socketId);
                 });
-                startLocalStream(true)
-                // debugger;
                 addEventCallKeep()
-
             } catch (error) {
                 console.log('error: ', error);
-
             }
         }
         didmount()
         return () => {
-            // socket.current.disconnect();
+            if (socket.current && Platform.OS == "ios") {
+                onSend(constants.socket_type.DISCONNECT, { token: tokenFirebase.current, platform: Platform.OS }, (data) => {
+                    console.log('data: ', data);
+                    socket.current.disconnect();
+                })
+            }
+            if (state.isAnswerSuccess || state.makeCall) {
+                rejectCall()
+            }
+            if (timeout.current) {
+                clearTimeout(timeout.current)
+            }
             removeEvent()
         }
     }, [])
     const startLocalStream = async (init) => {
-        console.log(11221122)
-
-        debugger
-        try {
-            // isFront will determine if the initial camera should face user or environment
-            const isFront = true;
-            const devices = await mediaDevices.enumerateDevices();
-
-            const facing = isFront ? 'front' : 'environment';
-            const videoSourceId = devices.find(device => device.kind === 'videoinput' && device.facing === facing);
-            const facingMode = isFront ? 'user' : 'environment';
-            const constraints = {
-                audio: true,
-                // audio: {
-                //     echoCancellation: true,
-                //     noiseSuppression: true,
-                //     autoGainControl: true,
-                //     googEchoCancellation: true,
-                //     // googAutoGainControl: true,
-                //     googNoiseSuppression: true,
-                //     // googHighpassFilter: true,
-                //     // googTypingNoiseDetection: true,
-                //     googNoiseReduction: true,
-                //     volume: 0.9,
-                // },
-                video: {
-                    mandatory: qvgaConstraints,
-                    facingMode,
-                    optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
-                },
-            };
-            const newStream = await mediaDevices.getUserMedia(constraints);
-            if (init) {
-                initCall(newStream)
-            }
-            localStream.current = newStream
-            // setLocalStream(newStream);
-        } catch (error) {
-            console.log('error: ', error);
-            debugger
-
-        }
-
-    };
-    const getStats = () => {
-        const pc = localPC.current;
-        if (pc.getRemoteStreams()[0] && pc.getRemoteStreams()[0].getAudioTracks()[0]) {
-            const track = pc.getRemoteStreams()[0].getAudioTracks()[0];
-            let callback = report => console.log('getStats report', report);
-
-            //console.log('track', track);
-
-            pc.getStats(track).then(callback).catch((err) => {
-
-            });
-        }
-    };
-    const initCall = async (newStream) => {
-        debugger
-
-        // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
-        const configuration = {
-            iceServers: [
-                // { url: 'stun:stun.l.google.com:19302' },
-                // { url: 'stun:stun1.l.google.com:19302' },
-                // { url: 'stun:stun2.l.google.com:19302' },
-                // { url: 'stun:stun3.l.google.com:19302' },
-                // { url: 'stun:stun4.l.google.com:19302' },
-                {
-                    url: 'turn:numb.viagenie.ca',
-                    username: 'gnurt250394@gmail.com',
-                    credential: 'trung123'
-                },
-            ],
-            iceTransportPolicy: 'public',
-        };
-        localPC.current = new RTCPeerConnection(configuration);
-        // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
-        localPC.current.onnegotiationneeded = e => {
-
-        }
-        localPC.current.onicecandidate = e => {
+        return new Promise(async (resolve, reject) => {
             try {
+                // isFront will determine if the initial camera should face user or environment
+                const isFront = true;
+                const devices = await mediaDevices.enumerateDevices();
+                const facing = isFront ? 'front' : 'environment';
+                const videoSourceId = devices.find(device => device.kind === 'videoinput' && device.facing === facing);
+                const facingMode = isFront ? 'user' : 'environment';
+                const constraints = {
+                    audio: true,
+                    // audio: {
+                    //     echoCancellation: true,
+                    //     noiseSuppression: true,
+                    //     autoGainControl: true,
+                    //     googEchoCancellation: true,
+                    //     // googAutoGainControl: true,
+                    //     googNoiseSuppression: true,
+                    //     // googHighpassFilter: true,
+                    //     // googTypingNoiseDetection: true,
+                    //     googNoiseReduction: true,
+                    //     volume: 0.9,
+                    // },
+                    video: {
+                        mandatory: qvgaConstraints,
+                        facingMode,
+                        optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
+                    },
+                };
+                const newStream = await mediaDevices.getUserMedia(constraints);
+                await initCall(newStream)
+                resolve()
+                localStream.current = newStream
+            } catch (error) {
+                reject()
+                console.log('error: ', error);
                 debugger
-                console.log('localPC icecandidate:', e.candidate);
-                if (e.candidate) {
-                    onSend(constants.socket_type.CANDIDATE, { to: socketId2.current, candidate: e.candidate, type: 'local' })
+            }
+        })
+
+    };
+
+    const initCall = async (newStream) => {
+        return new Promise((resolve, reject) => {
+            // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
+            const configuration = {
+                iceServers: [
+                    // { url: 'stun:stun.l.google.com:19302' },
+                    // { url: 'stun:stun1.l.google.com:19302' },
+                    // { url: 'stun:stun2.l.google.com:19302' },
+                    // { url: 'stun:stun3.l.google.com:19302' },
+                    // { url: 'stun:stun4.l.google.com:19302' },
+                    {
+                        url: 'turn:numb.viagenie.ca',
+                        username: 'gnurt250394@gmail.com',
+                        credential: 'trung123'
+                    },
+                    {
+                        url: 'turn:numb.viagenie.ca',
+                        username: 'trung.hv@isofhcare.com',
+                        credential: 'trung123'
+                    },
+                ],
+                iceTransportPolicy: 'public',
+            };
+            localPC.current = new RTCPeerConnection(configuration);
+            // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
+            localPC.current.onicecandidate = e => {
+                try {
+                    debugger
+                    console.log('localPC icecandidate:', e.candidate);
+                    if (e.candidate) {
+                        onSend(constants.socket_type.CANDIDATE, { to: socketId2.current, candidate: e.candidate, type: 'local' })
+                    }
+                } catch (err) {
+                    debugger
+                    console.error(`Error adding remotePC iceCandidate: ${err}`);
                 }
-            } catch (err) {
+            };
+            localPC.current.onaddstream = e => {
+                console.log('remotePC tracking with ', e);
                 debugger
-                console.error(`Error adding remotePC iceCandidate: ${err}`);
-            }
-        };
-        localPC.current.onaddstream = e => {
-            console.log('remotePC tracking with ', e);
-            debugger
-            if (e.stream && remoteStream !== e.stream) {
-                console.log('RemotePC received the stream', e.stream);
-                setRemoteStream(e.stream);
-            }
-        };
+                if (e.stream && remoteStream !== e.stream) {
+                    console.log('RemotePC received the stream', e.stream);
+                    setRemoteStream(e.stream);
+                }
+            };
 
-        localPC.current.addStream(newStream);
-        /**
-                * On Ice Connection State Change
-                */
+            localPC.current.addStream(newStream);
+            /**
+                    * On Ice Connection State Change
+                    */
 
-        localPC.current.oniceconnectionstatechange = async (event) => {
-            console.log('event: oniceconnectionstatechange', event);
-            console.log('event: iceConnectionState', event.target.iceConnectionState);
-            switch (event.target.iceConnectionState) {
-                case 'completed':
-                    setState({ statusCall: true })
-                    break;
-                case 'failed':
-                    if (localPC.current.restartIce) {
-                        localPC.current.restartIce();
-                    } else {
-                        try {
-                            if (state.makeCall == true) {
-                                let offer = await localPC.current.createOffer({ iceRestart: true })
-                                onCreateOfferSuccess(offer)
+            localPC.current.oniceconnectionstatechange = async (event) => {
+                console.log('event: oniceconnectionstatechange', event);
+                console.log('event: iceConnectionState', event.target.iceConnectionState);
+                switch (event.target.iceConnectionState) {
+                    case 'completed':
+                        setState({ statusCall: true })
+                        break;
+                    case 'failed':
+                        if (localPC.current.restartIce) {
+                            localPC.current.restartIce();
+                        } else {
+                            try {
+                                if (state.makeCall == true) {
+                                    let offer = await localPC.current.createOffer({ iceRestart: true })
+                                    onCreateOfferSuccess(offer)
+                                }
+                            } catch (error) {
+
                             }
-                        } catch (error) {
 
                         }
+                        break;
+                    case 'connected':
+                        setState({ statusCall: true })
+                        break;
+                    case 'disconnected':
+                        setState({ statusCall: false })
+                        break;
+                    case 'closed':
+                        closeStreams()
+                        break;
+                    default:
+                        break;
+                }
+            };
 
-                    }
-                    break;
-                case 'connected':
-                    setState({ statusCall: true })
-                    break;
-                case 'disconnected':
-                    setState({ statusCall: false })
-                    break;
-                case 'closed':
-                    closeStreams()
-                    break;
-                default:
-                    break;
-            }
+            /**
+             * On Signaling State Change
+             */
+            localPC.current.onsignalingstatechange = event => {
+                console.log('on signaling state change', event.target.signalingState);
+            };
+            /**
+             * On Remove Stream
+             */
+            localPC.current.onremovestream = event => {
+                debugger
+                //console.log('on remove stream', event.stream);
+            };
+            resolve()
+        })
 
-
-        };
-
-        /**
-         * On Signaling State Change
-         */
-        localPC.current.onsignalingstatechange = event => {
-            console.log('on signaling state change', event.target.signalingState);
-        };
-
-        /**
-         * On Remove Stream
-         */
-        localPC.current.onremovestream = event => {
-            debugger
-            //console.log('on remove stream', event.stream);
-        };
     };
 
     function setBandwidth(sdp) {
@@ -404,18 +399,21 @@ function CallScreen({ }, ref) {
         return new_sdp; //return the new sdp
     }
     const onCreateOfferSuccess = async (offer, booking) => {
-        console.log('Offer from localPC, setLocalDescription');
-        await localPC.current.setLocalDescription(offer);
-        console.log('remotePC, setRemoteDescription');
-        soundUtils.play('call_phone.mp3');
-        onSend(constants.socket_type.OFFER, { booking, to: socketId2.current, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
-            debugger
-        })
+        try {
+            console.log('Offer from localPC, setLocalDescription');
+            await localPC.current.setLocalDescription(offer);
+            console.log('remotePC, setRemoteDescription');
+            soundUtils.play('call_phone.mp3');
+            onSend(constants.socket_type.OFFER, { booking, to: socketId2.current, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
+                debugger
+            })
+        } catch (error) {
+
+        }
+
     }
     const startCall = async (booking, isOffer) => {
-        debugger
         try {
-            debugger
             showModal()
             if (!localPC.current) {
                 await initCall(localStream.current)
@@ -437,30 +435,21 @@ function CallScreen({ }, ref) {
                 //     'maxptime': 3
                 // });
                 onCreateOfferSuccess(offer, booking)
-                // console.log('Offer from localPC, setLocalDescription');
-                // await localPC.current.setLocalDescription(offer);
-                // console.log('remotePC, setRemoteDescription');
-                // onSend(constants.socket_type.OFFER, { booking, to: booking?.doctor?.id, from: socketId.current, sdp: localPC.current.localDescription }, (res) => {
-                //     debugger
-                // })
             }
         } catch (err) {
             debugger
             console.log(err);
         }
-
     }
     const createAnswer = async () => {
         try {
             const { data2 } = state
             console.log('data21111: ', data2);
-            debugger
             InCallManager.start({ media: "video" });
             const answer = await localPC.current.createAnswer();
             console.log(`Answer from remotePC: ${answer.sdp}`);
             answerCallEvent()
             // answer.sdp = handle_offer_sdp(answer)
-
             // answer.sdp = BandwidthHandler.setOpusAttributes(answer.sdp, {
             //     'stereo': 0, // to disable stereo (to force mono audio)
             //     'sprop-stereo': 1,
@@ -473,23 +462,21 @@ function CallScreen({ }, ref) {
             // });
             await localPC.current.setLocalDescription(answer);
             setState({ isAnswerSuccess: true })
+            onTimeOut()
+
             onSend(constants.socket_type.ANSWER, { to: socketId2.current, from: userApp.currentUser.id, sdp: localPC.current.localDescription })
-            console.log('socketId2.current: ', socketId2.current);
         } catch (error) {
             debugger
+            closeStreams()
             console.log('error: ', error);
-
         }
-
     }
     const switchCamera = () => {
-        debugger
         localStream.current.getVideoTracks().forEach(track => track._switchCamera());
     };
 
     // Mutes the local's outgoing audio
     const toggleMute = () => {
-        debugger
         // if (!remoteStream) return;
         localStream.current.getAudioTracks().forEach(track => {
             console.log(track.enabled ? 'muting' : 'unmuting', ' local track', track);
@@ -513,9 +500,6 @@ function CallScreen({ }, ref) {
         if (UUID.current) {
             RNCallKeep.reportEndCallWithUUID(UUID.current, 1)
         }
-        // setRemoteStream();
-
-
     };
     const toggleSpeaker = () => {
         setIsSpeak(state => ({ isSpeak: !state.isSpeak }))
@@ -641,7 +625,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#313131',
         // justifyContent: 'space-between',
         // alignItems: 'center',
-        flex: 1
+        flex: 1,
+        paddingTop: 10
     },
     text: {
         fontSize: 30,
