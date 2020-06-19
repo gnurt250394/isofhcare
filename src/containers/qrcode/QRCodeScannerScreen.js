@@ -200,40 +200,40 @@ class QRCodeScannerScreen extends Component {
         return (
             <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || constants.title.scan_qr_code}
             >
-                    <QRCodeScanner
-                        // reactivate={true}
-                        flashOn={this.state.flashOn}
-                        ref={(node) => { this.scanner = node }}
-                        showMarker={true}
-                        checkAndroid6Permissions={true}
-                        cameraType={this.state.front ? 'front' : 'back'}
-                        onRead={this.onSuccess.bind(this)}
-                        topContent={
+                <QRCodeScanner
+                    // reactivate={true}
+                    flashOn={this.state.flashOn}
+                    ref={(node) => { this.scanner = node }}
+                    showMarker={true}
+                    checkAndroid6Permissions={true}
+                    cameraType={this.state.front ? 'front' : 'back'}
+                    onRead={this.onSuccess.bind(this)}
+                    topContent={
 
-                            <Text style={styles.centerText}>
-                                {this.state.textHelp || constants.qr_code.move_camera}</Text>
+                        <Text style={styles.centerText}>
+                            {this.state.textHelp || constants.qr_code.move_camera}</Text>
 
-                        }
-                        bottomContent={
-                            <View style={styles.containerBottom}>
-                                {/* <View style={{ flex: 1, alignItems: 'center' }}>
+                    }
+                    bottomContent={
+                        <View style={styles.containerBottom}>
+                            {/* <View style={{ flex: 1, alignItems: 'center' }}>
                                 <TouchableOpacity onPress={this.onSelectImage} style={{ width: 50, height: 50, backgroundColor: '#00000030', borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icon type="MaterialIcons" name="image" style={{ color: '#FFF' }}></Icon>
                                 </TouchableOpacity>
                             </View> */}
-                                <View style={styles.containerFlash}>
-                                    <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
-                                        <Icon name="flashlight" style={{ color: this.state.flashOn ? '#FFF' : '#00000030' }}></Icon>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.containerFlash}>
-                                    <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
-                                        <Icon type="MaterialCommunityIcons" name="camera" style={{ color: this.state.front ? '#FFF' : '#00000030' }}></Icon>
-                                    </TouchableOpacity>
-                                </View>
+                            <View style={styles.containerFlash}>
+                                <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
+                                    <ScaledImage source={require("@images/ic_flash.png")} height={19} width={19} style={{ tintColor: this.state.flashOn ? '#FFF' : '#00000030' }} />
+                                </TouchableOpacity>
                             </View>
-                        }
-                    />
+                            <View style={styles.containerFlash}>
+                                <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
+                                    <ScaledImage source={require("@images/ic_camera.png")} height={19} width={19} style={{ tintColor: this.state.front ? '#FFF' : '#00000030' }} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+                />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
