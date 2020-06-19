@@ -231,18 +231,24 @@ class AccountScreen extends Component {
     codePushUtils.checkupDate();
   }
   onLogout = async () => {
-    let socket = await socketProvider.connectSocket(this.props.userApp.loginToken)
-    console.log('socket: ', socket);
-    if (Platform.OS == "android") {
-      let token = await firebase.messaging().getToken()
-      socket.emit(constants.socket_type.DISCONNECT, { token, platform: Platform.OS }, (data) => {
-        socket.close();
-        console.log('socket: ', socket.connected);
-      })
-    } 
-    
-    this.props.dispatch(redux.userLogout());
-    if (this.props.onLogout) this.props.onLogout();
+    console.log(1111)
+    try {
+      if (Platform.OS == "android") {
+        let socket = await socketProvider.connectSocket(this.props.userApp.loginToken)
+        let token = await firebase.messaging().getToken()
+        socket.emit(constants.socket_type.DISCONNECT, { token, platform: Platform.OS }, (data) => {
+          socket.close();
+          console.log('socket: ', socket.connected);
+        })
+      }
+
+      this.props.dispatch(redux.userLogout());
+      if (this.props.onLogout) this.props.onLogout();
+    } catch (error) {
+      console.log('error: ', error);
+
+    }
+
   }
   render() {
     return (
