@@ -150,7 +150,7 @@ class RegisterScreen extends Component {
             switch (res.code) {
               case 2: snackbar.show('Số điện thoại đã được đăng ký', 'danger')
                 break
-              case 404: snackbar.show(res.message, 'danger')
+              case 404: snackbar.show(res?.message, 'danger')
                 break
               default: snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
@@ -162,13 +162,16 @@ class RegisterScreen extends Component {
           }
 
         }).catch(e => {
-          snackbar.show(constants.msg.app.not_internet, "danger");
+          snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         });
       })
 
     }
 
-    )
+    ).catch(err => {
+      snackbar.show(constants.msg.app.not_internet, "danger");
+
+    })
 
   }
 

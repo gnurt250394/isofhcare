@@ -406,11 +406,11 @@ class HomeScreen extends Component {
             </View>
           </ScrollView>
         </View>
-        {
+        {/* {
           this.props.userApp.isLogin ?
             <CallScreen ref={ref => this.callRef = ref} />
             : null
-        }
+        } */}
         <PushController />
         <Deeplink />
       </ActivityPanel>
