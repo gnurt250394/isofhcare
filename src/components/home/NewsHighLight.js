@@ -53,7 +53,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
-                    <Text style={styles.txAds}>Tin tức y tế</Text>
+                    <Text style={styles.txAds}>TIN TỨC Y TẾ</Text>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
