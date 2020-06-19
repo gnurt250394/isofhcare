@@ -202,7 +202,7 @@ function CallScreen({ }, ref) {
         }
         didmount()
         return () => {
-            socket.current.disconnect();
+            // socket.current.disconnect();
             removeEvent()
         }
     }, [])
