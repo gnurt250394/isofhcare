@@ -24,6 +24,8 @@ const connectSocket = async (token) => {
                 }
                 resolve(socket)
 
+            }else{
+                reject()
             }
         } catch (error) {
             console.log('error: ', error);
