@@ -126,7 +126,7 @@ function CallScreen({ }, ref) {
             debugger
             if (Platform.OS == 'android') {
                 RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
-                // showModal()
+                showModal()
             }
             UUID.current = data.UUID
             socketId2.current = data.from
