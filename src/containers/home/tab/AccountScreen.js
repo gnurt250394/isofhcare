@@ -238,17 +238,16 @@ class AccountScreen extends Component {
         let token = await firebase.messaging().getToken()
         socket.emit(constants.socket_type.DISCONNECT, { token, platform: Platform.OS }, (data) => {
           socket.close();
-          console.log('socket: ', socket.connected);
         })
       }
 
-      this.props.dispatch(redux.userLogout());
-      if (this.props.onLogout) this.props.onLogout();
+
     } catch (error) {
       console.log('error: ', error);
 
     }
-
+    this.props.dispatch(redux.userLogout());
+    if (this.props.onLogout) this.props.onLogout();
   }
   render() {
     return (
