@@ -235,7 +235,7 @@ class RegisterScreen extends Component {
             <View style={{ flex: 1, padding: 20 }}>
               <View
                 style={{
-                  marginTop: 60,
+                  marginTop: 50,
                   justifyContent: "center",
                   alignItems: "center"
                 }}
@@ -372,7 +372,7 @@ class RegisterScreen extends Component {
                     onPress={this.onScanQrCode}
                     style={{
                       backgroundColor: 'rgb(2,195,154)',
-                      height: 51,
+                      height: 42,
                       alignSelf: 'flex-end',
                       paddingHorizontal: 10,
                       alignItems: 'center',
@@ -437,18 +437,18 @@ const styles = StyleSheet.create({
   textInputStyle: {
     color: "#000",
     fontWeight: "300",
-    height: 51,
+    height: 43,
     marginLeft: 0,
     borderWidth: 1,
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 6,
     borderColor: '#CCCCCC',
-    fontSize: 20,
+    fontSize: 16,
     paddingLeft: 15,
     paddingRight: 45,
   },
-  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
+  labelStyle: { paddingTop: 5, color: '#53657B', fontSize: 16 },
   btnEye: {
     position: "absolute",
     right: 25,
