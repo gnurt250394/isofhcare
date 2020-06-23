@@ -23,6 +23,7 @@ import {
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { Icon } from 'native-base';
+import { withNavigationFocus } from 'react-navigation'
 class QRCodeScannerScreen extends Component {
     constructor(props) {
         super(props);
@@ -197,18 +198,20 @@ class QRCodeScannerScreen extends Component {
         // }
     }
     render() {
+        const { isFocused } = this.props
         return (
             <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || constants.title.scan_qr_code}
             >
-                <QRCodeScanner
-                    // reactivate={true}
-                    flashOn={this.state.flashOn}
-                    ref={(node) => { this.scanner = node }}
-                    showMarker={true}
-                    checkAndroid6Permissions={true}
-                    cameraType={this.state.front ? 'front' : 'back'}
-                    onRead={this.onSuccess.bind(this)}
-                    topContent={
+                {isFocused &&
+                    <QRCodeScanner
+                        // reactivate={true}
+                        flashOn={this.state.flashOn}
+                        ref={(node) => { this.scanner = node }}
+                        showMarker={true}
+                        checkAndroid6Permissions={true}
+                        cameraType={this.state.front ? 'front' : 'back'}
+                        onRead={this.onSuccess.bind(this)}
+                        topContent={
 
                         <Text style={styles.centerText}>
                             {this.state.textHelp || constants.qr_code.move_camera}</Text>
@@ -221,19 +224,19 @@ class QRCodeScannerScreen extends Component {
                                     <Icon type="MaterialIcons" name="image" style={{ color: '#FFF' }}></Icon>
                                 </TouchableOpacity>
                             </View> */}
-                            <View style={styles.containerFlash}>
-                                <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
-                                    <ScaledImage source={require("@images/ic_flash.png")} height={19} width={19} style={{ tintColor: this.state.flashOn ? '#FFF' : '#00000030' }} />
-                                </TouchableOpacity>
+                                <View style={styles.containerFlash}>
+                                    <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
+                                        <ScaledImage source={require("@images/ic_flash.png")} height={19} width={19} style={{ tintColor: this.state.flashOn ? '#FFF' : '#00000030' }} />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.containerFlash}>
+                                    <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
+                                        <ScaledImage source={require("@images/ic_camera.png")} height={19} width={19} style={{ tintColor: this.state.front ? '#FFF' : '#00000030' }} />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={styles.containerFlash}>
-                                <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
-                                    <ScaledImage source={require("@images/ic_camera.png")} height={19} width={19} style={{ tintColor: this.state.front ? '#FFF' : '#00000030' }} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    }
-                />
+                        }
+                    />}
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel>
         );
@@ -277,4 +280,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default QRCodeScannerScreen;
+export default withNavigationFocus(QRCodeScannerScreen);
