@@ -170,7 +170,7 @@ class SearchIcdScreen extends Component {
                 <TouchableOpacity disabled={!(item.children && item.children.length)} style={styles.btn} onPress={() => this.onShowDetails(index)}>
                     <View style={styles.viewCode}>
                         <Text style={styles.txCode}>
-                            {item.typeCode}
+                            {item.diseaseCode}
                         </Text>
                     </View>
                     <View style={styles.viewName}>
