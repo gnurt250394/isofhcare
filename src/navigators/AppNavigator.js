@@ -445,6 +445,7 @@ const RootNavigator = (route = 'splash') => createStackNavigator(
     historyCumulative: { screen: HistoryCumulativeScreen },
   },
   {
+    initialRouteName: route,
     headerMode: "none",
     // cardStyle: {
     //   backgroundColor: 'transparent', opacity: 1,

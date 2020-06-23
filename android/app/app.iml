@@ -224,7 +224,7 @@
     <orderEntry type="module" module-name="mainam-react-native-location-switch" />
     <orderEntry type="module" module-name="mainam-react-native-photo-viewer" />
     <orderEntry type="module" module-name="react-native-firebase" />
-    <orderEntry type="module" module-name="react-native-momosdk-android-react-native-momosdk" />
+    <orderEntry type="module" module-name="react-native-momosdk" />
     <orderEntry type="module" module-name="react-native-webview" />
     <orderEntry type="module" module-name="appcenter" />
     <orderEntry type="module" module-name="appcenter-analytics" />
@@ -236,6 +236,7 @@
     <orderEntry type="module" module-name="react-native-camera" />
     <orderEntry type="module" module-name="react-native-code-push" />
     <orderEntry type="module" module-name="react-native-device-info" />
+    <orderEntry type="module" module-name="react-native-fbsdk" />
     <orderEntry type="module" module-name="react-native-fs" />
     <orderEntry type="module" module-name="react-native-gesture-handler" />
     <orderEntry type="module" module-name="react-native-get-location" />
@@ -255,7 +256,7 @@
     <orderEntry type="module" module-name="react-native-sound" />
     <orderEntry type="module" module-name="react-native-svg" />
     <orderEntry type="module" module-name="react-native-vector-icons" />
-    <orderEntry type="module" module-name="react-native-webrtc" />
+    <orderEntry type="module" module-name="node_modules-react-native-webrtc-android-react-native-webrtc" />
     <orderEntry type="module" module-name="react-native-wheel-picker-android" />
     <orderEntry type="module" module-name="rn-fetch-blob" />
   </component>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useImperativeHandle, forwardRef, memo } from 'react';
-import { View, SafeAreaView, Platform, StyleSheet, FlatList, TouchableOpacity, Text, Dimensions, StatusBar, Image, Modal } from 'react-native';
+import { View, SafeAreaView, Platform, StyleSheet, FlatList, TouchableOpacity, Text, Dimensions, StatusBar, Image, Modal, Vibration } from 'react-native';
 import { RTCPeerConnection, RTCView, mediaDevices, RTCIceCandidate, RTCSessionDescription } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 import constants from '@resources/strings'
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import BandWidth from './BandWidth';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import firebase from 'react-native-firebase'
-import RNCallKeepManager from '@components/RNCallKeepManager'
+// // import RNCallKeepManager from '@components/RNCallKeepManager'
 import RNCallKeep from 'react-native-callkeep'
 import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info'
@@ -46,6 +46,13 @@ function CallScreen({ }, ref) {
     const tokenFirebase = useRef("")
     const localPC = useRef()
     const userApp = useSelector(state => state.auth.userApp)
+    const ONE_SECOND_IN_MS = 1000;
+
+    const PATTERN = [
+        1 * ONE_SECOND_IN_MS,
+        2 * ONE_SECOND_IN_MS,
+        3 * ONE_SECOND_IN_MS
+    ];
     const hideModal = () => {
         setState({ isVisible: false });
     };
@@ -67,7 +74,7 @@ function CallScreen({ }, ref) {
     }
     const onConnected = async (data2) => {
         try {
-            RNCallKeepManager.setupCallKeep()
+            // RNCallKeepManager.setupCallKeep()
             if (Platform.OS == 'ios') {
                 VoipPushNotification.requestPermissions();
                 VoipPushNotification.registerVoipToken();
@@ -120,13 +127,23 @@ function CallScreen({ }, ref) {
         RNCallKeep.removeEventListener("didActivateAudioSession", onRNCallKitDidActivateAudioSession);
         RNCallKeep.removeEventListener('didDisplayIncomingCall', onDidDisplayIncomingCall);
     }
+    const startSound = () => {
+        InCallManager.startRingtone('_BUNDLE_');
+        Vibration.vibrate(PATTERN, true)
+    }
+    const stopSound = () => {
+        InCallManager.stopRingtone();
+        InCallManager.stop();
+        Vibration.cancel()
+    }
     const onOffer = async (data) => {
         console.log('data: ', data);
         try {
             debugger
             if (Platform.OS == 'android') {
-                RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+                // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
                 showModal()
+                startSound()
             }
             UUID.current = data.UUID
             socketId2.current = data.from
@@ -445,7 +462,9 @@ function CallScreen({ }, ref) {
         try {
             const { data2 } = state
             console.log('data21111: ', data2);
+            InCallManager.stopRingtone()
             InCallManager.start({ media: "video" });
+            Vibration.cancel()
             const answer = await localPC.current.createAnswer();
             console.log(`Answer from remotePC: ${answer.sdp}`);
             answerCallEvent()
@@ -493,7 +512,7 @@ function CallScreen({ }, ref) {
             localPC.current = null
         }
         soundUtils.stop();
-        InCallManager.stop();
+        stopSound()
         setState({ isAnswerSuccess: false, makeCall: false, isVisible: false })
         setIsSpeak(true)
         setIsMuted(false)
@@ -507,7 +526,7 @@ function CallScreen({ }, ref) {
 
     }
     const rejectCall = () => {
-        RNCallKeepManager.endCall()
+        // RNCallKeepManager.endCall()
         let type = state.isAnswerSuccess || state.makeCall ? constants.socket_type.LEAVE : constants.socket_type.REJECT
         onSend(constants.socket_type.LEAVE, { to: socketId2.current, type })
         closeStreams()
