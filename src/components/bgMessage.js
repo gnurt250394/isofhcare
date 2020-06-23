@@ -1,6 +1,6 @@
 import firebase from 'react-native-firebase';
 import { AppState, Linking, NativeModules } from 'react-native'
-import RNCallKeepManager from '@components/RNCallKeepManager'
+// import RNCallKeepManager from '@components/RNCallKeepManager'
 const LaunchApplication = NativeModules.LaunchApplication;
 import constants from '@resources/strings'
 import RNCallKeep from 'react-native-callkeep'
@@ -25,8 +25,8 @@ export default async (message) => {
 
         try {
             if (AppState.currentState != 'active') {
-                RNCallKeepManager.setupCallKeep()
-                RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+                // RNCallKeepManager.setupCallKeep()
+                // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
                 LaunchApplication.open(constants.package_name)
             }
         } catch (error) {

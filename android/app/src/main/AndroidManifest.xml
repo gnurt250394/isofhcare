@@ -27,6 +27,7 @@ xmlns:tools="http://schemas.android.com/tools"
     <!-- <uses-permission android:name="android.permission.WRITE_SETTINGS" /> -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- <action android:name="android.intent.action.DOWNLOAD_COMPLETE" /> -->
     <permission
         android:name="com.isofh.appisofhcaretest.permission.C2D_MESSAGE"
