@@ -876,7 +876,8 @@ module.exports = {
       re_send_otp: isofhcare_service + 'user/registration',
       get_user_details: isofhcare_service + '/user',
       resetPw: isofhcare_service + 'user/replace-password',
-      get_token: isofhcare_service + 'user/call/access-token'
+      get_token: isofhcare_service + 'user/call/access-token',
+      get_accumulations: isofhcare_service + 'user/accumulations',
 
 
     },
@@ -1049,6 +1050,9 @@ module.exports = {
       search_drug: isofhcare_service + 'pharmacy/v1/medicine/search',
       search_by_name: '/v1/search?expression=',
       delete_address: isofhcare_service + 'orders/v1/addresses/'
+    },
+    icd: {
+      search: isofhcare_service + 'catalog/v1/diseases/search'
     }
   }
 };

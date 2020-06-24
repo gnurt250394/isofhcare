@@ -109,13 +109,13 @@ class DetailsDoctorScreen extends Component {
       return
     }
     // if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('selectTimeDoctor', {
-        item: this.state.profileDoctor,
-        isNotHaveSchedule: true,
-        schedules: this.state.profileDoctor.schedules,
-        isOnline: true
+    this.props.navigation.navigate('selectTimeDoctor', {
+      item: this.state.profileDoctor,
+      isNotHaveSchedule: true,
+      schedules: this.state.profileDoctor.schedules,
+      isOnline: true
 
-      })
+    })
     // }
     // else {
 
@@ -256,7 +256,7 @@ class DetailsDoctorScreen extends Component {
   renderAcademic = (academicDegree) => {
     switch (academicDegree) {
       case 'BS': return 'BS'
-      case 'ThS': return 'Ths'
+      case 'ThS': return 'ThS'
       case 'TS': return 'TS'
       case 'PGS': return 'PGS'
       case 'GS': return 'GS'
@@ -264,8 +264,8 @@ class DetailsDoctorScreen extends Component {
       case 'BSCKII': return 'BSCKII'
       case 'GSTS': return 'GS.TS'
       case 'PGSTS': return 'PGS.TS'
-      case 'ThsBS': return 'Ths.BS'
-      case 'ThsBSCKII': return 'Ths.BSCKII'
+      case 'ThsBS': return 'ThS.BS'
+      case 'ThsBSCKII': return 'ThS.BSCKII'
       case 'TSBS': return 'TS.BS'
       default: return ''
     }
@@ -319,7 +319,7 @@ class DetailsDoctorScreen extends Component {
                   style={styles.imgDefault}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree ? this.renderAcademic(profileDoctor.academicDegree) + '.' : ''}{profileDoctor.name}</Text>
+                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree ? this.renderAcademic(profileDoctor.academicDegree) + '. ' : ''}{profileDoctor.name}</Text>
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>

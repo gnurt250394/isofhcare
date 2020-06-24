@@ -138,29 +138,29 @@ class InitialVideoCall extends Component {
     if (doctor?.name || doctor?.academicDegree) {
       let academicDegree = ''
       switch (doctor?.academicDegree) {
-        case 'BS': academicDegree = 'BS.'
+        case 'BS': academicDegree = 'BS. '
           break;
-        case 'ThS': academicDegree = 'Ths.'
+        case 'ThS': academicDegree = 'ThS. '
           break;
-        case 'TS': academicDegree = 'TS.'
+        case 'TS': academicDegree = 'TS. '
           break;
-        case 'PGS': academicDegree = 'PGS.'
+        case 'PGS': academicDegree = 'PGS. '
           break;
-        case 'GS': academicDegree = 'GS.'
+        case 'GS': academicDegree = 'GS. '
           break;
-        case 'BSCKI': academicDegree = 'BSCKI.'
+        case 'BSCKI': academicDegree = 'BSCKI. '
           break;
-        case 'BSCKII': academicDegree = 'BSCKII.'
+        case 'BSCKII': academicDegree = 'BSCKII. '
           break;
-        case 'GSTS': academicDegree = 'GS.TS.'
+        case 'GSTS': academicDegree = 'GS.TS. '
           break;
-        case 'PGSTS': academicDegree = 'PGS.TS.'
+        case 'PGSTS': academicDegree = 'PGS.TS. '
           break;
-        case 'ThsBS': academicDegree = 'Ths.BS.'
+        case 'ThsBS': academicDegree = 'ThS.BS. '
           break;
-        case 'ThsBSCKII': academicDegree = 'Ths.BSCKII.'
+        case 'ThsBSCKII': academicDegree = 'ThS.BSCKII. '
           break;
-        case 'TSBS': academicDegree = 'TS.BS.'
+        case 'TSBS': academicDegree = 'TS.BS. '
           break;
         default: academicDegree = ''
           break;
@@ -215,7 +215,7 @@ class InitialVideoCall extends Component {
       })
 
     } else {
-      
+
     }
 
   }

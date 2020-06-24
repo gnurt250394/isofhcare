@@ -116,52 +116,53 @@ class HomeScreen extends Component {
               });
           }
         },
+        // {
+        //   icon: require("@images/new/homev2/ic_advisory.png"),
+        //   text: "Tư vấn",
+        //   onPress: () => {
+        //     snackbar.show('Tính năng đang phát triển')
+        //     return
+        //     if (this.props.userApp.isLogin)
+        //       this.props.navigation.navigate("listQuestion");
+        //     else
+        //       this.props.navigation.navigate("login", {
+        //         nextScreen: { screen: "listQuestion", param: {} }
+        //       });
+        //   }
+        // },
+        // {
+        //   icon: require("@images/new/homev2/ic_voucher.png"),
+        //   text: "Mã ưu đãi",
+        //   onPress: () => {
+        //     snackbar.show('Tính năng đang phát triển')
+        //     return
+        //     if (this.props.userApp.isLogin)
+        //       this.props.navigation.navigate("myVoucher");
+        //     else
+        //       this.props.navigation.navigate("login", {
+        //         nextScreen: { screen: 'myVoucher' }
+        //       });
+        //   }
+        // },
+        // {
+        //   icon: require("@images/new/homev2/ic_drug.png"),
+        //   text: "Thuốc",
+        //   onPress: () => {
+        //     // if (this.props.userApp.isLogin)
+        //     //   this.props.navigation.navigate("drugTab");
+        //     // else
+        //     //   this.props.navigation.navigate("login", {
+        //     //     nextScreen: { screen: 'drugTab' }
+        //     //   });
+        //     snackbar.show('Tính năng đang phát triển')
+        //   }
+        // },
         {
-          icon: require("@images/new/homev2/ic_advisory.png"),
-          text: "Tư vấn",
+          icon: require("@images/new/homev2/ic_icd.png"),
+          text: "ICD Bệnh",
           onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
-            return
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("listQuestion");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "listQuestion", param: {} }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/homev2/ic_voucher.png"),
-          text: "Mã ưu đãi",
-          onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
-            return
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("myVoucher");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'myVoucher' }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/homev2/ic_drug.png"),
-          text: "Thuốc",
-          onPress: () => {
-            // if (this.props.userApp.isLogin)
-            //   this.props.navigation.navigate("drugTab");
-            // else
-            //   this.props.navigation.navigate("login", {
-            //     nextScreen: { screen: 'drugTab' }
-            //   });
-            snackbar.show('Tính năng đang phát triển')
-          }
-        },
-        {
-          icon: require("@images/new/homev2/ic_more_info.png"),
-          text: "Nhiều hơn",
-          onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
+            this.props.navigation.navigate("searchIcd");
+
             // this.props.navigation.navigate("videoCall", {
             //   from: this.props.userApp?.currentUser?.id || "",
             //   to: 5640,

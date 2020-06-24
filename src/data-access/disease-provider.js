@@ -27,11 +27,15 @@ module.exports = {
             });
         }
     },
-    search(name, page, size, callback) {
-        client.requestApi("get", constants.api.disease.search_by_disease_symptom + "?page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
+    search(value, page, size,) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", client.serviceSchedule + constants.api.icd.search + "?value=" + value + "&page=" + page + "&size=" + size, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            });
+        })
     },
     updateViewCount(id, callback) {
         client.requestApi("put", constants.api.disease.update_view_count + "/" + id, {}, (s, e) => {

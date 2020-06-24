@@ -44,7 +44,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
     const renderAcademic = (academicDegree) => {
         switch (academicDegree) {
             case 'BS': return 'BS'
-            case 'ThS': return 'Ths'
+            case 'ThS': return 'ThS'
             case 'TS': return 'TS'
             case 'PGS': return 'PGS'
             case 'GS': return 'GS'
@@ -52,8 +52,8 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             case 'BSCKII': return 'BSCKII'
             case 'GSTS': return 'GS.TS'
             case 'PGSTS': return 'PGS.TS'
-            case 'ThsBS': return 'Ths.BS'
-            case 'ThsBSCKII': return 'Ths.BSCKII'
+            case 'ThsBS': return 'ThS.BS'
+            case 'ThsBSCKII': return 'ThS.BSCKII'
             case 'TSBS': return 'TS.BS'
             default: return ''
         }
@@ -73,7 +73,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
                     />
                 </View>
                 {/* </Card> */}
-                <Text style={styles.txContensDoctor}>{item.academicDegree ? renderAcademic(item.academicDegree) + '.' : ''}{item.name ? item.name : ""}</Text>
+                <Text style={styles.txContensDoctor}>{item.academicDegree ? renderAcademic(item.academicDegree) + '. ' : ''}{item.name ? item.name : ""}</Text>
 
             </TouchableOpacity>
         )
