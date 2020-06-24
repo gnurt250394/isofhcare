@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, SectionList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SectionList,
+  ActivityIndicator,
+} from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import {Card} from 'native-base';
@@ -14,6 +20,7 @@ const HistoryCumulativeScreen = () => {
     isLoading: true,
     length: 0,
     refreshing: false,
+    loadMore: true,
     list: [],
   });
 
@@ -24,9 +31,14 @@ const HistoryCumulativeScreen = () => {
   const getListAccumulations = async () => {
     try {
       let res = await userProvider.getListAccumulations(state.page, state.size);
-      setState({isLoading: false, refreshing: false});
+      setState({isLoading: false, refreshing: false, loadMore: false});
       if (res?.code == 0) {
-        let group2 = [...state.list, ...res.data.content];
+        let group2 = [];
+        if (state.page == 0) {
+          group2 = res.data.content;
+        } else {
+          group2 = [...state.list, ...res.data.content];
+        }
         let group = group2
           .map(item => item.createdDate.toDateObject('-').format('dd/MM/yyyy'))
           .filter((item, i, ar) => ar.indexOf(item) === i)
@@ -40,7 +52,7 @@ const HistoryCumulativeScreen = () => {
         formatData(group, res.data.content);
       }
     } catch (error) {
-      setState({isLoading: false, refreshing: false});
+      setState({isLoading: false, refreshing: false, loadMore: false});
     }
   };
   const formatData = (data = [], list) => {
@@ -60,20 +72,20 @@ const HistoryCumulativeScreen = () => {
   };
   const loadMore = () => {
     if ((state.page + 1) * state.size <= state.list.length) {
-      setState({page: state.page + 1});
+      setState({page: state.page + 1, loadMore: true});
     }
   };
   const onRefresh = () => {
     setState({refreshing: true, page: 0});
   };
   useEffect(() => {
-    getListAccumulations();
-  }, [state.page]);
-  useEffect(() => {
-    if (state.refreshing) {
-      getListAccumulations();
-    }
-  }, [state.refreshing]);
+    if (state.refreshing || state.loadMore) getListAccumulations();
+  }, [state.refreshing, state.page]);
+  //   useEffect(() => {
+  //     if (state.refreshing) {
+  //       getListAccumulations();
+  //     }
+  //   }, [state.refreshing]);
 
   const Item = ({item}) => {
     const icon =
@@ -98,6 +110,10 @@ const HistoryCumulativeScreen = () => {
   const listEmpty = () =>
     !state.isLoading && <Text style={styles.txtEmpty}>Không có dữ liệu</Text>;
 
+  const listFooter = () =>
+    state.loadMore && (
+      <ActivityIndicator color={'green'} size="small" style={styles.loadmore} />
+    );
   return (
     <ActivityPanel
       title="Lịch sử tích luỹ điểm"
@@ -127,6 +143,7 @@ const HistoryCumulativeScreen = () => {
         onRefresh={onRefresh}
         ListEmptyComponent={listEmpty}
         refreshing={state.refreshing}
+        ListFooterComponent={listFooter}
         keyExtractor={(item, index) => item + index}
         renderItem={({item}) => <Item item={item} />}
         renderSectionHeader={({section: {title}}) => (
@@ -138,6 +155,9 @@ const HistoryCumulativeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  loadmore: {
+    padding: 10,
+  },
   txtEmpty: {
     textAlign: 'center',
     marginTop: 20,
