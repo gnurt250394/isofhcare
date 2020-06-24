@@ -27,9 +27,12 @@ export default async (message) => {
             if (AppState.currentState != 'active') {
                 // RNCallKeepManager.setupCallKeep()
                 // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
+                console.log('LaunchApplication: ', LaunchApplication);
+                LaunchApplication.unlock()
                 LaunchApplication.open(constants.package_name)
             }
         } catch (error) {
+            console.log('error: ========>', error);
 
 
         }
