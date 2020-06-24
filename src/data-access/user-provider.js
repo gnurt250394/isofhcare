@@ -271,7 +271,7 @@ export default {
   // },
   detail(userId) {
     return new Promise((resolve, reject) => {
-      client.requestApiWithHeaderBear(
+      client.requestApi(
         "get",
         constants.api.user.get_detail + "/" + userId,
         {},
