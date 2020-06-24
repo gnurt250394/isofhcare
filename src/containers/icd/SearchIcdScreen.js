@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'flex-start',
         height: '100%',
-        padding: 15,
+        width: '15%',
         borderTopLeftRadius: 6,
         borderBottomLeftRadius: 6,
     },
