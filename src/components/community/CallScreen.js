@@ -214,6 +214,9 @@ function CallScreen({}, ref) {
       if (!localPC.current) {
         await initCall(localStream.current);
       }
+      if (!localStream.current) {
+        startLocalStream();
+      }
       await localPC.current.setRemoteDescription(
         new RTCSessionDescription(data.sdp),
       );
@@ -275,6 +278,9 @@ function CallScreen({}, ref) {
           if (data.candidate) {
             if (!localPC.current) {
               await initCall(localStream.current);
+            }
+            if (!localStream.current) {
+              startLocalStream();
             }
             localPC.current.addIceCandidate(
               new RTCIceCandidate(data.candidate),
@@ -346,7 +352,9 @@ function CallScreen({}, ref) {
           },
         };
         const newStream = await mediaDevices.getUserMedia(constraints);
-        await initCall(newStream);
+        if (!localStream.current) {
+          await initCall(newStream);
+        }
         resolve();
         localStream.current = newStream;
       } catch (error) {
@@ -536,6 +544,9 @@ function CallScreen({}, ref) {
       if (!localPC.current) {
         await initCall(localStream.current);
       }
+      if (!localStream.current) {
+        startLocalStream();
+      }
       socketId2.current = booking?.doctor?.id;
       if (isOffer) {
         InCallManager.start({media: 'video'});
@@ -616,6 +627,7 @@ function CallScreen({}, ref) {
     if (localPC.current) {
       debugger;
       localPC.current.removeStream(remoteStream);
+      localPC.current.removeStream(localStream.current);
       localPC.current.close();
       localPC.current = null;
     }
@@ -627,6 +639,7 @@ function CallScreen({}, ref) {
       isVisible: false,
       callStatus: '',
     });
+    if (timeout.current) clearTimeout(timeout.current);
     setIsSpeak(true);
     setIsMuted(false);
     if (UUID.current) {
@@ -675,6 +688,7 @@ function CallScreen({}, ref) {
             <RTCView
               style={[styles.rtc]}
               zOrder={1}
+              mirror={true}
               streamURL={localStream.current.toURL()}
             />
           )}
