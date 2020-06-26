@@ -232,20 +232,6 @@ class AccountScreen extends Component {
   }
   onLogout = async () => {
     console.log(1111)
-    try {
-      if (Platform.OS == "android") {
-        let socket = await socketProvider.connectSocket(this.props.userApp.loginToken)
-        let token = await firebase.messaging().getToken()
-        socket.emit(constants.socket_type.DISCONNECT, { token, platform: Platform.OS }, (data) => {
-          socket.close();
-        })
-      }
-
-
-    } catch (error) {
-      console.log('error: ', error);
-
-    }
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }
