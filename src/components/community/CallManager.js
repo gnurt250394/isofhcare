@@ -7,6 +7,8 @@ class CallManager {
 
     if (!!ref) {
       ref.startCall(booking, isOffer);
+    }else{
+      alert(JSON.stringify(ref))
     }
   }
   register(_ref) {

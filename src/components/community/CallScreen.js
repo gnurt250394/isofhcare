@@ -287,7 +287,7 @@ function CallScreen({}, ref) {
           } else {
             setState({callStatus: 'Kết thúc cuộc gọi'});
           }
-          setTimeout(closeStreams, 3000);
+          setTimeout(closeStreams, 1500);
         });
 
         addEventCallKeep();
