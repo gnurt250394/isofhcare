@@ -91,6 +91,7 @@ function CallScreen({}, ref) {
     setState({isVisible: false});
   };
   const showModal = () => {
+    console.log('state.isVisible+============>', state.isVisible);
     setState({isVisible: true});
   };
   useImperativeHandle(
@@ -112,7 +113,7 @@ function CallScreen({}, ref) {
   const onConnected = async data2 => {
     try {
       if (Platform.OS == 'ios') {
-        RNCallKeepManager.setupCallKeep()
+        RNCallKeepManager.setupCallKeep();
         VoipPushNotification.requestPermissions();
         VoipPushNotification.registerVoipToken();
         VoipPushNotification.addEventListener('register', token => {
@@ -131,6 +132,7 @@ function CallScreen({}, ref) {
         );
       } else {
         let token = await firebase.messaging().getToken();
+        tokenFirebase.current = token;
         console.log('token: ', token);
         onSend(constants.socket_type.CONNECT, {
           token,
@@ -268,22 +270,26 @@ function CallScreen({}, ref) {
             updateBandwidthRestriction(data.sdp.sdp, 0),
           );
         });
-        socket.current.on(constants.socket_type.CANDIDATE, data => {
+        socket.current.on(constants.socket_type.CANDIDATE, async data => {
           debugger;
-          if (data.candidate)
+          if (data.candidate) {
+            if (!localPC.current) {
+              await initCall(localStream.current);
+            }
             localPC.current.addIceCandidate(
               new RTCIceCandidate(data.candidate),
             );
+          }
         });
-        socket.current.on(constants.socket_type.LEAVE, socketId => {
-          closeStreams(socketId);
+        socket.current.on(constants.socket_type.LEAVE, data => {
+          if (data.status && data.code == 1) {
+            setState({callStatus: 'Máy bận'});
+          } else {
+            setState({callStatus: 'Kết thúc cuộc gọi'});
+          }
+          setTimeout(closeStreams, 3000);
         });
-        socket.current.on(constants.socket_type.REJECT, socketId => {
-          closeStreams(socketId);
-        });
-        socket.current.on(constants.socket_type.DELINE, socketId => {
-          closeStreams(socketId);
-        });
+
         addEventCallKeep();
       } catch (error) {
         console.log('error: ', error);
@@ -291,16 +297,14 @@ function CallScreen({}, ref) {
     };
     didmount();
     return () => {
-      if (socket.current && Platform.OS == 'ios') {
-        onSend(
-          constants.socket_type.DISCONNECT,
-          {token: tokenFirebase.current, platform: Platform.OS},
-          data => {
-            console.log('data: ', data);
-            socket.current.disconnect();
-          },
-        );
-      }
+      onSend(
+        constants.socket_type.DISCONNECT,
+        {token: tokenFirebase.current, platform: Platform.OS},
+        data => {
+          console.log('data: ', data);
+          socket.current.disconnect();
+        },
+      );
       if (state.isAnswerSuccess || state.makeCall) {
         rejectCall();
       }
@@ -528,6 +532,7 @@ function CallScreen({}, ref) {
   const startCall = async (booking, isOffer) => {
     try {
       showModal();
+      console.log('localPC: ', localPC);
       if (!localPC.current) {
         await initCall(localStream.current);
       }
@@ -548,6 +553,7 @@ function CallScreen({}, ref) {
         //     'maxptime': 3
         // });
         onCreateOfferSuccess(offer, booking);
+        console.log('offer: ', offer);
       }
     } catch (err) {
       debugger;
@@ -609,13 +615,18 @@ function CallScreen({}, ref) {
   const closeStreams = () => {
     if (localPC.current) {
       debugger;
-      // localPC.current.removeStream(localStream);
+      localPC.current.removeStream(remoteStream);
       localPC.current.close();
       localPC.current = null;
     }
     soundUtils.stop();
     stopSound();
-    setState({isAnswerSuccess: false, makeCall: false, isVisible: false});
+    setState({
+      isAnswerSuccess: false,
+      makeCall: false,
+      isVisible: false,
+      callStatus: '',
+    });
     setIsSpeak(true);
     setIsMuted(false);
     if (UUID.current) {
@@ -680,6 +691,9 @@ function CallScreen({}, ref) {
             mediaConnected: state.isAnswerSuccess,
           }}
         />
+        {state.callStatus && !state.isAnswerSuccess ? (
+          <Text style={styles.statusCall}>{state.callStatus}</Text>
+        ) : null}
         {!state.statusCall && remoteStream ? (
           <Text style={styles.textWarning}>
             Kết nối bị gián đoạn vui lòng di chuyển đến khu vực có tín hiệu tốt
@@ -750,11 +764,19 @@ function CallScreen({}, ref) {
 }
 
 const styles = StyleSheet.create({
+  statusCall: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontSize: 16,
+    paddingBottom: 15,
+    paddingTop: 10,
+  },
   textWarning: {
     color: '#FFF',
     textAlign: 'center',
     flex: 1,
     paddingHorizontal: 10,
+    paddingTop: 20,
   },
   groupLocalSteam: {
     height: '30%',

@@ -22,7 +22,6 @@ import org.pweitz.reactnative.locationswitch.LocationSwitch;
 import vn.payoo.paymentsdk.OnPayooPaymentCompleteListener;
 import vn.payoo.paymentsdk.data.model.response.ResponseObject;
 import vn.payoo.paymentsdk.data.model.type.GroupType;
-import io.wazo.callkeep.RNCallKeepModule; // Add these import lines
 public class MainActivity extends ReactActivity implements OnPayooPaymentCompleteListener {
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     /**
@@ -64,6 +63,15 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
         }
     }
 
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +98,5 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
       @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length > 0) {
-            switch (requestCode) {
-                case RNCallKeepModule.REQUEST_READ_PHONE_STATE:
-                    RNCallKeepModule.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                    break;
-            }
-        }
     }
 }

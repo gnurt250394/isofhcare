@@ -256,7 +256,7 @@
     <orderEntry type="module" module-name="react-native-sound" />
     <orderEntry type="module" module-name="react-native-svg" />
     <orderEntry type="module" module-name="react-native-vector-icons" />
-    <orderEntry type="module" module-name="node_modules-react-native-webrtc-android-react-native-webrtc" />
+    <orderEntry type="module" module-name="node_modules-react-native-webrtc-android-react-native-webrtc~2" />
     <orderEntry type="module" module-name="react-native-wheel-picker-android" />
     <orderEntry type="module" module-name="rn-fetch-blob" />
   </component>
