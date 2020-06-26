@@ -216,6 +216,9 @@ class HomeScreen extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.userApp.isLogin) {
+      CallManager.register(this.callRef);
+    }
     let navigate = nextProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
       this.setState({navigate}, () => {
@@ -451,11 +454,9 @@ class HomeScreen extends Component {
             </View>
           </ScrollView>
         </View>
-        {
-          this.props.userApp.isLogin ?
-            <CallScreen ref={ref => this.callRef = ref} />
-            : null
-        }
+        {this.props.userApp.isLogin ? (
+          <CallScreen ref={ref => (this.callRef = ref)} />
+        ) : null}
         <PushController />
         <Deeplink />
       </ActivityPanel>
