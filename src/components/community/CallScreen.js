@@ -91,7 +91,6 @@ function CallScreen({}, ref) {
     setState({isVisible: false});
   };
   const showModal = () => {
-    console.log('state.isVisible+============>', state.isVisible);
     setState({isVisible: true});
   };
   useImperativeHandle(
@@ -301,8 +300,9 @@ function CallScreen({}, ref) {
         console.log('error: ', error);
       }
     };
-    didmount();
-    return () => {
+    if (userApp.isLogin) {
+      didmount();
+    } else {
       onSend(
         constants.socket_type.DISCONNECT,
         {token: tokenFirebase.current, platform: Platform.OS},
@@ -311,6 +311,9 @@ function CallScreen({}, ref) {
           socket.current.disconnect();
         },
       );
+      removeEvent();
+    }
+    return () => {
       if (state.isAnswerSuccess || state.makeCall) {
         rejectCall();
       }
