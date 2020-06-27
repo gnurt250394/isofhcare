@@ -8,7 +8,7 @@ const connectSocket = async (token) => {
                 // const url = 'http://192.168.1.5:4443';
                 // const url = 'http://192.168.43.31:4443';
                 // const url = 'http://10.0.50.122:4443';
-                const url = 'https://node-js-webbrtc-server.herokuapp.com';
+                const url = 'https://isofhcare-test.herokuapp.com';
                 socket = io.connect(url, {
                     transports: ['websocket'], query: {
                         token: token,
