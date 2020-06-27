@@ -146,7 +146,6 @@ import ListServicesScreen from '@containers/services/ListServicesScreen';
 import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
 import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
 import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen';
-import VideoCallScreen from '@containers/community/CallVideoScreen';
 // import VideoCallScreen from '@containers/community/CallVideoScreen';
 //icd
 import SearchIcdScreen from '@containers/icd/SearchIcdScreen';
