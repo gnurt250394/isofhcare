@@ -107,7 +107,7 @@ function CallScreen({}, ref) {
   };
 
   const onSend = (type, data = {}, callback) => {
-    socket.current.emit(type, data, callback);
+    if (socket.current) socket.current.emit(type, data, callback);
   };
   const onConnected = async data2 => {
     try {
@@ -438,12 +438,10 @@ function CallScreen({}, ref) {
               localPC.current.restartIce();
             } else {
               try {
-                if (state.makeCall == true) {
-                  let offer = await localPC.current.createOffer({
-                    iceRestart: true,
-                  });
-                  onCreateOfferSuccess(offer);
-                }
+                let offer = await localPC.current.createOffer({
+                  iceRestart: true,
+                });
+                onCreateOfferSuccess(offer);
               } catch (error) {}
             }
             break;
