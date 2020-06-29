@@ -658,7 +658,7 @@ function CallScreen({}, ref) {
     setIsSpeak(true);
     setIsMuted(false);
     if (UUID.current) {
-      RNCallKeep.endCall(UUID.current, 1);
+      RNCallKeep.reportEndCallWithUUID(UUID.current, 2);
     }
   };
   const toggleSpeaker = () => {
@@ -690,7 +690,8 @@ function CallScreen({}, ref) {
           {remoteStream ? (
             <RTCView
               style={styles.rtc}
-              zOrder={-1}
+              zOrder={-1} 
+              mirror={true}
               objectFit="cover"
               streamURL={remoteStream.toURL()}
             />

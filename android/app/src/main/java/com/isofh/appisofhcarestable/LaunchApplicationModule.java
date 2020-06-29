@@ -47,7 +47,7 @@ public class LaunchApplicationModule extends ReactContextBaseJavaModule {
         keyguardLock.disableKeyguard();
 
         PowerManager powerManager = (PowerManager) reactContext.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
+        @SuppressLint("InvalidWakeLockTag") PowerManager.WakeLock wakeLock = powerManager.newWakeLock(
                 PowerManager.FULL_WAKE_LOCK
                         | PowerManager.ACQUIRE_CAUSES_WAKEUP
                         | PowerManager.SCREEN_BRIGHT_WAKE_LOCK
