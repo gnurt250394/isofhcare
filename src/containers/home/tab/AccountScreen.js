@@ -28,6 +28,8 @@ import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
 import { red } from "ansi-colors";
 import constants from '@resources/strings';
+import socketProvider from "@data-access/socket-provider";
+import firebase from 'react-native-firebase'
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -227,6 +229,11 @@ class AccountScreen extends Component {
   checkUpdate = () => {
     snackbar.show(constants.msg.app.check_update, "success");
     codePushUtils.checkupDate();
+  }
+  onLogout = async () => {
+    console.log(1111)
+    this.props.dispatch(redux.userLogout());
+    if (this.props.onLogout) this.props.onLogout();
   }
   render() {
     return (
@@ -495,10 +502,7 @@ class AccountScreen extends Component {
           {this.props.userApp.isLogin && (
             <TouchableOpacity
               style={[styles.itemMenu, { marginTop: 10, marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-              onPress={() => {
-                this.props.dispatch(redux.userLogout());
-                if (this.props.onLogout) this.props.onLogout();
-              }}
+              onPress={this.onLogout}
             >
               <ScaledImage
                 source={require("@images/new/account/ic_logout.png")}

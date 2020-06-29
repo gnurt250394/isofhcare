@@ -1,11 +1,11 @@
 import uuid from 'uuid'
 import RNCallKeep from 'react-native-callkeep';
-import LaunchApplication from 'react-native-launch-application';
+// import LaunchApplication from 'react-native-launch-application';
 import { PermissionsAndroid } from 'react-native'
 import constants from '@resources/strings'
 import NavigationServices from '@navigators/NavigationService';
 
-let UUID = ''
+let UUID = 0
 let callId = {}
 let isAppForeground = false
 let isCall = false
@@ -71,10 +71,11 @@ const updateDisplay = ({ name = "", phone = "" }) => {
 }
 
 const displayIncommingCall = (callId, name = 'Người dùng đang gọi ...') => {
-    if (!UUID) {
-        callId = callId
-        UUID = uuid.v4().toLowerCase();
-        RNCallKeep.displayIncomingCall(UUID, name, '', 'generic', false)
+
+    if (UUID == 0) {
+        console.log('UUID: ', UUID);
+        ++UUID
+        RNCallKeep.displayIncomingCall(callId, name, '', 'generic', false)
     }
 }
 
@@ -86,10 +87,8 @@ const rejectCall = () => {
     }
 }
 const endCall = () => {
-
-    RNCallKeep.endAllCalls()
-    if (UUID)
-        UUID = ''
+    console.log('endCall: ');
+    UUID = 0
 }
 
 
