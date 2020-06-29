@@ -91,6 +91,17 @@ module.exports = {
   facebook: 'Facebook',
   gmail: 'Gmail',
   not_found: 'Hiện tại chưa có dữ liệu',
+  socket_type: {
+    OFFER: "OFFER",
+    ANSWER: "ANSWER",
+    CANDIDATE: "CANDIDATE",
+    LEAVE: "LEAVE",
+    REJECT: "REJECT",
+    DELINE: "DELINE",
+    DISCONNECT: "DISCONNECT",
+    CONNECT: 'connectFirebase',
+    CHECKING: 'CHECKING',
+  },
   voucher: {
     use_now: 'SỬ DỤNG NGAY',
     input_voucher: 'NHẬP MÃ ƯU ĐÃI',
