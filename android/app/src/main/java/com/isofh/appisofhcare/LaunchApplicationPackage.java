@@ -1,5 +1,5 @@
 
-package com.isofh.appisofhcarestable;
+package com.isofh.appisofhcare;
 
 import java.util.Arrays;
 import java.util.Collections;

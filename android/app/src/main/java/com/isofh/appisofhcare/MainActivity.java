@@ -19,10 +19,7 @@ import com.tkporter.sendsms.SendSMSPackage;
 
 import org.pweitz.reactnative.locationswitch.LocationSwitch;
 
-import vn.payoo.paymentsdk.OnPayooPaymentCompleteListener;
-import vn.payoo.paymentsdk.data.model.response.ResponseObject;
-import vn.payoo.paymentsdk.data.model.type.GroupType;
-public class MainActivity extends ReactActivity implements OnPayooPaymentCompleteListener {
+public class MainActivity extends ReactActivity  {
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -78,14 +75,7 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
             }
         }
     }
-    @Override
-    public void onPayooPaymentComplete(int groupType, @NonNull ResponseObject responseObject) {
-        if (groupType == GroupType.SUCCESS) {
-            PayooModule.promise.resolve(new Gson().toJson(responseObject.getData()));
-        } else {
-            PayooModule.promise.reject(groupType + "", responseObject.toString());
-        }
-    }
+    
       @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

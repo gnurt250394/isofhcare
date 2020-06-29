@@ -1,5 +1,5 @@
 
-package com.isofh.appisofhcarestable;
+package com.isofh.appisofhcare;
 
 import android.app.Activity;
 import android.annotation.SuppressLint;
