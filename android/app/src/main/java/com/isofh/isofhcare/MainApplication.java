@@ -69,7 +69,7 @@ import com.microsoft.codepush.react.CodePush;
 
  @Override
      public String getFileProviderAuthority() {
-            return BuildConfig.APPLICATION_ID + ".provider";
+            return "com.isofh.isofhcare.provider";
      }
   // @Override
   // protected void attachBaseContext(Context base) {
