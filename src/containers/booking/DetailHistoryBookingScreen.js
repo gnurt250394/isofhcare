@@ -323,11 +323,8 @@ class DetailHistoryBookingScreen extends Component {
         } else {
             this.props.navigation.navigate("confirmBooking", {
                 booking: this.state.booking,
-<<<<<<< HEAD
                 paymentMethod: this.state.booking.invoice.payment,
                 disabled: true
-=======
->>>>>>> user/feature/trunghv/add-webrtc
             });
         return (
             <RefreshControl
