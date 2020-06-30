@@ -98,7 +98,7 @@ class MenuProfile extends React.Component {
             </View>
             <TouchableOpacity onPress={() => NavigationService.navigate("ehealth")} style={styles.viewDrawer}>
               <ScaledImage height={20} source={require('@images/new/profile/ic_ehealth_small.png')} />
-              <Text style={[styles.txDrawer, { marginLeft: 12 }]}>Y bạ điện tử</Text>
+              <Text style={[styles.txDrawer, { marginLeft: 12 }]}>Hồ sơ sức khoẻ</Text>
             </TouchableOpacity>
             <View style={styles.viewDrawer}>
               <ScaledImage height={20} source={require('@images/new/profile/ic_drug.png')} />
