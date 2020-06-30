@@ -3,7 +3,7 @@ import {View, StyleSheet, Text} from 'react-native';
 import dateUtils from 'mainam-react-native-date-utils';
 export default function Timer(props) {
   const WARNING_TIME = 25 * 60 * 1000;
-  const TOTAL_TIME = 30 * 60 * 1000;
+  const TOTAL_TIME = 31 * 60 * 1000;
   const inteval = useRef(null);
   const time = useRef(0);
   const timeout = useRef(null);
@@ -111,7 +111,7 @@ export default function Timer(props) {
             textAlign: 'center',
             paddingHorizontal: 20,
           }}>
-          Thời gian gọi còn lại của bạn còn{' '}
+          Thời gian gọi còn lại của bạn là{' '}
           {state.timeRemain?.toDateObject().format('mm')} phút
         </Text>
       ) : null}
