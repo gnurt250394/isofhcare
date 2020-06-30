@@ -22,7 +22,7 @@ module.exports = {
   password: "Mật khẩu",
   forgot_password: "QUÊN MẬT KHẨU",
   finish: "HOÀN THÀNH",
-  ehealth: "Y bạ điện tử",
+  ehealth: "Hồ sơ sức khoẻ",
   booking: "Đặt lịch",
   home: "Trang chủ",
   account: "Tài khoản",
@@ -314,7 +314,7 @@ module.exports = {
         ask_requests: 'Tư vấn - đặt câu hỏi',
         booking: 'Đặt khám',
         get_quick_number: 'Lấy số nhanh',
-        ehealth: "Y bạ điện tử",
+        ehealth: "Hồ sơ sức khoẻ",
         transfer_payments: 'Thanh toán chuyển khoản'
       },
       notifi: "THÔNG BÁO"
@@ -722,7 +722,7 @@ module.exports = {
     modal_confirm: 'OK, XONG',
     suggestion: 'Suggestion',
     re_examination: 'Lịch tái khám',
-    share_ehealth: "Chia sẻ y bạ",
+    share_ehealth: "Chia sẻ hồ sơ",
     note: 'Ghi chú',
     clock: 'Thời gian',
     redmine_drug: 'Nhắc uống thuốc',
@@ -767,7 +767,7 @@ module.exports = {
     share_with_isofhcare: 'Chia sẻ trên hồ sơ iSofHcare',
     share_with_app_other: 'Chia sẻ trên ứng dụng khác',
     history_share: 'Lịch sử chia sẻ',
-    my_ehealth: 'Y bạ điện tử của tôi',
+    my_ehealth: 'Hồ sơ sức khoẻ của tôi',
     specialist_searched: 'Chuyên khoa được tìm kiếm',
     see_all: 'Xem tất cả',
     symptom_searched: 'Triệu chứng được tìm nhiều'
@@ -789,11 +789,11 @@ module.exports = {
 
   },
   title: {
-    ehealth: 'Y BẠ ĐIỆN TỬ',
+    ehealth: 'HỒ SƠ SỨC KHOẺ',
     uploadEhealth: 'NHẬP KẾT QUẢ KHÁM',
-    list_profile_ehealth: 'HỒ SƠ Y BẠ GIA ĐÌNH',
+    list_profile_ehealth: 'HỒ SƠ SỨC KHOẺ GIA ĐÌNH',
     search_profile: 'Chọn hồ sơ',
-    ehealth_details: 'CHI TIẾT Y BẠ',
+    ehealth_details: 'CHI TIẾT HỒ SƠ',
     create_booking_success: 'Chi tiết lịch đặt khám',
     patient_history_screen: 'Lịch sử đặt lịch',
     booking: "Thông tin đặt khám",
@@ -845,7 +845,7 @@ module.exports = {
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
     my_family: 'Thành viên gia đình',
-    medical_records: 'Y bạ điện tử',
+    medical_records: 'Hồ sơ sức khoẻ',
     pay_history: 'Lịch sử giao dịch',
     drug_odered: 'Thuốc đã đặt mua',
     examination_schedule: 'Lịch khám',
