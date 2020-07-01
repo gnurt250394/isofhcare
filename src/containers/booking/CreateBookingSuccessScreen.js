@@ -31,6 +31,8 @@ class CreateBookingSuccessScreen extends Component {
                 return constants.booking.payment_csyt; // thanh toán tại CSYT
             case constants.PAYMENT_METHOD.MOMO:
                 return constants.payment.MOMO;
+            case constants.PAYMENT_METHOD.BANK_TRANSFER:
+                return constants.payment.direct_transfer;
             // case constants.PAYMENT_METHOD.VNPAY:
             //     return constants.booking.status.payment_payoo2; // payoo cửa hàng tiện ích
             // case constants.PAYMENT_METHOD.VNPAY:
