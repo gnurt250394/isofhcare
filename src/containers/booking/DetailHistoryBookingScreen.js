@@ -131,6 +131,8 @@ class DetailHistoryBookingScreen extends Component {
         return (
           <Text style={styles.paymentHospital}>{constants.payment.MOMO}</Text>
         );
+      case 'NONE':
+        return <Text style={styles.paymentHospital}>Không xác định</Text>;
       // case 0:
       //     return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
       // case 1:

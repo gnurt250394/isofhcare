@@ -645,7 +645,12 @@ class ConfirmBookingScreen extends Component {
                                 title={constants.payment.MOMO}
                                 isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO}
                             />
-
+                            <ButtonSelectPaymentMethod
+                                icon={require('@images/new/booking/ic_banktransfer.png')}
+                                onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.BANK_TRANSFER)}
+                                title={constants.payment.direct_transfer}
+                                isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.BANK_TRANSFER}
+                            />
                         </React.Fragment>
                     }
                     <ButtonSelectPaymentMethod
