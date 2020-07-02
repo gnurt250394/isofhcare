@@ -25,7 +25,7 @@ import stylemodal from '@styles/modal-style';
 import constants from '@resources/strings';
 import Barcode from 'mainam-react-native-barcode';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
-import CallManager from '@components/community/CallManager';
+import CallManager from "@components/community/CallManager";
 class DetailHistoryBookingScreen extends Component {
   constructor(props) {
     super(props);

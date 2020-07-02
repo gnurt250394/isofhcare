@@ -5,6 +5,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   memo,
+  useContext,
 } from 'react';
 import {
   View,
@@ -29,7 +30,7 @@ import {
 } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 import constants from '@resources/strings';
-import socketProvider from '@data-access/socket-provider';
+import {WebSocketContext} from '@data-access/socket-provider';
 import {useSelector} from 'react-redux';
 import BandWidth from './BandWidth';
 import VoipPushNotification from 'react-native-voip-push-notification';
@@ -39,6 +40,7 @@ import RNCallKeep from 'react-native-callkeep';
 import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info';
 import soundUtils from '@utils/sound-utils';
+import BandwidthHandler from './BandwidthHandler';
 const {width, height} = Dimensions.get('screen');
 
 var qvgaConstraints = {
@@ -71,7 +73,7 @@ function CallScreen({}, ref) {
   const [remoteStream, setRemoteStream] = useState();
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeak, setIsSpeak] = useState(true);
-  const socket = useRef();
+  const context = useContext(WebSocketContext);
   const UUID = useRef();
   const timeout = useRef();
   const localStream = useRef();
@@ -106,9 +108,7 @@ function CallScreen({}, ref) {
     });
   };
 
-  const onSend = (type, data = {}, callback) => {
-    if (socket.current) socket.current.emit(type, data, callback);
-  };
+ 
   const onConnected = async data2 => {
     try {
       if (Platform.OS == 'ios') {
@@ -118,7 +118,7 @@ function CallScreen({}, ref) {
         VoipPushNotification.addEventListener('register', token => {
           // send token to your apn provider server
           tokenFirebase.current = token;
-          onSend(constants.socket_type.CONNECT, {
+          context.onSend(constants.socket_type.CONNECT, {
             token,
             id: userApp.currentUser.id,
             platform: 'ios',
@@ -133,7 +133,7 @@ function CallScreen({}, ref) {
         let token = await firebase.messaging().getToken();
         tokenFirebase.current = token;
         console.log('token: ', token);
-        onSend(constants.socket_type.CONNECT, {
+        context.onSend(constants.socket_type.CONNECT, {
           token,
           id: userApp.currentUser.id,
           platform: 'android',
@@ -213,10 +213,16 @@ function CallScreen({}, ref) {
       if (!localStream.current) {
         startLocalStream();
       }
+      console.log('data: 1', data.sdp.sdp);
+      data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
+      console.log('data: 2', data.sdp.sdp);
       await localPC.current.setRemoteDescription(
         new RTCSessionDescription(data.sdp),
       );
-    } catch (error) {}
+    } catch (error) {
+      debugger;
+      console.log('error: ', error);
+    }
   };
 
   function updateBandwidthRestriction(sdp, bandwidth) {
@@ -249,29 +255,32 @@ function CallScreen({}, ref) {
     const didmount = async () => {
       try {
         await startLocalStream(true);
-        socket.current = await socketProvider.connectSocket(userApp.loginToken);
-        socket.current.on('connect', onConnected);
-        socket.current.on(constants.socket_type.OFFER, onOffer);
-        socket.current.on(constants.socket_type.CHECKING, (data, callback) => {
+        await context.connectSocket(userApp.loginToken);
+        debugger;
+        console.log('socket: ', context.listen);
+        context.listen('connect', onConnected);
+        // context.socket.connect()
+        context.listen(constants.socket_type.OFFER, onOffer);
+        context.listen(constants.socket_type.CHECKING, (data, callback) => {
           console.log('data: 112211', data);
-          callback({status: state.isAnswerSuccess, id: socket.current.id});
+          callback({status: state.isAnswerSuccess, id: context.socket.id});
         });
-        socket.current.on(constants.socket_type.ANSWER, async data => {
+        context.listen(constants.socket_type.ANSWER, async data => {
           debugger;
           console.log('localPC, setRemoteDescription');
           setState({isAnswerSuccess: true});
           onTimeOut();
           soundUtils.stop();
-          await localPC.current.setRemoteDescription({
-            type: data.sdp.type,
-            sdp: updateBandwidthRestriction(data.sdp.sdp, 0),
-          });
+          data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
+          await localPC.current.setRemoteDescription(
+            new RTCSessionDescription(data.sdp),
+          );
           console.log(
             'updateBandwidthRestriction(data.sdp.sdp, 0): ',
             updateBandwidthRestriction(data.sdp.sdp, 0),
           );
         });
-        socket.current.on(constants.socket_type.CANDIDATE, async data => {
+        context.listen(constants.socket_type.CANDIDATE, async data => {
           debugger;
           if (data.candidate) {
             if (!localPC.current) {
@@ -285,7 +294,7 @@ function CallScreen({}, ref) {
             );
           }
         });
-        socket.current.on(constants.socket_type.LEAVE, data => {
+        context.listen(constants.socket_type.LEAVE, data => {
           if (data.status && data.code == 1 && !state.isAnswerSuccess) {
             setState({callStatus: 'Máy bận'});
             setTimeout(closeStreams, 1500);
@@ -304,7 +313,7 @@ function CallScreen({}, ref) {
     if (userApp.isLogin) {
       didmount();
     } else {
-      onSend(
+      context.onSend(
         constants.socket_type.DISCONNECT,
         {token: tokenFirebase.current, platform: Platform.OS},
         data => {
@@ -414,7 +423,7 @@ function CallScreen({}, ref) {
           debugger;
           console.log('localPC icecandidate:', e.candidate);
           if (e.candidate) {
-            onSend(constants.socket_type.CANDIDATE, {
+            context.onSend(constants.socket_type.CANDIDATE, {
               to: socketId2.current,
               candidate: e.candidate,
               type: 'local',
@@ -540,7 +549,7 @@ function CallScreen({}, ref) {
       await localPC.current.setLocalDescription(offer);
       console.log('remotePC, setRemoteDescription');
       soundUtils.play('call_phone.mp3');
-      onSend(
+      context.onSend(
         constants.socket_type.OFFER,
         {
           booking,
@@ -569,6 +578,7 @@ function CallScreen({}, ref) {
         InCallManager.start({media: 'video'});
         setState({makeCall: true, booking});
         const offer = await localPC.current.createOffer();
+        debugger;
         // offer.sdp = handle_offer_sdp(offer)
         // offer.sdp = BandwidthHandler.setOpusAttributes(offer.sdp, {
         //     'stereo': 0, // to disable stereo (to force mono audio)
@@ -612,7 +622,7 @@ function CallScreen({}, ref) {
       setState({isAnswerSuccess: true});
       onTimeOut();
 
-      onSend(constants.socket_type.ANSWER, {
+      context.onSend(constants.socket_type.ANSWER, {
         to: socketId2.current,
         from: userApp.currentUser.id,
         sdp: localPC.current.localDescription,
@@ -668,10 +678,10 @@ function CallScreen({}, ref) {
   const rejectCall = () => {
     // RNCallKeepManager.endCall()
     let type =
-    state.isAnswerSuccess || state.makeCall
-    ? constants.socket_type.LEAVE
-    : constants.socket_type.REJECT;
-    onSend(constants.socket_type.LEAVE, {to: socketId2.current, type});
+      state.isAnswerSuccess || state.makeCall
+        ? constants.socket_type.LEAVE
+        : constants.socket_type.REJECT;
+    context.onSend(constants.socket_type.LEAVE, {to: socketId2.current, type});
     closeStreams();
   };
   return (
@@ -690,7 +700,7 @@ function CallScreen({}, ref) {
           {remoteStream ? (
             <RTCView
               style={styles.rtc}
-              zOrder={-1} 
+              zOrder={-1}
               mirror={true}
               objectFit="cover"
               streamURL={remoteStream.toURL()}

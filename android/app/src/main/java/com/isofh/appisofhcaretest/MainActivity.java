@@ -63,6 +63,12 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
         }
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkPermission();
+    }
+
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
@@ -72,12 +78,6 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
             }
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        checkPermission();
-    }
-
     @Override
     public void onPayooPaymentComplete(int groupType, @NonNull ResponseObject responseObject) {
         if (groupType == GroupType.SUCCESS) {
