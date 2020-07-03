@@ -4,14 +4,7 @@
  * @flow
  */
 
-import React, {
-  Component,
-  useEffect,
-  useContext,
-  useRef,
-  useState,
-  useCallback,
-} from 'react';
+import React, {Component, useEffect, useContext, useRef, useState} from 'react';
 import {
   TextInput,
   View,
@@ -47,20 +40,10 @@ import ModalConfirmSend from '@components/chat/ModalConfirmSend';
 import questionProvider from '@data-access/question-provider';
 import connectionUtils from '@utils/connection-utils';
 import {RectButton} from 'react-native-gesture-handler';
-import {
-  GiftedChat,
-  Send,
-  Actions,
-  Composer,
-  InputToolbar,
-  LoadEarlier,
-  Message,
-} from 'react-native-gifted-chat';
+
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
 import RenderProfile from '@components/question/RenderProfile';
-import ImageLoad from 'mainam-react-native-image-loader';
-import {withNavigation} from 'react-navigation';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -146,24 +129,10 @@ const ChatScreen = ({
   const getListAnwser = async () => {
     try {
       let res = await questionProvider.listAnwser(item.id, false, page, size);
-      console.log('res: ', res);
+
       setLoading(false);
-      if (res?.content) {
-        let newKeys = {id: '_id', content: 'text', images: 'image'};
-        let list = res.content
-          .map(e => {
-            e.user = {_id: e.userId};
-            if (e.userId == item?.userInfo?.id) {
-              e.user = {...item.userInfo, _id: e.userId};
-            } else if (e.userId == item?.doctorInfo?.id) {
-              e.user = {...item.doctorInfo, _id: e.userId};
-            }
-            return formatMessage(e, newKeys);
-          })
-          .reverse();
-        console.log('list: ', list);
-        formatData(list);
-      } else formatData([]);
+      if (res?.content) formatData(res.content);
+      else formatData([]);
     } catch (error) {
       setLoading(false);
       formatData([]);
@@ -178,7 +147,7 @@ const ChatScreen = ({
       if (page == 0) {
         setData(state => data);
       } else {
-        setData(state => [...data, ...state]);
+        setData(state => [...state, ...data]);
       }
     }
   };
@@ -204,18 +173,15 @@ const ChatScreen = ({
       );
 
       if (res) {
-        console.log('res: ', res);
         let list = [...data];
+        // let i = data.findIndex(
+        //   e => e && !e.id && e.user.id == res.userId,
+        // );
 
-        let newKeys = {id: '_id', content: 'text', images: 'image'};
-        if (res.userId == item?.userInfo?.id) {
-          res.user = {...item.userInfo, _id: res.userId};
-        } else if (res.userId == item?.doctorInfo?.id) {
-          res.user = {...item.doctorInfo, _id: res.userId};
-        }
-        res = formatMessage(res, newKeys);
-        console.log('res: ', res);
-        list.push(res);
+        // if (i != -1) {
+        //   list.splice(i, 1, res);
+        // }
+        list.unshift(res);
         setData(state => list);
       }
     } catch (error) {}
@@ -234,15 +200,9 @@ const ChatScreen = ({
     socket.connect();
     socket.on(constants.socket_type.QUESTION + item.id, (res, callback) => {
       let data2 = [];
-      let newKeys = {id: '_id', content: 'text', images: 'image'};
-      if (res.userId == item?.doctorInfo?.id) {
-        res.user = {...item.doctorInfo, _id: res.userId};
-        res.received = true;
-      }
-      res = formatMessage(res, newKeys);
       data2.push(res);
       setState({isLoading: false});
-      setData(state => [...state, ...data2]);
+      setData(state => [...data2, ...state]);
       onScrollToEnd();
     });
     readQuestion();
@@ -342,14 +302,49 @@ const ChatScreen = ({
       if (flatList.current) flatList.current.scrollToEnd({animated: true});
     }, 500);
   };
-
+  const getChatProfile = id => {
+    if (state.chatProfile && state.chatProfile.id == id) {
+      return state.chatProfile;
+    }
+    try {
+      userProvider.detail(id).then(res => {
+        if (res.code == 0) {
+          setState({chatProfile: res.data.user});
+        }
+      });
+    } catch (error) {}
+  };
   const onChangeText = s => {
     setState({newMessage: s});
   };
   const onBackdropPress = () => {
     setState({isVisible: false});
   };
-
+  const onConfirmSend = () => {
+    Keyboard.dismiss();
+    setState({isVisible: true});
+  };
+  const listFooter = () => {
+    if (data.length >= (page + 1) * size) {
+      if (loading) {
+        return (
+          <View style={{alignItems: 'center'}}>
+            <ActivityIndicator
+              style={{margin: 5}}
+              color={'#3161AD'}
+              size="small"
+            />
+          </View>
+        );
+      } else {
+        return (
+          <TouchableOpacity style={styles.buttonLoading} onPress={onLoadMore}>
+            <Text style={styles.txtLoading}>Xem thêm câu trả lời</Text>
+          </TouchableOpacity>
+        );
+      }
+    } else return null;
+  };
   const _renderStatus = () => {
     switch (item.status) {
       case 'REJECT':
@@ -357,7 +352,6 @@ const ChatScreen = ({
       case 'DONE':
         return 'Cuộc tư vấn của bạn đã kết thúc';
       case 'NEW':
-      case 'ACCEPT':
         return '';
       default:
         return '* Câu trả lời của bạn sẽ được hiển thị trên cộng đồng';
@@ -404,242 +398,188 @@ const ChatScreen = ({
     }
     prevOpenedRow.current = row.current[index];
   };
-  const onSend = useCallback((messages = []) => {
-    setData(previousMessages => GiftedChat.append(previousMessages, messages));
-  }, []);
-
-  const formatMessage = (obj, newKeys) => {
-    const keyValues = Object.keys(obj).map(key => {
-      const newKey = newKeys[key] || key;
-      return {[newKey]: obj[key]};
-    });
-    return Object.assign({}, ...keyValues);
-  };
-  const photoViewer = (urls, index) => () => {
-    console.log('urls: ', urls);
-    try {
-      if (!urls) {
-        snackbar.show(constants.msg.message.none_image);
-        return;
-      }
-      navigation.navigate('photoViewer', {
-        index,
-        urls: urls.map(e => ({uri: e})),
-      });
-    } catch (error) {
-      console.log('error: ', error);
-    }
-  };
   return (
     // <TouchableWithoutFeedback
     //   onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
     <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
-      <GiftedChat
-        messages={data}
-        alwaysShowSend={true}
-        dateFormat={'DD/MM/YYYY'}
-        renderTime={() => null}
-        inverted={false}
-        onPressActionButton={selectImage}
-        renderUsernameOnMessage={true}
-        loadEarlier={true}
-        renderLoadEarlier={props => {
-          return (
+      <ScrollView ref={flatList}>
+        <RenderProfile item={item} />
+
+        <FlatList
+          style={{flex: 1, paddingBottom: 20}}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={state}
+          data={data}
+          scrollEnabled={false}
+          inverted={true}
+          ListFooterComponent={listFooter}
+          renderItem={props => (
             <View>
-              <RenderProfile item={item} />
-              {data.length >= (page + 1) * size ? (
-                <LoadEarlier
-                  {...props}
-                  isLoadingEarlier={loading ? true : false}
-                  onLoadEarlier={onLoadMore}
-                  label={'Xem thêm câu trả lời'}
+              {props.item?.userId != item?.doctorInfo?.id ? (
+                <Swipeable
+                  ref={ref => (row.current[props.index] = ref)}
+                  friction={2}
+                  enabled={!social}
+                  leftThreshold={30}
+                  rightThreshold={40}
+                  onSwipeableOpen={closeRow(props.index)}
+                  renderRightActions={renderRightActions(
+                    props.item,
+                    props.index,
+                  )}>
+                  <MyMessage
+                    isLast={props.index == 0}
+                    message={props.item}
+                    preMessage={props.index == 0 ? null : data[props.index - 1]}
+                  />
+                </Swipeable>
+              ) : (
+                <TheirMessage
+                  // chatProfile={getChatProfile(props.item.userId)}
+                  isLast={props.index == 0}
+                  message={props.item}
+                  info={item.doctorInfo}
+                  preMessage={props.index == 0 ? null : data[props.index - 1]}
                 />
-              ) : null}
+              )}
             </View>
-          );
-        }}
-        renderMessageText={props => {
-          console.log('props: ', props);
-          return (
-            <Text
-              style={{
-                color:
-                  props.currentMessage.user._id == props.user._id
-                    ? '#FFF'
-                    : '#000',
-                padding: 10,
-              }}>
-              {props.currentMessage.text}
-            </Text>
-          );
-        }}
-        renderMessageImage={props => {
-          if (props.currentMessage.image.length) {
-            return (
-              <View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    paddingBottom: 10,
-                  }}>
-                  {props.currentMessage.image.map((e, i) => {
-                    return (
-                      <TouchableOpacity
-                        key={i}
-                        style={{padding: 5}}
-                        onPress={photoViewer(props.currentMessage.image, i)}>
-                        <ImageLoad
-                          resizeMode="cover"
-                          placeholderSource={require('@images/noimage.png')}
-                          style={{width: 100, height: 100}}
-                          loadingStyle={{size: 'small', color: 'gray'}}
-                          source={{
-                            uri: e,
-                          }}
-                          defaultImage={() => {
-                            return (
-                              <ScaleImage
-                                resizeMode="cover"
-                                source={require('@images/noimage.png')}
-                                width={150}
-                              />
-                            );
-                          }}
-                        />
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-            );
-          }
-          return;
-        }}
-        keyboardShouldPersistTaps={'handled'}
-        renderSend={props => {
-          if (item.status == 'REPLY')
-            return (
-              <TouchableOpacity style={styles.buttonSend} onPress={send}>
-                <ScaleImage
-                  source={require('@images/new/ic_send.png')}
-                  height={19}
-                />
-              </TouchableOpacity>
-            );
-        }}
-        renderActions={props => {
-          if (item.status == 'REPLY')
-            return (
-              <Actions
-                {...props}
-                icon={() => (
-                  <ScaleImage
-                    source={require('@images/image.png')}
-                    width={25}
-                    style={{resizeMode: 'contain'}}
-                  />
-                )}
+          )}
+        />
+      </ScrollView>
+
+      {item.status == 'REPLY' ? (
+        <ChatView
+          keyboardVerticalOffset={keyboardVerticalOffset || 110}
+          behavior="padding">
+          {state.typing && state.typing.length != 0 ? (
+            <View style={styles.containerTyping}>
+              <Text style={styles.txtTyping}>
+                <Text style={{fontWeight: 'bold'}}>{state.typing[0]}</Text>
+                {state.typing.length > 1
+                  ? ' và ' + (state.typing.length - 1) + ' người khác'
+                  : ''}{' '}
+                đang gõ
+              </Text>
+              <TypingAnimation
+                dotColor="black"
+                dotMargin={5}
+                dotAmplitude={3}
+                dotSpeed={0.15}
+                dotRadius={2.5}
+                dotX={12}
+                dotY={6}
+                show={true}
+                style={styles.dotAnimation}
               />
-            );
-        }}
-        renderComposer={props => {
-          if (item.status == 'REPLY')
-            return (
-              <View style={styles.containerSendMes}>
-                <View
-                  style={[
-                    styles.containerInput,
-                    Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
-                  ]}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    {listImage.length
-                      ? listImage.map((item, index) => (
-                          <View key={index} style={styles.groupImagePicker}>
-                            <View style={styles.groupImage}>
-                              <Image
-                                source={{uri: item.url}}
-                                resizeMode="cover"
-                                style={styles.imagePicker}
-                              />
-                              {item.error ? (
-                                <View style={styles.imageError}>
-                                  <ScaleImage
-                                    source={require('@images/ic_warning.png')}
-                                    width={40}
-                                  />
-                                </View>
-                              ) : item.loading ? (
-                                <View style={styles.imageLoading}>
-                                  <ScaleImage
-                                    source={require('@images/loading.gif')}
-                                    width={20}
-                                  />
-                                </View>
-                              ) : null}
-                            </View>
-                            <TouchableOpacity
-                              onPress={removeImage(index)}
-                              style={styles.buttonClose}>
-                              <ScaleImage
-                                source={require('@images/new/ic_close.png')}
-                                width={15}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        ))
-                      : null}
-                  </View>
-                  <TextInput
-                    ref={txtMessage}
-                    style={styles.inputMes}
-                    placeholderTextColor="#cacaca"
-                    underlineColorAndroid="transparent"
-                    placeholder={'Nhập nội dung cần gửi'}
-                    onChangeText={onChangeText}
-                    multiline={true}
-                    autoCorrect={false}
-                    value={state.newMessage}
-                    onFocus={() => {
-                      onScrollToEnd();
-                    }}
-                  />
-                </View>
-              </View>
-            );
-        }}
-        renderAccessory={() => {
-          return isShowText ? (
-            <Text
+            </View>
+          ) : null}
+          <View style={styles.containerSendMes}>
+            <TouchableOpacity
+              style={styles.buttonSelectImage}
+              onPress={selectImage}>
+              <ScaleImage
+                source={require('@images/image.png')}
+                width={25}
+                style={{resizeMode: 'contain'}}
+              />
+            </TouchableOpacity>
+            <View
               style={[
-                {
-                  color:
-                    item.status == 'REJECT' || item.status == 'DONE'
-                      ? '#00000060'
-                      : '#00BA99',
-                },
-                styles.txtWarning,
+                styles.containerInput,
+                Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
               ]}>
-              {_renderStatus()}
-            </Text>
-          ) : null;
-        }}
-        scrollToBottom={true}
-        user={{
-          _id: item.userInfo.id,
-        }}
-      />
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                {listImage.length
+                  ? listImage.map((item, index) => (
+                      <View key={index} style={styles.groupImagePicker}>
+                        <View style={styles.groupImage}>
+                          <Image
+                            source={{uri: item.url}}
+                            resizeMode="cover"
+                            style={styles.imagePicker}
+                          />
+                          {item.error ? (
+                            <View style={styles.imageError}>
+                              <ScaleImage
+                                source={require('@images/ic_warning.png')}
+                                width={40}
+                              />
+                            </View>
+                          ) : item.loading ? (
+                            <View style={styles.imageLoading}>
+                              <ScaleImage
+                                source={require('@images/loading.gif')}
+                                width={20}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
+                        <TouchableOpacity
+                          onPress={removeImage(index)}
+                          style={styles.buttonClose}>
+                          <ScaleImage
+                            source={require('@images/new/ic_close.png')}
+                            width={15}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ))
+                  : null}
+              </View>
+              <TextInput
+                ref={txtMessage}
+                style={styles.inputMes}
+                placeholderTextColor="#cacaca"
+                underlineColorAndroid="transparent"
+                placeholder={'Nhập nội dung cần gửi'}
+                onChangeText={onChangeText}
+                multiline={true}
+                autoCorrect={false}
+                value={state.newMessage}
+                onFocus={() => {
+                  onScrollToEnd();
+                }}
+              />
+            </View>
+            <TouchableOpacity style={styles.buttonSend} onPress={send}>
+              <ScaleImage
+                source={require('@images/new/ic_send.png')}
+                height={19}
+              />
+            </TouchableOpacity>
+          </View>
+        </ChatView>
+      ) : null}
+      {isShowText ? (
+        <Text
+          style={[
+            {
+              color:
+                item.status == 'REJECT' || item.status == 'DONE'
+                  ? '#00000060'
+                  : '#00BA99',
+            },
+            styles.txtWarning,
+          ]}>
+          {_renderStatus()}
+        </Text>
+      ) : null}
 
       <ImagePicker ref={imagePicker} />
+      {/* <ModalConfirmSend
+        isVisible={state.isVisible}
+        onBackdropPress={onBackdropPress}
+        onSend={send}
+      /> */}
     </View>
+    // </TouchableWithoutFeedback>
   );
 };
 
-export default withNavigation(ChatScreen);
+export default ChatScreen;
 
 const styles = StyleSheet.create({
   txtLoading: {
@@ -724,17 +664,15 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
   },
   inputMes: {
     color: '#000',
     padding: 0,
     paddingLeft: 5,
     paddingRight: 5,
-    maxHeight: 200,
   },
   containerInput: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#00000010',
     // maxHeight: 100,
     margin: 5,
@@ -753,10 +691,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   containerSendMes: {
+    flexDirection: 'row',
     backgroundColor: 'white',
+    marginBottom: 0,
     marginTop: 5,
-    marginHorizontal: 10,
-    flex: 1,
+    borderTopColor: '#00000020',
+    borderTopWidth: 1,
   },
   dotAnimation: {
     marginBottom: 10,
