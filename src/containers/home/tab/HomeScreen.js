@@ -160,7 +160,7 @@ class HomeScreen extends Component {
         // },
         {
           icon: require("@images/new/homev2/ic_icd.png"),
-          text: "ICD Bệnh",
+          text: "Tra cứu mã bệnh",
           onPress: () => {
             this.props.navigation.navigate("searchIcd");
 
