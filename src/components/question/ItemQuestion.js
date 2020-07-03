@@ -1,131 +1,197 @@
-import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  FlatList,
+  Image,
+} from 'react-native';
+import ActivityPanel from '@components/ActivityPanel';
+import {connect} from 'react-redux';
+import ScaleImage from 'mainam-react-native-scaleimage';
+import questionProvider from '@data-access/question-provider';
 import dateUtils from 'mainam-react-native-date-utils';
-import { connect } from 'react-redux';
-import { Card } from 'native-base';
-import StarRating from 'react-native-star-rating';
 import ImageLoad from 'mainam-react-native-image-loader';
+import clientUtils from '@utils/client-utils';
+import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
+import ListQuestion from '@components/question/ListQuestion';
+import {IndicatorViewPager} from 'mainam-react-native-viewpager';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+const {width, height} = Dimensions.get('screen');
 class ItemQuestion extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    getTime(createdDate) {
-        let date = createdDate.toDateObject('-');
-        let hour = (new Date() - date) / 1000 / 60 / 60;
-        if (hour > 24)
-            return date.format("dd/MM/yyyy");
-        else {
-            if (hour < 1)
-                return date.getPostTime();
-            return Math.round(hour) + " giờ trước";
-        }
+  getTime(createdDate) {
+    let date = createdDate.toDateObject('-');
+    let hour = (new Date() - date) / 1000 / 60 / 60;
+    if (hour > 24) return date.format('dd/MM/yyyy');
+    else {
+      if (hour < 1) return date.getPostTime();
+      return Math.round(hour) + ' giờ trước';
     }
-    onNavigateDetails =(item)=>{
-        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctor',{
-            id : item.assignee.id
-        }) : this.props.navigation.navigate('detailsProfile',{
-            id : item.author.id
-        }) 
-    }
-    render() {
-        let { item } = this.props;
-        const source = item.author && item.author.avatar ? { uri: item.author.avatar.absoluteUrl() } : require("@images/new/user.png");
-        return this.props.item && this.props.item.post ?
-            <View style={{ margin: 20, marginTop: 0 }}>
-                <Card style={{ padding: 20, borderRadius: 6 }}>
-                    <TouchableOpacity key={this.props.index} onPress={() => this.props.navigation.navigate("detailQuestion", { post: this.props.item })}>
-                        <View style={{ width: 25, height: 4, backgroundColor: item.post.status == 4 ? 'rgb(106,1,54)' : 'rgb(0,141,111)', borderRadius: 2, alignSelf: 'center', marginBottom: 27 }} />
-                        <TouchableOpacity onPress = {() => this.onNavigateDetails(item)} style={{ flexDirection: 'row' }} >
-                            <ImageLoad
-                                resizeMode="cover"
-                                imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)'  }}
-                                borderRadius={25}
-                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
-                                placeholderSource={require("@images/new/user.png")}
-                                style={styles.avatar}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={source}
-                                defaultImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
-                                }}
-                            />
-                            <View style={{ flex: 1, marginLeft: 12, marginTop: 5 }}>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.author.name}</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ flex: 1, fontSize: 15, color: '#00000048' }}>{this.getTime(item.post.createdDate)}</Text>
-                                    {
-                                        item.post.status == 6 &&
-                                        <StarRating
-                                            disabled={true}
-                                            starSize={20}
-                                            maxStars={5}
-                                            rating={item.post.review}
-                                            starStyle={{ marginLeft: 5 }}
-                                            fullStarColor={"#fbbd04"}
-                                            emptyStarColor={"#fbbd04"}
-                                        />
-                                    }
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                        <Text numberOfLines={3} ellipsizeMode='tail' style={{ fontSize: 16, color: '#00000080', marginTop: 16 }} >{this.props.item.post.content}</Text>
-                        <View style={{ height: 2, backgroundColor: '#00000011', marginTop: 21, marginBottom: 9 }} />
-                        <View style={{ alignContent: 'flex-end', flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                {
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View style={{ flex: 1 }}>
-                                            {
-                                                this.props.item.specialist &&
-                                                <Text style={{ padding: 5, color: 'rgb(155,155,155)' }}>
-                                                    {this.props.item.specialist.name}
-                                                </Text>
-                                            }
-                                        </View>
-                                        <View>
-                                            {
-                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 ?
-                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Chờ trả lời</Text> :
-                                                    item.post.status == 3 ?
-                                                        <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
-                                                        item.post.status == 4 ?
-                                                            <Text style={{ padding: 5, color: 'rgb(106,1,54)', fontWeight: 'bold' }}>Đã bị từ chối</Text> :
-                                                            item.post.status ?
-                                                                <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã hoàn thành</Text> :
-                                                                null
-                                            }
-                                        </View>
-                                    </View>
-                                }
-                                {/* {
-                                    this.props.item.post.isAnswered == 0 ?
-                                        <Text>Trạng thái: <Text>{this.props.item.post.reject ? "Đã bị từ chối" : "Chưa trả lời"}</Text></Text> : null
-                                } */}
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
-            </View > : null
-    }
+  }
+  onNavigateDetails = item => {
+    item.user && item.user.id != this.props.userApp.currentUser.id
+      ? this.props.navigation.navigate('detailsDoctor', {
+          id: item.assignee.id,
+        })
+      : this.props.navigation.navigate('detailsProfile', {
+          id: item.author.id,
+        });
+  };
+  render() {
+    let {item, onPress} = this.props;
+    const icSupport = require('@images/new/user.png');
+    const avatar = item?.userInfo?.avatar
+      ? {uri: item?.userInfo?.avatar.absoluteUrl()}
+      : icSupport;
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.containerItem}>
+        <View style={styles.containerProfile}>
+          <ImageLoad
+            resizeMode="cover"
+            imageStyle={styles.boderImage}
+            borderRadius={20}
+            customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+            placeholderSource={icSupport}
+            style={styles.avatar}
+            loadingStyle={{size: 'small', color: 'gray'}}
+            source={avatar}
+            defaultImage={() => {
+              return (
+                <ScaleImage
+                  resizeMode="cover"
+                  source={icSupport}
+                  width={90}
+                  style={styles.imgDefault}
+                />
+              );
+            }}
+          />
+          <View style={styles.groupName}>
+            <Text style={styles.txtname}>
+              {item?.gender == 1 ? 'Nam' : item.gender == 0 ? 'Nữ' : 'Ẩn danh'},{' '}
+              {item.age} tuổi
+            </Text>
+            <Text style={styles.txtTime}>
+              {item.createdAt.toDateObject().format('dd/MM/yyyy')}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.txtComment} numberOfLines={3}>
+          {item.content}
+        </Text>
+        {item?.image?.length ? (
+          <Image source={{uri: item.image[0]}} style={styles.imgQuestion} />
+        ) : null}
+        <View style={styles.containerSpecialist}>
+          <Text numberOfLines={1} style={styles.groupSpecialist}>
+            {item.specializations.length
+              ? item.specializations.map((e, i) => {
+                  return (
+                    <Text
+                      key={i}
+                      style={styles.txtSpecialist}
+                      numberOfLines={1}>
+                      {e.specializationName}
+                      {i != item.specializations.length - 1 ? ', ' : ''}
+                    </Text>
+                  );
+                })
+              : null}
+          </Text>
+
+          <Text
+            style={{
+              paddingLeft: 20,
+              fontSize: 13,
+              color: '#00000090',
+            }}>
+            2 trả lời
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 }
 
-
 const styles = StyleSheet.create({
-    avatar: {
-        alignSelf: 'center',
-        borderRadius: 25,
-        width: 50,
-        height: 50
-    }
+  txtSpecialist: {
+    color: '#3161AD',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  groupSpecialist: {
+    backgroundColor: 'rgba(49, 97, 173, 0.1);',
+    borderRadius: 4,
+    padding: 5,
+    maxWidth: '60%',
+    flexDirection: 'row',
+    overflow: 'hidden',
+    paddingHorizontal: 10,
+  },
+  containerSpecialist: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 7,
+    paddingBottom: 14,
+  },
+  imgQuestion: {
+    width: '100%',
+    height: 200,
+  },
+  txtComment: {
+    paddingTop: 7.28,
+    paddingBottom: 8,
+  },
+  txtTime: {
+    color: '#00000080',
+  },
+  txtname: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 15,
+    shadowColor: '#00000040',
+    shadowOffset: {height: 1, width: 1},
+    shadowOpacity: 0.3,
+    elevation: 1,
+  },
+  groupName: {
+    paddingLeft: 10,
+  },
+  containerProfile: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  containerItem: {
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    elevation: 1,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    padding: 15,
+    paddingBottom: 4,
+  },
+  boderImage: {borderRadius: 20},
+  avatar: {width: 40, height: 40, alignSelf: 'flex-start'},
+  imgPlaceHoder: {
+    width: 40,
+    height: 40,
+    alignSelf: 'center',
+  },
 });
 function mapStateToProps(state) {
-    return {
-        userApp: state.auth.userApp,
-        navigation: state.navigation
-    };
+  return {
+    userApp: state.auth.userApp,
+    navigation: state.auth.navigation,
+  };
 }
 export default connect(mapStateToProps)(ItemQuestion);
