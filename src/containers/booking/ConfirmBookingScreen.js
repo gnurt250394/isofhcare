@@ -423,30 +423,15 @@ class ConfirmBookingScreen extends Component {
                     this.setState({ isLoading: false })
                     if (res) {
                         snackbar.show('Đặt khám thành công', 'success')
-                        if (this.state.paymentMethod == 6) {
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingWithPayment",
-                                    params: {
-                                        booking: res,
-                                        voucher: this.state.voucher
-
-                                    }
-                                }
-                            });
-                        }
-                        else {
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking: res,
                                         voucher: this.state.voucher
-
                                     }
                                 }
                             });
-                        }
                     } else {
                         snackbar.show(constants.msg.booking.booking_err2, "danger");
 
