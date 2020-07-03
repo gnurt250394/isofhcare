@@ -5,81 +5,121 @@ import datacacheProvider from '@data-access/datacache-provider';
 
 // const Realm = require('realm');
 import realmModel from '@models/realm-models';
-module.exports = {
-  create(content, gender, age, specialistId, diseaseHistory, otherContent, images) {
+export default {
+  create(content, gender, age, specializations, images) {
+    let params = {};
+    if (content) params.content = content;
+    if (gender) params.gender = gender;
+    if (age) params.age = age;
+    if (specializations) params.specializations = specializations;
+    if (images) params.images = images;
     // alert(images);
     return new Promise((resolve, reject) => {
       // reject();
-      client.requestApi("post", constants.api.question.create, {
-        specialistId,
-        post: {
-          age,
-          gender,
-          diseaseHistory,
-          images,
-          otherContent,
-          content
-        }
-      }, (s, e) => {
-        if (s)
-          resolve(s);
-        else
-          reject(e);
-      });
+      client.requestApi(
+        'post',
+        client.serviceChats + constants.api.question.create,
+        params,
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
     });
   },
-  like(isLiked, postId, callback) {
-    client.requestApi("put", constants.api.question.like + "/" + postId, {
-      isLiked
-    }, (s, e) => {
-      if (callback)
-        callback(s, e);
-    });
-  },
-  search(authorId, page, size, isAnswered, orderBy) {
+  listQuestionSocial(page, size) {
     return new Promise((resolve, reject) => {
-      let _authorId = authorId ? authorId : -1;
-      let _orderBy = orderBy == undefined ? -1 : orderBy;
-
-      client.requestApi("get", constants.api.question.search + "?page=" + page + "&size=" + size + "&authorId=" + _authorId + "&isAnswered=" + (isAnswered ? 1 : 0) + "&type=" + _orderBy, {}, (s, e) => {
-        if (s)
-          resolve(s);
-        if (e)
-          reject(e);
-      });
+      // reject();
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_question_social +
+          `?page=${page}&size=${size}`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
     });
   },
-  detail(postId) {
+  sendMessage(id, content, images) {
     return new Promise((resolve, reject) => {
-      client.requestApi("get", constants.api.question.detail + "/" + postId, {}, (s, e) => {
-        if (s)
-          resolve(s);
-        if (e)
-          reject(e);
-      });
+      // reject();
+      let params = {};
+      if (content) params.content = content;
+      if (images) params.images = images;
+      client.requestApi(
+        'put',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${id}/commentary`,
+        params,
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
     });
   },
-  review(postId, star) {
+  listAnwser(id, page, size) {
     return new Promise((resolve, reject) => {
-      client.requestApi("put", constants.api.question.review + "/" + postId, {
-        review: star
-      }, (s, e) => {
-        if (s)
-          resolve(s);
-        if (e)
-          reject(e);
-      });
+      // reject();
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${id}/comments?page=${page}&size=${size}`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getDetailQuestion(id){
+    return new Promise((resolve, reject) => {
+      // reject();
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${id}`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
     });
   },
   getResultReview(userId) {
     return new Promise((resolve, reject) => {
-      client.requestApi("get", constants.api.question.get_result_review + "/" + userId, {
-      }, (s, e) => {
-        if (s)
-          resolve(s);
-        if (e)
-          reject(e);
-      });
+      client.requestApi(
+        'get',
+        constants.api.question.get_result_review + '/' + userId,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          if (e) reject(e);
+        },
+      );
     });
-  }
-}
+  },
+  getListMyQuestion(page, size) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_my_question +
+          `?page=${page}&size=${size}`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          if (e) reject(e);
+        },
+      );
+    });
+  },
+};
