@@ -4,156 +4,178 @@
  * @flow
  */
 
-import React, { Component, PropTypes } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Text, StatusBar, TouchableOpacity, Image, Platform, Keyboard, AppState, FlatList } from 'react-native';
+import React, {Component, useEffect, useRef, useState, useContext} from 'react';
+import {
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+  Platform,
+  Keyboard,
+  AppState,
+  FlatList,
+} from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import dateUtisl from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
-import { connect } from 'react-redux';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import firebaseUtils from '@utils/firebase-utils';
 import GroupChatItem from '@components/chat/GroupChatItem';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
-import MyFacilityItem from '@components/chat/MyFacilityItem'
-class GroupChatScreen extends React.Component {
-    constructor(props) {
-        super(props);
-        let facility = this.props.navigation.getParam("facility");
-        let title = "Tin nhắn";
-        let userId = this.props.userApp.currentUser.id;
-        if (facility) {
-            title = facility.name;
-            userId = "facility_" + facility.id;
-        }
-        this.state =
-            {
-                loadingGroup: true,
-                listGroup: [],
-                title,
-                userId
-            }
-    }
-    // _handleAppStateChange = currentAppState => {
-    //     if (currentAppState === 'active') {
-    //         console.log('appstate - foreground');
-    //         if (sb) {
-    //             sb.setForegroundState();
-    //         }
-    //     } else if (currentAppState === 'background') {
-    //         console.log('appstate - background');
-    //         if (sb) {
-    //             sb.setBackgroundState();
-    //         }
-    //     }
-    // };
+import MyFacilityItem from '@components/chat/MyFacilityItem';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+import {WebSocketContext} from '@data-access/socket-provider';
+import snackbar from '@utils/snackbar-utils';
+const GroupChatScreen = ({navigation}) => {
+  const snap = useRef();
+  const data = useRef();
+  const dataIds = useRef();
+  const context = useContext(WebSocketContext);
+  const userApp = useSelector(state => state.auth.userApp);
+  const dispatch = useDispatch();
 
+  const [state, _setState] = useState({
+    loadingGroup: true,
+    listGroup: [],
+    title: 'Group',
+    page: 0,
+    size: 20,
+    data: [],
+    isLoading: true,
+  });
 
-    data = [];
-    dataIds = [];
-    removeGroup(id) {
-        let index = this.dataIds.indexOf(id);
-        if (index != -1) {
-            this.data.splice(index, 1);
-            this.dataIds.splice(index, 1);
-        }
+  const setState = (data = {}) => {
+    _setState(state => ({...state, ...data}));
+  };
+  const removeGroup = id => {
+    let index = dataIds.current.indexOf(id);
+    if (index != -1) {
+      data.current.splice(index, 1);
+      dataIds.current.splice(index, 1);
     }
-    addGroup(group, index) {
-        this.removeGroup(group.doc.id);
-        this.data.splice(index, 0, group.doc);
-        this.dataIds.splice(index, 0, group.doc.id);
-    }
-    getMyGroup() {
-        this.setState({ loadingGroup: true }, () => {
-            firebaseUtils.getMyGroup(this.state.userId).then(x => {
-                this.setState({
-                    listGroup: x,
-                    loadingGroup: false
-                })
-            }).catch(x => {
-                this.setState({
-                    listGroup: [],
-                    loadingGroup: false
-                })
-            });
-        });
-    }
-    componentDidMount() {
-        console.disableYellowBox = true;
-        this.setState({ loadingGroup: true }, () => {
-            this.getMyGroup();
-            this.snap = this.snap = firebaseUtils.onMyGroupChange(this.state.userId, (snap) => {
-                snap.docChanges().forEach(item => {
-                    if (item.type == 'added') {
-                        this.getMyGroup();
-                    }
-                });
-            });
-        });
-        if (this.state.userId == this.props.userApp.currentUser.id) {
-            userProvider.detail(this.props.userApp.currentUser.id).then(s => {
-                if (s && s.code == 0) {
-                    this.props.dispatch({ type: constants.action.action_set_my_facility, value: s.data.facilities })
-                }
-            });
-        }
-    }
-    componentWillUnmount() {
-        if (this.snap)
-            this.snap();
-    }
-    onOpenGroup(userId, groupId, title) {
-        this.props.navigation.navigate("chat", {
-            groupId: groupId,
-            title,
-            userId
+  };
+  const addGroup = (group, index) => {
+    removeGroup(group.doc.id);
+    data.current.splice(index, 0, group.doc);
+    dataIds.current.splice(index, 0, group.doc.id);
+  };
+
+  useEffect(() => {
+    context.onSend(
+      constants.socket_type.GET_LIST_GROUP,
+      {userId: userApp.currentUser.id},
+      data => {
+        setState({data: data.data, isLoading: false});
+        console.log('data: ', data);
+      },
+    );
+    const getData = () => {
+      const {page, size} = this.state;
+      console.log('getData');
+
+      bookingDoctorProvider
+        .getListDoctor(page, size)
+        .then(res => {
+          this.setState({isLoading: false, refreshing: false});
+          if (res && res.length > 0) {
+            this.formatData(res);
+          } else {
+            this.formatData([]);
+          }
         })
-    }
-
-    renderMyFacility() {
-        if (this.props.userApp.myFacility && this.props.userApp.myFacility.length > 0 && this.props.userApp.currentUser.id == this.state.userId) {
-            return (<View
-                style={{ height: 140 }}
-            >
-                {/* <Text style={{ fontSize: 15, padding: 20, fontWeight: 'bold' }}>Cơ sở y tế của bạn</Text> */}
-                <FlatList
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.props.userApp.myFacility}
-                    renderItem={({ item, index }) =>
-                        <MyFacilityItem facility={item} onOpenGroup={(x) => this.props.navigation.navigate("groupChatFacility", { facility: x })} />
-                    }
-                    horizontal={true}
-                />
-            </View>);
-        }
-        return <View></View>
-    }
-
-    render() {
-        return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.title} showFullScreen={true}>
-                {this.renderMyFacility()}
-                <FlatList
-                    onRefresh={this.getMyGroup.bind(this)}
-                    refreshing={this.state.loadingGroup}
-                    style={{ flex: 1, paddingTop: 20 }}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.state.listGroup}
-                    renderItem={({ item, index }) =>
-                        <GroupChatItem group={item} userId={this.state.userId} onOpenGroup={this.onOpenGroup.bind(this)} />
-                    }
-                />
-            </ActivityPanel >
-
-        );
-    }
-}
-function mapStateToProps(state) {
-    return {
-        userApp: state.auth.userApp
+        .catch(err => {
+          this.formatData([]);
+          this.setState({isLoading: false, refreshing: false});
+        });
     };
-}
-export default connect(mapStateToProps)(GroupChatScreen);
+    // getData();
+    return () => {
+      if (snap.current) snap.current();
+    };
+  }, []);
+  const formatData = data => {
+    if (data.length == 0) {
+      if (state.page == 0) {
+        setState({data});
+      }
+    } else {
+      if (state.page == 0) {
+        setState({data});
+      } else {
+        setState(preState => {
+          return {data: [...preState.data, ...data]};
+        });
+      }
+    }
+  };
+
+  const onCreateGroup = item => () => {
+    context.onSend(
+      constants.socket_type.CREATE_ROOM,
+      {
+        roomName: item.name,
+        id: item.userId,
+        userId: userApp.currentUser.id,
+        userName: userApp.currentUser.name,
+      },
+      data => {
+        console.log('data: ', data);
+        if (data.status) navigation.navigate('chat');
+        else snackbar.show('Phòng đã tồn tại', 'danger');
+      },
+    );
+  };
+  const onChatsGroup = item => () => {
+    context.onSend(
+      constants.socket_type.JOIN_ROOM,
+      {room: item, user: userApp.currentUser},
+      data => {
+        navigation.navigate('chat', {
+          room: item,
+        });
+      },
+    );
+  };
+  return (
+    <ActivityPanel
+      isLoading={state.isLoading}
+      titleStyle={{marginLeft: 40}}
+      title={state.title}
+      menuButton={
+        <TouchableOpacity
+          onPress={onCreateGroup}
+          style={{
+            paddingRight: 15,
+          }}>
+          <ScaledImage
+            source={require('@images/new/profile/ic_add.png')}
+            height={25}
+          />
+        </TouchableOpacity>
+      }>
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        data={state.data}
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            onPress={onChatsGroup(item)}
+            style={{
+              padding: 15,
+              borderBottomColor: '#00000060',
+              borderBottomWidth: 1,
+            }}>
+            <Text>{item.roomName}</Text>
+          </TouchableOpacity>
+        )}
+      />
+    </ActivityPanel>
+  );
+};
+
+export default GroupChatScreen;
