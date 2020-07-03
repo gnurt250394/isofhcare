@@ -301,6 +301,19 @@ export default {
             );
         });
     },
+   search_list_specialists(name) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                `${constants.api.booking.doctor.get_list_specialists}/search?name=${name}`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
 
     get_list_specialists_all() {
         return new Promise((resolve, reject) => {
