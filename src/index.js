@@ -39,7 +39,7 @@ Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
 import FlashMessage from "react-native-flash-message";
 import SocketProvider from "@data-access/socket-provider";
-
+import { MenuProvider } from 'react-native-popup-menu';
 
 class Kernel extends Component {
   constructor(props) {
@@ -81,11 +81,13 @@ class Kernel extends Component {
         <PersistGate loading={null} persistor={store.__PERSISTOR}>
         <SocketProvider>
           {/* <Root> */}
+          <MenuProvider>
           <RootApp ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
           }}
             screenProps={{ state: store.getState() }}
           />
+          </MenuProvider>
           {/* </Root> */}
           </SocketProvider>
         </PersistGate>
