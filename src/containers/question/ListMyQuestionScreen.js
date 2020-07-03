@@ -9,7 +9,6 @@ import {
   TextInput,
   FlatList,
   Image,
-  DeviceEventEmitter,
 } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import {connect} from 'react-redux';
@@ -22,61 +21,39 @@ import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import ListQuestion from '@components/question/ListQuestion';
 import {IndicatorViewPager} from 'mainam-react-native-viewpager';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import ItemQuestion from '@components/question/ItemQuestion';
-import ListSpecialQuestion from '@components/question/ListSpecialQuestion';
 import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
 const {width, height} = Dimensions.get('screen');
-class ListQuestionScreen extends Component {
+class ListMyQuestionScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tabIndex: 0,
-      refreshing: false,
+      specialist: [],
       data: [],
       isLoading: true,
       page: 0,
       size: 20,
-      value: '',
-      specialId: '',
-      onFocus: true,
+      refreshing: false,
     };
   }
   componentDidMount() {
-    // this.getListSpecialist();
-    DeviceEventEmitter.addListener(
-      'hardwareBackPress',
-      this.handleHardwareBack.bind(this),
-    );
-    this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0, onFocus: true}, this.getListQuestions);
-    });
-    this.didBlur = this.props.navigation.addListener('didBlur', () => {
-      this.setState({onFocus: false, specialId: '', value: ''});
+    const {navigation} = this.props;
+    this.focusListener = navigation.addListener('didFocus', () => {
+      this.getListQuestions();
+      // The screen is focused
+      // Call any action
     });
   }
-  componentWillUnmount = () => {
-    if (this.onFocus) {
-      this.onFocus.remove();
-    }
-    if (this.didBlur) {
-      this.didBlur.remove();
-    }
-    DeviceEventEmitter.removeAllListeners('hardwareBackPress');
-  };
-
-  handleHardwareBack = () => {
-    this.props.navigation.goBack();
-    return true;
-  };
-  getListQuestions = async value => {
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener && this.focusListener.remove();
+  }
+  getListQuestions = async () => {
     try {
-      const {page, size, value, specialId} = this.state;
-      let res = await questionProvider.listQuestionSocial(
-        value,
-        specialId,
-        page,
-        size,
-      );
+      const {page, size} = this.state;
+      let res = await questionProvider.getListMyQuestion(page, size);
       console.log('res: ', res);
       this.setState({isLoading: false, refreshing: false});
       if (res?.content) {
@@ -85,30 +62,9 @@ class ListQuestionScreen extends Component {
         this.formatData([]);
       }
     } catch (error) {
-      console.log('error: ', error);
       this.formatData([]);
       this.setState({isLoading: false, refreshing: false});
     }
-  };
-  onSelected = item => {
-    this.setState(
-      {specialId: item.id, isLoading: true, page: 0, onFocus: false},
-      () => {
-        this.getListQuestions();
-      },
-    );
-  };
-  onChangeText = value => {
-    this.setState({value}, () => {
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-      }
-      this.timeout = setTimeout(() => {
-        this.setState({isLoading: true, page: 0}, () => {
-          this.getListQuestions();
-        });
-      }, 500);
-    });
   };
   formatData = data => {
     if (data.length == 0) {
@@ -129,14 +85,14 @@ class ListQuestionScreen extends Component {
       this.setState(pre => ({page: pre.page + 1}), this.getListQuestions);
     }
   };
-  _onRefresh = () => {
-    this.setState(
-      {refreshing: true, page: 0, value: '', specialId: '', onFocus: true},
-      this.getListQuestions,
-    );
+  onRefresh = () => {
+    this.setState({page: 0, refreshing: true}, this.getListQuestions);
   };
-  onClickCreateMenu = () =>
-    this.props.navigation.navigate('createQuestionStep1');
+  onClickCreateMenu = () => {
+    this.props.navigation.navigate('createQuestionStep1', {
+      replace: true,
+    });
+  };
   onMyQuestion = () => this.props.navigation.navigate('listMyQuestion');
   menuCreate() {
     return (
@@ -147,17 +103,11 @@ class ListQuestionScreen extends Component {
   }
 
   goToDetailQuestion = item => () => {
-    this.props.navigation.navigate('detailQuestion', {item, social: true});
+    this.props.navigation.navigate('detailMessage', {item});
   };
   keyExtractor = (item, index) => `${index}`;
   renderItem = ({item, index}) => {
-    return (
-      <ItemQuestion
-        item={item}
-        onPress={this.goToDetailQuestion(item)}
-        social={true}
-      />
-    );
+    return <ItemQuestion item={item} onPress={this.goToDetailQuestion(item)} />;
   };
   ItemSeparator = () => {
     return <View style={styles.lineBetwenItem} />;
@@ -170,33 +120,7 @@ class ListQuestionScreen extends Component {
       : icSupport;
     return (
       <ActivityPanel
-        // title={constants.title.advisory_online}
-        backButtonClick={() => this.props.navigation.goBack()}
-        titleView={
-          <View style={styles.containerTitle}>
-            <TextInput
-              style={styles.inputTitle}
-              onChangeText={this.onChangeText}
-              value={this.state.value}
-              placeholder="Tìm kiếm câu hỏi"
-              placeholderTextColor="#FFF"
-            />
-            {/* <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
-                            <ScaleImage source={require('@images/ic_close.png')} height={16} />
-                        </TouchableOpacity>
-                            : */}
-            <TouchableOpacity
-              style={[styles.buttonSearch]}
-              onPress={this.onSearch}>
-              <ScaleImage
-                source={require('@images/new/ic_search.png')}
-                height={16}
-              />
-            </TouchableOpacity>
-          </View>
-        }
-        titleViewStyle={styles.titleViewStyle}
-        menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
+        title={'Câu hỏi của bạn'}
         titleStyle={[
           this.props.userApp.isLogin ? {marginRight: 0} : {},
           {color: '#FFF'},
@@ -228,9 +152,12 @@ class ListQuestionScreen extends Component {
             <Text>Hãy viết câu hỏi của bạn</Text>
           </TouchableOpacity>
         </View>
-        <ListSpecialQuestion
-          onSelected={this.onSelected}
-          onFocus={this.state.onFocus}
+        <View
+          style={{
+            height: 5,
+            width: '100%',
+            backgroundColor: '#bbbbbb80',
+          }}
         />
         {this.state.isLoading ? (
           <RenderPlaceHolder />
@@ -243,7 +170,7 @@ class ListQuestionScreen extends Component {
             keyExtractor={this.keyExtractor}
             onEndReached={this._onEndReached}
             onEndReachedThreshold={0.7}
-            onRefresh={this._onRefresh}
+            onRefresh={this.onRefresh}
             refreshing={this.state.refreshing}
           />
         )}
@@ -254,7 +181,7 @@ class ListQuestionScreen extends Component {
 const styles = StyleSheet.create({
   lineBetwenItem: {
     backgroundColor: '#00000010',
-    height: 6,
+    height: 10,
   },
   buttonQuestion: {
     borderColor: '#BBB',
@@ -292,7 +219,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    marginLeft: 10,
   },
   containerItemSpecialist: {
     maxWidth: width / 2.5,
@@ -325,4 +251,4 @@ function mapStateToProps(state) {
     userApp: state.auth.userApp,
   };
 }
-export default connect(mapStateToProps)(ListQuestionScreen);
+export default connect(mapStateToProps)(ListMyQuestionScreen);

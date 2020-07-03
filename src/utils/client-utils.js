@@ -73,6 +73,7 @@ module.exports = {
   serverApi: server_url + "/",
   serviceSchedule: "http://123.24.206.9:12032/",
   serviceBooking: "http://123.24.206.9:12033/",
+  serviceChats: "http://10.0.0.88:8085/",
   response: {
     ok(data, message) {
       if (!message) message = "";
@@ -192,7 +193,8 @@ module.exports = {
         }
       })
       .catch(e => {
-        if (funRes) funRes(undefined, e);
+        if (e.status >= 200 && e.status < 300) funRes(true, undefined);
+        else funRes(undefined, e);
       });
   },
 
