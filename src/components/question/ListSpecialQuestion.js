@@ -20,8 +20,8 @@ const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
     bookingDoctorProvider
       .get_list_specialists(page, size)
       .then(res => {
-        if (res && res.content.length > 0) {
-          formatData(res.content);
+        if (res && res.length > 0) {
+          formatData(res);
         } else {
           formatData([]);
         }

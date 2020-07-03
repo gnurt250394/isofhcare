@@ -67,8 +67,8 @@ class SelectSpecialistScreen extends Component {
           isLoading: false,
           isSearch: false,
         });
-        if (s?.content?.length) {
-          this.formatData(s?.content);
+        if (s?.length) {
+          this.formatData(s);
         } else {
           this.formatData([]);
         }

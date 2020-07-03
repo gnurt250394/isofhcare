@@ -258,27 +258,27 @@ const TabNavigatorComponent = createBottomTabNavigator(
     //     },
     //   }
     // },
-    bookingTab: {
-      screen: ListBookingHistoryScreen,
-      navigationOptions: {
-        tabBarLabel: 'Lich hẹn',
-        tabBarIcon: ({tintColor}) => (
-          <ScaledImage
-            height={23}
-            source={require('@images/new/homev2/ic_booking_home.png')}
-            style={{tintColor: tintColor}}
-          />
-        ),
-        tabBarOnPress: ({navigation, defaultHandler}) => {
-          if (userProvider.isLogin) {
-            console.log('userProvider.isLogin: ', userProvider.isLogin);
-            defaultHandler();
-          } else {
-            NavigationService.navigate('login');
-          }
-        },
-      },
-    },
+    // bookingTab: {
+    //   screen: ListBookingHistoryScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: 'Lich hẹn',
+    //     tabBarIcon: ({tintColor}) => (
+    //       <ScaledImage
+    //         height={23}
+    //         source={require('@images/new/homev2/ic_booking_home.png')}
+    //         style={{tintColor: tintColor}}
+    //       />
+    //     ),
+    //     tabBarOnPress: ({navigation, defaultHandler}) => {
+    //       if (userProvider.isLogin) {
+    //         console.log('userProvider.isLogin: ', userProvider.isLogin);
+    //         defaultHandler();
+    //       } else {
+    //         NavigationService.navigate('login');
+    //       }
+    //     },
+    //   },
+    // },
     // ehealthTab: {
     //   screen: EHealthNavigator,
     //   navigationOptions: {
