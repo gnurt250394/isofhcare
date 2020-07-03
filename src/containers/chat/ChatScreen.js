@@ -427,6 +427,11 @@ const ChatScreen = ({
       });
     } catch (error) {}
   };
+  const goToProfileDoctor = doctorInfo => {
+    navigation.navigate('detailsDoctor', {
+      item: {id: doctorInfo.doctorId},
+    });
+  };
   return (
     // <TouchableWithoutFeedback
     //   onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
@@ -439,6 +444,7 @@ const ChatScreen = ({
         inverted={false}
         onPressActionButton={selectImage}
         loadEarlier={true}
+        onPressAvatar={goToProfileDoctor}
         renderBubble={props => {
           return (
             <View style={{}}>
@@ -449,7 +455,7 @@ const ChatScreen = ({
                   style={{
                     fontWeight: 'bold',
                     paddingBottom: 5,
-                    color:'#00BA99'
+                    color: '#00BA99',
                   }}>
                   {item.doctorInfo.academicDegree}. {item.doctorInfo.name}
                 </Text>
