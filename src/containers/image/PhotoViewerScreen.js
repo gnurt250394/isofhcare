@@ -90,7 +90,7 @@ function PhotoViewerScreen(props) {
 const styles = StyleSheet.create({
     colorImg: { tintColor: '#fff' },
     btnCancel: { padding: 5 },
-    viewHeader: { alignItems: 'flex-end', paddingRight: 10 },
+    viewHeader: { alignItems: 'flex-end', paddingRight: 10,paddingTop:30 },
     txIndex: { color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold', position: 'absolute', top: 10, alignSelf: 'center' },
     txDownload: { color: '#fff', textAlign: 'center', fontSize: 14 },
     btnDownload: { height: 52, borderRadius: 6, backgroundColor: '#5eb8ff', justifyContent: 'center', alignItems: 'center', marginHorizontal: 60, marginBottom: 20 }
