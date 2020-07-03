@@ -55,6 +55,7 @@ import {
   InputToolbar,
   LoadEarlier,
   Message,
+  Bubble,
 } from 'react-native-gifted-chat';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
@@ -146,7 +147,7 @@ const ChatScreen = ({
   const getListAnwser = async () => {
     try {
       let res = await questionProvider.listAnwser(item.id, false, page, size);
-      console.log('res: ', res);
+
       setLoading(false);
       if (res?.content) {
         let newKeys = {id: '_id', content: 'text', images: 'image'};
@@ -161,7 +162,7 @@ const ChatScreen = ({
             return formatMessage(e, newKeys);
           })
           .reverse();
-        console.log('list: ', list);
+
         formatData(list);
       } else formatData([]);
     } catch (error) {
@@ -204,7 +205,6 @@ const ChatScreen = ({
       );
 
       if (res) {
-        console.log('res: ', res);
         let list = [...data];
 
         let newKeys = {id: '_id', content: 'text', images: 'image'};
@@ -214,7 +214,7 @@ const ChatScreen = ({
           res.user = {...item.doctorInfo, _id: res.userId};
         }
         res = formatMessage(res, newKeys);
-        console.log('res: ', res);
+
         list.push(res);
         setData(state => list);
       }
@@ -416,7 +416,6 @@ const ChatScreen = ({
     return Object.assign({}, ...keyValues);
   };
   const photoViewer = (urls, index) => () => {
-    console.log('urls: ', urls);
     try {
       if (!urls) {
         snackbar.show(constants.msg.message.none_image);
@@ -426,9 +425,7 @@ const ChatScreen = ({
         index,
         urls: urls.map(e => ({uri: e})),
       });
-    } catch (error) {
-      console.log('error: ', error);
-    }
+    } catch (error) {}
   };
   return (
     // <TouchableWithoutFeedback
@@ -441,10 +438,29 @@ const ChatScreen = ({
         renderTime={() => null}
         inverted={false}
         onPressActionButton={selectImage}
-        renderUsernameOnMessage={true}
         loadEarlier={true}
+        renderBubble={props => {
+          return (
+            <View style={{}}>
+              {props?.currentMessage?.user?._id !=
+                props?.previousMessage?.user?._id &&
+              props?.currentMessage?.user?._id != props?.user?._id ? (
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    paddingBottom: 5,
+                    color:'#00BA99'
+                  }}>
+                  {item.doctorInfo.academicDegree}. {item.doctorInfo.name}
+                </Text>
+              ) : null}
+              <Bubble {...props} />
+            </View>
+          );
+        }}
+        renderAvatarOnTop={true}
         messagesContainerStyle={{
-          paddingBottom:20
+          paddingBottom: 20,
         }}
         renderLoadEarlier={props => {
           return (

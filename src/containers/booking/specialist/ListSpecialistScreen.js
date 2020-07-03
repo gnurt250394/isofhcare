@@ -31,7 +31,7 @@ class ListSpecialistScreen extends Component {
   getData = () => {
     this.setState({refreshing: true}, () => {
       bookingDoctorProvider
-        .get_list_specialists_all()
+        .get_list_specialists(0,999)
         .then(res => {
           this.setState({refreshing: false});
           if (res && res.length > 0) {
