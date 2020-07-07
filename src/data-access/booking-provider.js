@@ -2,7 +2,7 @@ import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 
-module.exports = {
+export default {
   getListBooking(profileId, hospitalId) {
     return new Promise((resolve, reject) => {
       if (hospitalId)

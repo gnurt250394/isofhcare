@@ -34,7 +34,7 @@ class AddBookingDoctorScreen extends Component {
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
         let isOnline = this.props.navigation.getParam('isOnline', false)
-        console.log('isOnline: ', isOnline);
+        
 
 
         this.state = {
@@ -170,141 +170,6 @@ class AddBookingDoctorScreen extends Component {
     componentWillUnmount() {
         // AppState.removeEventListener('change', this._handleAppStateChange);
     }
-    // _handleAppStateChange = (nextAppState) => {
-    //     if (nextAppState == 'inactive' || nextAppState == 'background') {
-
-    //     } else {
-    //         let { paymentMethod } = this.state
-    //         this.setState({ isLoading: true }, () => {
-    //             bookingProvider.detail(this.state.booking.book.id).then(s => {
-    //                 this.setState({ isLoading: false }, () => {
-    //                     if (s.code == 0 && s.data && s.data.booking) {
-    //                         if (s.code == 0 && s.data && s.data.booking) {
-    //                             switch (s.data.booking.status) {
-    //                                 case 3: //đã thanh toán
-    //                                     let booking = this.state.booking;
-    //                                     booking.hospital = this.state.hospital;
-    //                                     booking.profile = this.state.profile;
-    //                                     booking.payment = paymentMethod;
-    //                                     this.props.navigation.navigate("homeTab", {
-    //                                         navigate: {
-    //                                             screen: "createBookingSuccess",
-    //                                             params: {
-    //                                                 booking,
-    //                                                 service: this.state.service,
-    //                                                 voucher: this.state.voucher
-
-    //                                             }
-    //                                         }
-    //                                     });
-    //                                     break;
-    //                             }
-    //                         }
-    //                     }
-    //                 });
-    //             });
-    //         });
-    //     }
-    // };
-
-    confirmPayment(booking, bookingId, paymentMethod) {
-
-        booking.hospital = this.state.hospital;
-        booking.profile = this.state.profile;
-        booking.payment = this.state.paymentMethod;
-        this.setState({ isLoading: true }, () => {
-            bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
-                switch (s.code) {
-
-                    case 0:
-                        if (paymentMethod) {
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingWithPayment",
-                                    params: {
-                                        booking,
-                                        service: this.state.service,
-                                        voucher: this.state.voucher
-
-                                    }
-                                }
-                            });
-                        }
-                        else {
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingSuccess",
-                                    params: {
-                                        booking,
-                                        service: this.state.service,
-                                        voucher: this.state.voucher
-
-                                    }
-                                }
-                            });
-                        }
-                        break;
-                    case 5:
-                        this.setState({ isLoading: false }, () => {
-                            snackbar.show(constants.msg.booking.booking_expired, "danger");
-                        });
-                }
-            }).catch(e => {
-                this.setState({ isLoading: false }, () => {
-                    snackbar.show(constants.msg.booking.booking_err2, "danger");
-                });
-            });
-        })
-    }
-    getPaymentMethod() {
-        let { paymentMethod } = this.state
-        switch (paymentMethod) {
-            case 1:
-                return "VNPAY";
-            case 2:
-                return "CASH";
-            case 3:
-            case 5:
-            // return "PAYOO";
-            case 4:
-                return "PAYOO";
-            case 6:
-                return "CASH";
-        }
-    }
-    getPaymentReturnUrl() {
-        let { paymentMethod } = this.state
-        switch (paymentMethod) {
-            case 1:
-                return constants.key.payment_return_url.vnpay;
-            // return "http://localhost:8888/order/vnpay_return";
-            case 2:
-                return "";
-            case 3:
-            case 5:
-            case 4:
-                return constants.key.payment_return_url.payoo;
-        }
-    }
-    getPaymentMethodUi() {
-        let { paymentMethod } = this.state
-        switch (paymentMethod) {
-            case 3:
-            case 5:
-                return "SDK";
-            default:
-                return "";
-        }
-    }
-
-    getBookingTime = () => {
-        try {
-            return this.state.bookingDate.format("yyyy-MM-dd") + " " + (this.state.schedule.timeString || ((this.state.schedule.time || new Date()).format("HH:mm:ss")));
-        } catch (error) {
-
-        }
-        return "";
-    }
 
     disablePromotion = (promotion) => {
         let dayOfWeek = {
@@ -350,6 +215,7 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.date).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
+        
 
         if (!this.props.userApp.isLogin) {
             this.props.navigation.replace("login", {
@@ -359,7 +225,7 @@ class AddBookingDoctorScreen extends Component {
                         bookingDate: this.state.bookingDate,
                         detailSchedule: this.state.detailSchedule,
                         schedule: this.state.schedule,
-                        isOnline:this.state.isOnline
+                        isOnline: this.state.isOnline
                     }
                 }
             });
@@ -382,18 +248,21 @@ class AddBookingDoctorScreen extends Component {
         }
         var images = [];
         this.state.imageUris.forEach((item) => {
-
-
             images.push(item.url);
         });
         let img = images ? images : ''
-
-
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
-        let services = Object.assign({}, detailSchedule.medicalService, { monetaryAmount: { value: this.pricePromotion(detailSchedule.medicalService) } })
-
-        console.log('this.state.isOnline: ', this.state.isOnline);
+        let services = [{
+            serviceId: detailSchedule?.medicalService?.id || '',
+            name: detailSchedule?.medicalService?.name || '',
+            price: detailSchedule?.medicalService?.monetaryAmount?.value || 0,
+            isOnline: this.state.isOnline,
+            promotionTitle: detailSchedule?.medicalService?.promotion && this.disablePromotion(detailSchedule?.medicalService?.promotion) ? detailSchedule?.medicalService?.promotion?.title : null,
+            promotionType: detailSchedule?.medicalService?.promotion && this.disablePromotion(detailSchedule?.medicalService?.promotion) ? detailSchedule?.medicalService?.promotion?.type : null,
+            promotionValue: detailSchedule?.medicalService?.promotion && this.disablePromotion(detailSchedule?.medicalService?.promotion) ? detailSchedule?.medicalService?.promotion?.value : null
+        }]
+        detailSchedule.medicalService
         let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
@@ -438,7 +307,7 @@ class AddBookingDoctorScreen extends Component {
                     }).catch(e => {
                         this.isChecking = true
                         this.setState({ isLoading: false });
-                        console.log('e.response: ', e.response);
+                        
                         if (e.response && e.response.data.error == 'Locked') {
                             snackbar.show(e.response.data.message, 'danger')
                         } else if (e.response && typeof e.response.data == 'string') {
