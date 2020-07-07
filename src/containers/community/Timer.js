@@ -111,11 +111,7 @@ export default function Timer(props) {
             textAlign: 'center',
             paddingHorizontal: 20,
           }}>
-<<<<<<< HEAD
-          Thời gian gọi còn lại của bạn còn{' '}
-=======
           Thời gian gọi còn lại của bạn là{' '}
->>>>>>> ddc4d6b2... config webrtc video call
           {state.timeRemain?.toDateObject().format('mm')} phút
         </Text>
       ) : null}
