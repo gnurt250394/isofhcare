@@ -146,7 +146,7 @@ class CreateBookingSuccessScreen extends Component {
             </View>
             <View style={styles.containerBody}>
               <View style={styles.row}>
-                <Text style={styles.label}>{constants.booking.CSYT}:</Text>
+                <Text style={styles.label}>Cơ Sở y tế:</Text>
                 <Text style={styles.text}>{booking.hospital.name}</Text>
               </View>
               <View style={styles.row}>

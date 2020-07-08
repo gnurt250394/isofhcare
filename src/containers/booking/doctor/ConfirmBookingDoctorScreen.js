@@ -23,7 +23,7 @@ class ConfirmBookingDoctorScreen extends Component {
         let isOnline = this.props.navigation.getParam('isOnline');
         let paymentMethod = this.props.navigation.getParam('paymentMethod');
         let disabled = this.props.navigation.getParam('disabled');
-        let voucher = this.props.navigation.getParam('voucher');
+        let voucher = this.props.navigation.getParam('voucher',{});
         this.state = {
             isVisible: false,
             isOnline,
@@ -31,7 +31,7 @@ class ConfirmBookingDoctorScreen extends Component {
             booking,
             bookingDate,
             detailSchedule,
-            voucher,
+            voucher:voucher?voucher:{},
             disabled
         }
         this.isChecking = true
