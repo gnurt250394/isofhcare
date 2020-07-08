@@ -191,12 +191,25 @@ export default {
           (hospitals.contact && hospitals.address) ||
           '',
         checkInPlace: (hospitals && hospitals.checkInPlace) || '',
-        hotLine: (hospitals && hospitals.hotLine) || '',
-        bank: (hospitals && hospitals.bank) || '',
-        accountNo: (hospitals && hospitals.accountNo) || '',
-        owner: (hospitals && hospitals.owner) || '',
-        branch: (hospitals && hospitals.branch) || '',
-        note: (hospitals && hospitals.note) || '',
+        hotLine:
+          (hospitals && (hospitals.hotLine || hospitals?.contact?.hotLine)) || '',
+        bank:
+          (hospitals && (hospitals.bank || hospitals?.transferInfo?.bank)) ||
+          '',
+        accountNo:
+          (hospitals &&
+            (hospitals.accountNo || hospitals?.transferInfo?.accountNo)) ||
+          '',
+        owner:
+          (hospitals && (hospitals.owner || hospitals?.transferInfo?.owner)) ||
+          '',
+        branch:
+          (hospitals &&
+            (hospitals.branch || hospitals?.transferInfo?.branch)) ||
+          '',
+        note:
+          (hospitals && (hospitals.note || hospitals?.transferInfo?.note)) ||
+          '',
       };
       console.log('hospital: ', hospitals);
       let patient = {
