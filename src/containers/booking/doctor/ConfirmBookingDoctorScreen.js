@@ -370,12 +370,12 @@ class ConfirmBookingDoctorScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
 
-                                <ButtonSelectPaymentMethod
+                                {/* <ButtonSelectPaymentMethod
                                     icon={require('@images/new/booking/ic_momo.png')}
                                     onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.MOMO)}
                                     title={constants.payment.MOMO}
                                     isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO}
-                                />
+                                /> */}
                                     <ButtonSelectPaymentMethod
                                         icon={require('@images/new/booking/ic_banktransfer.png')}
                                         onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.BANK_TRANSFER)}
