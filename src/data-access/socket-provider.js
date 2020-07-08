@@ -37,10 +37,10 @@ export default ({children}) => {
       if (token) {
         try {
           // console.log('token: ', token);
-          const url = 'http://192.168.1.5:4443';
+        //   const url = 'http://192.168.1.5:4443';
           // const url = 'http://192.168.43.31:4443';
           // const url = 'http://10.0.50.55:4443';
-          // const url = 'https://isofhcare-stable.herokuapp.com';
+          const url = 'https://isofhcare-test.herokuapp.com';
           socket.current = io.connect(url, {
             transports: ['websocket'],
             query: {
