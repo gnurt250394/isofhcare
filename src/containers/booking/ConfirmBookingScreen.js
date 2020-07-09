@@ -474,6 +474,7 @@ class ConfirmBookingScreen extends Component {
 
             <TouchableOpacity
                 style={styles.btnGoToVoucher}
+                disabled={this.state.disabled}
                 onPress={this.goToMyVoucher}
             >
                 <Text numberOfLines={1}

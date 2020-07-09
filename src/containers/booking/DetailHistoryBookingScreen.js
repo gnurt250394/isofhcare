@@ -25,7 +25,7 @@ import stylemodal from '@styles/modal-style';
 import constants from '@resources/strings';
 import Barcode from 'mainam-react-native-barcode';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
-import CallManager from "@components/community/CallManager";
+import CallManager from '@components/community/CallManager';
 class DetailHistoryBookingScreen extends Component {
   constructor(props) {
     super(props);
@@ -377,13 +377,31 @@ class DetailHistoryBookingScreen extends Component {
         booking: this.state.booking,
         isOnline,
         paymentMethod: this.state.booking.invoice.payment,
-        disabled: true,
+        voucher:
+          this.state.booking.invoice.voucher &&
+          this.state.booking.invoice.voucher.discount
+            ? this.state.booking.invoice.voucher
+            : {},
+        disabled:
+          this.state.booking.invoice.voucher &&
+          this.state.booking.invoice.voucher.discount
+            ? true
+            : false,
       });
     } else {
       this.props.navigation.navigate('confirmBooking', {
         booking: this.state.booking,
         paymentMethod: this.state.booking.invoice.payment,
-        disabled: true,
+        voucher:
+          this.state.booking.invoice.voucher &&
+          this.state.booking.invoice.voucher.discount
+            ? this.state.booking.invoice.voucher
+            : {},
+        disabled:
+          this.state.booking.invoice.voucher &&
+          this.state.booking.invoice.voucher.discount
+            ? true
+            : false,
       });
     }
   };
