@@ -23,7 +23,6 @@
 #import "RNCallKeep.h"
 #import <PushKit/PushKit.h>                    /* <------ add this line */
 #import "RNVoipPushNotificationManager.h"
-#import <React/RCTLinkingManager.h>
 /* config momo sdk**/
 #import "RNMomosdk.h"
 
