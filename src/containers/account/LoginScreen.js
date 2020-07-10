@@ -205,23 +205,24 @@ class LoginScreen extends Component {
 											<TextField
 
 												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-													keyboardType='numeric'
-													maxLength={10}
+													// keyboardType='numeric'
+													// maxLength={10}
 													placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 													inputStyle={styles.textInputStyle}
 													placeholderTextColor='#000'
+													autoCapitalize={"none"}
 													placeholderStyle={{ fontWeight: '300', fontSize: 16 }}
-													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+													labelStyle={styles.labelStyle} placeholder={"Số điện thoại/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={s => this.setState({ phone: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
 														required: true,
-														phone: true
+														// phone: true
 													},
 													messages: {
 														required: "Số điện thoại không được bỏ trống",
-														phone: "SĐT không hợp lệ"
+														// phone: "SĐT không hợp lệ"
 													}
 												}}
 											/>
@@ -410,7 +411,6 @@ const styles = StyleSheet.create({
 		borderColor: '#CCCCCC',
 		fontSize: 20,
 		paddingLeft: 15,
-		paddingRight: 45,
 
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
