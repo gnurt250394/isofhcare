@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import { View, Text, Platform, DeviceEventEmitter, NativeModules, NativeEventEmitter, StyleSheet, TouchableOpacity } from 'react-native'
-import RNMomosdk from 'react-native-momosdk';
+// import RNMomosdk from 'react-native-momosdk';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import voucherProvider from '@data-access/voucher-provider'
 import snackbar from '@utils/snackbar-utils';
 import NavigationService from '@navigators/NavigationService'
-const RNMomosdkModule = NativeModules.RNMomosdk;
-const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
+// const RNMomosdkModule = NativeModules.RNMomosdk;
+// const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
 
 import constants from '@resources/strings'
 const ButtonPayment = ({
@@ -19,34 +19,34 @@ const ButtonPayment = ({
     createBooking,
 }) => {
     const isChecking = useRef(true)
-    useEffect(() => {
-        EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
-            try {
-                console.log("<MoMoPay>Listen.Event::", response);
-                if (response && response.status == 0) {
-                    //SUCCESS: continue to submit momoToken,phonenumber to server
-                    let fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
-                    let momoToken = response.data;
-                    let phonenumber = response.phonenumber;
-                    let message = response.message;
-                    let orderId = response.refOrderId;
-                    createBooking(phonenumber, momoToken)
-                } else {
-                    //let message = response.message;
-                    //Has Error: show message here
-                }
-            } catch (ex) { }
-        });
-        //OPTIONAL
-        EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenState', (response) => {
-            console.log("<MoMoPay>Listen.RequestTokenState:: " + response.status);
-            // status = 1: Parameters valid & ready to open MoMo app.
-            // status = 2: canOpenURL failed for URL MoMo app 
-            // status = 3: Parameters invalid
-        })
-        return () => {
-        }
-    }, [])
+    // useEffect(() => {
+    //     EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
+    //         try {
+    //             console.log("<MoMoPay>Listen.Event::", response);
+    //             if (response && response.status == 0) {
+    //                 //SUCCESS: continue to submit momoToken,phonenumber to server
+    //                 let fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
+    //                 let momoToken = response.data;
+    //                 let phonenumber = response.phonenumber;
+    //                 let message = response.message;
+    //                 let orderId = response.refOrderId;
+    //                 createBooking(phonenumber, momoToken)
+    //             } else {
+    //                 //let message = response.message;
+    //                 //Has Error: show message here
+    //             }
+    //         } catch (ex) { }
+    //     });
+    //     //OPTIONAL
+    //     EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenState', (response) => {
+    //         console.log("<MoMoPay>Listen.RequestTokenState:: " + response.status);
+    //         // status = 1: Parameters valid & ready to open MoMo app.
+    //         // status = 2: canOpenURL failed for URL MoMo app 
+    //         // status = 3: Parameters invalid
+    //     })
+    //     return () => {
+    //     }
+    // }, [])
 
     // TODO: Action to Request Payment MoMo App
     const requestPaymentMomo = async () => {
