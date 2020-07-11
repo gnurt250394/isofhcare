@@ -208,7 +208,7 @@ class SearchIcdScreen extends Component {
         return (
             <ActivityPanel
                 transparent={true}
-                title={'Tra cứu mã ICD bệnh'}
+                title={'Tra cứu mã bệnh'}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput

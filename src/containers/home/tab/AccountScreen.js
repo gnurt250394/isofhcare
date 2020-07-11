@@ -312,7 +312,7 @@ class AccountScreen extends Component {
                   width={32}
                   height={32}
                 />
-                <Text style={styles.itemText}>Y bạ điện tử</Text>
+                <Text style={styles.itemText}>Hồ sơ sức khoẻ</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               <View style={styles.borderMenu}></View>

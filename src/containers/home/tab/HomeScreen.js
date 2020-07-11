@@ -107,7 +107,7 @@ class HomeScreen extends Component {
         },
         {
           icon: require('@images/new/homev2/ic_ehealth.png'),
-          text: 'Y bạ điện tử',
+          text: 'Hồ sơ sức khoẻ',
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('ehealth');
@@ -160,7 +160,7 @@ class HomeScreen extends Component {
         // },
         {
           icon: require("@images/new/homev2/ic_icd.png"),
-          text: "ICD Bệnh",
+          text: "Tra cứu mã bệnh",
           onPress: () => {
             this.props.navigation.navigate("searchIcd");
 
