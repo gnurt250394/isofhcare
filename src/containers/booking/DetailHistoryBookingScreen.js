@@ -331,7 +331,7 @@ class DetailHistoryBookingScreen extends Component {
     ) {
       return true;
     } else {
-      return true;
+      return false;
     }
   };
   renderAcademic = academicDegree => {
