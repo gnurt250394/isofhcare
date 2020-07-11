@@ -141,7 +141,7 @@ const HistoryCumulativeScreen = () => {
         onEndReached={loadMore}
         onEndReachedThreshold={0.6}
         onRefresh={onRefresh}
-        ListEmptyComponent={listEmpty}
+        // ListEmptyComponent={listEmpty}
         refreshing={state.refreshing}
         ListFooterComponent={listFooter}
         keyExtractor={(item, index) => item + index}

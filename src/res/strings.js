@@ -21,7 +21,7 @@ module.exports = {
   password: "Mật khẩu",
   forgot_password: "QUÊN MẬT KHẨU",
   finish: "HOÀN THÀNH",
-  ehealth: "Y bạ điện tử",
+  ehealth: "Hồ sơ sức khoẻ",
   booking: "Đặt lịch",
   home: "Trang chủ",
   account: "Tài khoản",
@@ -117,6 +117,16 @@ module.exports = {
     expired_voucher: 'Hạn sử dụng',
     quantity_voucher: 'Số lần sử dụng',
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?'
+  },
+  momo_config: {
+    enviroment: "0",                    //"0": SANBOX , "1": PRODUCTION
+    action: 'gettoken',                 // DO NOT EDIT
+    partner: 'merchant',                // DO NOT EDIT
+    app_scheme: 'momocomu20200526',      // get from info account in web momo 
+    partner_name: 'Bệnh viện Phổi TW',
+    partner_code: 'MOMOCOMU20200526',
+    partner_label: 'Người nhận',
+    order_label: 'Mã khám bệnh',
   },
   qr_code: {
     move_camera: 'Di chuyển camera đến vùng chứa mã QR để quét',
@@ -304,7 +314,7 @@ module.exports = {
         ask_requests: 'Tư vấn - đặt câu hỏi',
         booking: 'Đặt khám',
         get_quick_number: 'Lấy số nhanh',
-        ehealth: "Y bạ điện tử",
+        ehealth: "Hồ sơ sức khoẻ",
         transfer_payments: 'Thanh toán chuyển khoản'
       },
       notifi: "THÔNG BÁO"
@@ -548,10 +558,18 @@ module.exports = {
       none_image: 'Không có ảnh nào'
     }
   },
+  PAYMENT_METHOD: {
+    VNPAY: "VNPAY",
+    CASH: "CASH",
+    MOMO: "MOMO",
+    //PAYOO: "PAYOO";
+    BANK_TRANSFER: "BANK_TRANSFER",
+    NONE:"NONE"
+  },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
     VNPAY: 'VNPAY',
-    PAYOO: 'PAYOO',
+    MOMO: 'Thanh toán qua ví MoMo',
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT'
@@ -704,7 +722,7 @@ module.exports = {
     modal_confirm: 'OK, XONG',
     suggestion: 'Suggestion',
     re_examination: 'Lịch tái khám',
-    share_ehealth: "Chia sẻ y bạ",
+    share_ehealth: "Chia sẻ hồ sơ",
     note: 'Ghi chú',
     clock: 'Thời gian',
     redmine_drug: 'Nhắc uống thuốc',
@@ -749,7 +767,7 @@ module.exports = {
     share_with_isofhcare: 'Chia sẻ trên hồ sơ iSofHcare',
     share_with_app_other: 'Chia sẻ trên ứng dụng khác',
     history_share: 'Lịch sử chia sẻ',
-    my_ehealth: 'Y bạ điện tử của tôi',
+    my_ehealth: 'Hồ sơ sức khoẻ của tôi',
     specialist_searched: 'Chuyên khoa được tìm kiếm',
     see_all: 'Xem tất cả',
     symptom_searched: 'Triệu chứng được tìm nhiều'
@@ -771,14 +789,14 @@ module.exports = {
 
   },
   title: {
-    ehealth: 'Y BẠ ĐIỆN TỬ',
+    ehealth: 'HỒ SƠ SỨC KHOẺ',
     uploadEhealth: 'NHẬP KẾT QUẢ KHÁM',
-    list_profile_ehealth: 'HỒ SƠ Y BẠ GIA ĐÌNH',
+    list_profile_ehealth: 'HỒ SƠ SỨC KHOẺ GIA ĐÌNH',
     search_profile: 'Chọn hồ sơ',
-    ehealth_details: 'CHI TIẾT Y BẠ',
-    create_booking_success: 'Đặt khám thành công',
+    ehealth_details: 'CHI TIẾT HỒ SƠ',
+    create_booking_success: 'Chi tiết lịch đặt khám',
     patient_history_screen: 'Lịch sử đặt lịch',
-    booking: "Đặt khám",
+    booking: "Thông tin đặt khám",
     location_near: 'Địa điểm gần bạn',
     select_profile: 'Tất cả hồ sơ',
     select_service_type: "Chọn loại dịch vụ",
@@ -787,7 +805,7 @@ module.exports = {
     change_password: 'Đổi mật khẩu',
     result_ehealth: "KẾT QUẢ KHÁM",
     result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH",
-    verification_booking: 'Xác nhận lịch khám',
+    verification_booking: 'Chọn phương thức thanh toán',
     filter: 'Lọc',
     select_specialist: 'Chọn chuyên khoa',
     select_time: 'Chọn thời gian',
@@ -827,7 +845,7 @@ module.exports = {
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
     my_family: 'Thành viên gia đình',
-    medical_records: 'Y bạ điện tử',
+    medical_records: 'Hồ sơ sức khoẻ',
     pay_history: 'Lịch sử giao dịch',
     drug_odered: 'Thuốc đã đặt mua',
     examination_schedule: 'Lịch khám',

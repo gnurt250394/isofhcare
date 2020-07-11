@@ -23,6 +23,9 @@
 #import "RNCallKeep.h"
 #import <PushKit/PushKit.h>                    /* <------ add this line */
 #import "RNVoipPushNotificationManager.h"
+/* config momo sdk**/
+#import "RNMomosdk.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -66,13 +69,22 @@
 #endif
 }
 
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-  return [RCTLinkingManager application:application openURL:url
-                      sourceApplication:sourceApplication annotation:annotation];
+/* config momo sdk **/
+/*iOS 9 or newest*/
+-(BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
+    [RNMomosdk handleOpenUrl:url];
+    return YES;
 }
+
+/*iOS 8 or lower*/
+-(BOOL)application:(UIApplication *)application
+             openURL:(NSURL *)url
+   sourceApplication:(NSString *)sourceApplication
+          annotation:(id)annotation;{
+    [RNMomosdk handleOpenUrl:url];
+    return YES;
+}
+
 
 // Only if your app is using [Universal Links](https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/AppSearch/UniversalLinks.html).
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
