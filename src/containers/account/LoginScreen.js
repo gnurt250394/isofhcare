@@ -210,7 +210,7 @@ class LoginScreen extends Component {
 													placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 													inputStyle={styles.textInputStyle}
 													placeholderTextColor='#000'
-													autoCapitalize={false}
+													autoCapitalize={"none"}
 													placeholderStyle={{ fontWeight: '300', fontSize: 16 }}
 													labelStyle={styles.labelStyle} placeholder={"Số điện thoại/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={s => this.setState({ phone: s })}
