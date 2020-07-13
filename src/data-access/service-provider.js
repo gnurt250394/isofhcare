@@ -70,7 +70,7 @@ export default {
                 })
         })
     },
-    getListServices(hospitalId,isOnline, medicalName, categoryId, status, lat, lon, page, size) {
+    getListServices(hospitalId,isOnline, medicalName, categoryId, status, lat, lon, page, size, onlyHospitalService) {
         let parameters =
             (typeof isOnline != 'undefined' ? 'isOnline=' + isOnline + '&' : '') +
             (medicalName ? 'medicalName=' + medicalName + '&' : '') +
@@ -79,6 +79,7 @@ export default {
             (status ? 'status=' + status + '&' : '') +
             (lat ? 'lat=' + lat + '&' : '') +
             (lon ? 'lon=' + lon + '&' : '') +
+            (onlyHospitalService ? 'onlyHospitalService=' + onlyHospitalService + '&' : '') +
             (page != null || page != undefined ? 'page=' + page + '&' : '') +
             (size ? 'size=' + size : '')
         return new Promise((resolve, reject) => {
