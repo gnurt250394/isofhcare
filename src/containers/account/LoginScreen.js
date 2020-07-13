@@ -206,7 +206,7 @@ class LoginScreen extends Component {
 
 												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 													// keyboardType='numeric'
-													maxLength={10}
+													// maxLength={10}
 													placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 													inputStyle={styles.textInputStyle}
 													placeholderTextColor='#000'
@@ -218,11 +218,11 @@ class LoginScreen extends Component {
 												validate={{
 													rules: {
 														required: true,
-														phone: true
+														// phone: true
 													},
 													messages: {
 														required: "Số điện thoại không được bỏ trống",
-														phone: "SĐT không hợp lệ"
+														// phone: "SĐT không hợp lệ"
 													}
 												}}
 											/>
