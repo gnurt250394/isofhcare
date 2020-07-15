@@ -115,9 +115,9 @@ class CreateProfileTicketScreen extends Component {
             this.setState({
               image
             });
-            imageProvider.upload(this.state.image.path,this.state.image.mime, (s, e) => {
+            imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
               if (s.success && s.data.code == 0) {
-                let images = s.data.data.images[0].thumbnail;
+                let images = s.data[0].fileDownloadUri;
                 this.setState({
                   imgLocal: images
                 });
@@ -197,9 +197,9 @@ class CreateProfileTicketScreen extends Component {
     }
     if (this.state.image)
       this.setState({ isLoading: true }, () => {
-        imageProvider.upload(this.state.image.path,this.state.image.mime, (s, e) => {
+        imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
           if (s.success && s.data.code == 0) {
-            let image = s.data.data.images[0].thumbnail;
+            let image = s.data[0].fileDownloadUri;
             this.onUpdate2(image);
           }
           if (e) {
@@ -268,7 +268,7 @@ class CreateProfileTicketScreen extends Component {
     );
     const icSupport = require("@images/new/user.png");
     const source = this.state.imgLocal
-      ? { uri: this.state.imgLocal.absoluteUrl() }
+      ? { uri: this.state.imgLocal }
       : icSupport;
 
     return (

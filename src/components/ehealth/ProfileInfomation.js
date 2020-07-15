@@ -33,7 +33,7 @@ class ProfileInfomation extends Component {
         let serviceCheckup = (resultDetail.ListService || []).find(item => item.ServiceType == "CheckUp");
         const icSupport = require("@images/new/user.png");
         const source = this.props.ehealth.patient.avatar
-            ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
+            ? { uri: this.props.ehealth.patient.avatar }
             : icSupport;
         const hospital = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital : this.props.ehealth.hospital
         console.log('hospital: ', hospital);

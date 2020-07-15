@@ -109,8 +109,8 @@ class ProfileScreen extends Component {
                 imageProvider.upload(image.path, (s, e) => {
                     console.log(JSON.stringify(s))
                     if (s && s.data.code == 0) {
-                        this.setState({ avatar: s.data.data.images[0].thumbnail }, () => {
-                            this.state.user.avatar = s.data.data.images[0].thumbnail
+                        this.setState({ avatar: s.data[0].fileDownloadUri }, () => {
+                            this.state.user.avatar = s.data[0].fileDownloadUri
                             this.props.dispatch(redux.userLogin(this.state.user));
                             this.setState({ isLoading: false });
                         });
@@ -145,7 +145,7 @@ class ProfileScreen extends Component {
                 { rotateY: this.backInterpolate }
             ]
         }
-        const source = this.state.avatar ? { uri: this.state.avatar.absoluteUrl() } : icSupport;
+        const source = this.state.avatar ? { uri: this.state.avatar } : icSupport;
         return (
             <ActivityPanel style={styles.container} title={constants.account_screens.info} showFullScreen={true} isLoading={this.state.isLoading}>
                 <ImageBackground source={bgImage} style={styles.imgBackground}>

@@ -22,7 +22,7 @@ class DrugDetailScreen extends Component {
         return <View style={styles.containerItemPaper} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
             <ImageLoad
                 resizeMode="contain"
-                source={{ uri: item ? item.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
+                source={{ uri: item ? item : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
         </View>
     }
     getType(category) {

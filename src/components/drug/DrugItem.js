@@ -25,17 +25,17 @@ class DrugItem extends Component {
     let imageHeight = imageWidth / 1.5;
     return (
       <View key={index} style={styles.viewItem}>
-        <View style={[styles.view_image,{width:imageWidth,height:imageHeight}]}>
+        <View style={[styles.view_image, { width: imageWidth, height: imageHeight }]}>
           <Image
             resizeMode="cover"
-            source={{ uri: item.image.absoluteUrl() }}
-            style={[styles.customImg, { width:imageWidth, height: imageHeight }]}
+            source={{ uri: item.image }}
+            style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
         </View>
         <Card style={styles.viewDetails}>
-          <View style={[styles.viewContents,{justifyContent:'space-between'}]}><Text  style={styles.txName}>{item.name && item.name.length > 30 ? item.name.substring(0,29) + "..."
-                        : item.name}</Text><Text style={styles.underLine}><Text style={styles.txPriceOld}>{item.priceOld.formatPrice()}đ</Text></Text></View>
-          <View style={[styles.viewContents,{justifyContent:'space-between'}]}><StarRating
+          <View style={[styles.viewContents, { justifyContent: 'space-between' }]}><Text style={styles.txName}>{item.name && item.name.length > 30 ? item.name.substring(0, 29) + "..."
+            : item.name}</Text><Text style={styles.underLine}><Text style={styles.txPriceOld}>{item.priceOld.formatPrice()}đ</Text></Text></View>
+          <View style={[styles.viewContents, { justifyContent: 'space-between' }]}><StarRating
             disabled={true}
             starSize={12}
             maxStars={5}
@@ -48,11 +48,11 @@ class DrugItem extends Component {
             <TouchableOpacity style={styles.btnStore}>
               <ScaledImage height={14} source={require('@images/new/home/ic_store.png')}></ScaledImage>
               <Text style={styles.txStore}>Đặt hàng ngay</Text>
-              <ScaledImage height={4} style={{ marginLeft: 5,marginTop:5 }} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
+              <ScaledImage height={4} style={{ marginLeft: 5, marginTop: 5 }} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
             </TouchableOpacity>
             {
               item.isPropose ?
-                <ScaledImage style={{marginHorizontal:12}} height={15} source={require('@images/new/home/ic_hearth.png')}></ScaledImage> : null
+                <ScaledImage style={{ marginHorizontal: 12 }} height={15} source={require('@images/new/home/ic_hearth.png')}></ScaledImage> : null
             }
           </View>
         </Card>

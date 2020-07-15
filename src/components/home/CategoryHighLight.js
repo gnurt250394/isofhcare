@@ -83,7 +83,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={item?.image?.absoluteUrl() || ''}
+                        uri={item?.image || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />

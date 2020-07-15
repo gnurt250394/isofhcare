@@ -32,13 +32,13 @@ class HospitalItem extends Component {
           <Image
             resizeMode="cover"
             //   source={require('@images/new/home/banner_drug_test.png')}
-            source={{ uri: item.imageHome ? item.imageHome.absoluteUrl() : '' }}
+            source={{ uri: item.imageHome ? item.imageHome : '' }}
 
             style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
           {this.props.isHopitalNear ? (
-            parseFloat(item.distance) < 1 ? <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{(parseFloat(item.distance).toFixed(2) * 1000)+'m'}</Text></View> : <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{parseFloat(item.distance).toFixed(1) + 'km'}</Text></View> )
-           : (null)}
+            parseFloat(item.distance) < 1 ? <View style={styles.viewDistance}><Text style={{ color: '#fff', fontSize: 12 }}>{(parseFloat(item.distance).toFixed(2) * 1000) + 'm'}</Text></View> : <View style={styles.viewDistance}><Text style={{ color: '#fff', fontSize: 12 }}>{parseFloat(item.distance).toFixed(1) + 'km'}</Text></View>)
+            : (null)}
         </View>
         <Card style={[styles.viewDetails]}>
           <Text style={styles.nameHospital} numberOfLines={2}>{item.name}</Text>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  viewDistance:{position: 'absolute',top:10,right:10,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:2,paddingHorizontal:2},
+  viewDistance: { position: 'absolute', top: 10, right: 10, backgroundColor: 'rgba(0, 0, 0, 0.5)', borderRadius: 2, paddingHorizontal: 2 },
   customImg: {
     borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5,
   },

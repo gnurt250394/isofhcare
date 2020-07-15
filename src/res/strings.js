@@ -882,7 +882,7 @@ module.exports = {
       getAllProvince: isofhcare_service + "province/get-all",
     },
     upload: {
-      image: isofhcare_service + "upload/image"
+      image: "images"
     },
     user: {
       login: isofhcare_service + "user/login",

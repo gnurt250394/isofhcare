@@ -274,7 +274,7 @@ class DetailsDoctorScreen extends Component {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
     const source = profileDoctor && profileDoctor.imagePath
-      ? { uri: profileDoctor.imagePath.absoluteUrl() }
+      ? { uri: profileDoctor.imagePath }
       : icSupport;
     return (
       <ActivityPanel

@@ -166,7 +166,7 @@ class SelectProfileScreen extends Component {
         }
     }
     renderItem = ({ item, index }) => {
-        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar } : require("@images/new/user.png");
 
         return (
             <View style={styles.containerItem}>

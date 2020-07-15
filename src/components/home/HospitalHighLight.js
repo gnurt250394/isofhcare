@@ -31,14 +31,14 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
     }, [refreshing])
     const goToDetailService = (item) => () => {
 
-            navigation.navigate('profileHospital', { item })
+        navigation.navigate('profileHospital', { item })
     }
     const renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity onPress={goToDetailService(item)}  style={{ flex: 1 }}>
+            <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={item.imageHome.absoluteUrl()}
+                        uri={item.imageHome}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
     cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, width: 259 },
-    txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259,fontWeight:'bold' },
+    txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259, fontWeight: 'bold' },
 
 });
 export default HospitalHighLight

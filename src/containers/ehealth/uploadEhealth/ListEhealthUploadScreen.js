@@ -83,7 +83,7 @@ class ListEhealthUpload extends Component {
         });
     }
     renderItem = ({ item, index }) => {
-        const source = item.hospitalImage ? { uri:  item.hospitalImage.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.hospitalImage ? { uri: item.hospitalImage } : require("@images/new/user.png");
 
         return (
             <Card style={styles.viewItem}>
@@ -126,7 +126,7 @@ class ListEhealthUpload extends Component {
         this.props.navigation.navigate('createEhealth')
     }
     renderFooter = () => {
-        return(
+        return (
             <View style={{ height: 50 }}></View>
         )
     }
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     },
     viewTx: { marginLeft: 10, flex: 1 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15, },
-    txServiceName: { color: '#5A5956', fontSize: 14,marginRight:5 },
+    txServiceName: { color: '#5A5956', fontSize: 14, marginRight: 5 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 
     viewContent: {

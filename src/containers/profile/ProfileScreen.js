@@ -78,7 +78,7 @@ class ProfileScreen extends Component {
                             imageProvider.upload(this.state.imageAvt.path, null, (s, e) => {
 
                                 if (s.success && s.data.code == 0) {
-                                    let images = s.data.data.images[0].thumbnail;
+                                    let images = s.data[0].fileDownloadUri;
                                     this.setState({
                                         imgAvtLocal: images
                                     });
@@ -103,7 +103,7 @@ class ProfileScreen extends Component {
     //         this.setState({ isLoading: true }, () => {
     //             imageProvider.upload(this.state.imageAvt.path, (s, e) => {
     //                 if (s.success && s.data.code == 0) {
-    //                     let image = s.data.data.images[0].thumbnail;
+    //                     let image = s.data[0].fileDownloadUri;
     //                     this.onUpdateAvt2(image);
     //                 }
     //                 if (e) {
@@ -387,7 +387,7 @@ class ProfileScreen extends Component {
         const icSupport = require("@images/new/user.png");
         const details = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
         const sourceAvt = this.state.imgAvtLocal
-            ? { uri: this.state.imgAvtLocal.absoluteUrl() }
+            ? { uri: this.state.imgAvtLocal }
             : icSupport
         return (
             <ActivityPanel

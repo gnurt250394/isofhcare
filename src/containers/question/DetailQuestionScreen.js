@@ -63,10 +63,10 @@ class DetailQuestionScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    showImage = (images,index) => () => {
+    showImage = (images, index) => () => {
         this.props.navigation.navigate("photoViewer", {
-            urls:images.map(item => {
-                return { 'uri': item.absoluteUrl() }
+            urls: images.map(item => {
+                return { 'uri': item }
             }), index
         });
     }
@@ -78,11 +78,11 @@ class DetailQuestionScreen extends Component {
                 <Text style={[styles.moreInfo, { marginTop: 20 }]}>{constants.image}:</Text>
                 <View style={styles.containerListImage}>
                     {
-                        images.map((item, index) => <TouchableOpacity onPress={this.showImage(images,index)} key={index} style={styles.buttonShowImage}>
+                        images.map((item, index) => <TouchableOpacity onPress={this.showImage(images, index)} key={index} style={styles.buttonShowImage}>
                             <Image
                                 style={styles.image}
                                 source={{
-                                    uri: item.absoluteUrl()
+                                    uri: item
                                 }}
                                 resizeMode={'cover'}
                             />
@@ -182,7 +182,7 @@ class DetailQuestionScreen extends Component {
     showItemComment(item, key, size) {
         if (!item.user)
             return null;
-        const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.user && item.user.avatar ? { uri: item.user.avatar } : require("@images/new/user.png");
         return <View key={key}>
             {item.user &&
                 <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={styles.buttonShowDetails}>

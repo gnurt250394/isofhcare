@@ -49,7 +49,7 @@ class HistoryEhealthScreen extends Component {
             }).catch(err => {
                 snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', "danger");
                 this.setState({
-                    isLoading:false
+                    isLoading: false
                 })
             });
         });
@@ -132,7 +132,7 @@ class HistoryEhealthScreen extends Component {
         )
     }
     render() {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png");
 
         return (
             <ActivityPanel style={styles.container}

@@ -358,7 +358,7 @@ class CreateProfileScreen extends Component {
         );
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal.absoluteUrl() }
+            ? { uri: this.state.imgLocal }
             : icSupport;
 
         return (

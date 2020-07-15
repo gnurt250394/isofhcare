@@ -43,7 +43,7 @@ class TheirMessage extends React.Component {
                 createdDate: new Date()
             }
         const chatProfile = this.props.chatProfile;
-        let avatar = chatProfile && chatProfile.avatar ? chatProfile.avatar.absoluteUrl() : "";
+        let avatar = chatProfile && chatProfile.avatar ? chatProfile.avatar : "";
         return (
             <View style={{ marginBottom: this.props.isLast ? 30 : 0 }}>
                 {
@@ -75,13 +75,13 @@ class TheirMessage extends React.Component {
 
                         {
                             this.props.message.type == 4 ?
-                                <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message.absoluteUrl() : "")}>
+                                <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message : "")}>
                                     <ImageLoad
                                         resizeMode="cover"
                                         placeholderSource={require("@images/noimage.jpg")}
                                         style={{ width: 150, height: 150 }}
                                         loadingStyle={{ size: 'small', color: 'gray' }}
-                                        source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
+                                        source={{ uri: message.message ? message.message : "" }}
                                         defaultImage={() => {
                                             return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={150} />
                                         }}

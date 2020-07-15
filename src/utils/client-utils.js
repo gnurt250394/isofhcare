@@ -10,7 +10,7 @@ const server_url = "http://123.24.206.9:9451"; //dev
 // const server_url = "http://34.95.91.81"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
-const resource_url = "https://storage.googleapis.com/isofh-care-dev/"; //test
+const resource_url = "http://10.0.50.86:8288/v1/"; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
 
@@ -53,7 +53,7 @@ String.prototype.absoluteUrl =
     // if(this.startsWith("user"))
 
     //     return
-    return server_url + _this + "";
+    return 'http://10.0.50.86:8288/v1/' + _this + "";
   };
 
 String.prototype.getServiceUrl =
@@ -68,14 +68,15 @@ String.prototype.getServiceUrl =
     if (_this.indexOf("http") == 0 || _this.indexOf("blob") == 0) {
       return _this;
     }
-    return server_url + _this;
+    return 'http://10.0.50.86:8288/v1/' + _this;
   };
 
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
-  serviceSchedule: "http://123.24.206.9:8080/",
-  serviceBooking: "http://123.24.206.9:8082/",
+  serviceSchedule: "http://123.24.206.9:12032/",
+  serviceBooking: "http://123.24.206.9:12033/",
+  serviceImage: "http://10.0.50.86:8288/v1/",
   response: {
     ok(data, message) {
       if (!message) message = "";
@@ -95,7 +96,7 @@ module.exports = {
   },
   uploadFile(url, uri, type, funRes) {
     const data = new FormData();
-    data.append("file", {
+    data.append("files", {
       uri: uri,
       type: type ? type : "image/jpeg", // or photo.type
       name: uri ? uri.replace(/^.*[\\\/]/, '') : 'test.png'
@@ -103,7 +104,7 @@ module.exports = {
 
     this.requestFetch(
       "post",
-      this.serverApi + url,
+      this.serviceImage + url,
       {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",

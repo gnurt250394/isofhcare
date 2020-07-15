@@ -53,13 +53,13 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
         }
     }
     const renderItem = ({ item, index }) => {
-        const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
+        const source = item.imagePath ? { uri: item.imagePath } : require('@images/new/user.png')
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                 {/* <Card style={{ borderRadius: 5, }}> */}
                 <View style={styles.containerImageDoctor}>
                     <Image
-                        // uri={item.advertise.images.absoluteUrl()}
+                        // uri={item.advertise.images}
                         style={{ borderRadius: 5, width: '100%', height: '100%' }}
                         source={source}
                     // width={DEVICE_WIDTH / 3}

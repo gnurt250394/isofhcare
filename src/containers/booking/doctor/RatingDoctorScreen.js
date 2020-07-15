@@ -22,7 +22,7 @@ class RatingDoctorScreen extends Component {
         const icSupport = require("@images/new/user.png");
         const { profileHospital } = this.state
         const source = profileHospital && profileHospital.imagePath
-            ? { uri: profileHospital.imagePath.absoluteUrl() }
+            ? { uri: profileHospital.imagePath }
             : icSupport;
         return (
             <ActivityPanel
@@ -101,7 +101,7 @@ export default RatingDoctorScreen;
 const styles = StyleSheet.create({
     imgDefault: { width: 50, height: 50, alignSelf: "center" },
     boderImage: { borderRadius: 25, borderWidth: 2, borderColor: '#00CBA7' },
-    avatar: { width: 50, height: 50,borderRadius: 25, alignSelf: "flex-start", },
+    avatar: { width: 50, height: 50, borderRadius: 25, alignSelf: "flex-start", },
     imgPlaceHoder: {
         width: 50,
         height: 50,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         height: 150,
         textAlignVertical: 'top',
-        color:'#000'
+        color: '#000'
     },
     txtNameDoctor: {
         color: '#00CBA7',

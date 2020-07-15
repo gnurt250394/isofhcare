@@ -264,7 +264,7 @@ class DetailsDrugScreen extends Component {
                         {
                             dataDetail.images.map((item, index) => <View key={index} style={styles.containerImagePicker}>
                                 <View style={styles.groupImagePicker}>
-                                    <Image source={{ uri: item.pathThumbnail.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
+                                    <Image source={{ uri: item.pathThumbnail }} resizeMode="cover" style={styles.imagePicker} />
                                     {
                                         item.error ?
                                             <View style={styles.groupImageError} >
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     txTitle: { color: '#fff', marginLeft: 50, fontSize: 18 },
-    txTitleStore:{color: '#000', fontSize: 18,fontWeight:'bold'},
+    txTitleStore: { color: '#000', fontSize: 18, fontWeight: 'bold' },
     txTitleMenu: {
         fontSize: 16,
         fontWeight: 'bold',

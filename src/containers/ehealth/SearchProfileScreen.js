@@ -194,7 +194,7 @@ class SearchProfileScreen extends Component {
                                 resizeMode="cover"
                                 loadingStyle={{ size: "small", color: "gray" }}
                                 source={item.user.avatar
-                                    ? { uri: item.user.avatar.absoluteUrl() }
+                                    ? { uri: item.user.avatar }
                                     : icSupport}
                                 defaultImage={() => {
                                     return (

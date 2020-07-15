@@ -55,7 +55,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <ScaledImage
-                        uri={item?.image?.absoluteUrl() || ''}
+                        uri={item?.image || ''}
                         height={134}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
                     />
@@ -78,7 +78,7 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                             color: '#00000070',
                             paddingBottom: 10
                         }}>{getTime()}</Text>
-                        <Image source={{ uri: detail?.image?.absoluteUrl() || '' }} style={styles.imageNews} />
+                        <Image source={{ uri: detail?.image || '' }} style={styles.imageNews} />
                         {
                             detail?.content ?
                                 <HTML html={'<div style="color: black">' + detail?.content + '</div>'}

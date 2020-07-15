@@ -74,7 +74,7 @@ class ItemDoctorOfHospital extends Component {
         const { item, onPress, onPressDoctor } = this.props
         const icSupport = require("@images/new/user.png");
         const source = item.imagePath
-            ? { uri: item.imagePath.absoluteUrl() }
+            ? { uri: item.imagePath }
             : icSupport;
         return (
             <TouchableOpacity

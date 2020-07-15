@@ -46,9 +46,9 @@ class CreateQuestionStep2Screen extends Component {
             if (s && s.post) {
                 let images = (s.post.images || "").split(',').filter(x => x != "").map(x => {
                     return {
-                        uri: x.absoluteUrl(),
-                        url: x.absoluteUrl(),
-                        thumbnail: x.absoluteUrl(),
+                        uri: x,
+                        url: x,
+                        thumbnail: x,
                         loading: false,
                         error: false
                     }
@@ -107,15 +107,15 @@ class CreateQuestionStep2Screen extends Component {
                         })
                         if (!temp) {
                             imageUris.push({ uri: image.path, loading: true });
-                            imageProvider.upload(image.path,image.mime, (s, e) => {
+                            imageProvider.upload(image.path, image.mime, (s, e) => {
                                 if (s.success) {
-                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                    if (s && s.data.length > 0) {
                                         let imageUris = this.state.imageUris;
                                         imageUris.forEach((item) => {
                                             if (item.uri == s.uri) {
                                                 item.loading = false;
-                                                item.url = s.data.data.images[0].image;
-                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                                item.url = s.data[0].fileDownloadUri;
+                                                item.thumbnail = s.data[0].fileDownloadUri;
                                             }
                                         });
                                         this.setState({
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
         paddingLeft: 7,
         padding: padding,
         borderRadius: 6,
-        color:'#000'
+        color: '#000'
     },
     errorStyle: {
         color: 'red',

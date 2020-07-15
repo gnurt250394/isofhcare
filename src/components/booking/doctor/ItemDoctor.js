@@ -120,7 +120,7 @@ class ItemDoctor extends Component {
     render() {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
-        const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
+        const avatar = item && item.imagePath ? { uri: item.imagePath } : icSupport
         return (
             <View>
                 <TouchableHighlight onPress={onPressDoctor} underlayColor={'#fff'} style={styles.containerItem}>

@@ -31,7 +31,7 @@ class DiseaseDetailScreen extends Component {
         return <View style={styles.containerItemPaper} >
             <ImageLoad
                 resizeMode="contain"
-                source={{ uri: item && item.url ? item.url.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
+                source={{ uri: item && item.url ? item.url : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
         </View>
     }
 

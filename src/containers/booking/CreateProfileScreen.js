@@ -135,7 +135,7 @@ class createProfile extends Component {
             });
             imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
               if (s.success && s.data.code == 0) {
-                let images = s.data.data.images[0].thumbnail;
+                let images = s.data[0].fileDownloadUri;
                 this.setState({
                   imgLocal: images
                 });
@@ -214,7 +214,7 @@ class createProfile extends Component {
       this.setState({ isLoading: true }, () => {
         imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
           if (s.success && s.data.code == 0) {
-            let image = s.data.data.images[0].thumbnail;
+            let image = s.data[0].fileDownloadUri;
             this.onUpdate2(image);
           }
           if (e) {
@@ -290,7 +290,7 @@ class createProfile extends Component {
     );
     const icSupport = require("@images/new/user.png");
     const source = this.state.imgLocal
-      ? { uri: this.state.imgLocal.absoluteUrl() }
+      ? { uri: this.state.imgLocal }
       : icSupport;
 
     return (
