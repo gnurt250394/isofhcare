@@ -419,7 +419,7 @@ class HomeScreen extends Component {
                   </View> : <View style={styles.containerHeadertitle}>
                   </View>} */}
                 <Card style={styles.card}>
-                  <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
+                  <Text style={styles.txBooking}>ĐẶT LỊCH HẸN</Text>
                   <View style={{justifyContent: 'center'}}>
                     <View style={styles.containerButtonBooking}>
                       {this.renderButtonBooking()}
