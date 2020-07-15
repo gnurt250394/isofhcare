@@ -30,7 +30,7 @@ class EditProfileScreen extends Component {
         let zone = data.zone
         this.state = {
             item: data,
-            avatar: data.medicalRecords && data.medicalRecords.avatar ? { uri: data.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png"),
+            avatar: data.medicalRecords && data.medicalRecords.avatar ? { uri: data.medicalRecords.avatar } : require("@images/new/user.png"),
             name: dataProfile && dataProfile.name ? dataProfile.name : '',
             date: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
             txGender: dataProfile && dataProfile.gender == 1 ? 'Nam' : 'Nữ',
@@ -220,13 +220,13 @@ class EditProfileScreen extends Component {
 
                 this.setState({ isLoading: true }, () => {
                     imageProvider
-                        .upload(image.path,image.mime)
+                        .upload(image.path, image.mime)
                         .then(s => {
-                            this.setState({ avatar: { uri: s.data.data.images[0].thumbnail.absoluteUrl(), isLoading: false } })
+                            this.setState({ avatar: { uri: s.data[0].fileDownloadUri, isLoading: false } })
                             // this.setState({ isLoading: false }, () => {
                             //     if (s && s.data.code == 0) {
                             //         let user = objectUtils.clone(this.props.userApp.currentUser);
-                            //         user.avatar = s.data.data.images[0].thumbnail;
+                            //         user.avatar = s.data[0].fileDownloadUri;
                             //         this.setState({ isLoading: true }, () => {
                             //             userProvider
                             //                 .update(this.props.userApp.currentUser.id, user)
@@ -586,7 +586,7 @@ class EditProfileScreen extends Component {
                                                 onPress={this.onSelectRelationShip}
                                                 editable={false}
                                                 inputStyle={[
-                                                    styles.txtValue, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {color:'#00BA99'} : { color: '#8d8d8d' }
+                                                    styles.txtValue, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? { color: '#00BA99' } : { color: '#8d8d8d' }
                                                 ]}
                                                 errorStyle={styles.errorStyle}
                                                 value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
@@ -653,7 +653,7 @@ class EditProfileScreen extends Component {
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={newDate => {
-                        
+
                         this.setState(
                             {
                                 dob: newDate,

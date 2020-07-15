@@ -312,13 +312,13 @@ class CreateEhealthScreen extends Component {
                             imageProvider.upload(image.path, image.mime, (s, e) => {
 
                                 if (s.success) {
-                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                    if (s && s.data.length > 0) {
                                         let imageUris = this.state.imageUris;
                                         imageUris.forEach((item) => {
                                             if (item.uri == s.uri) {
                                                 item.loading = false;
-                                                item.url = s.data.data.images[0].imageLink;
-                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                                item.url = s.data[0].fileDownloadUri;
+                                                item.thumbnail = s.data[0].fileDownloadUri;
                                             }
                                         });
                                         this.setState({

@@ -62,21 +62,21 @@ class EditProfileScreen extends Component {
     componentWillMount() {
         this.renderRelation()
         let dataProfile = this.props.navigation.state.params.data.medicalRecords
-        if(dataProfile.gender == 1){
+        if (dataProfile.gender == 1) {
             this.setState({
-                txGender:'Nam'
+                txGender: 'Nam'
             })
             return
         }
-        if(dataProfile.gender == 0){
+        if (dataProfile.gender == 0) {
             this.setState({
-                txGender:'Nữ'
+                txGender: 'Nữ'
             })
             return
         }
-        if(!dataProfile.gender){
+        if (!dataProfile.gender) {
             this.setState({
-                txGender:'Chưa có giới tính'
+                txGender: 'Chưa có giới tính'
             })
             return
         }
@@ -392,7 +392,7 @@ class EditProfileScreen extends Component {
         );
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal.absoluteUrl() }
+            ? { uri: this.state.imgLocal }
             : icSupport;
 
         return (

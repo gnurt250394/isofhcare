@@ -36,18 +36,18 @@ class Account extends React.Component {
       return null;
     const icSupport = require("@images/new/user.png");
     const source = this.state.avatar
-      ? { uri: this.state.avatar.absoluteUrl() }
+      ? { uri: this.state.avatar }
       : icSupport;
     return (
       <ActivityPanel
-        
+
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin ? (
             <View style={styles.viewHeader}>
-              {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage> */}
+              {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar} height={60} ></ScaledImage> */}
               <View
                 style={{ marginLeft: 15 }}
 

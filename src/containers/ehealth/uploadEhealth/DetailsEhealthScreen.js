@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions, ScrollView} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -94,9 +94,9 @@ class DetailsEhealthScreen extends Component {
     render() {
         const icSupport = require("@images/new/user.png");
         const source = this.state.listEhealth && this.state.listEhealth.medicalRecord && this.state.listEhealth.medicalRecord.avatar
-            ? { uri: this.state.listEhealth.medicalRecord.avatar.absoluteUrl() }
+            ? { uri: this.state.listEhealth.medicalRecord.avatar }
             : icSupport;
-            console.log('source: ', source);
+        console.log('source: ', source);
         return (
             <ActivityPanel
                 titleStyle={{ marginLeft: 50 }}
@@ -107,48 +107,48 @@ class DetailsEhealthScreen extends Component {
                     <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
                 </TouchableOpacity>}
             >
-            <ScrollView>
-                <View style={styles.viewInfoProfile}>
-                    <View style={styles.viewItem}></View>
-                    <View style={styles.viewLabel}>
-                        <View style={[styles.item, { marginTop: 0 }]}>
-                            <View style={styles.round1}>
-                                <View style={styles.round2} />
+                <ScrollView>
+                    <View style={styles.viewInfoProfile}>
+                        <View style={styles.viewItem}></View>
+                        <View style={styles.viewLabel}>
+                            <View style={[styles.item, { marginTop: 0 }]}>
+                                <View style={styles.round1}>
+                                    <View style={styles.round2} />
+                                </View>
+                                <Text style={[styles.itemlabel, styles.txLabel]}>{this.state.listEhealth && this.state.listEhealth.medicalRecord ? this.state.listEhealth.medicalRecord.name : ''}</Text>
                             </View>
-                            <Text style={[styles.itemlabel, styles.txLabel]}>{this.state.listEhealth && this.state.listEhealth.medicalRecord ? this.state.listEhealth.medicalRecord.name : ''}</Text>
-                        </View>
 
-                        <View>
-                            <View style={styles.item}>
-                                <View style={styles.round1}>
-                                    <View style={styles.round3} />
+                            <View>
+                                <View style={styles.item}>
+                                    <View style={styles.round1}>
+                                        <View style={styles.round3} />
+                                    </View>
+                                    <Text style={styles.itemlabel}>{this.state.listEhealth && this.state.listEhealth.hospitalName}</Text>
                                 </View>
-                                <Text style={styles.itemlabel}>{this.state.listEhealth && this.state.listEhealth.hospitalName}</Text>
-                            </View>
-                            <View style={styles.item}>
-                                <View style={styles.round1}>
-                                    <View style={styles.round3} />
+                                <View style={styles.item}>
+                                    <View style={styles.round1}>
+                                        <View style={styles.round3} />
+                                    </View>
+                                    <Text style={styles.itemlabel}>Dịch vụ: <Text style={styles.itemcontent}>{this.state.listEhealth && this.state.listEhealth.medicalServiceName}</Text></Text>
                                 </View>
-                                <Text style={styles.itemlabel}>Dịch vụ: <Text style={styles.itemcontent}>{this.state.listEhealth && this.state.listEhealth.medicalServiceName}</Text></Text>
-                            </View>
-                            <View style={styles.item}>
-                                <View style={styles.round1}>
-                                    <View style={styles.round3} />
+                                <View style={styles.item}>
+                                    <View style={styles.round1}>
+                                        <View style={styles.round3} />
+                                    </View>
+                                    <Text style={styles.itemlabel}>KẾT QUẢ KHÁM</Text>
                                 </View>
-                                <Text style={styles.itemlabel}>KẾT QUẢ KHÁM</Text>
                             </View>
                         </View>
-                    </View>
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.imageStyle}
-                        borderRadius={35}
-                        customImagePlaceholderDefaultStyle={styles.customImage}
-                        placeholderSource={icSupport}
-                        style={styles.imgLoad}
-                        resizeMode="cover"
-                        loadingStyle={{ size: "small", color: "gray" }}
-                        source={source}
+                        <ImageLoad
+                            resizeMode="cover"
+                            imageStyle={styles.imageStyle}
+                            borderRadius={35}
+                            customImagePlaceholderDefaultStyle={styles.customImage}
+                            placeholderSource={icSupport}
+                            style={styles.imgLoad}
+                            resizeMode="cover"
+                            loadingStyle={{ size: "small", color: "gray" }}
+                            source={source}
                         // defaultImage={() => {
                         //     return (
                         //         <ScaledImage
@@ -159,38 +159,38 @@ class DetailsEhealthScreen extends Component {
                         //         />
                         //     );
                         // }}
-                    />
-                </View>
-                <Card style={{ borderRadius: 5, borderWidth: 1, alignItem: 'center', flex: 1, marginHorizontal: 10 }}>
-                    <Text style={{ textAlign: 'left', marginVertical: 20, color: '#000', fontSize: 16 ,marginHorizontal:10}}>{this.state.listEhealth && this.state.listEhealth.result}</Text>
-                    {this.state.listEhealth && this.state.listEhealth.images && this.state.listEhealth.images.length
-                        ?
-                        <View >
-                            <View style={styles.list_image}>
-                                {
-                                    this.state.listEhealth.images.map((item, index) => <TouchableOpacity onPress={() => this.showImage(this.state.listEhealth.images, index)} key={index} style={styles.containerImagePicker}>
-                                        <View style={styles.groupImagePicker}>
-                                            {item ? <Image source={{ uri: item }} resizeMode="cover" style={styles.imagePicker} /> : null}
-                                            {
-                                                item.error ?
-                                                    <View style={styles.groupImageError} >
-                                                        <ScaledImage source={require("@images/ic_warning.png")} width={40} />
-                                                    </View> :
-                                                    item.loading ?
-                                                        <View style={styles.groupImageLoading} >
-                                                            <ScaledImage source={require("@images/loading.gif")} width={40} />
-                                                        </View>
-                                                        : null
-                                            }
-                                        </View>
-                                    </TouchableOpacity>)
-                                }
-                            </View>
-                        </View> : null
-                    }
-                </Card>
+                        />
+                    </View>
+                    <Card style={{ borderRadius: 5, borderWidth: 1, alignItem: 'center', flex: 1, marginHorizontal: 10 }}>
+                        <Text style={{ textAlign: 'left', marginVertical: 20, color: '#000', fontSize: 16, marginHorizontal: 10 }}>{this.state.listEhealth && this.state.listEhealth.result}</Text>
+                        {this.state.listEhealth && this.state.listEhealth.images && this.state.listEhealth.images.length
+                            ?
+                            <View >
+                                <View style={styles.list_image}>
+                                    {
+                                        this.state.listEhealth.images.map((item, index) => <TouchableOpacity onPress={() => this.showImage(this.state.listEhealth.images, index)} key={index} style={styles.containerImagePicker}>
+                                            <View style={styles.groupImagePicker}>
+                                                {item ? <Image source={{ uri: item }} resizeMode="cover" style={styles.imagePicker} /> : null}
+                                                {
+                                                    item.error ?
+                                                        <View style={styles.groupImageError} >
+                                                            <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                                        </View> :
+                                                        item.loading ?
+                                                            <View style={styles.groupImageLoading} >
+                                                                <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                                            </View>
+                                                            : null
+                                                }
+                                            </View>
+                                        </TouchableOpacity>)
+                                    }
+                                </View>
+                            </View> : null
+                        }
+                    </Card>
                 </ScrollView>
-                <View style= {{height:50}}></View>
+                <View style={{ height: 50 }}></View>
             </ActivityPanel >
         )
     }

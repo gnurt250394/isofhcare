@@ -133,7 +133,7 @@ class TicketHistory extends Component {
         let informationUserHospital = item.informationUserHospital;
         let info = this.getInfo(informationUserHospital.scanCode);
         const icSupport = require("@images/new/user.png");
-        const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
+        const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : icSupport) : icSupport;
 
         return (
             <View>

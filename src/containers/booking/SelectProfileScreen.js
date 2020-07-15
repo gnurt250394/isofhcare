@@ -26,7 +26,7 @@ class SelectProfileScreen extends Component {
     onRefresh(refreshing) {
         if (!refreshing)
             this.setState(
-                { refreshing: true},
+                { refreshing: true },
                 () => {
                     this.onLoad();
                 }
@@ -131,7 +131,7 @@ class SelectProfileScreen extends Component {
         return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
     }
     renderItem = ({ item, index }) => {
-        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar } : require("@images/new/user.png");
 
         return (<TouchableOpacity style={styles.bn} disabled={this.state.disable} onPress={this.selectPofile.bind(this, item)}>
             <ImageLoad

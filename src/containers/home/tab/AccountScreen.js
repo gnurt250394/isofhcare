@@ -48,9 +48,11 @@ class AccountScreen extends Component {
   getDetailUser = async () => {
     try {
       let res = await userProvider.detail(this.props.userApp.currentUser.id)
-      console.log('res: ', res);
+
       if (res.code == 0) {
         let user = res.data.user
+        console.log('user: ', user);
+        console.log(this.props.userApp.currentUser, 'this.props.userApp.currentUserthis.props.userApp.currentUser')
         user.bookingNumberHospital = res.data.bookingNumberHospital;
         user.bookingStatus = res.data.bookingStatus;
         if (JSON.stringify(user) != JSON.stringify(this.props.userApp.currentUser))
@@ -58,7 +60,7 @@ class AccountScreen extends Component {
 
       }
     } catch (error) {
-      console.log('error: ', error);
+
 
     }
   }
@@ -83,9 +85,10 @@ class AccountScreen extends Component {
             .upload(image.path, image.mime)
             .then(s => {
               this.showLoading(false, () => {
-                if (s && s.data.code == 0) {
+                if (s && s.data.length) {
                   let user = objectUtils.clone(this.props.userApp.currentUser);
-                  user.avatar = s.data.data.images[0].imageLink;
+                  user.avatar = s.data[0].fileDownloadUri;
+
                   this.showLoading(true, () => {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
@@ -93,10 +96,12 @@ class AccountScreen extends Component {
                         this.showLoading(false, () => { });
                         if (s.code == 0) {
                           var user = s.data.user;
+                          console.log('s.data.user: ', s.data.user);
                           let current = this.props.userApp.currentUser;
                           user.bookingNumberHospital = current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
                           user.avatar = s.data.user.avatar
+
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
@@ -127,8 +132,9 @@ class AccountScreen extends Component {
   renderCurrentUserInfo() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.currentUser.avatar
-      ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
+      ? { uri: this.props.userApp.currentUser.avatar }
       : icSupport;
+
     return (
       <View
         style={styles.viewCurrentUser}
@@ -231,7 +237,7 @@ class AccountScreen extends Component {
     codePushUtils.checkupDate();
   }
   onLogout = async () => {
-    console.log(1111)
+
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }

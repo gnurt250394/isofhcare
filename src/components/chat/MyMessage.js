@@ -50,13 +50,13 @@ class MyMessage extends React.Component {
                     <View style={{ marginLeft: 5, backgroundColor: '#0090ff', padding: 5, borderRadius: 10, minWidth: 120 }}>
                         {
                             this.props.message.type == 4 ?
-                                <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message.absoluteUrl() : "")}>
+                                <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message : "")}>
                                     <ImageLoad
                                         resizeMode="cover"
                                         placeholderSource={require("@images/noimage.jpg")}
                                         style={{ width: 150, height: 150 }}
                                         loadingStyle={{ size: 'small', color: 'gray' }}
-                                        source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
+                                        source={{ uri: message.message ? message.message : "" }}
                                         defaultImage={() => {
                                             return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={150} />
                                         }}

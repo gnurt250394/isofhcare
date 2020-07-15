@@ -48,7 +48,7 @@ class GroupChatItem extends React.Component {
                 }
             }
             firebaseUtils.getGroupName(this.state.userId, groupId).then(x => {
-                let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
+                let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar : "" }
                 this.setState(info);
                 dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
             }).catch(x => {

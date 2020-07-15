@@ -75,7 +75,7 @@ class FilterSpecialistScreen extends Component {
         return <ScaleImage resizeMode='cover' source={require("@images/new/booking/ic_default.png")} width={30} height={30} />
     }
     renderItem = ({ item }) => {
-        const source = item.linkImages ? { uri: item.linkImages.absoluteUrl() } : require("@images/new/booking/ic_default.png");
+        const source = item.linkImages ? { uri: item.linkImages } : require("@images/new/booking/ic_default.png");
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
                 <ImageLoad

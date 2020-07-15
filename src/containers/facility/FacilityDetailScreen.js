@@ -51,9 +51,9 @@ class FacilityDetailScreen extends Component {
         var list_images = [];
         try {
             for (var i = 0; i < images.length; i++) {
-                let url = images[i].url.absoluteUrl();
+                let url = images[i].url;
                 if (url && url.indexOf("blob:") != 0) {
-                    list_images.push(images[i].url.absoluteUrl())
+                    list_images.push(images[i].url)
                 }
             }
         } catch (error) {
@@ -211,7 +211,7 @@ class FacilityDetailScreen extends Component {
 
             this.props.navigation.navigate("photoViewer", {
                 urls: this.state.list_images.map(item => {
-                    return { 'uri': item.absoluteUrl() }
+                    return { 'uri': item }
                 }), index
             });
 
@@ -281,7 +281,7 @@ class FacilityDetailScreen extends Component {
         if (!image)
             image = ".";
         else {
-            image = image.absoluteUrl();
+            image = image;
         }
         console.log(facility);
         return (

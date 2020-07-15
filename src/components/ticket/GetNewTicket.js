@@ -127,7 +127,7 @@ class GetNewTicket extends Component {
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
 
                 <View style={styles.viewImg}>
-                    <ScaledImage style={styles.viewAvt} source={{ uri: item.hospital.avatar.absoluteUrl() }}></ScaledImage>
+                    <ScaledImage style={styles.viewAvt} source={{ uri: item.hospital.avatar }}></ScaledImage>
                     <View style={styles.viewRating}>
                         <StarRating
                             disabled={true}
@@ -192,7 +192,7 @@ class GetNewTicket extends Component {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold', paddingLeft: 9, color:'#000' }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold', paddingLeft: 9, color: '#000' }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     <TouchableOpacity style={{ marginRight: -2 }} onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (

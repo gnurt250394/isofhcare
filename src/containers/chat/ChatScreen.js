@@ -114,7 +114,7 @@ class ChatScreen extends React.Component {
         }
         let group = firebaseUtils.getGroup(groupId);
         firebaseUtils.getGroupName(this.state.userId).then(x => {
-            this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
+            this.setState({ title: x.name, avatar: x.avatar ? x.avatar : "" });
         }).catch(x => {
             this.setState({ title: "Tin nhắn", avatar: "" });
         });
@@ -150,11 +150,11 @@ class ChatScreen extends React.Component {
 
     selectImageCallback(image) {
         this.setState({ isLoading: true }, () => {
-            imageProvider.upload(image.path,image.mime, (s, e) => {
+            imageProvider.upload(image.path, image.mime, (s, e) => {
                 this.setState({ isLoading: false });
                 if (s.success) {
-                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
-                        firebaseUtils.sendImage(this.state.userId, this.state.groupId, s.data.data.images[0].image).catch(e => {
+                    if (s && s.data.length > 0) {
+                        firebaseUtils.sendImage(this.state.userId, this.state.groupId, s.data[0].fileDownloadUri).catch(e => {
                             snackbar.show(constants.msg.upload.upload_image_error, 'danger');
                         });
                     }

@@ -43,14 +43,14 @@ class AddNewClinicScreen extends Component {
         if (!imageUris)
             imageUris = [];
         imageUris.forEach((item) => {
-            item.uri = item.url ? item.url.absoluteUrl() : "";
+            item.uri = item.url ? item.url : "";
         });
 
         let logo;
 
         if (facility.facility.logo) {
             logo = {
-                uri: facility.facility.logo.absoluteUrl(),
+                uri: facility.facility.logo,
                 url: facility.facility.logo
             }
         }
@@ -167,15 +167,15 @@ class AddNewClinicScreen extends Component {
                 })
                 if (!temp) {
                     imageUris.push({ uri: image.path, loading: true });
-                    imageProvider.upload(image.path,image.mime, (s, e) => {
+                    imageProvider.upload(image.path, image.mime, (s, e) => {
                         if (s.success) {
-                            if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                            if (s && s.data.length > 0) {
                                 let imageUris = this.state.imageUris;
                                 imageUris.forEach((item) => {
                                     if (item.uri == s.uri) {
                                         item.loading = false;
-                                        item.url = s.data.data.images[0].image;
-                                        item.thumbnail = s.data.data.images[0].thumbnail;
+                                        item.url = s.data[0].fileDownloadUri;
+                                        item.thumbnail = s.data[0].fileDownloadUri;
                                     }
                                 });
                                 this.setState({
@@ -211,16 +211,16 @@ class AddNewClinicScreen extends Component {
                         loading: true
                     }
                 }, () => {
-                    imageProvider.upload(image.path,image.mime, (s, e) => {
+                    imageProvider.upload(image.path, image.mime, (s, e) => {
                         let logo = this.state.logo;
                         if (!logo) {
                             return;
                         }
-                        if (s.success && s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                        if (s.success && s && s.data.length > 0) {
                             if (logo.uri == s.uri) {
                                 logo.loading = false;
-                                logo.url = s.data.data.images[0].image;
-                                logo.thumbnail = s.data.data.images[0].thumbnail;
+                                logo.url = s.data[0].fileDownloadUri;
+                                logo.thumbnail = s.data[0].fileDownloadUri;
 
                                 this.setState({
                                     logo

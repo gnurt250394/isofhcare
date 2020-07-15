@@ -59,7 +59,7 @@ const ItemService = ({ item, onPress }) => {
         }
         return text.formatPrice()
     }
-    const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath?.absoluteUrl() } : require("@images/new/user.png");
+    const source = item?.hospital?.imagePath ? { uri: item?.hospital?.imagePath } : require("@images/new/user.png");
     return (
         <TouchableOpacity onPress={onPress} style={styles.containerItem}>
 

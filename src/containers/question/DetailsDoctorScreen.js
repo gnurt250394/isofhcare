@@ -86,7 +86,7 @@ class DetailsDoctorScreen extends Component {
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.state.avatar
-      ? { uri: this.state.avatar.absoluteUrl() }
+      ? { uri: this.state.avatar }
       : icSupport;
 
     return (

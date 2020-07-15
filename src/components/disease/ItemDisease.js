@@ -24,7 +24,7 @@ class ItemDisease extends Component {
         if (!image)
             image = ".";
         else {
-            image = image.absoluteUrl();
+            image = image;
         }
         return (
             <TouchableOpacity {...this.props} style={[styles.container, this.props.style]}

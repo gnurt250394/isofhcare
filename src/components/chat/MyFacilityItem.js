@@ -83,7 +83,7 @@ class MyFacilityItem extends React.Component {
         const facility = this.props.facility;
         let avatar = facility.logo;
         if (avatar)
-            avatar = avatar.absoluteUrl();
+            avatar = avatar;
         else
             avatar = "";
 

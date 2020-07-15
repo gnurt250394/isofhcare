@@ -247,7 +247,7 @@ class ProfileHospitalScreen extends Component {
             ? profileHospital.imagePath.replace('/', '')
             : profileHospital && profileHospital.imagePath ? profileHospital.imagePath : ''
         const source = this.state.profileHospital && this.state.profileHospital.imagePath
-            ? { uri: images.absoluteUrl() }
+            ? { uri: images }
             : icSupport;
         const contact = profileHospital && profileHospital.contact || {}
         return (

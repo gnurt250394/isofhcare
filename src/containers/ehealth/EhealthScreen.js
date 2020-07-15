@@ -84,7 +84,7 @@ class EhealthScreen extends Component {
         });
     }
     renderItem = ({ item, index }) => {
-        const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar } : require("@images/new/user.png");
 
         return (
             <Card style={styles.viewItem}>
@@ -160,7 +160,7 @@ class EhealthScreen extends Component {
     }
 
 
-} 
+}
 const styles = StyleSheet.create({
     image: { width: 60, height: 60 },
     container: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     imageStyle: {
         borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { marginLeft: 10,flex:1 },
+    viewTx: { marginLeft: 10, flex: 1 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
 

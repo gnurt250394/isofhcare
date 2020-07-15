@@ -376,7 +376,7 @@ class NotificationScreen extends Component {
   }
   defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
   renderItem = ({ item, index }) => {
-    const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
+    const source = item.user && item.user.avatar ? { uri: item.user.avatar } : require("@images/new/user.png");
 
     return (
       <View style={[item.notification.watched == 1 ? { backgroundColor: '#FFF' } : { backgroundColor: '#00CBA710' }]}>

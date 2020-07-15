@@ -266,7 +266,7 @@ class SelectLocationEhealthScreen extends Component {
     }
     footerComponent = () => <View style={{ height: 10 }} />
     renderItem = ({ item, index }) => {
-        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar } : require("@images/new/user.png");
         return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
             {this.state.region &&
                 < View style={styles.containerKM}>

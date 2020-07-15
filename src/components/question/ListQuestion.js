@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { TouchableOpacity, ActivityIndicator,Dimensions } from 'react-native';
+import { TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
@@ -122,13 +122,13 @@ class ListQuestion extends Component {
     renderItemPost(item, index) {
         const icSupport = require("@images/user.png");
         const DEVICE_WIDTH = Dimensions.get('window').width;
-        const source = item.author && item.author.avatar ? { uri: item.author.avatar.absoluteUrl() } : icSupport;
+        const source = item.author && item.author.avatar ? { uri: item.author.avatar } : icSupport;
         var image = "";
         if (item.post.images) {
             var arr = item.post.images.split(',');
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i]) {
-                    image = arr[i].absoluteUrl();
+                    image = arr[i];
                     break;
                 }
             }

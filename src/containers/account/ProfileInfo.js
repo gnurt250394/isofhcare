@@ -58,7 +58,7 @@ class ProfileInfo extends Component {
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.state.avatar
-      ? { uri: this.state.avatar.absoluteUrl() }
+      ? { uri: this.state.avatar }
       : icSupport;
 
     return (
@@ -191,7 +191,7 @@ class ProfileInfo extends Component {
             });
             imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
               if (s.success && s.data.code == 0) {
-                let images = s.data.data.images[0].thumbnail;
+                let images = s.data[0].fileDownloadUri;
                 this.setState({
                   imgLocal: images
                 });
@@ -273,7 +273,7 @@ class ProfileInfo extends Component {
       this.setState({ isLoading: true }, () => {
         imageProvider.upload(this.state.image.path, this.state.image.mime, (s, e) => {
           if (s.success && s.data.code == 0) {
-            let image = s.data.data.images[0].thumbnail;
+            let image = s.data[0].fileDownloadUri;
             this.onUpdate2(image);
           }
           if (e) {

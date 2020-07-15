@@ -34,7 +34,7 @@ class AddBookingDoctorScreen extends Component {
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
         let isOnline = this.props.navigation.getParam('isOnline', false)
-        
+
 
 
         this.state = {
@@ -125,13 +125,13 @@ class AddBookingDoctorScreen extends Component {
                             imageUris.push({ uri: image.path, loading: true });
                             imageProvider.upload(image.path, image.mime, (s, e) => {
                                 if (s.success) {
-                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                    if (s && s.data.length > 0) {
                                         let imageUris = this.state.imageUris;
                                         imageUris.forEach((item) => {
                                             if (item.uri == s.uri) {
                                                 item.loading = false;
-                                                item.url = s.data.data.images[0].image;
-                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                                item.url = s.data[0].fileDownloadUri;
+                                                item.thumbnail = s.data[0].fileDownloadUri;
                                             }
                                         });
                                         this.setState({
@@ -215,7 +215,7 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.date).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-        
+
 
         if (!this.props.userApp.isLogin) {
             this.props.navigation.replace("login", {
@@ -307,7 +307,7 @@ class AddBookingDoctorScreen extends Component {
                     }).catch(e => {
                         this.isChecking = true
                         this.setState({ isLoading: false });
-                        
+
                         if (e.response && e.response.data.error == 'Locked') {
                             snackbar.show(e.response.data.message, 'danger')
                         } else if (e.response && typeof e.response.data == 'string') {

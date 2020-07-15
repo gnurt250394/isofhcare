@@ -37,7 +37,7 @@ class ListProfileScreen extends PureComponent {
         this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
     }
     renderItemProfile = ({ item, index }) => {
-        const source = item.avatar ? { uri: item.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.avatar ? { uri: item.avatar } : require("@images/new/user.png");
         return (
             <View style={styles.containerItem}>
                 <Card style={styles.card}>
@@ -86,7 +86,7 @@ class ListProfileScreen extends PureComponent {
             );
     }
     onLoad() {
-        let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital  ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
+        let hospitalId = this.props.ehealth.hospital && this.props.ehealth.hospital.hospital ? this.props.ehealth.hospital.hospital.id : this.props.ehealth.hospital.id
         ehealthProvider.getGroupPatient(hospitalId).then(res => {
             this.setState({
                 loading: false,

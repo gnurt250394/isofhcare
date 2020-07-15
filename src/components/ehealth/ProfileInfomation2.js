@@ -39,7 +39,7 @@ class ProfileInfomation extends Component {
         let serviceCheckup = (resultDetail.ListService || []).find(item => item.ServiceType == "CheckUp");
         const icSupport = require("@images/new/user.png");
         const source = this.props.ehealth.patient.avatar
-            ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
+            ? { uri: this.props.ehealth.patient.avatar }
             : icSupport;
         return <View style={styles.container}>
             <View style={styles.viewInfo}>

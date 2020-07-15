@@ -23,25 +23,25 @@ class ItemQuestion extends Component {
             return Math.round(hour) + " giờ trước";
         }
     }
-    onNavigateDetails =(item)=>{
-        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctor',{
-            id : item.assignee.id
-        }) : this.props.navigation.navigate('detailsProfile',{
-            id : item.author.id
-        }) 
+    onNavigateDetails = (item) => {
+        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctor', {
+            id: item.assignee.id
+        }) : this.props.navigation.navigate('detailsProfile', {
+            id: item.author.id
+        })
     }
     render() {
         let { item } = this.props;
-        const source = item.author && item.author.avatar ? { uri: item.author.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.author && item.author.avatar ? { uri: item.author.avatar } : require("@images/new/user.png");
         return this.props.item && this.props.item.post ?
             <View style={{ margin: 20, marginTop: 0 }}>
                 <Card style={{ padding: 20, borderRadius: 6 }}>
                     <TouchableOpacity key={this.props.index} onPress={() => this.props.navigation.navigate("detailQuestion", { post: this.props.item })}>
                         <View style={{ width: 25, height: 4, backgroundColor: item.post.status == 4 ? 'rgb(106,1,54)' : 'rgb(0,141,111)', borderRadius: 2, alignSelf: 'center', marginBottom: 27 }} />
-                        <TouchableOpacity onPress = {() => this.onNavigateDetails(item)} style={{ flexDirection: 'row' }} >
+                        <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={{ flexDirection: 'row' }} >
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)'  }}
+                                imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                 borderRadius={25}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
                                 placeholderSource={require("@images/new/user.png")}
