@@ -729,7 +729,7 @@ class AddBookingDoctorScreen extends Component {
                     </KeyboardAwareScrollView>
                     <View style={styles.btn}>
                         <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                            <Text style={styles.datkham}>{isOnline ? "Đặt lịch gọi" : 'Đặt lịch khám'}</Text>
+                            <Text style={styles.datkham}>{isOnline ? "Đặt lịch" : 'Đặt lịch'}</Text>
                         </TouchableOpacity>
                     </View>
 
