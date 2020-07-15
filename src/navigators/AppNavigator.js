@@ -226,7 +226,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
     bookingTab: {
       screen: ListBookingHistoryScreen,
       navigationOptions: {
-        tabBarLabel: "Lich khám",
+        tabBarLabel: "Lich hẹn",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_booking_home.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (userProvider.isLogin) {
