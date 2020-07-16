@@ -49,7 +49,8 @@ const ListServiceDetailScreen = ({ navigation }) => {
                 state?.latitude,
                 state?.longitude,
                 state.page,
-                state.size
+                state.size,
+                true
             )
             if (res?.content?.length > 0) {
                 
