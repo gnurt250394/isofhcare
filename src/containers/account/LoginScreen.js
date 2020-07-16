@@ -411,7 +411,6 @@ const styles = StyleSheet.create({
 		borderColor: '#CCCCCC',
 		fontSize: 20,
 		paddingLeft: 15,
-		paddingRight: 45,
 
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
