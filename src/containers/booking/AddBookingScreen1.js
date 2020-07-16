@@ -641,7 +641,7 @@ class AddBookingScreen extends Component {
                         </View>
                         <Text style={styles.des}>{constants.booking.simptom_note}</Text>
                         <View style={styles.btn}>
-                            <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? styles.backgroundGreen : {}]}><Text style={styles.datkham}>Đặt lịch khám</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? styles.backgroundGreen : {}]}><Text style={styles.datkham}>Đặt lịch</Text></TouchableOpacity>
                         </View>
                     </KeyboardAwareScrollView>
 
