@@ -46,11 +46,12 @@ function updateFromAppStore() {
         { cancelable: false })
 }
 module.exports = {
-    async checkupDate(silent) {
+    async checkupDate(silent,init) {
         let updateFromStore = await getVerstionAppstore()
         if (updateFromStore) {
             updateFromAppStore()
         } else {
+            if(!init){
             codePush.checkForUpdate().then(update => {
                 if (update) {
                     if (update.isMandatory) {
@@ -105,6 +106,7 @@ module.exports = {
                 if (!silent)
                     snackbar.show("Bạn đang sử dụng phiên bản iSofHcare mới nhất", "success");
             })
+        }
         }
 
     }
