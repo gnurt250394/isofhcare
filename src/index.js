@@ -51,10 +51,10 @@ class Kernel extends Component {
   }
 
   componentDidMount() {
-    // if (constants.route != 'home') {
-    //   // codePushUtils.checkupDate(true);
+    if (constants.route != 'home') {
+      // codePushUtils.checkupDate(true,true);
 
-    // }
+    }
   }
   SetDefaultText = () => {
     let components = [Text, TextInput]
