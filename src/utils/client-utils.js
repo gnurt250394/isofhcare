@@ -53,7 +53,7 @@ String.prototype.absoluteUrl =
     // if(this.startsWith("user"))
 
     //     return
-    return 'http://10.0.50.86:8288/v1/' + _this + "";
+    return 'http://10.0.0.88:8288/v1/' + _this + "";
   };
 
 String.prototype.getServiceUrl =
@@ -68,15 +68,15 @@ String.prototype.getServiceUrl =
     if (_this.indexOf("http") == 0 || _this.indexOf("blob") == 0) {
       return _this;
     }
-    return 'http://10.0.50.86:8288/v1/' + _this;
+    return server_url + _this;
   };
 
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
-  serviceSchedule: "http://123.24.206.9:12032/",
-  serviceBooking: "http://123.24.206.9:12033/",
-  serviceImage: "http://10.0.50.86:8288/v1/",
+  serviceSchedule: "http://123.24.206.9:8080/",
+  serviceBooking: "http://123.24.206.9:8082/",
+  serviceImage: "http://10.0.0.88:8288/v1/",
   response: {
     ok(data, message) {
       if (!message) message = "";
