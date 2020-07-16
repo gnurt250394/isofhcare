@@ -53,7 +53,7 @@ String.prototype.absoluteUrl =
     // if(this.startsWith("user"))
 
     //     return
-    return 'http://10.0.0.88:8288/v1/' + _this + "";
+    return 'http://123.24.206.9:38288/v1/' + _this + "";
   };
 
 String.prototype.getServiceUrl =
@@ -76,7 +76,7 @@ module.exports = {
   serverApi: server_url + "/",
   serviceSchedule: "http://123.24.206.9:8080/",
   serviceBooking: "http://123.24.206.9:8082/",
-  serviceImage: "http://10.0.0.88:8288/v1/",
+  serviceImage: "http://123.24.206.9:38288/v1/",
   response: {
     ok(data, message) {
       if (!message) message = "";
