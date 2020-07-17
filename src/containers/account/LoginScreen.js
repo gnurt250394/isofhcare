@@ -27,7 +27,7 @@ import firebase from 'react-native-firebase';
 import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import InputPhone from '@components/account/InputPhone'
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -115,6 +115,9 @@ class LoginScreen extends Component {
 							if (s.data.profile && s.data.profile.uid)
 								user.uid = s.data.profile.uid;
 							snackbar.show(constants.msg.user.login_success, "success");
+							if (!user.phone) {
+								user.requestInputPhone = true
+							}
 							this.props.dispatch(redux.userLogin(user));
 							if (this.nextScreen) {
 								this.props.navigation.replace(
@@ -171,6 +174,7 @@ class LoginScreen extends Component {
 			'tel:1900299983'
 		);
 	}
+
 	render() {
 		return (
 
@@ -293,6 +297,7 @@ class LoginScreen extends Component {
 						</TouchableOpacity>
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
+					<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>
 				</ImageBackground>
 			</ActivityPanel>
 
