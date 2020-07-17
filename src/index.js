@@ -24,7 +24,11 @@ import codePush from "react-native-code-push";
 // let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
 import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
-let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_START };
+let codePushOptions = { 
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  installMode: CodePush.InstallMode.ON_NEXT_RESUME,
+  minimumBackgroundDuration: 15 * 60,
+ };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
 import ReactNative, { Text, TextInput, Animated, StyleSheet } from 'react-native';
 import codePushUtils from '@utils/codepush-utils';
