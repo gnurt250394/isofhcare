@@ -33,6 +33,16 @@ module.exports = {
             });
         }
     },
+    verifyFillPhone(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.verify_fill_phone, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
     getByUserPromise(userId) {
         return new Promise((resolve, reject) => {
             this.getByUser(userId, (s, e) => {
@@ -42,144 +52,154 @@ module.exports = {
             }, false);
         })
     },
-    getUserInfo(id){
+    getUserInfo(id) {
         return new Promise((resolve, reject) => {
-        client.requestApi('get',constants.api.profile.get_details_user+ "/" + id, {}, (s, e) =>{
-            if(s)
-            resolve(s)
-            if(e)
-            reject(e)
+            client.requestApi('get', constants.api.profile.get_details_user + "/" + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                if (e)
+                    reject(e)
+            })
         })
-    })
     },
-    getProfileFamily(){
+    getProfileFamily() {
         return new Promise((resolve, reject) => {
-        client.requestApi('get',constants.api.profile.get_profile_family, {}, (s, e) =>{
-            if(s)
-            resolve(s)
-            if(e)
-            reject(e)
+            client.requestApi('get', constants.api.profile.get_profile_family, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                if (e)
+                    reject(e)
+            })
         })
-    })
     },
-    getListProfile(){
+    getListProfile() {
         return new Promise((resolve, reject) => {
-            client.requestApi('get',constants.api.profile.get_list_profile,{},(s,e) => {
-                if(s)
-                resolve(s)
+            client.requestApi('get', constants.api.profile.get_list_profile, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    deleteFamilyProfile(id){
-        return new Promise ((resolve,reject) => {
-            client.requestApi('delete',`${constants.api.profile.delete_family_profile}/${id}`,{},(s,e) => {
-                if(s)
-                resolve(s)
+    deleteFamilyProfile(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('delete', `${constants.api.profile.delete_family_profile}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    createProfile (data){
-        return new Promise ((resolve,reject) => {
-            client.requestApi('post',`${constants.api.profile.create_profile}`,data,(s,e) => {
-                if(s)
-                resolve(s)
+    createProfile(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('post', `${constants.api.profile.create_profile}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    updateProfile(id,data){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.update_profile}/${id}`,data,(s,e) => {
-                if(s)
-                resolve(s)
+    updateProfile(id, data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.profile.update_profile}/${id}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    updateAvatar(id,data){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.update_avatar}/${id}`,data,(s,e) => {
-                if(s)
-                resolve(s)
+    updateAvatar(id, data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.profile.update_avatar}/${id}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    updateCover(id,data){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.update_cover}/${id}`,data,(s,e) => {
-                if(s)
-                resolve(s)
+    updateCover(id, data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.profile.update_cover}/${id}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    sendConfirmProfile(id){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.send_confirm}/${id}`,{},(s,e) => {
-                if(s)
-                resolve(s)
+    sendConfirmProfile(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.profile.send_confirm}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    sharePermission(data){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',constants.api.profile.share_permission,data,(s,e) => {
-                if(s)
-                resolve(s)
-                else 
-                reject(e)
+    sharePermission(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.share_permission, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
             })
         })
     },
-    checkOtp (data,id){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',constants.api.profile.check_otp + '/' + id,data,(s,e) => {
-                if(s)
-                resolve(s)
+    checkOtp(data, id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.check_otp + '/' + id, data, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    resendOtp (id){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',constants.api.profile.resend_otp + '/' + id,{},(s,e) => {
-                if(s)
-                resolve(s)
+    resendOtp(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.resend_otp + '/' + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    confirm (id){
-        return new Promise((resolve,reject) => {
-            client.requestApi('put',constants.api.profile.confirm + '/' + id , {},(s,e) => {
-                if(s)
-                resolve(s)
+    confirm(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.confirm + '/' + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
-            } )
-        })
-    },
-    getDetailsMedical(id){
-        return new Promise((resolve,reject) => {
-            client.requestApi('get',constants.api.profile.get_details_medical+'/' + id,{},(s,e) => {
-                if(s)
-                resolve(s)
-                else
-                reject(e)
+                    reject(e)
             })
         })
-    }
+    },
+    getDetailsMedical(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', constants.api.profile.get_details_medical + '/' + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    fillPhone(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', constants.api.profile.fill_phone, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
 }
