@@ -33,9 +33,7 @@ class InputPhone extends Component {
 
     }
     onBackdropPress = () => {
-        let user = this.props.userApp.currentUser
-        user.requestInputPhone = false
-        this.props.dispatch(redux.userLogin(user));
+
         this.setState({
             isVisible: false
         })
@@ -54,6 +52,9 @@ class InputPhone extends Component {
                 })
             }, 500)
         }
+        let user = nextProps.userApp.currentUser
+        user.requestInputPhone = false
+        this.props.dispatch(redux.userLogin(user));
     }
     changePassword() {
         Keyboard.dismiss();
@@ -166,9 +167,6 @@ class InputPhone extends Component {
 
     }
     goHome = () => {
-        let user = this.props.userApp.currentUser
-        user.requestInputPhone = false
-        this.props.dispatch(redux.userLogin(user));
         NavigationService.navigate("homeTab", { showDraw: false });
         this.setState({
             isVisible: false
