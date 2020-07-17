@@ -304,7 +304,7 @@ class ListProfileScreen extends Component {
           style={styles.viewGradientUser}
           colors={['#02C293', '#01BF88', '#02C293']}>
           <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
-          {item.medicalRecords.hospitalName ? (
+          {item?.medicalRecords?.hospitalName && item?.medicalRecords?.value ? (
             <Text style={[{fontSize: 15, color: '#FFF', paddingTop: 5}]}>
               CSYT: {item.medicalRecords.hospitalName}
             </Text>
