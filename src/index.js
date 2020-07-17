@@ -26,7 +26,7 @@ import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
 let codePushOptions = { 
   checkFrequency: codePush.CheckFrequency.ON_APP_START,
-  installMode: CodePush.InstallMode.ON_NEXT_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME,
   minimumBackgroundDuration: 15 * 60,
  };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
