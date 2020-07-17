@@ -422,20 +422,20 @@ class ProfileScreen extends Component {
                   </View>
                 ) : null
               ) : null}
-              {details?.hospitalName ? (
-                <View style={styles.viewItem}>
-                  <Text>
-                    <Text style={styles.txLabel}>Cơ sở y tế: </Text>
-                    {details.hospitalName}
-                  </Text>
-                </View>
-              ) : null}
-              {details?.value ? (
-                <View style={styles.viewItem}>
-                  <Text>
-                    <Text style={styles.txLabel}>Mã bệnh nhân: </Text>
-                    {details.value}
-                  </Text>
+              {details?.hospitalName && details?.value ? (
+                <View>
+                  <View style={styles.viewItem}>
+                    <Text>
+                      <Text style={styles.txLabel}>Cơ sở y tế: </Text>
+                      {details.hospitalName}
+                    </Text>
+                  </View>
+                  <View style={styles.viewItem}>
+                    <Text>
+                      <Text style={styles.txLabel}>Mã bệnh nhân: </Text>
+                      {details.value}
+                    </Text>
+                  </View>
                 </View>
               ) : null}
             </View>
