@@ -51,10 +51,11 @@ class InputPhone extends Component {
                     isVisible: true
                 })
             }, 500)
+            let user = nextProps.userApp.currentUser
+            user.requestInputPhone = false
+            this.props.dispatch(redux.userLogin(user));
         }
-        let user = nextProps.userApp.currentUser
-        user.requestInputPhone = false
-        this.props.dispatch(redux.userLogin(user));
+
     }
     changePassword() {
         Keyboard.dismiss();
