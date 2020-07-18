@@ -571,13 +571,15 @@ class ProfileScreen extends Component {
         actionbarStyle={styles.actionbarStyle}
         style={styles.container}
         menuButton={
-          <TouchableOpacity onPress={this.onEdit}>
-            <ScaledImage
-              style={styles.iconEdit}
-              height={20}
-              source={require('@images/new/profile/ic_edit.png')}
-            />
-          </TouchableOpacity>
+          details?.hospitalName && details?.value ? null : (
+            <TouchableOpacity onPress={this.onEdit}>
+              <ScaledImage
+                style={styles.iconEdit}
+                height={20}
+                source={require('@images/new/profile/ic_edit.png')}
+              />
+            </TouchableOpacity>
+          )
         }
         isLoading={this.state.loading}>
         {!this.state.loading ? (
