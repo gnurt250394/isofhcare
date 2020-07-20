@@ -1,30 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, Keyboard, KeyboardAvoidingView } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
-import medicalRecordProvider from '@data-access/medical-record-provider';
-import ImageLoad from 'mainam-react-native-image-loader';
-import clientUtils from '@utils/client-utils';
-import constants from '@resources/strings';
-import profileProvider from '@data-access/profile-provider'
-import DateTimePicker from "mainam-react-native-date-picker";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
-import ActionSheet from 'react-native-actionsheet'
 import snackbar from "@utils/snackbar-utils";
-import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
-import userProvider from "@data-access/user-provider";
-import connectionUtils from "@utils/connection-utils";
 class SelectAddressScreen extends Component {
     constructor(props) {
         super(props);
-        let provinces = this.props.navigation.getParam('provinces')
-        let districts = this.props.navigation.getParam('districts')
-        let zone = this.props.navigation.getParam('zone')
-        let address = this.props.navigation.getParam('address')
+
+        let dataLocaotion = this.props.navigation.getParam('dataLocaotion', null)
+        let provinces = dataLocaotion && dataLocaotion.provinces
+        let districts = dataLocaotion && dataLocaotion.districts
+        let zone = dataLocaotion && dataLocaotion.zone
+        let address = dataLocaotion && dataLocaotion.address
         this.state = {
             isLoading: false,
             provinces,
@@ -92,6 +82,11 @@ class SelectAddressScreen extends Component {
         }
 
     }
+    _replaceSpace(str) {
+        if (str)
+            return str.replace(/\u0020/, '\u00a0')
+    }
+
     onChangeText = type => text => {
         this.setState({ [type]: text });
     };
@@ -114,7 +109,8 @@ class SelectAddressScreen extends Component {
         }
         let onSelected = this.props.navigation.getParam('onSelected')
         this.props.navigation.pop()
-        if (onSelected) onSelected(provinces, districts, zone, address)
+        let dataLocation = { provinces, districts, zone, address }
+        if (onSelected) onSelected(dataLocation)
 
 
     }
@@ -134,96 +130,98 @@ class SelectAddressScreen extends Component {
                     backgroundColor: '#E5E5E5',
                 }}
             >
-                <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
-                    <Field style={[styles.mucdichkham,]}>
-                        <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
-                        <Field>
+                <KeyboardAvoidingView style={{ flex: 1 }}>
+                    <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+                        <Field style={[styles.mucdichkham,]}>
+                            <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
+                            <Field>
+                                <TextField
+                                    hideError={true}
+                                    onPress={this.onSelectProvince}
+                                    editable={false}
+                                    multiline={true}
+                                    inputStyle={[
+                                        styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
+                                    ]}
+                                    errorStyle={styles.errorStyle}
+                                    value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                    autoCapitalize={"none"}
+                                    // underlineColorAndroid="transparent"
+                                    autoCorrect={false}
+                                />
+                            </Field>
+
+                        </Field>
+
+                        <Field style={[styles.mucdichkham,]}>
+                            <Text style={styles.mdk}>Quận/Huyện</Text>
+                            <Field>
+                                <TextField
+                                    hideError={true}
+
+                                    multiline={true}
+                                    inputStyle={[
+                                        styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
+                                    ]}
+                                    onPress={this.onSelectDistrict}
+                                    editable={false}
+                                    errorStyle={styles.errorStyle}
+                                    value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
+                                    autoCapitalize={"none"}
+                                    // underlineColorAndroid="transparent"
+                                    autoCorrect={false}
+                                />
+                            </Field>
+
+                        </Field>
+                        <Field style={[styles.mucdichkham,]}>
+                            <Text style={styles.mdk}>Xã/Phường</Text>
+                            <Field>
+                                <TextField
+                                    hideError={true}
+                                    multiline={true}
+                                    onPress={this.onSelectZone}
+                                    editable={false}
+
+                                    inputStyle={[
+                                        styles.ktq, { minHeight: 41 }, this.state.zone && this.state.zone.name ? {} : { color: '#8d8d8d' }
+                                    ]}
+                                    errorStyle={styles.errorStyle}
+                                    value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
+                                    autoCapitalize={"none"}
+                                    // underlineColorAndroid="transparent"
+                                    autoCorrect={false}
+                                />
+                            </Field>
+                        </Field>
+
+                        <Field style={[styles.mucdichkham,]}>
+                            <Text style={styles.mdk}>Địa chỉ</Text>
                             <TextField
                                 hideError={true}
-                                onPress={this.onSelectProvince}
-                                editable={false}
-                                multiline={true}
+                                onValidate={(valid, messages) => {
+                                    if (valid) {
+                                        this.setState({ addressError: "" });
+                                    } else {
+                                        this.setState({ addressError: messages });
+                                    }
+                                }}
+                                placeholder={'Nhập địa chỉ'}
+                                // multiline={true}
                                 inputStyle={[
-                                    styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
+                                    styles.ktq,
                                 ]}
                                 errorStyle={styles.errorStyle}
-                                value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                onChangeText={this.onChangeText("address")}
+                                value={this._replaceSpace(this.state.address)}
                                 autoCapitalize={"none"}
                                 // underlineColorAndroid="transparent"
                                 autoCorrect={false}
                             />
                         </Field>
-
-                    </Field>
-
-                    <Field style={[styles.mucdichkham,]}>
-                        <Text style={styles.mdk}>Quận/Huyện</Text>
-                        <Field>
-                            <TextField
-                                hideError={true}
-
-                                multiline={true}
-                                inputStyle={[
-                                    styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
-                                ]}
-                                onPress={this.onSelectDistrict}
-                                editable={false}
-                                errorStyle={styles.errorStyle}
-                                value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
-                                autoCapitalize={"none"}
-                                // underlineColorAndroid="transparent"
-                                autoCorrect={false}
-                            />
-                        </Field>
-
-                    </Field>
-                    <Field style={[styles.mucdichkham,]}>
-                        <Text style={styles.mdk}>Xã/Phường</Text>
-                        <Field>
-                            <TextField
-                                hideError={true}
-                                multiline={true}
-                                onPress={this.onSelectZone}
-                                editable={false}
-
-                                inputStyle={[
-                                    styles.ktq, { minHeight: 41 }, this.state.zone && this.state.zone.name ? {} : { color: '#8d8d8d' }
-                                ]}
-                                errorStyle={styles.errorStyle}
-                                value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
-                                autoCapitalize={"none"}
-                                // underlineColorAndroid="transparent"
-                                autoCorrect={false}
-                            />
-                        </Field>
-                    </Field>
-
-                    <Field style={[styles.mucdichkham,]}>
-                        <Text style={styles.mdk}>Địa chỉ</Text>
-                        <TextField
-                            hideError={true}
-                            onValidate={(valid, messages) => {
-                                if (valid) {
-                                    this.setState({ addressError: "" });
-                                } else {
-                                    this.setState({ addressError: messages });
-                                }
-                            }}
-                            placeholder={'Nhập địa chỉ'}
-                            // multiline={true}
-                            inputStyle={[
-                                styles.ktq,
-                            ]}
-                            errorStyle={styles.errorStyle}
-                            onChangeText={this.onChangeText("address")}
-                            value={this.state.address}
-                            autoCapitalize={"none"}
-                            // underlineColorAndroid="transparent"
-                            autoCorrect={false}
-                        />
-                    </Field>
-                    <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
-                </Form>
+                        <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
+                    </Form>
+                </KeyboardAvoidingView>
             </ActivityPanel>
         );
     }
@@ -266,7 +264,10 @@ const styles = StyleSheet.create({
         color: "#000",
         paddingHorizontal: 10,
         minHeight: 41,
-        textAlign: 'right'
+        textAlign: 'right',
+        marginTop: 10,
+        textAlignVertical: 'top',
+        minWidth: 150
 
     },
     errorStyle: {

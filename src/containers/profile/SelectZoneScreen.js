@@ -1,12 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, } from 'react';
 import { View, FlatList, TouchableOpacity, Text, TextInput, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
-import serviceTypeProvider from '@data-access/service-type-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import snackbar from '@utils/snackbar-utils';
-import dataCacheProvider from '@data-access/datacache-provider';
 import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 

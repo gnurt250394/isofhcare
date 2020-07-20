@@ -128,33 +128,54 @@ module.exports = {
     },
 
     districtGetByProvince(provinceId) {
-        return new Promise ((resolve, reject) => {
-            client.requestApi('get', `${constants.api.location.districtGetByProvince}/${provinceId}`,{},(s,e)=> {
-                if(s)
-                resolve(s)
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.location.districtGetByProvince}/${provinceId}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    zoneGetByDistrict(districtId){
-        return new Promise((resolve,reject) => {
-            client.requestApi('get',`${constants.api.location.zoneGetByDistrict}/${districtId}`,{},(s,e) => {
-                if(s)
-                resolve(s)
+    zoneGetByDistrict(districtId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.location.zoneGetByDistrict}/${districtId}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
-    getAllProvince(){
-        return new Promise((resolve,reject) => {
-            client.requestApi('get',constants.api.location.getAllProvince,{},(s,e) => {
-                if(s)
-                resolve(s)
+    getAllProvince() {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', constants.api.location.getAllProvince, {}, (s, e) => {
+                if (s)
+                    resolve(s)
                 else
-                reject(e)
+                    reject(e)
             })
         })
     },
+    getAllNations() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.location.getAllNations}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            });
+        })
+    },
+    getAllJobs() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.location.getAllJobs}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            });
+        })
+    },
+
 }

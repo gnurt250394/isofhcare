@@ -6,6 +6,7 @@ import profileProvider from '@data-access/profile-provider'
 import NavigationService from "@navigators/NavigationService";
 import snackbar from "@utils/snackbar-utils";
 import constants from '../../res/strings';
+import ScaledImage from "mainam-react-native-scaleimage";
 
 export default class ShareDataProfileScreen extends Component {
   constructor(props) {
@@ -64,7 +65,11 @@ export default class ShareDataProfileScreen extends Component {
         <View style={styles.viewConfirm}>
           <Text style={styles.txContent}>{constants.msg.user.select_data_need_share}</Text>
           <View style={styles.viewSelected}>
-            <CheckBox onPress={this.shareEhealth} checked={this.state.ehealth} color="#02C39A"></CheckBox>
+            {this.state.ehealth ? <TouchableOpacity onPress={this.shareEhealth} style={{ padding: 5 }}>
+              <ScaledImage source={require('@images/new/profile/ic_checked.png')} height={20}></ScaledImage>
+            </TouchableOpacity> : <TouchableOpacity onPress={this.shareEhealth} style={{ padding: 5 }}>
+                <ScaledImage source={require('@images/new/profile/ic_unCheck.png')} height={20}></ScaledImage>
+              </TouchableOpacity>}
             <Text style={styles.txSelected}>{constants.ehealth.my_ehealth}</Text></View>
           {/* <View style={styles.viewSelected}><CheckBox onPress={this.shareBookingDate} checked={this.state.bookingDate} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Lịch khám của tôi</Text></View> */}
           <View style={styles.viewBtn}><TouchableOpacity onPress={this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>{constants.actionSheet.confirm.toUpperCase()}</Text></TouchableOpacity></View>
@@ -84,7 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   btnConfirm: {
-    backgroundColor: '#01BF88',
+    backgroundColor: '#3161ad',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
