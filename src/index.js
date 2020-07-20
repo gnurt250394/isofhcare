@@ -24,11 +24,11 @@ import codePush from "react-native-code-push";
 // let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
 import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
-let codePushOptions = { 
+let codePushOptions = {
   checkFrequency: codePush.CheckFrequency.ON_APP_START,
   installMode: codePush.InstallMode.ON_NEXT_RESUME,
   minimumBackgroundDuration: 15 * 60,
- };
+};
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
 import ReactNative, { Text, TextInput, Animated, StyleSheet } from 'react-native';
 import codePushUtils from '@utils/codepush-utils';
@@ -42,6 +42,7 @@ TextInput.defaultProps.placeholderTextColor = "#BBB";
 Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
 import FlashMessage from "react-native-flash-message";
+import InputPhone from '@components/account/InputPhone'
 
 
 class Kernel extends Component {
@@ -55,7 +56,7 @@ class Kernel extends Component {
 
   componentDidMount() {
     if (constants.route != 'home') {
-      codePushUtils.checkupDate(true,true);
+      codePushUtils.checkupDate(true, true);
 
     }
   }
@@ -77,7 +78,13 @@ class Kernel extends Component {
       };
     }
   }
+  onBackdropPress = () => {
+    this.setState({
+      isVisible: false
+    })
+  }
   render() {
+    console.log(this.props, 'propssssssss');
     const RootApp = AppContainer(constants.route)
     return (
       <Provider store={store}>
@@ -91,6 +98,7 @@ class Kernel extends Component {
           {/* </Root> */}
         </PersistGate>
         <FlashMessage floating={true} style={{ marginTop: 30 }} position="top" ref="myLocalFlashMessage" />
+        <InputPhone></InputPhone>
       </Provider>
     )
   }
