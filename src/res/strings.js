@@ -881,6 +881,8 @@ module.exports = {
       districtGetByProvince: isofhcare_service + 'district/get-by-province',
       zoneGetByDistrict: isofhcare_service + 'zone/get-by-district',
       getAllProvince: isofhcare_service + "province/get-all",
+      getAllNations: isofhcare_service + 'nations',
+      getAllJobs: isofhcare_service + 'jobs',
     },
     upload: {
       image: "images"

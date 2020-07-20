@@ -67,8 +67,9 @@ import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccess
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
 
-
-import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
+import SelectNationsSceen from "@containers/profile/SelectNationsSceen";
+import SelectJobsSceen from '@containers/profile/GetJobsSceen';
+import CreateProfileScreen from "@containers/profile/CreateProfileScreen1";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 // import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
@@ -93,7 +94,8 @@ import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
 import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
 import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
 import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
-
+import EditProfileUsernameScreen from '@containers/profile/EditProfileUsernameScreen';
+import SelectCountrySceen from "@containers/profile/SelectCountrySceen";
 
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
@@ -146,6 +148,8 @@ import ListServicesScreen from '@containers/services/ListServicesScreen';
 import ListServiceDetailScreen from '@containers/services/ListServiceDetailScreen';
 import ListOfServiceScreen from '@containers/services/ListOfServiceScreen';
 import DetailNewHighLightScreen from '@containers/home/DetailNewHighLightScreen';
+
+
 // import VideoCallScreen from '@containers/community/CallVideoScreen';
 //icd
 import SearchIcdScreen from '@containers/icd/SearchIcdScreen';
@@ -443,6 +447,10 @@ const RootNavigator = (route = 'splash') => createStackNavigator(
     searchIcd: { screen: SearchIcdScreen },
     code: { screen: CodeScreen },
     historyCumulative: { screen: HistoryCumulativeScreen },
+    selectNations: { screen: SelectNationsSceen },
+    getJobs: { screen: SelectJobsSceen },
+    selectCountry: { screen: SelectCountrySceen },
+    editProfileUsername: { screen: EditProfileUsernameScreen },
   },
   {
     initialRouteName: route,

@@ -2,12 +2,10 @@ import React, { Component, } from "react";
 import {
     View,
     StyleSheet,
-    ScrollView,
     Keyboard,
     Text,
     TouchableOpacity,
     Platform,
-    FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import ImagePicker from "mainam-react-native-select-image";
@@ -22,7 +20,6 @@ import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
-import locationProvider from '@data-access/location-provider';
 import Modal from "@components/modal";
 import NavigationService from "@navigators/NavigationService";
 import ActivityPanel from "@components/ActivityPanel";
@@ -358,7 +355,7 @@ class CreateProfileScreen extends Component {
         );
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal }
+            ? { uri: this.state.imgLocal.absoluteUrl() }
             : icSupport;
 
         return (
@@ -711,8 +708,6 @@ class CreateProfileScreen extends Component {
                 </KeyboardAwareScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
-                    locale="vi"
-                    titleIOS={"Chọn ngày tháng"}
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={this.onConfirmDate}
                     onCancel={this.onCancelDate}
