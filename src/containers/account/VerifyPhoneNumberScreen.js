@@ -17,7 +17,7 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 //case 1 : regiter
 //case 2 : fogot password
 //case 3 : create profile
-
+//case 4 : add phone 
 class VerifyPhoneNumberScreen extends React.Component {
     constructor(props) {
         super(props)
@@ -192,6 +192,66 @@ class VerifyPhoneNumberScreen extends React.Component {
                                 })
                             }
                             break
+                        case 4:
+                            {
+                                let phone = this.props.navigation.getParam('phone', null)
+                                let id = this.props.userApp.currentUser.id
+                                connectionUtils
+                                    .isConnected()
+                                    .then(s => {
+                                        this.setState(
+                                            {
+                                                isLoading: true
+                                            },
+                                            () => {
+                                                let data = {
+                                                    phone: phone
+                                                }
+                                                if (id) {
+                                                    profileProvider.fillPhone(data).then(res => {
+
+                                                        this.setState({
+                                                            isLoading: false,
+                                                            disabled: false,
+
+                                                        })
+                                                        switch (res.code) {
+                                                            case 0:
+                                                                {
+                                                                    this.props.navigation.replace('verifyPhone', { verify: 4, phone: phone })
+                                                                    snackbar.show('Mã xác thực đã được gửi lại', 'success')
+
+                                                                }
+                                                                break
+                                                            case 8:
+                                                                snackbar.show('Số điện thoại đã tồn tại', "danger");
+                                                                break
+                                                            case 2:
+                                                                snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
+                                                                break
+                                                            default:
+                                                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', "danger");
+                                                                break
+                                                        }
+                                                    }).catch(err => {
+                                                        this.setState({
+                                                            isLoading: false,
+                                                            disabled: false,
+                                                        })
+                                                    })
+                                                }
+                                            });
+                                    }
+                                    ).catch(e => {
+
+                                        this.setState({
+                                            isLoading: false,
+                                            disabled: false,
+                                        })
+                                        snackbar.show(constants.msg.app.not_internet, "danger");
+                                    });
+                            }
+                            break
                     }
                 }).catch(e => {
                     this.setState({
@@ -324,11 +384,37 @@ class VerifyPhoneNumberScreen extends React.Component {
                                 return
                             }
                         }
+                        if (this.state.verify == 4) {
+                            let data = {
+                                'otp': text
+                            }
+                            profileProvider.verifyFillPhone(data).then(res => {
+
+                                this.setState({
+                                    disabled: false
+                                })
+                                if (res.code == 0) {
+                                    let user = this.props.userApp.currentUser
+                                    user.phone = this.props.navigation.getParam('phone')
+                                    user.requestInputPhone = false
+                                    this.props.dispatch(redux.userLogin(user));
+                                    this.props.navigation.pop()
+                                    snackbar.show('Thêm số điện thoại thành công', 'success')
+                                } else if (res.code == 4) {
+                                    snackbar.show('Mã xác thực không đúng')
+                                    return
+                                }
+
+                            }).catch(err => {
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            })
+                        }
                     }).catch(e => {
                         snackbar.show('Không có kết nối mạng', 'danger')
 
                     })
                 return
+
             }
         }
     }
@@ -414,7 +500,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                         {
                             this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red', marginTop: 10 }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) :
                                 <View style={{ flex: 1, padding: 10 }}>
-                                    <Text style={{ color: '#000', marginTop: 100, fontSize: 14 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
+                                    <Text style={{ color: '#000', marginTop: 50, fontSize: 14 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
                                     <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                                 </View>
                         }

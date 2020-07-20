@@ -1017,7 +1017,11 @@ module.exports = {
       check_otp: isofhcare_service + 'medical-records/check-otp',
       resend_otp: isofhcare_service + 'medical-records/resend-otp',
       confirm: isofhcare_service + 'medical-records/confirm',
-      get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record'
+      get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record',
+      verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
+      fill_phone: isofhcare_service + 'user/fill-phone',
+
+
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
