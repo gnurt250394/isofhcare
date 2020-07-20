@@ -1,10 +1,8 @@
 import ScaledImage from "mainam-react-native-scaleimage";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react';
-import { DrawerItems } from 'react-navigation';
 import { connect } from "react-redux";
 import NavigationService from "@navigators/NavigationService";
-import DeviceInfo from 'react-native-device-info';
 import ActivityPanel from "@components/ActivityPanel";
 import ImageLoad from "mainam-react-native-image-loader";
 
@@ -36,7 +34,7 @@ class MenuProfile extends React.Component {
       return null;
     const icSupport = require("@images/new/user.png");
     const source = this.state.avatar
-      ? { uri: this.state.avatar }
+      ? { uri: this.state.avatar.absoluteUrl() }
       : icSupport;
     return (
       <ActivityPanel
@@ -47,7 +45,7 @@ class MenuProfile extends React.Component {
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin ? (
             <View style={styles.viewHeader}>
-              {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar} height={60} ></ScaledImage> */}
+              {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage> */}
               <View
                 style={{ marginLeft: 15 }}
 
@@ -98,7 +96,7 @@ class MenuProfile extends React.Component {
             </View>
             <TouchableOpacity onPress={() => NavigationService.navigate("ehealth")} style={styles.viewDrawer}>
               <ScaledImage height={20} source={require('@images/new/profile/ic_ehealth_small.png')} />
-              <Text style={[styles.txDrawer, { marginLeft: 12 }]}>Hồ sơ sức khoẻ</Text>
+              <Text style={[styles.txDrawer, { marginLeft: 12 }]}>Y bạ điện tử</Text>
             </TouchableOpacity>
             <View style={styles.viewDrawer}>
               <ScaledImage height={20} source={require('@images/new/profile/ic_drug.png')} />

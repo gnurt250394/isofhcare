@@ -392,7 +392,7 @@ class EditProfileScreen extends Component {
         );
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal }
+            ? { uri: this.state.imgLocal.absoluteUrl() }
             : icSupport;
 
         return (
