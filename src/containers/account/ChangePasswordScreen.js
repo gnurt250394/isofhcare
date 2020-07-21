@@ -15,6 +15,7 @@ import Field from "mainam-react-native-form-validate/Field";
 import HeaderBar from '@components/account/HeaderBar'
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import NavigationService from "@navigators/NavigationService";
 
 class ChangePasswordScreen extends Component {
     constructor(props) {
@@ -56,7 +57,7 @@ class ChangePasswordScreen extends Component {
                     switch (s.code) {
                         case 0:
                             snackbar.show(constants.msg.user.change_password_success, 'success');
-                            this.props.navigation.navigate('home');
+                            NavigationService.navigate('home');
                             break;
                         case 2:
                             snackbar.show(constants.msg.user.change_password_success_old_password_incorrect, 'danger');
@@ -67,6 +68,7 @@ class ChangePasswordScreen extends Component {
                     }
                     this.setState({ isLoading: false, disabled: false });
                 }).catch(e => {
+                    console.log('e: ', e);
                     this.setState({ isLoading: false, disabled: false });
                     snackbar.show(constants.msg.user.change_password_not_success, 'danger');
                 });
