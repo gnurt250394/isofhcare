@@ -46,6 +46,8 @@ class ProfileScreen extends Component {
                                 fromHis: true,
                                 dataProfile: res.data,
                                 isLoading: false
+                            }, () => {
+                                this.renderAddress()
                             })
                         } else {
                             this.setState({
