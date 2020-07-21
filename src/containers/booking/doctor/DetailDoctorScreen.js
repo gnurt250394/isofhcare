@@ -232,7 +232,7 @@ class DetailsDoctorScreen extends Component {
     return (
       <View style={styles.viewItemBooking}>
         <Text style={styles.txItemWorking}>+ </Text>
-        <Text style={styles.contentWorking}>{`${item.startDate ? item.startDate.toDateObject('-').format("dd/MM/yyyy") : ''} - ${item.endDate ? item.endDate.toDateObject('-').format("dd/MM/yyyy") : 'Hiện tại'} : ${item.position} tại ${item.workPlace}`}</Text>
+        <Text style={styles.contentWorking}>{`${item.startDate ? item.startDate.toDateObject('-').format("yyyy") : ''} - ${item.endDate ? item.endDate.toDateObject('-').format("yyyy") : 'Hiện tại'} : ${item.position} tại ${item.workPlace}`}</Text>
       </View>
     )
   }
