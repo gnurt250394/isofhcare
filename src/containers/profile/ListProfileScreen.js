@@ -537,7 +537,8 @@ class ListProfileScreen extends Component {
                             <View style={styles.viewItemActive}>
                                 <Text style={styles.nameActive}>{item.medicalRecords.name}{item?.medicalRecords?.status == 1 ? ' (Chủ tài khoản)' : this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                 <Text style={styles.phoneActive}>SĐT {item?.medicalRecords?.phone}</Text>
-                                <Text style={styles.dobActive}>{item?.medicalRecords?.dob?.toDateObject('-').format('dd/MM/yyyy') || ''} - {age ? age + ' tuổi' : age == 0 ? '1 tuổi' : ''}</Text>
+                                <Text style={styles.dobActive}>{item?.medicalRecords?.value && item?.medicalRecords?.hospitalName ? item?.medicalRecords?.hospitalName : ''}</Text>
+                                {/* <Text style={styles.dobActive}>{'Mã bệnh nhân: '}{item?.medicalRecords?.value}</Text> */}
 
                             </View>
                             {item?.medicalRecords?.status !== 1 ? <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item)}>
