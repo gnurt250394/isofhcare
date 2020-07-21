@@ -605,22 +605,7 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Cơ sở y tế</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.hospitalName || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
+                            {dataProfile?.medicalRecords?.value ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Mã bệnh nhân</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField

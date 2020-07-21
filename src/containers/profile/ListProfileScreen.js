@@ -536,7 +536,7 @@ class ListProfileScreen extends Component {
                             />
                             <View style={styles.viewItemActive}>
                                 <Text style={styles.nameActive}>{item.medicalRecords.name}{item?.medicalRecords?.status == 1 ? ' (Chủ tài khoản)' : this.renderRelation(item.medicalRecords.relationshipType)}</Text>
-                                {item?.medicalRecords?.phone && <Text style={styles.phoneActive}>SĐT {item.medicalRecords.phone}</Text>}
+                                <Text style={styles.phoneActive}>SĐT {item?.medicalRecords?.phone}</Text>
                                 <Text style={styles.dobActive}>{item?.medicalRecords?.value && item?.medicalRecords?.hospitalName ? item?.medicalRecords?.hospitalName : ''}</Text>
                                 {/* <Text style={styles.dobActive}>{'Mã bệnh nhân: '}{item?.medicalRecords?.value}</Text> */}
 
