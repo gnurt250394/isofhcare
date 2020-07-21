@@ -421,6 +421,7 @@ class EditProfileScreen extends Component {
                                 <Text style={styles.txtTitle2}>Hồ sơ được sử dụng để đặt khám do đó chỉ có thể sửa hồ sơ tại nơi khám.</Text>
                             </View>}
                         <TouchableOpacity
+                            disabled
                             // onPress={this.selectImage}
                             style={styles.buttonAvatar}>
                             <ImageLoad
