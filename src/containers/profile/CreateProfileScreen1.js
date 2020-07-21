@@ -156,7 +156,7 @@ class EditProfileScreen extends Component {
     }
     renderAddress = () => {
         let dataLocation = this.state.dataLocation
-        console.log('dataLocation: ', dataLocation);
+
         let district = dataLocation.districts ? dataLocation.districts.name : null
         let province = dataLocation.provinces ? dataLocation.provinces.countryCode : null
         let zone = dataLocation.zone ? dataLocation.zone.name : ''
