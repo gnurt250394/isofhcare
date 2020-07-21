@@ -448,7 +448,7 @@ class ProfileScreen extends Component {
         if (accountSource && phoneProfile) {
             return null
         }
-        else if (this.state.fromHis) {
+        else if (this.state.dataProfile?.medicalRecords?.hospitalName && this.state.dataProfile?.medicalRecords?.value) {
             return null
         }
         else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
@@ -598,6 +598,21 @@ class ProfileScreen extends Component {
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
                                         value={dataProfile?.medicalRecords?.job?.name || ''}
+                                        autoCapitalize={"none"}
+                                        editable={false}
+                                        autoCorrect={false}
+                                    >
+                                    </TextField>
+                                </Field>
+                            </Field> : <Field></Field>}
+                            {dataProfile?.medicalRecords?.hospitalName ? <Field style={[styles.containerField]}>
+                                <Text style={styles.txLabel}>Cơ sở y tế</Text>
+                                <Field style={{ flex: 1 }}>
+                                    <TextField
+                                        multiline={true}
+                                        onChangeText={this.onChangeText("address")}
+                                        inputStyle={[styles.input]}
+                                        value={dataProfile?.medicalRecords?.hospitalName || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
