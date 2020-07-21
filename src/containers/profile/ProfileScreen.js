@@ -40,13 +40,24 @@ class ProfileScreen extends Component {
                 profileProvider.getDetailsMedical(id).then(res => {
 
                     if (res && res.code == 0) {
-                        this.setState({
-                            dataProfile: res.data,
-                            isLoading: false
+                        console.log('res: ', res);
+                        if (res.data?.medicalRecords?.hospitalName && res.data?.medicalRecords?.value) {
+                            this.setState({
+                                fromHis: true,
+                                dataProfile: res.data,
+                                isLoading: false
+                            })
+                        } else {
+                            this.setState({
+                                fromHis: false,
+                                dataProfile: res.data,
+                                isLoading: false
 
-                        }, () => {
-                            this.renderAddress()
-                        })
+                            }, () => {
+                                this.renderAddress()
+                            })
+                        }
+
                     } else {
                         this.setState({
                             isLoading: false
@@ -435,7 +446,7 @@ class ProfileScreen extends Component {
         if (accountSource && phoneProfile) {
             return null
         }
-        else if (this.state.dataProfile?.medicalRecords?.hospitalName && this.state.dataProfile?.medicalRecords?.value) {
+        else if (this.state.fromHis) {
             return null
         }
         else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
@@ -592,7 +603,7 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.hospitalName ? <Field style={[styles.containerField]}>
+                            {dataProfile?.medicalRecords?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Cơ sở y tế</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
@@ -607,7 +618,7 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.value ? <Field style={[styles.containerField]}>
+                            {dataProfile?.medicalRecords?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Mã bệnh nhân</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
