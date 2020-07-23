@@ -74,6 +74,7 @@ function CallScreen({}, ref) {
   const [localStream, setLocalStream] = useState();
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeak, setIsSpeak] = useState(true);
+  const [isCamFront, setIsCamFront] = useState(true);
   const context = useContext(WebSocketContext);
   const callId = useRef();
   const timeout = useRef();
@@ -555,6 +556,7 @@ function CallScreen({}, ref) {
     }
 
     localStream.getVideoTracks().forEach(track => track._switchCamera());
+    setIsCamFront(isCam => !isCam);
   };
 
   // Mutes the local's outgoing audio
@@ -639,7 +641,7 @@ function CallScreen({}, ref) {
             <RTCView
               style={[styles.rtc]}
               zOrder={1}
-              mirror={false}
+              mirror={isCamFront}
               streamURL={localStream.toURL()}
             />
           )}
