@@ -19,16 +19,13 @@ export default ({children}) => {
   console.log('userApp: 111', userApp);
 
   const clearSocket = () => {
-    debugger;
     if (socket.current) socket.current.disconnect();
     socket.current = null;
   };
   const onSend = (type, data = {}, callback) => {
-    debugger;
     if (socket.current) socket.current.emit(type, data, callback);
   };
   const listen = (event, data, callback) => {
-    debugger;
     if (socket.current) socket.current.on(event, data, callback);
   };
   
@@ -37,9 +34,9 @@ export default ({children}) => {
       if (token) {
         try {
           // console.log('token: ', token);
-          const url = 'http://192.168.1.5:4443';
+          // const url = 'http://192.168.1.5:4443';
           // const url = 'http://192.168.43.31:4443';
-          // const url = 'http://10.0.50.55:4443';
+          const url = 'http://10.0.50.134:4443';
           // const url = 'https://isofhcare-stable.herokuapp.com';
           socket.current = io.connect(url, {
             transports: ['websocket'],

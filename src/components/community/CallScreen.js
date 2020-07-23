@@ -71,12 +71,13 @@ function CallScreen({}, ref) {
     isVisible: false,
   });
   const [remoteStream, setRemoteStream] = useState();
+  const [localStream, setLocalStream] = useState();
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeak, setIsSpeak] = useState(true);
   const context = useContext(WebSocketContext);
-  const UUID = useRef();
+  const callId = useRef();
   const timeout = useRef();
-  const localStream = useRef();
+  // const localStream = useRef();
   const socketId = useRef('');
   const socketId2 = useRef('');
   const tokenFirebase = useRef('');
@@ -108,7 +109,6 @@ function CallScreen({}, ref) {
     });
   };
 
- 
   const onConnected = async data2 => {
     try {
       if (Platform.OS == 'ios') {
@@ -204,47 +204,21 @@ function CallScreen({}, ref) {
       showModal();
       startSound();
       // }
-      UUID.current = data.UUID;
+      callId.current = data.UUID;
       socketId2.current = data.from;
       setState({data2: data, isAnswer: true, booking: data.booking});
       if (!localPC.current) {
-        await initCall(localStream.current);
+        await initCall(localStream);
       }
-      if (!localStream.current) {
-        startLocalStream();
-      }
-      console.log('data: 1', data.sdp.sdp);
+
       data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
-      console.log('data: 2', data.sdp.sdp);
+
       await localPC.current.setRemoteDescription(
         new RTCSessionDescription(data.sdp),
       );
-    } catch (error) {
-      debugger;
-      console.log('error: ', error);
-    }
+    } catch (error) {}
   };
 
-  function updateBandwidthRestriction(sdp, bandwidth) {
-    let modifier = 'AS';
-    if (sdp.indexOf('b=' + modifier + ':') === -1) {
-      // insert b= after c= line.
-      sdp = sdp.replace(
-        /c=IN (.*)\r\n/,
-        'c=IN $1\r\nb=' + modifier + ':' + bandwidth + '\r\n',
-      );
-    } else {
-      sdp = sdp.replace(
-        new RegExp('b=' + modifier + ':.*\r\n'),
-        'b=' + modifier + ':' + bandwidth + '\r\n',
-      );
-    }
-    return sdp;
-  }
-
-  function removeBandwidthRestriction(sdp) {
-    return sdp.replace(/b=AS:.*\r\n/, '').replace(/b=TIAS:.*\r\n/, '');
-  }
   const onTimeOut = () => {
     timeout.current = setTimeout(() => {
       rejectCall();
@@ -254,16 +228,13 @@ function CallScreen({}, ref) {
   useEffect(() => {
     const didmount = async () => {
       try {
-        await startLocalStream(true);
+        await initCall(true);
         await context.connectSocket(userApp.loginToken);
-        debugger;
-        console.log('socket: ', context.listen);
         context.listen('connect', onConnected);
-        // context.socket.connect()
         context.listen(constants.socket_type.OFFER, onOffer);
         context.listen(constants.socket_type.CHECKING, (data, callback) => {
           console.log('data: 112211', data);
-          callback({status: state.isAnswerSuccess, id: context.socket.id});
+          callback({status: state.isAnswerSuccess, id: context.context.id});
         });
         context.listen(constants.socket_type.ANSWER, async data => {
           debugger;
@@ -272,23 +243,19 @@ function CallScreen({}, ref) {
           onTimeOut();
           soundUtils.stop();
           data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
+
           await localPC.current.setRemoteDescription(
             new RTCSessionDescription(data.sdp),
           );
-          console.log(
-            'updateBandwidthRestriction(data.sdp.sdp, 0): ',
-            updateBandwidthRestriction(data.sdp.sdp, 0),
-          );
         });
         context.listen(constants.socket_type.CANDIDATE, async data => {
+          console.log('data: CANDIDATE', data);
           debugger;
           if (data.candidate) {
             if (!localPC.current) {
-              await initCall(localStream.current);
+              await initCall(localStream);
             }
-            if (!localStream.current) {
-              startLocalStream();
-            }
+
             localPC.current.addIceCandidate(
               new RTCIceCandidate(data.candidate),
             );
@@ -384,11 +351,10 @@ function CallScreen({}, ref) {
           },
         };
         const newStream = await mediaDevices.getUserMedia(constraints);
-        if (!localStream.current) {
-          await initCall(newStream);
-        }
+        localPC.current.addStream(newStream);
+
         resolve();
-        localStream.current = newStream;
+        setLocalStream(newStream);
       } catch (error) {
         reject();
         handleGetUserMediaError(error);
@@ -399,7 +365,7 @@ function CallScreen({}, ref) {
   };
 
   const initCall = async newStream => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
       const configuration = {
         iceServers: [
@@ -443,7 +409,10 @@ function CallScreen({}, ref) {
         }
       };
 
-      localPC.current.addStream(newStream);
+      if (!localStream) {
+        console.log('localStream:1111 ', localStream);
+        await startLocalStream();
+      }
       /**
        * On Ice Connection State Change
        */
@@ -501,64 +470,28 @@ function CallScreen({}, ref) {
     });
   };
 
-  function setBandwidth(sdp) {
-    const audioBandwidth = 50;
-    const videoBandwidth = 256;
-    sdp = sdp.replace(
-      /a=mid:audio\r\n/g,
-      'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n',
-    );
-    sdp = sdp.replace(
-      /a=mid:video\r\n/g,
-      'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n',
-    );
-    return sdp;
-  }
-  function handle_offer_sdp(offer) {
-    let sdp = offer.sdp.split('\r\n'); //convert to an concatenable array
-    let new_sdp = '';
-    let position = null;
-    sdp = sdp.slice(0, -1); //remove the last comma ','
-    for (let i = 0; i < sdp.length; i++) {
-      //look if exists already a b=AS:XXX line
-      if (sdp[i].match(/b=AS:/)) {
-        position = i; //mark the position
-      }
-    }
-    if (position) {
-      sdp.splice(position, 1); //remove if exists
-    }
-    for (let i = 0; i < sdp.length; i++) {
-      if (sdp[i].match(/m=video/)) {
-        //modify and add the new lines for video
-        new_sdp += sdp[i] + '\r\n' + 'b=AS:' + '128' + '\r\n';
-      } else {
-        if (sdp[i].match(/m=audio/)) {
-          //modify and add the new lines for audio
-          new_sdp += sdp[i] + '\r\n' + 'b=AS:' + 64 + '\r\n';
-        } else {
-          new_sdp += sdp[i] + '\r\n';
-        }
-      }
-    }
-    return new_sdp; //return the new sdp
-  }
   const onCreateOfferSuccess = async (offer, booking) => {
     try {
       console.log('Offer from localPC, setLocalDescription');
-      await localPC.current.setLocalDescription(offer);
-      console.log('remotePC, setRemoteDescription');
       soundUtils.play('call_phone.mp3');
       context.onSend(
         constants.socket_type.OFFER,
         {
           booking,
           to: socketId2.current,
-          from: socketId.current,
-          sdp: localPC.current.localDescription,
+          from: userApp.currentUser.id,
+          sdp: offer,
         },
-        res => {
-          debugger;
+        async res => {
+          console.log('res: ', res);
+          console.log('callId: ', callId);
+          callId.current = res.callId;
+          console.log('localPC.current: ', localPC.current);
+          if (localPC.current) {
+            await localPC.current.setLocalDescription(
+              new RTCSessionDescription(offer),
+            );
+          }
         },
       );
     } catch (error) {}
@@ -568,28 +501,14 @@ function CallScreen({}, ref) {
       showModal();
       console.log('localPC: ', localPC);
       if (!localPC.current) {
-        await initCall(localStream.current);
+        await initCall(localStream);
       }
-      if (!localStream.current) {
-        startLocalStream();
-      }
+
       socketId2.current = booking?.doctor?.id;
       if (isOffer) {
         InCallManager.start({media: 'video'});
         setState({makeCall: true, booking});
         const offer = await localPC.current.createOffer();
-        debugger;
-        // offer.sdp = handle_offer_sdp(offer)
-        // offer.sdp = BandwidthHandler.setOpusAttributes(offer.sdp, {
-        //     'stereo': 0, // to disable stereo (to force mono audio)
-        //     'sprop-stereo': 1,
-        //     'maxaveragebitrate': 500 * 1024 * 8, // 500 kbits
-        //     'maxplaybackrate': 500 * 1024 * 8, // 500 kbits
-        //     'cbr': 0, // disable cbr
-        //     'useinbandfec': 1, // use inband fec
-        //     'usedtx': 1, // use dtx
-        //     'maxptime': 3
-        // });
         onCreateOfferSuccess(offer, booking);
         console.log('offer: ', offer);
       }
@@ -600,48 +519,48 @@ function CallScreen({}, ref) {
   };
   const createAnswer = async () => {
     try {
-      const {data2} = state;
-      console.log('data21111: ', data2);
       InCallManager.stopRingtone();
       InCallManager.start({media: 'video'});
       Vibration.cancel();
       const answer = await localPC.current.createAnswer();
       console.log(`Answer from remotePC: ${answer.sdp}`);
-      // answer.sdp = handle_offer_sdp(answer)
-      // answer.sdp = BandwidthHandler.setOpusAttributes(answer.sdp, {
-      //     'stereo': 0, // to disable stereo (to force mono audio)
-      //     'sprop-stereo': 1,
-      //     'maxaveragebitrate': 500 * 1024 * 8, // 500 kbits
-      //     'maxplaybackrate': 500 * 1024 * 8, // 500 kbits
-      //     'cbr': 0, // disable cbr
-      //     'useinbandfec': 1, // use inband fec
-      //     'usedtx': 1, // use dtx
-      //     'maxptime': 3
-      // });
-      await localPC.current.setLocalDescription(answer);
+
       setState({isAnswerSuccess: true});
       onTimeOut();
 
-      context.onSend(constants.socket_type.ANSWER, {
-        to: socketId2.current,
-        from: userApp.currentUser.id,
-        sdp: localPC.current.localDescription,
-      });
+      context.onSend(
+        constants.socket_type.ANSWER,
+        {
+          callId: callId.current,
+          to: socketId2.current,
+          from: userApp.currentUser.id,
+          sdp: answer,
+        },
+        () => {
+          localPC.current &&
+            localPC.current.setLocalDescription(
+              new RTCSessionDescription(answer),
+            );
+        },
+      );
     } catch (error) {
       debugger;
       console.log('error: ', error);
     }
   };
-  const switchCamera = () => {
-    localStream.current
-      .getVideoTracks()
-      .forEach(track => track._switchCamera());
+  const switchCamera = async () => {
+    console.log('localStream: ', localStream);
+    if (!localStream || localStream?.getVideoTracks?.().length == 0) {
+      await startLocalStream();
+    }
+
+    localStream.getVideoTracks().forEach(track => track._switchCamera());
   };
 
   // Mutes the local's outgoing audio
   const toggleMute = () => {
-    // if (!remoteStream) return;
-    localStream.current.getAudioTracks().forEach(track => {
+    if (!localStream) return;
+    localStream.getAudioTracks().forEach(track => {
       console.log(track.enabled ? 'muting' : 'unmuting', ' local track', track);
       track.enabled = !track.enabled;
       setIsMuted(!track.enabled);
@@ -650,9 +569,10 @@ function CallScreen({}, ref) {
 
   const closeStreams = () => {
     if (localPC.current) {
+      console.log('localPC.current: ', localPC.current);
       debugger;
       localPC.current.removeStream(remoteStream);
-      localPC.current.removeStream(localStream.current);
+      // localPC.current.removeStream(localStream);
       localPC.current.close();
       localPC.current = null;
     }
@@ -667,8 +587,8 @@ function CallScreen({}, ref) {
     if (timeout.current) clearTimeout(timeout.current);
     setIsSpeak(true);
     setIsMuted(false);
-    if (UUID.current) {
-      RNCallKeep.reportEndCallWithUUID(UUID.current, 2);
+    if (callId.current) {
+      RNCallKeep.reportEndCallWithUUID(callId.current, 2);
     }
   };
   const toggleSpeaker = () => {
@@ -676,12 +596,17 @@ function CallScreen({}, ref) {
     InCallManager.setForceSpeakerphoneOn(!isSpeak);
   };
   const rejectCall = () => {
+    console.log('callId.current: ', callId.current);
     // RNCallKeepManager.endCall()
     let type =
       state.isAnswerSuccess || state.makeCall
         ? constants.socket_type.LEAVE
         : constants.socket_type.REJECT;
-    context.onSend(constants.socket_type.LEAVE, {to: socketId2.current, type});
+    context.onSend(constants.socket_type.LEAVE, {
+      to: socketId2.current,
+      callId: callId.current,
+      type,
+    });
     closeStreams();
   };
   return (
@@ -701,7 +626,7 @@ function CallScreen({}, ref) {
             <RTCView
               style={styles.rtc}
               zOrder={-1}
-              mirror={true}
+              mirror={false}
               objectFit="cover"
               streamURL={remoteStream.toURL()}
             />
@@ -710,12 +635,12 @@ function CallScreen({}, ref) {
 
         {localPC.current ? <BandWidth localPc={localPC.current} /> : null}
         <View style={[styles.groupLocalSteam]}>
-          {localStream.current && (
+          {localStream && (
             <RTCView
               style={[styles.rtc]}
               zOrder={1}
-              mirror={true}
-              streamURL={localStream.current.toURL()}
+              mirror={false}
+              streamURL={localStream.toURL()}
             />
           )}
           <TouchableOpacity onPress={switchCamera} style={styles.buttonSwitch}>
@@ -745,7 +670,7 @@ function CallScreen({}, ref) {
             flex: 1,
             justifyContent: 'flex-end',
           }}>
-          {localStream.current && (state.isAnswerSuccess || state.makeCall) && (
+          {localStream && (state.isAnswerSuccess || state.makeCall) && (
             <View style={styles.toggleButtons}>
               <TouchableOpacity onPress={toggleMute} style={{padding: 10}}>
                 {isMuted ? (

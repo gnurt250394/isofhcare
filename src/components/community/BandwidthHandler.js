@@ -3,14 +3,14 @@ function getSdp(sdp) {
   let bandwidth = {
     screen: 300, // 300kbits minimum
     audio: 50, // 50kbits  minimum
-    video: 128, // 256kbits (both min-max)
+    video: 512, // 256kbits (both min-max)
   };
   let isScreenSharing = false;
   // sdp = setBAS(sdp, bandwidth, isScreenSharing);
-  sdp = setVideoBitrates(sdp, {
-    min: bandwidth.video,
-    max: bandwidth.video,
-  });
+  // sdp = setVideoBitrates(sdp, {
+  //   min: 128,
+  //   max: 1280,
+  // });
   // sdp = setOpusAttributes(sdp);
   return sdp;
 }
