@@ -335,7 +335,7 @@ class AccountScreen extends Component {
                   width={24}
                   height={24}
                 />
-                <Text style={styles.itemText}>Lịch khám</Text>
+                <Text style={styles.itemText}>Lịch hẹn</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               <View style={styles.borderMenu}></View>

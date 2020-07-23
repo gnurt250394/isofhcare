@@ -484,7 +484,7 @@ class DetailHistoryBookingScreen extends Component {
                           <Text
                             style={
                               styles.txtBookingCall
-                            }>{`Gọi khám\nonline`}</Text>
+                            }>{`Gọi tư vấn`}</Text>
                         </TouchableOpacity>
                       </View>
                     ) : (
@@ -511,7 +511,7 @@ class DetailHistoryBookingScreen extends Component {
                           <Text
                             style={
                               styles.txtBookingCall
-                            }>{`Gọi khám\nonline`}</Text>
+                            }>{`Gọi tư vấn`}</Text>
                         </TouchableOpacity>
                       </View>
                     )
