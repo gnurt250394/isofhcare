@@ -19,16 +19,13 @@ export default ({children}) => {
   console.log('userApp: 111', userApp);
 
   const clearSocket = () => {
-    debugger;
     if (socket.current) socket.current.disconnect();
     socket.current = null;
   };
   const onSend = (type, data = {}, callback) => {
-    debugger;
     if (socket.current) socket.current.emit(type, data, callback);
   };
   const listen = (event, data, callback) => {
-    debugger;
     if (socket.current) socket.current.on(event, data, callback);
   };
   
