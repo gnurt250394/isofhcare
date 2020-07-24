@@ -463,58 +463,55 @@ class DetailHistoryBookingScreen extends Component {
                 </View>
                 {isOnline ? (
                   this.getTimeOnline() &&
-                  (this.state.booking.status == 'ACCEPTED' ||
-                    this.state.booking.status == 'CHECKIN') ? (
-                    <View
-                      style={[
-                        styles.flex,
-                        {
-                          borderLeftColor: '#00000050',
-                          borderLeftWidth: 1,
-                        },
-                      ]}>
-                      <TouchableOpacity
-                        onPress={this.onCallVideo}
-                        style={styles.buttonBookingCall}>
-                        <ScaledImage
-                          width={20}
-                          height={20}
-                          source={require('@images/new/videoCall/ic_call.png')}
-                        />
-                        <Text
-                          style={
-                            styles.txtBookingCall
-                          }>{`Gọi khám\nonline`}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    <View
-                      style={[
-                        styles.flex,
-                        {
-                          borderLeftColor: '#00000050',
-                          borderLeftWidth: 1,
-                        },
-                      ]}>
-                      <TouchableOpacity
-                        disabled={true}
-                        onPress={this.onCallVideo}
+                    (this.state.booking.status == 'ACCEPTED' ||
+                      this.state.booking.status == 'CHECKIN') ? (
+                      <View
+                        style={[
+                          styles.flex,
+                          {
+                            borderLeftColor: '#00000050',
+                            borderLeftWidth: 1,
+                          },
+                        ]}>
+                        <TouchableOpacity
+                          onPress={this.onCallVideo}
+                          style={styles.buttonBookingCall}>
+                          <ScaledImage
+                            width={20}
+                            height={20}
+                            source={require('@images/new/videoCall/ic_call.png')}
+                          />
+                          <Text
+                            style={
+                              styles.txtBookingCall
+                            }>{`Gọi tư vấn`}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View
                         style={[
                           styles.buttonBookingCall,
                           {backgroundColor: '#ffcf99'},
                         ]}>
-                        <ScaledImage
-                          width={20}
-                          height={20}
-                          source={require('@images/new/videoCall/ic_call.png')}
-                        />
-                        <Text
-                          style={
-                            styles.txtBookingCall
-                          }>{`Gọi khám\nonline`}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )
+                        <TouchableOpacity
+                          disabled={true}
+                          onPress={this.onCallVideo}
+                          style={[
+                            styles.buttonBookingCall,
+                            { backgroundColor: '#ffcf99' },
+                          ]}>
+                          <ScaledImage
+                            width={20}
+                            height={20}
+                            source={require('@images/new/videoCall/ic_call.png')}
+                          />
+                          <Text
+                            style={
+                              styles.txtBookingCall
+                            }>{`Gọi tư vấn`}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )
                 ) : null}
               </View>
               {/** bác sĩ */}
