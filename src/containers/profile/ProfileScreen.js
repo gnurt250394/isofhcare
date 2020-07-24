@@ -448,7 +448,7 @@ class ProfileScreen extends Component {
         if (accountSource && phoneProfile) {
             return null
         }
-        else if (this.state.fromHis) {
+        else if (this.state.dataProfile?.medicalRecords?.hospitalName && this.state.dataProfile?.medicalRecords?.value) {
             return null
         }
         else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
@@ -605,7 +605,7 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
+                            {dataProfile?.medicalRecords?.hospitalName ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Cơ sở y tế</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
@@ -620,7 +620,7 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
+                            {dataProfile?.medicalRecords?.value ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Mã bệnh nhân</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
