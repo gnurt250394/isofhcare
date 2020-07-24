@@ -194,8 +194,9 @@ class VerifyPhoneNumberScreen extends React.Component {
                             break
                         case 4:
                             {
+                                let dataOld = this.props.navigation.getParam('dataOld', null)
                                 let phone = this.props.navigation.getParam('phone', null)
-                                let id = this.props.userApp.currentUser.id
+                                let id = dataOld ? dataOld.medicalRecords?.id : this.props.userApp.currentUser.id
                                 connectionUtils
                                     .isConnected()
                                     .then(s => {
@@ -218,7 +219,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                                                         switch (res.code) {
                                                             case 0:
                                                                 {
-                                                                    this.props.navigation.replace('verifyPhone', { verify: 4, phone: phone })
+                                                                    this.props.navigation.replace('verifyPhone', { verify: 4, dataOld, phone: phone })
                                                                     snackbar.show('Mã xác thực đã được gửi lại', 'success')
 
                                                                 }
@@ -388,17 +389,24 @@ class VerifyPhoneNumberScreen extends React.Component {
                             let data = {
                                 'otp': text
                             }
+                            let dataOld = this.props.navigation.getParam('dataOld', null)
                             profileProvider.verifyFillPhone(data).then(res => {
 
                                 this.setState({
                                     disabled: false
                                 })
                                 if (res.code == 0) {
-                                    let user = this.props.userApp.currentUser
-                                    user.phone = this.props.navigation.getParam('phone')
-                                    user.requestInputPhone = false
-                                    this.props.dispatch(redux.userLogin(user));
-                                    this.props.navigation.pop()
+                                    if (dataOld) {
+                                        this.props.navigation.replace('profile', {
+                                            id: dataOld?.medicalRecords?.id,
+                                        })
+                                    } else {
+                                        let user = this.props.userApp.currentUser
+                                        user.phone = this.props.navigation.getParam('phone')
+                                        user.requestInputPhone = false
+                                        this.props.dispatch(redux.userLogin(user));
+                                        this.props.navigation.pop()
+                                    }
                                     snackbar.show('Thêm số điện thoại thành công', 'success')
                                 } else if (res.code == 4) {
                                     snackbar.show('Mã xác thực không đúng')

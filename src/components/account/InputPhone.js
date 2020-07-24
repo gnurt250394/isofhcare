@@ -224,6 +224,7 @@ class InputPhone extends Component {
                             style={styles.updatePass}>
                             {this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txbtnUpdate}>{'XÁC NHẬN'}</Text>}
                         </TouchableOpacity>
+
                     </View>
                     <TouchableOpacity style={styles.btn}>
                         <Text style={styles.btntext} onPress={this.goHome}>
@@ -232,6 +233,7 @@ class InputPhone extends Component {
                     </TouchableOpacity>
                     {/* <View style={{ height: 50 }}></View> */}
                 </View>
+
             </Modal>
         )
     }
@@ -249,13 +251,17 @@ const styles = StyleSheet.create({
     btntext: {
         color: '#3161AD',
         textAlign: 'center',
-        padding: 15,
         textDecorationLine: "underline",
         fontWeight: 'bold',
-        fontSize: 16
+        fontSize: 16,
+        padding: 0
     },
     btn: {
-        marginBottom: 49
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 49,
+        alignSelf: 'center',
+        padding: 5
     },
     header: { paddingHorizontal: 0 },
     txbtnUpdate: { color: '#FFF', fontSize: 17 },

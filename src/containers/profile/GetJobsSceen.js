@@ -1,13 +1,16 @@
-import React, { Component, } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { View, FlatList, TouchableOpacity, Text, TextInput, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
+import serviceTypeProvider from '@data-access/service-type-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
+import snackbar from '@utils/snackbar-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
 import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 
-class SelectProvinceScreen extends Component {
+class GetJobsSceen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,10 +23,10 @@ class SelectProvinceScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    selectProvinces(provinces) {
+    selectZone(zone) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(provinces);
+            callback(zone);
             this.props.navigation.pop();
         }
     }
@@ -31,13 +34,13 @@ class SelectProvinceScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            locationProvider.getAllProvince().then(s => {
+            locationProvider.getAllJobs().then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
                     if (s) {
                         this.setState({
-                            data: s.data.provinces
+                            data: s
                         }, () => {
                             this.onSearch();
                         });
@@ -52,7 +55,7 @@ class SelectProvinceScreen extends Component {
         });
     }
 
-    showSearch() {
+    showSearch = () => {
         this.setState({
             showSearch: !this.state.showSearch,
             searchValue: ""
@@ -64,36 +67,37 @@ class SelectProvinceScreen extends Component {
     onSearch = () => {
         var s = this.state.searchValue;
         var listSearch = this.state.data.filter(function (item) {
-            return (item == null || item.countryCode.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
+            return (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
         });
         this.setState({ dataSearch: listSearch });
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
+            <TouchableOpacity onPress={this.showSearch} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
     goBack = () => this.props.navigation.pop()
     keyExtractor = (item, index) => index.toString()
+
     headerComponent = () => {
         return (
             !this.state.refreshing &&
                 (!this.state.dataSearch || this.state.dataSearch.length == 0) ?
                 <View style={styles.containerSearchValue}>
                     <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                    <Text>{constants.none_service_type_match}<Text style={styles.txtSearchValue}>{this.state.searchValue}</Text></Text>
+                    <Text>{'Không tìm thấy dữ liệu phù hợp'}<Text style={styles.txtSeatchValue}>{this.state.searchValue}</Text></Text>
                 </View> : null
         )
     }
     footerComponent = () => <View style={{ height: 10 }} />
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity onPress={this.selectProvinces.bind(this, item)}>
+            <TouchableOpacity onPress={this.selectZone.bind(this, item)}>
                 <View style={styles.containerItem}>
                     <Text style={styles.txtItem}>
-                        {item.countryCode}
+                        {item.name}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -103,7 +107,7 @@ class SelectProvinceScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={this.goBack}><Text>{constants.actionSheet.cancel}</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={'Chọn Tỉnh/Thành phố'}
+                titleStyle={{ marginRight: 0 }} title={'Chọn nghề nghiệp'}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
@@ -125,7 +129,7 @@ class SelectProvinceScreen extends Component {
                 }
 
                 <FlatList
-                    style={styles.flatList}
+                    style={styles.flatlist}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
                     keyExtractor={this.keyExtractor}
@@ -147,7 +151,7 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(SelectProvinceScreen);
+export default connect(mapStateToProps)(GetJobsSceen);
 
 
 const styles = StyleSheet.create({
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#00000011',
         borderBottomWidth: 0.7
     },
-    txtSearchValue: {
+    txtSeatchValue: {
         fontWeight: 'bold',
         color: constants.colors.actionbar_title_color
     },
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    flatList: {
+    flatlist: {
         flex: 1,
         backgroundColor: '#FFF'
     },
@@ -196,7 +200,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         elevation: 5,
         height: 55,
-        justifyContent: 'center', alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: constants.colors.actionbar_color,
         flexDirection: 'row'
     },
