@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Keyboard } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
+import ScaledImage from "mainam-react-native-scaleimage";
+import medicalRecordProvider from '@data-access/medical-record-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
+import clientUtils from '@utils/client-utils';
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -13,74 +16,47 @@ import ActionSheet from 'react-native-actionsheet'
 import snackbar from "@utils/snackbar-utils";
 import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
+import userProvider from "@data-access/user-provider";
 import connectionUtils from "@utils/connection-utils";
-import dateUtils from 'mainam-react-native-date-utils';
-import NavigationService from "@navigators/NavigationService";
+import dateUtils from "mainam-react-native-date-utils";
 
-class ProfileScreen extends Component {
+class EditProfileScreen extends Component {
     constructor(props) {
         super(props);
-        let id = this.props.navigation.getParam('id', null)
-
+        let data = this.props.navigation.getParam('dataOld', null)
+        let dataProfile = data?.medicalRecords || {}
+        let country = data?.country || {}
+        let district = data?.district || {}
+        let province = data?.province || {}
+        let zone = data?.zone || {}
         this.state = {
-            id,
-            dataProfile: {}
+            item: data,
+            avatar: data && data.medicalRecords && data.medicalRecords.avatar ? { uri: data.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png"),
+            name: dataProfile && dataProfile.name ? dataProfile.name : '',
+            date: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
+            txGender: dataProfile && dataProfile.gender == 1 ? 'Nam' : 'Nữ',
+            gender: dataProfile && dataProfile.gender ? dataProfile.gender : 0,
+            dobOld: dataProfile && dataProfile.dob ? dataProfile.dob : '',
+            height: dataProfile && dataProfile.height ? dataProfile.height.toString() : '',
+            weight: dataProfile && dataProfile.weight ? dataProfile.weight.toString() : '',
+            address: dataProfile && dataProfile.village && dataProfile.village != ' ' ? dataProfile.village : '',
+            relationshipType: dataProfile && dataProfile.relationshipType ? dataProfile.relationshipType : '',
+            profileNo: dataProfile && dataProfile.profileNo ? dataProfile.profileNo : '',
+            id: dataProfile && dataProfile.id,
+            dob: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-') : '',
+            phone: dataProfile && dataProfile.phone,
+            data: dataProfile ? dataProfile : {},
+            country,
+            districts: district,
+            provinces: province,
+            zone,
+            isReset: 1,
+            isLoading: false,
+            image: null
         };
-    }
-    componentDidMount() {
-        this.onGetData()
-
-    }
-    onGetData = () => {
-        let id = this.state.id
-        this.setState({
-            isLoading: true
-        }, () => {
-            if (id) {
-                profileProvider.getDetailsMedical(id).then(res => {
-
-                    if (res && res.code == 0) {
-                        console.log('res: ', res);
-                        if (res.data?.medicalRecords?.hospitalName && res.data?.medicalRecords?.value) {
-                            this.setState({
-                                fromHis: true,
-                                dataProfile: res.data,
-                                isLoading: false
-                            }, () => {
-                                this.renderAddress()
-                            })
-                        } else {
-                            this.setState({
-                                fromHis: false,
-                                dataProfile: res.data,
-                                isLoading: false
-
-                            }, () => {
-                                this.renderAddress()
-                            })
-                        }
-
-                    } else {
-                        this.setState({
-                            isLoading: false
-                        })
-                    }
-                }).catch(err => {
-                    this.setState({
-                        isLoading: false
-                    })
-
-                })
-            }
-        })
     }
     defaultImage = () => {
         return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-    }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps) {
-            this.onGetData()
-        }
     }
     renderRelation = () => {
 
@@ -186,7 +162,9 @@ class ProfileScreen extends Component {
                 break
         }
     }
-
+    componentDidMount = () => {
+        this.renderRelation()
+    };
 
     onShowGender = () => {
         this.actionSheetGender.show();
@@ -280,7 +258,6 @@ class ProfileScreen extends Component {
                             // });
                         })
                         .catch(e => {
-
                             this.setState({ isLoading: false }, () => { });
                             snackbar.show("Upload ảnh không thành công", "danger");
                         });
@@ -299,8 +276,25 @@ class ProfileScreen extends Component {
 
         this.setState({ provinces, districts, zone, address })
 
-    }
+    } selectCountry(country) {
 
+        this.setState({ country })
+
+    }
+    renderAddress = () => {
+        const { provinces, districts, zone } = this.state
+        let value = ''
+        let address = this.state.address ? this.state.address + ' - ' : ''
+        if (provinces && districts && zone) {
+            value = address + ' ' + zone.name + ' - ' + districts.name + ' - ' + provinces.countryCode
+        }
+        return value
+    }
+    onSelectCountry = () => {
+        this.props.navigation.navigate('selectCountry', {
+            onSelected: this.selectCountry.bind(this),
+        })
+    }
     onCreateProfile = () => {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
@@ -361,109 +355,9 @@ class ProfileScreen extends Component {
             return 'Chọn ngày sinh'
         }
     }
-    renderAddress = () => {
-        let dataLocaotion = this.state.dataProfile
-
-        let district = dataLocaotion.district ? dataLocaotion.district.name : null
-        let province = dataLocaotion.province ? dataLocaotion.province.countryCode : null
-        let zone = dataLocaotion.zone ? dataLocaotion.zone.name : ''
-        let village = dataLocaotion.medicalRecords.village && dataLocaotion.medicalRecords.village != ' ' ? dataLocaotion.medicalRecords.village : null
-
-        if (district && province && zone && village) {
-            this.setState({
-                location: `${village}\n${zone}\n${district}\n${province}`
-            })
-
-        }
-        else if (district && province && zone) {
-            this.setState({
-                location: `${zone}\n${district}\n${province}`
-            })
-
-        }
-        else if (district && province && village) {
-            this.setState({
-                location: `${village}\n${district}\n${province}`
-            })
-
-        }
-        else if (district && province) {
-            this.setState({
-                location: `${district}\n${province}`
-            })
-
-        }
-
-        else if (province && village) {
-            this.setState({
-                location: `${village}\n${province}`
-            })
-
-        }
-        else if (province) {
-            this.setState({
-                location: `${province}`
-            })
-
-        }
-        else if (village) {
-
-            this.setState({
-                location: `${village}`
-            })
-
-        } else if (!village && !district && !province && !zone) {
-            this.setState({
-                location: null
-            })
-        }
-    }
-    onEdit(isEdit) {
-        debugger
-        if (isEdit) {
-            this.onGetData()
-        }
-    }
-    onEditProfile = () => {
-
-        if (this.props.userApp.currentUser.accountSource == 'VENDOR') {
-            this.props.navigation.replace('editProfileUsername', {
-                dataOld: this.state.dataProfile,
-                // onEdit: this.onEdit.bind(this)
-            })
-        }
-        else
-            this.props.navigation.navigate('createProfile', {
-                dataOld: this.state.dataProfile,
-                onEdit: this.onEdit.bind(this)
-            })
-    }
-    renderEdit = () => {
-        let phoneProfile = this.state.dataProfile?.medicalRecords?.phone
-
-        let alreadyHaveAccount = this.state.dataProfile?.medicalRecords?.alreadyHaveAccount
-
-        let phone = this.props.userApp.currentUser.phone
-        let accountSource = this.props.userApp.currentUser.accountSource == "VENDOR"
-        if (accountSource && phoneProfile) {
-            return null
-        }
-        else if (this.state.fromHis) {
-            return null
-        }
-        else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
-            return (
-                <TouchableOpacity
-                    onPress={this.onEditProfile}
-                    style={styles.buttonSave}>
-                    <Text style={styles.txtSave}>Sửa</Text>
-                </TouchableOpacity>
-            )
-        }
-    }
     render() {
-        const { dataProfile, avatar, isLoading, location } = this.state
-
+        const { item, avatar, isLoading } = this.state
+        let age = this.state.dob ? new Date().getFullYear() - this.state.dob.getFullYear() : null
 
         let maxDate = new Date();
         maxDate = new Date(
@@ -477,13 +371,15 @@ class ProfileScreen extends Component {
             maxDate.getMonth(),
             maxDate.getDate()
         );
-        let age = dataProfile?.medicalRecords?.dob ? new Date().getFullYear() - dataProfile?.medicalRecords?.dob?.toDateObject('-').getFullYear() : null
-        let gender = dataProfile?.medicalRecords?.gender == 0 ? 'Nữ' : dataProfile?.medicalRecords?.gender == 1 ? 'Nam' : null
         return (
             <ActivityPanel
-                title={'Chi tiết hồ sơ'}
+                title={this.state.item ? 'Chỉnh sửa hồ sơ' : 'Thêm mới hồ sơ'}
                 isLoading={isLoading}
-                menuButton={this.renderEdit()}
+                menuButton={<TouchableOpacity
+                    onPress={this.onCreateProfile}
+                    style={styles.buttonSave}>
+                    <Text style={styles.txtSave}>Lưu</Text>
+                </TouchableOpacity>}
                 containerStyle={{ backgroundColor: '#f8f8f8' }}
                 titleStyle={styles.titleStyle}
 
@@ -491,29 +387,27 @@ class ProfileScreen extends Component {
 
                 <ScrollView>
                     <View style={styles.container}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}><View
-                            // onPress={this.selectImage}
+                        <View style={styles.groupTitle}>
+                            <Text style={styles.txtTitle1}>Vui lòng nhập thông tin chính xác!</Text>
+                            <Text style={styles.txtTitle2}>Hồ sơ được sử dụng để đặt khám do đó chỉ có thể sửa hồ sơ tại nơi khám.</Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={this.selectImage}
                             style={styles.buttonAvatar}>
                             <ImageLoad
                                 resizeMode="cover"
                                 imageStyle={styles.borderImage}
                                 borderRadius={40}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImage]}
-                                placeholderSource={dataProfile?.medicalRecords?.avatar ? { uri: dataProfile?.medicalRecords?.avatar } : require("@images/new/user.png")}
+                                placeholderSource={require("@images/new/user.png")}
                                 resizeMode="cover"
                                 loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={{ uri: dataProfile.medicalRecords && dataProfile.medicalRecords.avatar ? dataProfile.medicalRecords.avatar.absoluteUrl() : '' || '' }}
+                                source={avatar}
                                 style={styles.image}
                                 defaultImage={this.defaultImage}
                             />
-                            {/* <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} /> */}
-                        </View>
-                            <View style={{ marginLeft: 20 }}>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#000' }}>{dataProfile?.medicalRecords?.name || ''}</Text>
-                                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#075BB5' }}>{dataProfile?.medicalRecords?.dob?.toDateObject('-').format('dd/MM/yyyy') || ''} - {age ? age + ' tuổi' : age == 0 ? '1 tuổi' : ''}</Text>
-
-                            </View>
-                        </View>
+                            <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} />
+                        </TouchableOpacity>
                         {/* <View style={styles.containerScan}>
                                 <View style={styles.groupScan}>
                                     <Text style={styles.txtScan}>QUÉT CMND </Text>
@@ -523,224 +417,306 @@ class ProfileScreen extends Component {
                                 <Text style={styles.txtOr}>Để điền thông tin nhanh hơn!</Text>
                             </View> */}
                         <Form ref={ref => (this.form = ref)}>
-
-                            {gender ? <Field style={[styles.containerField,
-                            ]}>
-                                <Text style={styles.txLabel}>Giới tính</Text>
-                                <Field style={{ flex: 1 }}>
+                            {/** Văn bằng chuyên môn */}
+                            <Field style={[styles.containerField, {
+                                borderTopColor: '#00000011',
+                                borderTopWidth: 1
+                            }]}>
+                                <Text style={styles.txLabel}>Họ và tên</Text>
+                                <Field style={styles.fieldFlex}>
                                     <TextField
-                                        errorStyle={styles.err}
+                                        errorStyle={[styles.err,]}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Họ và tên không được để trống",
+                                            }
+                                        }}
+
+                                        placeholder={'Nhập họ và tên'}
                                         multiline={true}
-                                        // onPress={this.onShowGender}
                                         inputStyle={[styles.input]}
-                                        value={gender}
+                                        onChangeText={this.onChangeText("name")}
+                                        value={this.state.name}
                                         autoCapitalize={"none"}
+                                        autoCorrect={false}
+                                        editable={this.state.status == "ACTIVE" ? false : true}
+                                    >
+
+                                    </TextField>
+                                </Field>
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
+                            {/** Học vị */}
+                            <Field style={[styles.containerField]}>
+                                <Text style={styles.txLabel}>Ngày sinh</Text>
+                                <Field style={styles.fieldFlex}>
+                                    <TextField
+                                        multiline={true}
+                                        dateFormat={"dd/MM/yyyy"}
+                                        errorStyle={styles.err}
+                                        splitDate={"/"}
+                                        onPress={() => {
+                                            this.setState({ toggelDateTimePickerVisible: true })
+                                        }}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Ngày sinh không được để trống",
+                                            }
+                                        }}
                                         editable={false}
+                                        inputStyle={[styles.input]}
+                                        placeholder="Chọn ngày sinh"
+                                        value={this.state.date}
+                                        autoCapitalize={"none"}
+                                        // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     >
                                     </TextField>
                                 </Field>
-                            </Field> : <Field></Field>}
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
 
-                            {this.state.location ? <Field style={[styles.containerField, {
+                            <Field style={[styles.containerField,
+                            ]}>
+                                <Text style={styles.txLabel}>Giới tính</Text>
+                                <Field style={styles.fieldFlex}>
+                                    <TextField
+                                        errorStyle={styles.err}
+                                        multiline={true}
+                                        onPress={this.onShowGender}
+                                        editable={false}
+                                        inputStyle={[styles.input]}
+                                        placeholder="Chọn giới tính"
+                                        value={!this.state.valueGender && this.state.valueGender !== 0 ? '' : this.state.valueGender == 0 ? 'Nữ' : 'Nam'}
+                                        autoCapitalize={"none"}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Giới tính không được để trống",
+                                            }
+                                        }}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    >
+                                    </TextField>
+                                </Field>
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
+
+                            {/**Giới tính */}
+
+
+                            {/** Ngày sinh */}
+
+                            {/*** Số điện thoại*/}
+                            {/* <Field style={[styles.containerField, {
+                                marginTop: 10,
+                                borderTopColor: '#00000011',
+                                borderTopWidth: 1
+                            }]}>
+                                <Text style={styles.txLabel}>Số điện thoại</Text>
+                                <Field style={styles.fieldFlex}>
+                                    <TextField
+                                        multiline={true}
+                                        editable={false}
+                                        inputStyle={[styles.input]}
+                                        placeholder="Số điện thoại"
+                                        errorStyle={styles.err}
+                                        value={this.props.userApp.currentUser.phone}
+                                        autoCapitalize={"none"}
+                                        autoCorrect={false}
+                                    >
+
+                                    </TextField>
+                                </Field>
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field> */}
+                            {/** Tỉnh thành phố */}
+                            <Field style={[styles.containerField, {
                                 marginTop: 10,
                                 borderTopColor: '#00000011',
                                 borderTopWidth: 1
                             }]}>
                                 <Text style={styles.txLabel}>Địa chỉ</Text>
-                                <Field style={{ flex: 1 }}>
+                                <Field style={styles.fieldFlex}>
                                     <TextField
                                         multiline={true}
-                                        inputStyle={[styles.input]}
-                                        value={this.state.location}
-                                        autoCapitalize={"none"}
+                                        errorStyle={styles.err}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Địa chỉ không được để trống",
+                                            }
+                                        }}
+                                        onPress={this.onSelectProvince}
                                         editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.nation?.name ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Dân tộc</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.nation?.name || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile && dataProfile.country && dataProfile.country.name ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Quốc tịch</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={dataProfile?.country?.name || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.job?.name ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Nghề nghiệp</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.job?.name || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Cơ sở y tế</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.hospitalName || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Mã bệnh nhân</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.value || ''}
-                                        autoCapitalize={"none"}
-                                        editable={false}
-                                        autoCorrect={false}
-                                    >
-                                    </TextField>
-                                </Field>
-                            </Field> : <Field></Field>}
-                            {/* <Field style={[styles.containerField]}>
-                                <Text style={styles.txLabel}>Nghề nghiệp</Text>
-                                <Field style={{ flex: 1 }}>
-                                    <TextField
-                                        multiline={true}
-                                        onChangeText={this.onChangeText("address")}
-                                        inputStyle={[styles.input]}
-                                        value={this.state.address}
+                                        placeholder="Nhập địa chỉ"
+                                        // value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : ''}
                                         autoCapitalize={"none"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
-                                        editable={false}
                                     >
                                     </TextField>
                                 </Field>
-                            </Field> */}
-                            {age && age < 14 || age == 0 ?
-                                <Field>
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianName ? <Field style={[styles.containerField, {
-                                        marginTop: 10,
-                                        borderTopColor: '#00000011',
-                                        borderTopWidth: 1
-                                    }]}>
-                                        <Text style={styles.txLabel}>Người bảo lãnh</Text>
-                                        <Field style={{ flex: 1 }}>
-                                            <TextField
-                                                multiline={true}
-                                                editable={false}
-                                                inputStyle={[styles.input]}
-                                                errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianName || ''}
-                                                autoCapitalize={"none"}
-                                                autoCorrect={false}
-                                            >
-
-                                            </TextField>
-                                        </Field>
-                                    </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianPhone ? <Field style={[styles.containerField]}>
-                                        <Text style={styles.txLabel}>SĐT người bảo lãnh</Text>
-                                        <Field style={{ flex: 1 }}>
-                                            <TextField
-                                                multiline={true}
-                                                editable={false}
-                                                inputStyle={[styles.input]}
-                                                errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianPhone || ''}
-                                                autoCapitalize={"none"}
-                                                autoCorrect={false}
-                                            >
-
-                                            </TextField>
-                                        </Field>
-                                    </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianPassport ? <Field style={[styles.containerField,]}>
-                                        <Text style={styles.txLabel}>CMTND/ HC người bảo lãnh</Text>
-                                        <Field style={{ flex: 1 }}>
-                                            <TextField
-                                                multiline={true}
-                                                editable={false}
-                                                inputStyle={[styles.input]}
-                                                errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianPassport || ''}
-                                                autoCapitalize={"none"}
-                                                autoCorrect={false}
-                                            >
-
-                                            </TextField>
-                                        </Field>
-                                    </Field> : <Field></Field>}
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
+                            {/** Quận huyện */}
+                            <Field style={[styles.containerField]}>
+                                <Text style={styles.txLabel}>Dân tộc</Text>
+                                <Field style={{ flex: 1, }}>
+                                    <TextField
+                                        multiline={true}
+                                        onPress={this.onSelectDistrict}
+                                        editable={false}
+                                        inputStyle={[styles.input]}
+                                        placeholder="Chọn dân tộc"
+                                        value={this.state.districts && this.state.districts.name ? this.state.districts.name : ''}
+                                        autoCapitalize={"none"}
+                                        errorStyle={styles.err}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Dân tộc không được để trống",
+                                            }
+                                        }}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    >
+                                    </TextField>
                                 </Field>
-                                : <Field>
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.phone ? <Field style={[styles.containerField]}>
-                                        <Text style={styles.txLabel}>Số điện thoại</Text>
-                                        <Field style={{ flex: 1 }}>
-                                            <TextField
-                                                multiline={true}
-                                                editable={false}
-                                                inputStyle={[styles.input]}
-                                                errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.phone || ''}
-                                                autoCapitalize={"none"}
-                                                autoCorrect={false}
-                                            >
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
+                            {/** Tỉnh thành phố */}
+                            <Field style={[styles.containerField]}>
+                                <Text style={styles.txLabel}>Quốc tịch</Text>
+                                <Field style={styles.fieldFlex}>
+                                    <TextField
+                                        multiline={true}
+                                        onPress={this.onSelectCountry}
+                                        editable={false}
+                                        inputStyle={[styles.input]}
+                                        placeholder="Chọn quốc tịch"
+                                        errorStyle={styles.err}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                            },
+                                            messages: {
+                                                required: "Quốc tịch không được để trống",
+                                            }
+                                        }}
+                                        value={this.state.country && this.state.country ? this.state.country.name : ''}
+                                        autoCapitalize={"none"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    >
+                                    </TextField>
+                                </Field>
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
 
-                                            </TextField>
-                                        </Field>
-                                    </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.passport ? <Field style={[styles.containerField,]}>
-                                        <Text style={styles.txLabel}>Số CMND</Text>
-                                        <Field style={{ flex: 1 }}>
-                                            <TextField
-                                                multiline={true}
-                                                editable={false}
-                                                inputStyle={[styles.input]}
-                                                errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.passport || ''}
-                                                autoCapitalize={"none"}
-                                                autoCorrect={false}
-                                            >
-
-                                            </TextField>
-                                        </Field>
-                                    </Field> : <Field></Field>}
-                                </Field>}
                             {/** Địa chỉ */}
+                            {age && age < 14 ? <Field>
+                                <Field style={[styles.containerField, { marginTop: 10 }]}>
+                                    <Text style={styles.txLabel}>Người bảo lãnh</Text>
+                                    <Field style={styles.fieldFlex}>
+                                        <TextField
+                                            multiline={true}
+                                            onChangeText={this.onChangeText("guardianName")}
+                                            inputStyle={[styles.input]}
+                                            placeholder="Nhập người bảo lãnh"
+                                            value={this.state.guardianName}
+                                            autoCapitalize={"none"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        >
+                                        </TextField>
+                                    </Field>
+                                    <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                                </Field>
+                                <Field style={[styles.containerField]}>
+                                    <Text style={styles.txLabel}>SDT người bảo lãnh</Text>
+                                    <Field style={styles.fieldFlex}>
+                                        <TextField
+                                            multiline={true}
+                                            onChangeText={this.onChangeText("guardianPhone")}
+                                            inputStyle={[styles.input]}
+                                            placeholder="Nhập SDT người bảo lãnh"
+                                            value={this.state.guardianPhone}
+                                            autoCapitalize={"none"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        >
+                                        </TextField>
+                                    </Field>
+                                    <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                                </Field>
+                                <Field style={[styles.containerField]}>
+                                    <Text style={styles.txLabel}>CMTND/HC người bảo lãnh</Text>
+                                    <Field style={styles.fieldFlex}>
+                                        <TextField
+                                            multiline={true}
+                                            onChangeText={this.onChangeText("guardianPassport")}
+                                            inputStyle={[styles.input]}
+                                            placeholder="Nhập CMTND/HC người bảo lãnh"
+                                            value={this.state.guardianPassport}
+                                            autoCapitalize={"none"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        >
+                                        </TextField>
+                                    </Field>
+                                    <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                                </Field>
+                            </Field> : <Field>
+                                    <Field style={[styles.containerField, { marginTop: 10 }]}>
+                                        <Text style={styles.txLabel}>Số điện thoại</Text>
+                                        <Field style={styles.fieldFlex}>
+                                            <TextField
+                                                multiline={true}
+                                                onChangeText={this.onChangeText("phone")}
+                                                inputStyle={[styles.input]}
+                                                placeholder="Nhập số điện thoại"
+                                                value={this.state.phone}
+                                                autoCapitalize={"none"}
+                                                // underlineColorAndroid="transparent"
+                                                autoCorrect={false}
+                                            >
+                                            </TextField>
+                                        </Field>
+                                        <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                                    </Field>
+                                    <Field style={[styles.containerField]}>
+                                        <Text style={styles.txLabel}>Số CMND</Text>
+                                        <Field style={styles.fieldFlex}>
+                                            <TextField
+                                                multiline={true}
+                                                onChangeText={this.onChangeText("userPassport")}
+                                                inputStyle={[styles.input]}
+                                                placeholder="Nhập số CMND"
+                                                value={this.state.userPassport}
+                                                autoCapitalize={"none"}
+                                                // underlineColorAndroid="transparent"
+                                                autoCorrect={false}
+                                            >
+                                            </TextField>
+                                        </Field>
+                                        <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                                    </Field>
+                                </Field>}
                         </Form>
                     </View>
                 </ScrollView>
@@ -761,6 +737,7 @@ class ProfileScreen extends Component {
                     onCancel={() => {
                         this.setState({ toggelDateTimePickerVisible: false });
                     }}
+                    date={new Date()}
                     minimumDate={minDate}
                     maximumDate={new Date()}
                     cancelTextIOS={constants.actionSheet.cancel2}
@@ -784,7 +761,7 @@ function mapStateToProps(state) {
         userApp: state.auth.userApp
     };
 }
-export default connect(mapStateToProps)(ProfileScreen);
+export default connect(mapStateToProps)(EditProfileScreen);
 
 
 const styles = StyleSheet.create({
@@ -792,6 +769,7 @@ const styles = StyleSheet.create({
         color: "red",
         marginLeft: 13
     },
+    fieldFlex: { flex: 1 },
     row: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -852,17 +830,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         textAlign: 'right'
     },
-    input: {
-        textAlign: 'right',
-        color: '#000',
-        fontWeight: 'bold',
-        minHeight: 40,
-        textAlign: 'right',
-        paddingRight: 10,
-        color: '#000',
-        fontWeight: 'bold',
-        paddingLeft: 60,
-    },
+
     txtLabel: {
         paddingRight: 10,
     },
@@ -907,7 +875,7 @@ const styles = StyleSheet.create({
     titleStyle: {
         paddingLeft: 50,
     },
-    placeHolderImage: { width: 80, height: 80, borderRadius: 40 },
+    placeHolderImage: { width: 80, height: 80 },
     image: {
         alignSelf: 'center',
         borderRadius: 40,
@@ -923,7 +891,7 @@ const styles = StyleSheet.create({
         color: '#FFF'
     },
     txLabel: {
-        position: 'absolute', left: 10, fontSize: 14
+        position: 'absolute', left: 10, fontSize: 14,
     },
     buttonSave: {
         paddingVertical: 10,
@@ -941,6 +909,16 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 0
     },
+    input: {
+        minHeight: 40,
+        textAlign: 'right',
+        paddingRight: 10,
+        color: '#000',
+        fontWeight: 'bold',
+        paddingLeft: 20,
+        flex: 1,
+        marginTop: 10
+    },
     containerField: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -950,6 +928,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         paddingHorizontal: 10,
         flex: 1,
+        flexWrap: 'wrap',
         backgroundColor: '#fff'
         // borderTopColor: '#00000011',
         // borderTopWidth: 1
@@ -983,7 +962,7 @@ const styles = StyleSheet.create({
         position: "relative"
     },
     imageStyle: {
-        borderRadius: 40,
+        borderRadius: 35,
         borderWidth: 0.5,
         borderColor: 'rgba(151, 151, 151, 0.29)'
     },
