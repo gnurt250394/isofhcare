@@ -21,6 +21,7 @@ import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import {connect} from 'react-redux';
 import constants from '@resources/strings';
+import {withNavigation} from 'react-navigation';
 
 class MyMessage extends React.Component {
   constructor(props) {
@@ -41,15 +42,18 @@ class MyMessage extends React.Component {
         : false,
     };
   }
-  photoViewer(uri) {
+  photoViewer = (urls, index) => () => {
     try {
-      if (!uri) {
+      if (!urls) {
         snackbar.show(constants.msg.message.none_image);
         return;
       }
-      this.props.navigation.navigate('photoViewer', {urls: [uri], index: 0});
+      this.props.navigation.navigate('photoViewer', {
+        index,
+        urls: urls.map(e => ({uri: e})),
+      });
     } catch (error) {}
-  }
+  };
   render() {
     let {message, loadingMessage} = this.props;
     if (!message)
@@ -76,37 +80,45 @@ class MyMessage extends React.Component {
                 borderBottomRightRadius: !this.state.showDate ? 10 : 0,
               },
             ]}>
-            {message.type == 4 ? (
-              <TouchableOpacity
-                onPress={this.photoViewer.bind(
-                  this,
-                  message.message ? message.message : '',
-                )}>
-                <ImageLoad
-                  resizeMode="cover"
-                  placeholderSource={require('@images/noimage.png')}
-                  style={{width: 150, height: 150}}
-                  loadingStyle={{size: 'small', color: 'gray'}}
-                  source={{
-                    uri: message.message ? message.message : '',
-                  }}
-                  defaultImage={() => {
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                paddingBottom: 10,
+              }}>
+              {message.images.length
+                ? message.images.map((e, i) => {
                     return (
-                      <ScaleImage
-                        resizeMode="cover"
-                        source={require('@images/noimage.png')}
-                        width={150}
-                      />
+                      <TouchableOpacity
+                        key={i}
+                        onPress={this.photoViewer(message.images, i)}>
+                        <ImageLoad
+                          resizeMode="cover"
+                          placeholderSource={require('@images/noimage.png')}
+                          style={{width: 100, height: 100}}
+                          loadingStyle={{size: 'small', color: 'gray'}}
+                          source={{
+                            uri: e,
+                          }}
+                          defaultImage={() => {
+                            return (
+                              <ScaleImage
+                                resizeMode="cover"
+                                source={require('@images/noimage.png')}
+                                width={150}
+                              />
+                            );
+                          }}
+                        />
+                      </TouchableOpacity>
                     );
-                  }}
-                />
-              </TouchableOpacity>
-            ) : (
-              <Text
-                style={{color: 'white', textAlign: 'right', paddingRight: 5}}>
-                {message.content}
-              </Text>
-            )}
+                  })
+                : null}
+            </View>
+            <Text style={{color: 'white', textAlign: 'right', paddingRight: 5}}>
+              {message.content}
+            </Text>
+
             {/* <Text style={{marginTop: 7, color: '#FFFFFF80', fontSize: 13}}>
               {message?.createdAt?.toDateObject?.().format('hh:mm')}
             </Text> */}
@@ -130,7 +142,7 @@ function mapStateToProps(state) {
     navigation: state.navigation,
   };
 }
-export default connect(mapStateToProps)(MyMessage);
+export default connect(mapStateToProps)(withNavigation(MyMessage));
 
 const styles = StyleSheet.create({
   containerLoading: {
@@ -153,7 +165,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderTopLeftRadius: 10,
     minWidth: 30,
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   groupMessage: {
     marginLeft: 5,

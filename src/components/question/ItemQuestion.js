@@ -89,8 +89,8 @@ class ItemQuestion extends Component {
         <Text style={styles.txtComment} numberOfLines={3}>
           {item.content}
         </Text>
-        {item?.image?.length ? (
-          <Image source={{uri: item.image[0]}} style={styles.imgQuestion} />
+        {item?.images?.length ? (
+          <Image source={{uri: item.images[0]}} style={styles.imgQuestion} />
         ) : null}
         <View style={styles.containerSpecialist}>
           <Text numberOfLines={1} style={styles.groupSpecialist}>

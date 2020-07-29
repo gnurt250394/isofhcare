@@ -37,6 +37,7 @@ import TypingAnimation from '@components/chat/TypingAnimation';
 import KeyboardShift from '@components/question/KeyboardShift';
 import ModalConfirmSend from '@components/chat/ModalConfirmSend';
 import questionProvider from '@data-access/question-provider';
+import connectionUtils from '@utils/connection-utils';
 import io from 'socket.io-client';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
@@ -154,7 +155,7 @@ const ChatScreen = ({
       let res = await questionProvider.sendMessage(
         item.id,
         state.newMessage,
-        listImage,
+        listImage.map(e => e.url),
       );
       console.log('res: ', res);
       if (res) {
@@ -172,79 +173,89 @@ const ChatScreen = ({
     } catch (error) {}
   };
   useEffect(() => {
-    const socket = io("http://10.0.0.98:8000",{
+    const socket = io('http://10.0.0.98:8000', {
       host: 'http://10.0.0.98',
       port: 8000,
-      autoConnect:true,
+      autoConnect: true,
     });
-    socket.connect()
+    socket.connect();
     console.log('socket: ', socket);
-    socket.on(
-      constants.socket_type.QUESTION + item.id,
-      (res, callback) => {
-        console.log('data: ', res);
-        let data2 = [];
+    socket.on(constants.socket_type.QUESTION + item.id, (res, callback) => {
+      console.log('data: ', res);
+      let data2 = [];
 
-        data2.push(res);
-        setState({isLoading: false});
-        setData(state => [...data2, ...state]);
-        onScrollToEnd();
-      },
-    );
+      data2.push(res);
+      setState({isLoading: false});
+      setData(state => [...data2, ...state]);
+      onScrollToEnd();
+    });
     return () => {};
   }, []);
 
   const selectImage = () => {
     if (imagePicker.current) {
-      imagePicker.current.open(false, 200, 200, selectImageCallback);
+      connectionUtils
+        .isConnected()
+        .then(s => {
+          if (imagePicker.current) {
+            imagePicker.current
+              .show({
+                multiple: true,
+                mediaType: 'photo',
+                maxFiles: 3,
+                compressImageMaxWidth: 500,
+                compressImageMaxHeight: 500,
+              })
+              .then(images => {
+                let listImages = [];
+                if (images.length) listImages = [...images];
+                else listImages.push(images);
+                let imageUris = listImage;
+                listImages.forEach(image => {
+                  if (imageUris.length >= 3) {
+                    snackbar.show('Chỉ được chọn tối đa 3 ảnh', 'warning');
+                    return;
+                  }
+                  let temp = null;
+                  imageUris.forEach(item => {
+                    if (item.uri == image.path) temp = item;
+                  });
+                  if (!temp) {
+                    imageUris.push({uri: image.path, loading: true});
+                    imageProvider.upload(image.path, image.mime, (s, e) => {
+                      console.log('s: ', s);
+                      if (s.success) {
+                        if (s.data && s.data.length > 0) {
+                          let imageUris = listImage;
+                          imageUris.forEach(item => {
+                            if (item.uri == s.uri) {
+                              item.loading = false;
+                              item.url = s.data[0].fileDownloadUri;
+                              item.thumbnail = s.data[0].fileDownloadUri;
+                            }
+                          });
+                          setListImage(imageUris);
+                        }
+                      } else {
+                        imageUris.forEach(item => {
+                          if (item.uri == s.uri) {
+                            item.error = true;
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+                setListImage([...imageUris]);
+              });
+          }
+        })
+        .catch(e => {
+          snackbar.show(constants.msg.app.not_internet, 'danger');
+        });
     }
   };
 
-  const selectImageCallback = image => {
-    // RNFS.readFile(image.path, 'base64').then(res => {
-    //   let data2 = [];
-    //   data2.push({
-    //     message: image.path,
-    //     user: userApp.currentUser,
-    //     item,
-    //     type: 4,
-    //     base64: res,
-    //   });
-    //   setData(state => [...state, ...data2]);
-    //   onScrollToEnd();
-    // });
-    setState({isLoading: true}, () => {
-      imageProvider.upload(image.path, image.mime, (s, e) => {
-        setState({isLoading: false});
-        if (s.success) {
-          if (
-            s.data.code == 0 &&
-            s.data.data &&
-            s.data.data.images &&
-            s.data.data.images.length > 0
-          ) {
-            firebaseUtils
-              .sendImage(
-                state.userId,
-                state.groupId,
-                s.data.data.images[0].image,
-              )
-              .catch(e => {
-                snackbar.show(
-                  constants.msg.upload.upload_image_error,
-                  'danger',
-                );
-              });
-          }
-          return;
-        }
-        snackbar.show(constants.msg.upload.upload_image_error, 'danger');
-      });
-    });
-  };
-  // useEffect(() => {
-  //   sendMessage(state.newMessage);
-  // }, [data]);
   const send = e => {
     onBackdropPress();
     e.preventDefault();
@@ -259,6 +270,8 @@ const ChatScreen = ({
     setState({
       newMessage: '',
     });
+    setListImage([])
+
     txtMessage.current.clear();
     // Keyboard.dismiss();
   };
@@ -303,7 +316,23 @@ const ChatScreen = ({
       );
     else return null;
   };
-
+  const _renderStatus = () => {
+    switch (item.status) {
+      case 'REJECT':
+        return 'Câu hỏi của bạn đã bị từ chối vì vi phạm các quy định của ứng dụng.';
+      case 'DONE':
+        return 'Cuộc tư vấn của bạn đã kết thúc';
+      case 'NEW':
+        return 'Vui lòng chờ duyệt để có thể nói chuyện với bác sĩ';
+      default:
+        return '* Câu trả lời của bạn sẽ được hiển thị trên cộng đồng';
+    }
+  };
+  const removeImage = index => () => {
+    var imageUris = listImage;
+    imageUris.splice(index, 1);
+    setListImage(imageUris);
+  };
   return (
     // <ActivityPanel
     //   style={{flex: 1}}
@@ -383,6 +412,47 @@ const ChatScreen = ({
                 styles.containerInput,
                 Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
               ]}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                {listImage.length
+                  ? listImage.map((item, index) => (
+                      <View key={index} style={styles.groupImagePicker}>
+                        <View style={styles.groupImage}>
+                          <Image
+                            source={{uri: item.url}}
+                            resizeMode="cover"
+                            style={styles.imagePicker}
+                          />
+                          {item.error ? (
+                            <View style={styles.imageError}>
+                              <ScaleImage
+                                source={require('@images/ic_warning.png')}
+                                width={40}
+                              />
+                            </View>
+                          ) : item.loading ? (
+                            <View style={styles.imageLoading}>
+                              <ScaleImage
+                                source={require('@images/loading.gif')}
+                                width={20}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
+                        <TouchableOpacity
+                          onPress={removeImage(index)}
+                          style={styles.buttonClose}>
+                          <ScaleImage
+                            source={require('@images/new/ic_close.png')}
+                            width={15}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ))
+                  : null}
+              </View>
               <TextInput
                 ref={txtMessage}
                 style={styles.inputMes}
@@ -418,11 +488,7 @@ const ChatScreen = ({
             },
             styles.txtWarning,
           ]}>
-          {item.status == 'REJECT'
-            ? 'Câu hỏi của bạn đã bị từ chối vì vi phạm các quy định của ứng dụng.'
-            : item.status == 'DONE'
-            ? 'Cuộc tư vấn của bạn đã kết thúc'
-            : '* Câu trả lời của bạn sẽ được hiển thị trên cộng đồng'}
+          {_renderStatus()}
         </Text>
       ) : null}
 
@@ -440,6 +506,44 @@ const ChatScreen = ({
 export default ChatScreen;
 
 const styles = StyleSheet.create({
+  buttonSelectImage: {
+    marginTop: 10,
+    width: 60,
+    height: 60,
+  },
+  buttonClose: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  imageLoading: {
+    position: 'absolute',
+    left: 20,
+    top: 20,
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+  },
+  imageError: {
+    position: 'absolute',
+    left: 20,
+    top: 20,
+  },
+  imagePicker: {
+    width: 60,
+    height: 60,
+    borderRadius: 6,
+  },
+  groupImage: {
+    marginTop: 6,
+    width: 60,
+    height: 60,
+  },
+  groupImagePicker: {
+    margin: 2,
+    width: 66,
+    height: 66,
+    position: 'relative',
+  },
   txtWarning: {
     textAlign: 'center',
     paddingTop: 10,
@@ -468,7 +572,7 @@ const styles = StyleSheet.create({
   containerInput: {
     flex: 1,
     backgroundColor: '#00000010',
-    maxHeight: 100,
+    // maxHeight: 100,
     margin: 5,
     borderRadius: 7,
     marginLeft: 0,
@@ -489,8 +593,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginBottom: 0,
     marginTop: 5,
-    borderTopColor:'#00000020',
-    borderTopWidth:1
+    borderTopColor: '#00000020',
+    borderTopWidth: 1,
   },
   dotAnimation: {
     marginBottom: 10,

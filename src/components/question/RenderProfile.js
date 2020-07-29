@@ -8,16 +8,18 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Image,
 } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import {Card} from 'native-base';
 import ImageLoad from 'mainam-react-native-image-loader';
 import CustomMenu from '@components/CustomMenu';
 import questionProvider from '@data-access/question-provider';
+import { withNavigation } from 'react-navigation';
 const icSupport = require('@images/new/user.png');
 const {height} = Dimensions.get('screen');
 
-const RenderProfile = ({item}) => {
+const RenderProfile = ({item, navigation}) => {
   const [isShow, setIsShow] = useState(false);
   const [textShow, setTextShow] = useState(false);
   const [data, setData] = useState({});
@@ -56,6 +58,14 @@ const RenderProfile = ({item}) => {
       showMenu();
     }
   };
+  const showImage = () => {
+    navigation.navigate('photoViewer', {
+      index: 0,
+      urls: item.images.map(item => {
+        return {uri: item};
+      }),
+    });
+  };
   return (
     <View style={[styles.containerItem]}>
       <View style={styles.containerMessage}>
@@ -82,9 +92,12 @@ const RenderProfile = ({item}) => {
           />
           <View style={{flex: 1, paddingLeft: 10, paddingTop: 3}}>
             <Text numberOfLines={1} style={styles.txtname}>
-            {item?.gender == 1 ? 'Nam' : item.gender == 0 ? 'Nữ' : 'Ẩn danh'},{' '} {item?.age} tuổi
+              {item?.gender == 1 ? 'Nam' : item.gender == 0 ? 'Nữ' : 'Ẩn danh'},{' '}
+              {item?.age} tuổi
             </Text>
-            <Text style={styles.txtTime}>{item.createdAt.toDateObject('-').format('dd/MM/yyyy')} </Text>
+            <Text style={styles.txtTime}>
+              {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}{' '}
+            </Text>
           </View>
           <CustomMenu
             MenuSelectOption={
@@ -118,6 +131,14 @@ const RenderProfile = ({item}) => {
                 style={styles.txtMessage}>
                 {item.content}
               </Text>
+              {textShow ? (
+                <TouchableOpacity onPress={showImage}>
+                  <Image
+                    source={{uri: item.images[0]}}
+                    style={styles.imgQuestion}
+                  />
+                </TouchableOpacity>
+              ) : null}
             </View>
           </ScrollView>
         </View>
@@ -159,6 +180,11 @@ const RenderProfile = ({item}) => {
 };
 
 const styles = StyleSheet.create({
+  imgQuestion: {
+    width: '100%',
+    height: 200,
+    marginTop: 5,
+  },
   txtHide: {
     color: '#00000070',
     fontStyle: 'italic',
@@ -284,4 +310,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-export default RenderProfile;
+export default withNavigation(RenderProfile);

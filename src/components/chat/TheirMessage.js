@@ -34,15 +34,18 @@ class TheirMessage extends React.Component {
         : false,
     };
   }
-  photoViewer(uri) {
+  photoViewer = (urls, index) => () => {
     try {
-      if (!uri) {
+      if (!urls) {
         snackbar.show(constants.msg.message.none_image);
         return;
       }
-      this.props.navigation.navigate('photoViewer', {urls: [uri], index: 0});
+      this.props.navigation.navigate('photoViewer', {
+        index,
+        urls: urls.map(e => ({uri: e})),
+      });
     } catch (error) {}
-  }
+  };
 
   render() {
     let message = this.props.message;
@@ -105,36 +108,44 @@ class TheirMessage extends React.Component {
                 borderBottomLeftRadius: this.state.showAuthor ? 0 : 10,
               },
             ]}>
-            {this.props.message.type == 4 ? (
-              <TouchableOpacity
-                onPress={this.photoViewer.bind(
-                  this,
-                  message.content ? message.content : '',
-                )}>
-                <ImageLoad
-                  resizeMode="cover"
-                  placeholderSource={require('@images/noimage.png')}
-                  style={{width: 150, height: 150}}
-                  loadingStyle={{size: 'small', color: 'gray'}}
-                  source={{
-                    uri: message.message ? message.message : '',
-                  }}
-                  defaultImage={() => {
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                paddingBottom: 10,
+              }}>
+              {message.images.length
+                ? message.images.map((e, i) => {
                     return (
-                      <ScaleImage
-                        resizeMode="cover"
-                        source={require('@images/noimage.png')}
-                        width={150}
-                      />
+                      <TouchableOpacity
+                        key={i}
+                        onPress={this.photoViewer(message.images, i)}>
+                        <ImageLoad
+                          resizeMode="cover"
+                          placeholderSource={require('@images/noimage.png')}
+                          style={{width: 100, height: 100}}
+                          loadingStyle={{size: 'small', color: 'gray'}}
+                          source={{
+                            uri: e,
+                          }}
+                          defaultImage={() => {
+                            return (
+                              <ScaleImage
+                                resizeMode="cover"
+                                source={require('@images/noimage.png')}
+                                width={150}
+                              />
+                            );
+                          }}
+                        />
+                      </TouchableOpacity>
                     );
-                  }}
-                />
-              </TouchableOpacity>
-            ) : (
-              <Text style={{textAlign: 'left', paddingHorizontal: 5}}>
-                {message.content}
-              </Text>
-            )}
+                  })
+                : null}
+            </View>
+            <Text style={{textAlign: 'left', paddingHorizontal: 5}}>
+              {message.content}
+            </Text>
 
             {/* <Text style={styles.txtDate}>
               {this.props.message.createdAt.toDateObject().format('hh:mm')}
