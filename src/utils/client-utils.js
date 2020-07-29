@@ -77,6 +77,8 @@ module.exports = {
   serviceSchedule: "http://123.24.206.9:8080/",
   serviceBooking: "http://123.24.206.9:8082/",
   serviceImage: "http://123.24.206.9:38288/v1/",
+  serviceChats: "http://10.0.0.98:8085/",
+  
   response: {
     ok(data, message) {
       if (!message) message = "";

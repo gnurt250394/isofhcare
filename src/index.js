@@ -45,6 +45,7 @@ import FlashMessage from "react-native-flash-message";
 import SocketProvider from "@data-access/socket-provider";
 import InputPhone from '@components/account/InputPhone'
 
+import { MenuProvider } from 'react-native-popup-menu';
 
 class Kernel extends Component {
   constructor(props) {
@@ -90,14 +91,16 @@ class Kernel extends Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={store.__PERSISTOR}>
-          <SocketProvider>
-            {/* <Root> */}
-            <RootApp ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-              screenProps={{ state: store.getState() }}
-            />
-            {/* </Root> */}
+        <SocketProvider>
+          {/* <Root> */}
+          <MenuProvider>
+          <RootApp ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+            screenProps={{ state: store.getState() }}
+          />
+          </MenuProvider>
+          {/* </Root> */}
           </SocketProvider>
         </PersistGate>
         <FlashMessage floating={true} style={{ marginTop: 30 }} position="top" ref="myLocalFlashMessage" />

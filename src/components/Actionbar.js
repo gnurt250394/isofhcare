@@ -31,7 +31,7 @@ class Actionbar extends Component {
                             this.props.backButton :
                             !this.props.hideBackButton ?
                                 <TouchableOpacity onPress={this.backButtonClick} style={styles.buttonBack}>
-                                    <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={14}></ScaleImage>
+                                    <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={16}></ScaleImage>
                                 </TouchableOpacity>
                                 :
                                 <View style={styles.containerBack}>
