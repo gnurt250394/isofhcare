@@ -162,19 +162,15 @@ class CreateQuestionStep1Screen extends Component {
                 if (!temp) {
                   imageUris.push({uri: image.path, loading: true});
                   imageProvider.upload(image.path, image.mime, (s, e) => {
+                    console.log('s: ', s);
                     if (s.success) {
-                      if (
-                        s.data.code == 0 &&
-                        s.data.data &&
-                        s.data.data.images &&
-                        s.data.data.images.length > 0
-                      ) {
+                      if (s.data && s.data.length > 0) {
                         let imageUris = this.state.imageUris;
                         imageUris.forEach(item => {
                           if (item.uri == s.uri) {
                             item.loading = false;
-                            item.url = s.data.data.images[0].image;
-                            item.thumbnail = s.data.data.images[0].thumbnail;
+                            item.url = s.data[0].fileDownloadUri;
+                            item.thumbnail = s.data[0].fileDownloadUri;
                           }
                         });
                         this.setState({
@@ -232,10 +228,8 @@ class CreateQuestionStep1Screen extends Component {
       .isConnected()
       .then(s => {
         this.setState({isLoading: true}, () => {
-          var images = '';
-          this.state.imageUris.forEach(item => {
-            if (images) images += ',';
-            images += item.url;
+          let images = this.state.imageUris.map(item => {
+            return item.url;
           });
           console.log('this.state.specialist: ', this.state.specialist);
           let specialist = this.state.specialist.map(e => ({
