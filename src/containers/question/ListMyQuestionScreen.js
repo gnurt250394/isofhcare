@@ -21,15 +21,15 @@ import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import ListQuestion from '@components/question/ListQuestion';
 import {IndicatorViewPager} from 'mainam-react-native-viewpager';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import ItemQuestion from '@components/question/ItemQuestion';
-import ListSpecialQuestion from '@components/question/ListSpecialQuestion';
 const {width, height} = Dimensions.get('screen');
-class ListQuestionScreen extends Component {
+class ListMyQuestionScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tabIndex: 0,
-
+      specialist: [ ],
       data: [],
       isLoading: true,
       page: 0,
@@ -37,20 +37,13 @@ class ListQuestionScreen extends Component {
     };
   }
   componentDidMount() {
-    // this.getListSpecialist();
-    this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0}, this.getListQuestions);
-    });
+    // this.getListSpecialist()
+    this.getListQuestions();
   }
-  componentWillUnmount = () => {
-    if (this.onFocus) {
-      this.onFocus.remove();
-    }
-  };
   getListQuestions = async () => {
     try {
       const {page, size} = this.state;
-      let res = await questionProvider.listQuestionSocial(page, size);
+      let res = await questionProvider.getListMyQuestion(page, size);
       console.log('res: ', res);
       this.setState({isLoading: false});
       if (res?.content) {
@@ -59,12 +52,10 @@ class ListQuestionScreen extends Component {
         this.formatData([]);
       }
     } catch (error) {
-      console.log('error: ', error);
       this.formatData([]);
       this.setState({isLoading: false});
     }
   };
-
   formatData = data => {
     if (data.length == 0) {
       if (this.state.page == 0) {
@@ -96,7 +87,7 @@ class ListQuestionScreen extends Component {
   }
 
   goToDetailQuestion = item => () => {
-    this.props.navigation.navigate('detailQuestion', {item});
+    this.props.navigation.navigate('detailMessage', {item});
   };
   keyExtractor = (item, index) => `${index}`;
   renderItem = ({item, index}) => {
@@ -113,30 +104,7 @@ class ListQuestionScreen extends Component {
       : icSupport;
     return (
       <ActivityPanel
-        // title={constants.title.advisory_online}
-        titleView={
-          <View style={styles.containerTitle}>
-            <TextInput
-              style={styles.inputTitle}
-              placeholder="Tìm kiếm câu hỏi"
-              placeholderTextColor="#FFF"
-            />
-            {/* <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
-                            <ScaleImage source={require('@images/ic_close.png')} height={16} />
-                        </TouchableOpacity>
-                            : */}
-            <TouchableOpacity
-              style={[styles.buttonSearch]}
-              onPress={this.onSearch}>
-              <ScaleImage
-                source={require('@images/new/ic_search.png')}
-                height={16}
-              />
-            </TouchableOpacity>
-          </View>
-        }
-        titleViewStyle={styles.titleViewStyle}
-        menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
+        title={'Câu hỏi của bạn'}
         isLoading={this.state.isLoading}
         titleStyle={[
           this.props.userApp.isLogin ? {marginRight: 0} : {},
@@ -169,9 +137,11 @@ class ListQuestionScreen extends Component {
             <Text>Hãy viết câu hỏi của bạn</Text>
           </TouchableOpacity>
         </View>
-        <ListSpecialQuestion
-          onSelected={item => {
-            console.log('item: ', item);
+        <View
+          style={{
+            height: 5,
+            width: '100%',
+            backgroundColor: '#bbbbbb80',
           }}
         />
         <FlatList
@@ -190,7 +160,7 @@ class ListQuestionScreen extends Component {
 const styles = StyleSheet.create({
   lineBetwenItem: {
     backgroundColor: '#00000010',
-    height: 6,
+    height: 10,
   },
   buttonQuestion: {
     borderColor: '#BBB',
@@ -228,7 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    marginLeft: 10,
   },
   containerItemSpecialist: {
     maxWidth: width / 2.5,
@@ -261,4 +230,4 @@ function mapStateToProps(state) {
     userApp: state.auth.userApp,
   };
 }
-export default connect(mapStateToProps)(ListQuestionScreen);
+export default connect(mapStateToProps)(ListMyQuestionScreen);

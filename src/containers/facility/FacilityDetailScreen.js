@@ -373,7 +373,7 @@ class FacilityDetailScreen extends Component {
                                         </View>}
                                         <ImageLoad
                                             resizeMode="cover"
-                                            placeholderSource={require("@images/noimage.jpg")}
+                                            placeholderSource={require("@images/noimage.png")}
                                             style={{ width: 90, height: 90 }}
                                             loadingStyle={{ size: 'small', color: 'gray' }}
                                             source={{ uri: image }}
