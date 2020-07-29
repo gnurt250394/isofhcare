@@ -37,7 +37,7 @@ export default ({children}) => {
           // const url = 'http://192.168.1.5:4443';
           // const url = 'http://192.168.43.31:4443';
           // const url = 'http://10.0.50.134:4443';
-          const url = 'https://isofhcare-release.herokuapp.com';
+          const url = 'http://18.223.30.123:4443';
           socket.current = io.connect(url, {
             transports: ['websocket'],
             query: {
