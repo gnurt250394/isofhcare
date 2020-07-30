@@ -30,6 +30,7 @@ import { red } from "ansi-colors";
 import constants from '@resources/strings';
 import socketProvider from "@data-access/socket-provider";
 import firebase from 'react-native-firebase'
+import NavigationService from "@navigators/NavigationService";
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -184,7 +185,7 @@ class AccountScreen extends Component {
 
   navigate_to = (router, params) => () => {
     if (router) {
-      this.props.navigation.navigate(router, params);
+     NavigationService.reset(router, params);
     } else {
       snackbar.show(constants.msg.app.in_development);
     }
@@ -237,7 +238,7 @@ class AccountScreen extends Component {
     codePushUtils.checkupDate();
   }
   onLogout = async () => {
-
+    console.log(1111)
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }
