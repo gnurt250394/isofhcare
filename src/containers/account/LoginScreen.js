@@ -174,7 +174,9 @@ class LoginScreen extends Component {
 			'tel:1900299983'
 		);
 	}
-
+	goHome=()=>{
+		this.props.navigation.navigate('home')
+	}
 	render() {
 		return (
 
@@ -294,6 +296,12 @@ class LoginScreen extends Component {
 						{/* </KeyboardAvoidingView> */}
 						<TouchableOpacity onPress={this.register.bind(this)} style={styles.btnSignUp} >
 							<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.goHome} style={{
+							alignSelf:'center',
+							padding:30
+						}} >
+							<Text style={[styles.txSignUp,{textDecorationLine:'underline'}]}>{"Về trang chủ"}</Text>
 						</TouchableOpacity>
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
