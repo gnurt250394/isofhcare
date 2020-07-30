@@ -18,7 +18,7 @@ export default class DateMessage extends React.Component {
         <View style={styles.containerDate}>
           <Text style={styles.txtDate}>
             {this.props.message?.createdAt
-              ?.toDateObject?.()
+              ?.toDateObject?.('-')
               .format('dd/MM/yyyy')}
           </Text>
         </View>

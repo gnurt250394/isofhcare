@@ -28,8 +28,8 @@ class TheirMessage extends React.Component {
         ? true
         : this.props.message.createdAt &&
           this.props.preMessage.createdAt &&
-          this.props.message.createdAt.toDateObject().format('dd/MM/yyyy') !=
-            this.props.preMessage.createdAt.toDateObject().format('dd/MM/yyyy')
+          this.props.message.createdAt.toDateObject('-').format('dd/MM/yyyy') !=
+            this.props.preMessage.createdAt.toDateObject('-').format('dd/MM/yyyy')
         ? true
         : false,
     };

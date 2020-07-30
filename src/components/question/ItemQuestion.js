@@ -82,7 +82,7 @@ class ItemQuestion extends Component {
               {item.age} tuổi
             </Text>
             <Text style={styles.txtTime}>
-              {item.createdAt.toDateObject().format('dd/MM/yyyy')}
+              {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}
             </Text>
           </View>
         </View>

@@ -15,7 +15,7 @@ import {Card} from 'native-base';
 import ImageLoad from 'mainam-react-native-image-loader';
 import CustomMenu from '@components/CustomMenu';
 import questionProvider from '@data-access/question-provider';
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 const icSupport = require('@images/new/user.png');
 const {height} = Dimensions.get('screen');
 
@@ -58,9 +58,9 @@ const RenderProfile = ({item, navigation}) => {
       showMenu();
     }
   };
-  const showImage = () => {
+  const showImage = i => () => {
     navigation.navigate('photoViewer', {
-      index: 0,
+      index: i,
       urls: item.images.map(item => {
         return {uri: item};
       }),
@@ -131,14 +131,22 @@ const RenderProfile = ({item, navigation}) => {
                 style={styles.txtMessage}>
                 {item.content}
               </Text>
-              {textShow ? (
-                <TouchableOpacity onPress={showImage}>
-                  <Image
-                    source={{uri: item.images[0]}}
-                    style={styles.imgQuestion}
-                  />
-                </TouchableOpacity>
-              ) : null}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
+                {textShow && item?.images?.length
+                  ? item.images.map((e, i) => {
+                      return (
+                        <TouchableOpacity key={i} onPress={showImage(i)}>
+                          <Image source={{uri: e}} style={styles.imgQuestion} />
+                        </TouchableOpacity>
+                      );
+                    })
+                  : null}
+              </View>
             </View>
           </ScrollView>
         </View>
@@ -181,9 +189,10 @@ const RenderProfile = ({item, navigation}) => {
 
 const styles = StyleSheet.create({
   imgQuestion: {
-    width: '100%',
-    height: 200,
+    width: 100,
+    height: 100,
     marginTop: 5,
+    marginRight: 5,
   },
   txtHide: {
     color: '#00000070',
