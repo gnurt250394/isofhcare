@@ -28,7 +28,6 @@ export default ({children}) => {
   const listen = (event, data, callback) => {
     if (socket.current) socket.current.on(event, data, callback);
   };
-
   const connectSocket = token => {
     return new Promise((resolve, reject) => {
       if (token) {
