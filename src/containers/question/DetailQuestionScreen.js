@@ -151,7 +151,7 @@ class DetailQuestionScreen extends Component {
               </Text>
             </View>
           </View>
-          <CustomMenu
+          {/* <CustomMenu
             MenuSelectOption={
               <View style={styles.buttonMenu}>
                 <ScaleImage
@@ -169,7 +169,7 @@ class DetailQuestionScreen extends Component {
               console.log('i: ', i);
               console.log('e: ', e);
             }}
-          />
+          /> */}
         </View>
         <View style={styles.containerContent}>
           <ScrollView ref={ref => (this.scrollRef = ref)} bounces={false}>

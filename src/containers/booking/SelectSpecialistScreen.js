@@ -14,6 +14,7 @@ import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
 import dataCacheProvider from '@data-access/datacache-provider';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 
 class SelectSpecialistScreen extends Component {
   constructor(props) {
@@ -25,6 +26,9 @@ class SelectSpecialistScreen extends Component {
       searchValue: '',
       refreshing: false,
       listSelected,
+      page: 0,
+      size: 20,
+      isLoading: true,
     };
   }
   componentDidMount() {
@@ -56,37 +60,51 @@ class SelectSpecialistScreen extends Component {
   }
 
   onRefresh = () => {
-    this.setState({refreshing: true}, () => {
-      specialistProvider
-        .getAll()
-        .then(s => {
-          this.setState(
-            {
-              refreshing: false,
-            },
-            () => {
-              if (s) {
-                this.setState(
-                  {
-                    listSpecialist: s,
-                  },
-                  () => {
-                    this.onSearch();
-                  },
-                );
-              }
-            },
-          );
-        })
-        .catch(e => {
-          this.setState({
-            listSpecialist: [],
-            refreshing: false,
-          });
-        });
-    });
+    this.setState({refreshing: true, page: 0}, this.getData);
   };
-
+  getData = () => {
+    bookingDoctorProvider
+      .get_list_specialists(this.state.page, this.state.size)
+      .then(s => {
+        this.setState({
+          refreshing: false,
+          isLoading: false,
+        });
+        if (s) {
+          this.formatData(s.content);
+        } else {
+          this.formatData([]);
+        }
+      })
+      .catch(e => {
+        this.formatData([]);
+        this.setState({
+          isLoading: false,
+          refreshing: false,
+        });
+      });
+  };
+  formatData = data => {
+    if (data.length == 0) {
+      if (this.state.page == 0) {
+        this.setState({listSpecialistSearch: []});
+      }
+    } else {
+      if (this.state.page == 0) {
+        this.setState({listSpecialistSearch: data});
+      } else {
+        this.setState(pre => ({
+          listSpecialistSearch: [...pre.listSpecialistSearch, ...data],
+        }));
+      }
+    }
+  };
+  _onEndReached = () => {
+    const {page, size, listSpecialistSearch} = this.state;
+    if (listSpecialistSearch.length >= (page + 1) * size) {
+      this.setState(pre => ({page: pre.page + 1}), this.getData);
+    }
+  };
   showSearch = () => {
     this.setState({
       showSearch: !this.state.showSearch,
@@ -94,35 +112,34 @@ class SelectSpecialistScreen extends Component {
     });
   };
   searchTextChange = s => {
+    if (!s) {
+      this.setState({page: 0, isLoading: true}, this.getData);
+    }
     this.setState({searchValue: s});
   };
   onSearch = () => {
-    var s = this.state.searchValue;
-    var listSearch = this.state.listSpecialist
-      .filter(function(item) {
-        return (
-          s == null ||
-          (item.name &&
-            item.name
-              .trim()
-              .toLowerCase()
-              .unsignText()
-              .indexOf(
-                s
-                  .trim()
-                  .toLowerCase()
-                  .unsignText(),
-              ) != -1)
-        );
-      })
-      .map(e => {
-        let obj = this.state.listSelected.find(elm => e.id == elm.id);
-        if (obj) {
-          return obj;
-        }
-        return e;
-      });
-    this.setState({listSpecialistSearch: listSearch});
+    this.setState({isLoading: true}, () => {
+      bookingDoctorProvider
+        .search_list_specialists(this.state.searchValue)
+        .then(s => {
+          this.setState({
+            refreshing: false,
+            isLoading: false,
+          });
+          if (s) {
+            this.setState({listSpecialistSearch: s});
+          } else {
+            this.setState({listSpecialistSearch: []});
+          }
+        })
+        .catch(e => {
+          this.setState({listSpecialistSearch: []});
+          this.setState({
+            isLoading: false,
+            refreshing: false,
+          });
+        });
+    });
   };
   onSelected = listSelected => () => {
     let callback = ((this.props.navigation.state || {}).params || {})
@@ -233,6 +250,8 @@ class SelectSpecialistScreen extends Component {
           ListFooterComponent={this.footerComponent}
           data={this.state.listSpecialistSearch}
           renderItem={this.renderItem}
+          onEndReached={this._onEndReached}
+          onEndReachedThreshold={0.7}
         />
       </ActivityPanel>
     );

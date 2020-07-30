@@ -99,7 +99,7 @@ const RenderProfile = ({item, navigation}) => {
               {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}{' '}
             </Text>
           </View>
-          <CustomMenu
+          {/* <CustomMenu
             MenuSelectOption={
               <View style={styles.buttonMenu}>
                 <ScaleImage
@@ -117,7 +117,7 @@ const RenderProfile = ({item, navigation}) => {
               console.log('i: ', i);
               console.log('e: ', e);
             }}
-          />
+          /> */}
         </View>
         <View
           style={{
@@ -151,23 +151,27 @@ const RenderProfile = ({item, navigation}) => {
           </ScrollView>
         </View>
         <View style={styles.containerSpecialist}>
-          <Text
-            numberOfLines={textShow ? undefined : 1}
-            style={styles.groupSpecialist}>
-            {item.specializations.length
-              ? item.specializations.map((e, i) => {
-                  return (
-                    <Text
-                      key={i}
-                      style={styles.txtSpecialist}
-                      numberOfLines={1}>
-                      {e.specializationName}
-                      {i != item.specializations.length - 1 ? ', ' : ''}
-                    </Text>
-                  );
-                })
-              : null}
-          </Text>
+          {item.specializations.length ? (
+            <Text
+              numberOfLines={textShow ? undefined : 1}
+              style={styles.groupSpecialist}>
+              {item.specializations.length
+                ? item.specializations.map((e, i) => {
+                    return (
+                      <Text
+                        key={i}
+                        style={styles.txtSpecialist}
+                        numberOfLines={1}>
+                        {e.specializationName}
+                        {i != item.specializations.length - 1 ? ', ' : ''}
+                      </Text>
+                    );
+                  })
+                : null}
+            </Text>
+          ) : (
+            <View />
+          )}
           <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
             <Text style={styles.txtHide}>
               {!textShow ? 'Xem thêm' : 'Rút gọn'}
