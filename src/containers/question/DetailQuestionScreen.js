@@ -39,6 +39,7 @@ class DetailQuestionScreen extends Component {
     super(props);
     this.state = {
       item: this.props.navigation.getParam('item', {}),
+      textShow: false,
       data: [
         {
           id: 1,
@@ -72,8 +73,26 @@ class DetailQuestionScreen extends Component {
       this.setState({isShow: true});
     }
   };
+  onShowText = () => {
+    this.setState(pre => {
+      if (pre.textShow && this.scrollRef) {
+        setTimeout(() => {
+          this.scrollRef.scrollTo({y: 0});
+        }, 500);
+      }
+      return {textShow: !pre.textShow};
+    });
+  };
+  showImage = i => () => {
+    this.props.navigation.navigate('photoViewer', {
+      index: i,
+      urls: this.state.item.images.map(item => {
+        return {uri: item};
+      }),
+    });
+  };
   render() {
-    const {item} = this.state;
+    const {item, textShow} = this.state;
     console.log('item: ', item);
     const icSupport = require('@images/new/user.png');
     const avatar = item?.userInfo?.avatar
@@ -128,7 +147,7 @@ class DetailQuestionScreen extends Component {
                 , {item?.age} tuổi
               </Text>
               <Text style={styles.txtTime}>
-                {item.createdAt.toDateObject().format('dd/MM/yyyy')}
+                {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}
               </Text>
             </View>
           </View>
@@ -153,9 +172,25 @@ class DetailQuestionScreen extends Component {
           />
         </View>
         <View style={styles.containerContent}>
-          <Text onLayout={this.onLayout} style={styles.txtComment}>
-            {item.content}
-          </Text>
+          <ScrollView ref={ref => (this.scrollRef = ref)} bounces={false}>
+            <View onStartShouldSetResponder={() => true}>
+              <Text
+                // onLayout={onLayout}
+                numberOfLines={textShow ? undefined : 1}
+                style={styles.txtMessage}>
+                {item.content}
+              </Text>
+              {textShow && item?.images?.length
+                ? item.images.map((e, i) => {
+                    return (
+                      <TouchableOpacity key={i} onPress={this.showImage(i)}>
+                        <Image source={{uri: e}} style={styles.imgQuestion} />
+                      </TouchableOpacity>
+                    );
+                  })
+                : null}
+            </View>
+          </ScrollView>
 
           {/* {detail.image ?
                         <Image source={{ uri: detail.image }} style={styles.imgQuestion} />
@@ -178,10 +213,17 @@ class DetailQuestionScreen extends Component {
                 : null}
             </Text>
 
-            <TouchableOpacity style={styles.buttonShow}>
-              <Text style={styles.txtShow}>Rút gọn</Text>
+            <TouchableOpacity
+              onPress={this.onShowText}
+              style={styles.buttonHide}>
+              <Text style={styles.txtHide}>
+                {!textShow ? 'Xem thêm' : 'Rút gọn'}
+              </Text>
               <ScaleImage
-                style={styles.iconShow}
+                style={{
+                  tintColor: '#00000070',
+                  transform: [{rotate: !textShow ? '0deg' : '180deg'}],
+                }}
                 source={require('@images/new/down.png')}
                 height={9}
               />
@@ -199,6 +241,18 @@ class DetailQuestionScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  txtMessage: {
+    color: '#000',
+  },
+  txtHide: {
+    color: '#00000070',
+    fontStyle: 'italic',
+    paddingRight: 7,
+  },
+  buttonHide: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   containerChat: {
     flex: 1,
   },
