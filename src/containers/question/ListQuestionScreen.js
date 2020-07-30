@@ -34,6 +34,8 @@ class ListQuestionScreen extends Component {
       isLoading: true,
       page: 0,
       size: 20,
+      value: '',
+      specialId: '',
     };
   }
   componentDidMount() {
@@ -49,8 +51,13 @@ class ListQuestionScreen extends Component {
   };
   getListQuestions = async () => {
     try {
-      const {page, size} = this.state;
-      let res = await questionProvider.listQuestionSocial(page, size);
+      const {page, size, value, specialId} = this.state;
+      let res = await questionProvider.listQuestionSocial(
+        value,
+        specialId,
+        page,
+        size,
+      );
       console.log('res: ', res);
       this.setState({isLoading: false});
       if (res?.content) {
@@ -64,7 +71,23 @@ class ListQuestionScreen extends Component {
       this.setState({isLoading: false});
     }
   };
-
+  onSearch = () => {};
+  onSelected = item => {
+    this.setState(
+      {specialId: item.id, isLoading: true, page: 0},
+      this.getListQuestions,
+    );
+  };
+  onChangeText = value => {
+    this.setState({value}, () => {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
+        this.setState({isLoading: true, page: 0}, this.getListQuestions);
+      }, 500);
+    });
+  };
   formatData = data => {
     if (data.length == 0) {
       if (this.state.page == 0) {
@@ -118,6 +141,8 @@ class ListQuestionScreen extends Component {
           <View style={styles.containerTitle}>
             <TextInput
               style={styles.inputTitle}
+              onChangeText={this.onChangeText}
+              value={this.state.value}
               placeholder="Tìm kiếm câu hỏi"
               placeholderTextColor="#FFF"
             />
@@ -169,11 +194,7 @@ class ListQuestionScreen extends Component {
             <Text>Hãy viết câu hỏi của bạn</Text>
           </TouchableOpacity>
         </View>
-        <ListSpecialQuestion
-          onSelected={item => {
-            console.log('item: ', item);
-          }}
-        />
+        <ListSpecialQuestion onSelected={this.onSelected} />
         <FlatList
           data={this.state.data}
           showsVerticalScrollIndicator={false}

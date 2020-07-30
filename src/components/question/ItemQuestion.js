@@ -93,21 +93,23 @@ class ItemQuestion extends Component {
           <Image source={{uri: item.images[0]}} style={styles.imgQuestion} />
         ) : null}
         <View style={styles.containerSpecialist}>
-          <Text numberOfLines={1} style={styles.groupSpecialist}>
-            {item.specializations.length
-              ? item.specializations.map((e, i) => {
-                  return (
-                    <Text
-                      key={i}
-                      style={styles.txtSpecialist}
-                      numberOfLines={1}>
-                      {e.specializationName}
-                      {i != item.specializations.length - 1 ? ', ' : ''}
-                    </Text>
-                  );
-                })
-              : null}
-          </Text>
+          {item.specializations.length ? (
+            <Text numberOfLines={1} style={styles.groupSpecialist}>
+              {item.specializations.length
+                ? item.specializations.map((e, i) => {
+                    return (
+                      <Text
+                        key={i}
+                        style={styles.txtSpecialist}
+                        numberOfLines={1}>
+                        {e.specializationName}
+                        {i != item.specializations.length - 1 ? ', ' : ''}
+                      </Text>
+                    );
+                  })
+                : null}
+            </Text>
+          ) : null}
 
           <Text
             style={{

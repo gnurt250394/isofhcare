@@ -323,7 +323,7 @@ const ChatScreen = ({
       case 'DONE':
         return 'Cuộc tư vấn của bạn đã kết thúc';
       case 'NEW':
-        return 'Vui lòng chờ duyệt để có thể nói chuyện với bác sĩ';
+        return '';
       default:
         return '* Câu trả lời của bạn sẽ được hiển thị trên cộng đồng';
     }

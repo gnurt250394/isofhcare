@@ -9,7 +9,7 @@ export default {
   create(content, gender, age, specializations, images) {
     let params = {};
     if (content) params.content = content;
-    if (gender) params.gender = gender;
+    if (gender || gender == 0) params.gender = gender;
     if (age) params.age = age;
     if (specializations) params.specializations = specializations;
     if (images) params.images = images;
@@ -27,14 +27,21 @@ export default {
       );
     });
   },
-  listQuestionSocial(page, size) {
+  listQuestionSocial(value, specialId, page, size) {
     return new Promise((resolve, reject) => {
+      let params =
+        '?page=' +
+        page +
+        '&size=' +
+        size +
+        (value ? '&searchValue=' + value : '') +
+        (specialId ? '&specializationId=' + specialId : '');
       // reject();
       client.requestApi(
         'get',
         client.serviceChats +
           constants.api.question.list_question_social +
-          `?page=${page}&size=${size}`,
+          params,
         {},
         (s, e) => {
           if (s) resolve(s);
@@ -78,14 +85,12 @@ export default {
       );
     });
   },
-  getDetailQuestion(id){
+  getDetailQuestion(id) {
     return new Promise((resolve, reject) => {
       // reject();
       client.requestApi(
         'get',
-        client.serviceChats +
-          constants.api.question.list_anwser +
-          `/${id}`,
+        client.serviceChats + constants.api.question.list_anwser + `/${id}`,
         {},
         (s, e) => {
           if (s) resolve(s);

@@ -14,6 +14,7 @@ import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import {connect} from 'react-redux';
 import constants from '@resources/strings';
+import { withNavigation } from 'react-navigation';
 
 class TheirMessage extends React.Component {
   constructor(props) {
@@ -162,7 +163,7 @@ function mapStateToProps(state) {
     navigation: state.navigation,
   };
 }
-export default connect(mapStateToProps)(TheirMessage);
+export default connect(mapStateToProps)(withNavigation(TheirMessage));
 
 const styles = StyleSheet.create({
   txtDate: {
