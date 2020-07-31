@@ -14,7 +14,7 @@ import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import {connect} from 'react-redux';
 import constants from '@resources/strings';
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 
 class TheirMessage extends React.Component {
   constructor(props) {
@@ -30,7 +30,9 @@ class TheirMessage extends React.Component {
         : this.props.message.createdAt &&
           this.props.preMessage.createdAt &&
           this.props.message.createdAt.toDateObject('-').format('dd/MM/yyyy') !=
-            this.props.preMessage.createdAt.toDateObject('-').format('dd/MM/yyyy')
+            this.props.preMessage.createdAt
+              .toDateObject('-')
+              .format('dd/MM/yyyy')
         ? true
         : false,
     };
@@ -47,39 +49,58 @@ class TheirMessage extends React.Component {
       });
     } catch (error) {}
   };
-
+  goToProfileDoctor = doctorInfo => () => {
+    this.props.navigation.navigate('detailsDoctor', {
+      item: {id: doctorInfo.doctorId},
+    });
+  };
+  renderName = info => {
+    let name = '';
+    if (info?.name) {
+      name = info?.name;
+    }
+    console.log('name: ', name);
+    return name
+      .split?.(' ')
+      .pop()
+      .trim()
+      .substring(0, 1)
+      .toUpperCase();
+  };
   render() {
-    let message = this.props.message;
+    let {isShowProfile, message, chatProfile, info} = this.props;
+    console.log('message: ', message);
+    console.log('info: ', info);
     if (!message)
       message = {
         message: '',
         createdDate: new Date(),
       };
-    const chatProfile = this.props.chatProfile;
-    let avatar =
-      chatProfile && chatProfile.avatar ? chatProfile.avatar.absoluteUrl() : '';
+    const icSupport = require('@images/new/user.png');
+    let avatar = info?.avatar ? {uri: info?.avatar} : icSupport;
+    console.log('avatar: ', avatar);
     return (
       <View style={{marginBottom: this.props.isLast ? 30 : 0, flex: 1}}>
         {this.state.showDate ? (
           <DateMessage message={this.props.message} />
         ) : null}
         <View style={styles.containerMessage}>
-          {this.state.showAuthor || this.state.showDate ? (
-            avatar ? (
+          <TouchableOpacity onPress={this.goToProfileDoctor(info)}>
+            {avatar ? (
               <ImageLoad
                 customImagePlaceholderDefaultStyle={styles.defaultImage}
                 resizeMode="cover"
-                placeholderSource={require('@images/noimage.png')}
+                placeholderSource={icSupport}
                 style={styles.defaultImage}
                 loadingStyle={{size: 'small', color: 'gray'}}
                 borderRadius={25}
                 imageStyle={styles.defaultImage}
-                source={{uri: avatar}}
+                source={avatar}
                 defauleImage={() => {
                   return (
                     <ScaleImage
                       resizeMode="cover"
-                      source={require('@images/noimage.png')}
+                      source={icSupport}
                       width={40}
                       style={{borderRadius: 20}}
                     />
@@ -88,19 +109,11 @@ class TheirMessage extends React.Component {
               />
             ) : (
               <View style={styles.containerImageName}>
-                <Text style={styles.txtName}>
-                  {chatProfile?.name
-                    ?.split?.(' ')
-                    .pop()
-                    .trim()
-                    .substring(0, 1)
-                    .toUpperCase()}
-                </Text>
+                <Text style={styles.txtName}>{this.renderName(info)}</Text>
               </View>
-            )
-          ) : (
-            <View style={{width: 40, height: 40}} />
-          )}
+            )}
+          </TouchableOpacity>
+
           <View
             style={[
               styles.containerMessageName,
@@ -109,41 +122,46 @@ class TheirMessage extends React.Component {
                 borderBottomLeftRadius: this.state.showAuthor ? 0 : 10,
               },
             ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                paddingBottom: 10,
-              }}>
-              {message.images.length
-                ? message.images.map((e, i) => {
-                    return (
-                      <TouchableOpacity
-                        key={i}
-                        onPress={this.photoViewer(message.images, i)}>
-                        <ImageLoad
-                          resizeMode="cover"
-                          placeholderSource={require('@images/noimage.png')}
-                          style={{width: 100, height: 100}}
-                          loadingStyle={{size: 'small', color: 'gray'}}
-                          source={{
-                            uri: e,
-                          }}
-                          defaultImage={() => {
-                            return (
-                              <ScaleImage
-                                resizeMode="cover"
-                                source={require('@images/noimage.png')}
-                                width={150}
-                              />
-                            );
-                          }}
-                        />
-                      </TouchableOpacity>
-                    );
-                  })
-                : null}
-            </View>
+            {!isShowProfile && info?.id == message.userId ? (
+              <Text style={styles.txtNameProfile}>
+                {info?.academicDegree}. {info?.name}
+              </Text>
+            ) : null}
+            {message.images.length ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  paddingBottom: 10,
+                }}>
+                {message.images.map((e, i) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={this.photoViewer(message.images, i)}>
+                      <ImageLoad
+                        resizeMode="cover"
+                        placeholderSource={require('@images/noimage.png')}
+                        style={{width: 100, height: 100}}
+                        loadingStyle={{size: 'small', color: 'gray'}}
+                        source={{
+                          uri: e,
+                        }}
+                        defaultImage={() => {
+                          return (
+                            <ScaleImage
+                              resizeMode="cover"
+                              source={require('@images/noimage.png')}
+                              width={150}
+                            />
+                          );
+                        }}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
             <Text style={{textAlign: 'left', paddingHorizontal: 5}}>
               {message.content}
             </Text>
@@ -166,6 +184,13 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(withNavigation(TheirMessage));
 
 const styles = StyleSheet.create({
+  txtNameProfile: {
+    marginBottom: 5,
+    fontWeight: '800',
+    color: '#000000',
+    fontSize: 15,
+    paddingRight: 10,
+  },
   txtDate: {
     marginTop: 7,
     color: '#bababa',
@@ -179,6 +204,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     minWidth: 30,
     marginRight: 50,
+    maxWidth: '80%',
     justifyContent: 'center',
     flexDirection: 'column',
   },

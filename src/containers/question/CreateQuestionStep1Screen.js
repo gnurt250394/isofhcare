@@ -347,11 +347,13 @@ class CreateQuestionStep1Screen extends Component {
                         min: 1,
                         max: 150,
                         number: true,
+                        required: true,
                       },
                       messages: {
                         min: constants.msg.question.age_greater_than_1,
                         max: constants.msg.question.age_less_than_150,
                         number: constants.msg.question.invalid_age,
+                        required: "Vui lòng nhập tuổi",
                       },
                     }}
                     value={this.state.age}
