@@ -37,7 +37,9 @@ class MyMessage extends React.Component {
         : this.props.message.createdAt &&
           this.props.preMessage.createdAt &&
           this.props.message.createdAt.toDateObject('-').format('dd/MM/yyyy') !=
-            this.props.preMessage.createdAt.toDateObject('-').format('dd/MM/yyyy')
+            this.props.preMessage.createdAt
+              .toDateObject('-')
+              .format('dd/MM/yyyy')
         ? true
         : false,
     };
@@ -80,41 +82,41 @@ class MyMessage extends React.Component {
                 borderBottomRightRadius: !this.state.showDate ? 10 : 0,
               },
             ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                paddingBottom: 10,
-              }}>
-              {message.images.length
-                ? message.images.map((e, i) => {
-                    return (
-                      <TouchableOpacity
-                        key={i}
-                        onPress={this.photoViewer(message.images, i)}>
-                        <ImageLoad
-                          resizeMode="cover"
-                          placeholderSource={require('@images/noimage.png')}
-                          style={{width: 100, height: 100}}
-                          loadingStyle={{size: 'small', color: 'gray'}}
-                          source={{
-                            uri: e,
-                          }}
-                          defaultImage={() => {
-                            return (
-                              <ScaleImage
-                                resizeMode="cover"
-                                source={require('@images/noimage.png')}
-                                width={150}
-                              />
-                            );
-                          }}
-                        />
-                      </TouchableOpacity>
-                    );
-                  })
-                : null}
-            </View>
+            {message.images.length ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  paddingBottom: 10,
+                }}>
+                {message.images.map((e, i) => {
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={this.photoViewer(message.images, i)}>
+                      <ImageLoad
+                        resizeMode="cover"
+                        placeholderSource={require('@images/noimage.png')}
+                        style={{width: 100, height: 100}}
+                        loadingStyle={{size: 'small', color: 'gray'}}
+                        source={{
+                          uri: e,
+                        }}
+                        defaultImage={() => {
+                          return (
+                            <ScaleImage
+                              resizeMode="cover"
+                              source={require('@images/noimage.png')}
+                              width={150}
+                            />
+                          );
+                        }}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            ) : null}
             <Text style={{color: 'white', textAlign: 'right', paddingRight: 5}}>
               {message.content}
             </Text>
@@ -165,6 +167,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderTopLeftRadius: 10,
     minWidth: 30,
+    maxWidth: '89%',
     justifyContent: 'center',
   },
   groupMessage: {
@@ -178,5 +181,6 @@ const styles = StyleSheet.create({
   containerMessage: {
     minHeight: 40,
     marginTop: 5,
+    marginRight: 5,
   },
 });

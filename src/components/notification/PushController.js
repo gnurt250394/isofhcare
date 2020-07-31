@@ -145,13 +145,21 @@ class PushController extends Component {
                 console.log('id: ', id);
                 const type = notificationOpen.notification.data.type
                 console.log('type: ', type);
+                let question = {};
+                if (
+                    notificationOpen?.notification?.title.startsWith('{') &&
+                    notificationOpen?.notification?.title.endsWith('}')
+                ) {
+                  let obj = JSON.parse(notificationOpen.notification.title);
+                  question = obj.question;
+                }
                 switch (type) {
-                    case "1":
-                        this.openQuestion(id);
-                        break;
-                    case "2":
-                        this.openQuestion(id);
-                        break;
+                    // case "1":
+                    //     this.openQuestion(id);
+                    //     break;
+                    // case "2":
+                    //     this.openQuestion(id);
+                    //     break;
                     case "4":
                         this.openBooking(id);
                         break;
@@ -169,6 +177,9 @@ class PushController extends Component {
                     case "13":
                     case "14":
                         this.openBooking(id);
+                        break;
+                    case "16":
+                        this.openQuestion(question);
                         break;
                     case "-1":
                         break;
@@ -267,19 +278,10 @@ class PushController extends Component {
             id
         });
     }
-    openQuestion(id) {
+    openQuestion=(item)=> {
         if (!this.props.userApp.isLogin)
             return;
-        questionProvider.detail(id).then(s => {
-            if (s && s.data) {
-                NavigationService.navigate("detailQuestion", { post: s.data })
-            }
-            else {
-                snackbar.show("Lỗi, bài viết không tồn tại", "danger");
-            }
-        }).catch(e => {
-            snackbar.show("Lỗi, vui lòng thử lại", "danger");
-        });
+            NavigationService.navigate('detailMessage', {item});
     }
     getInitialNotification(notificationOpen) {
         console.log('notificationOpen: ', notificationOpen);
@@ -290,14 +292,21 @@ class PushController extends Component {
                 console.log('id: ', id);
                 const type = notificationOpen.notification.data.type
                 console.log('type: ', type);
-
+                let question = {};
+                if (
+                  item.notification.title.startsWith('{') &&
+                  item.notification.title.endsWith('}')
+                ) {
+                  let obj = JSON.parse(item.notification.title);
+                  question = obj.question;
+                }
                 switch (type) {
-                    case '2':
-                        this.openQuestion(id);
-                        break;
-                    case '4':
-                        this.openBooking(id);
-                        break;
+                    // case '2':
+                    //     this.openQuestion(id);
+                    //     break;
+                    // case '4':
+                    //     this.openBooking(id);
+                    //     break;
                     case '5':
                         setTimeout(() => {
                             this.openTicket(id);
@@ -314,6 +323,9 @@ class PushController extends Component {
                     case "13":
                     case "14":
                         this.openBooking(id);
+                        break;
+                    case "16":
+                        this.openQuestion(question);
                         break;
                     case 'NEWS': {
                         NavigationService.navigate('detailNewsHighlight', { item: { id } })

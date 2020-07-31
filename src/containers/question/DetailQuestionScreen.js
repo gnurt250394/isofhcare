@@ -177,7 +177,7 @@ class DetailQuestionScreen extends Component {
             <View onStartShouldSetResponder={() => true}>
               <Text
                 // onLayout={onLayout}
-                numberOfLines={textShow ? undefined : 1}
+                numberOfLines={textShow ? undefined : 3}
                 style={styles.txtMessage}>
                 {item.content}
               </Text>
@@ -205,7 +205,7 @@ class DetailQuestionScreen extends Component {
                         : null
                     } */}
           <View style={styles.containerSpecialist}>
-            <Text numberOfLines={1} style={styles.groupSpecialist}>
+            <Text numberOfLines={textShow ? undefined : 1} style={styles.groupSpecialist}>
               {item.specializations.length
                 ? item.specializations.map((e, i) => {
                     return (

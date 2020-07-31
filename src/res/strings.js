@@ -328,6 +328,7 @@ module.exports = {
         get_quick_number: 'Lấy số nhanh',
         ehealth: 'Hồ sơ sức khoẻ',
         transfer_payments: 'Thanh toán chuyển khoản',
+        new_message: 'Bạn có 1 tin nhắn mới',
       },
       notifi: 'THÔNG BÁO',
     },

@@ -69,7 +69,7 @@ const RenderProfile = ({item, navigation}) => {
   return (
     <View style={[styles.containerItem]}>
       <View style={styles.containerMessage}>
-        <View style={styles.containerName}>
+        {/* <View style={styles.containerName}>
           <ImageLoad
             resizeMode="cover"
             imageStyle={styles.boderImage}
@@ -99,7 +99,7 @@ const RenderProfile = ({item, navigation}) => {
               {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}{' '}
             </Text>
           </View>
-          {/* <CustomMenu
+          <CustomMenu
             MenuSelectOption={
               <View style={styles.buttonMenu}>
                 <ScaleImage
@@ -117,8 +117,8 @@ const RenderProfile = ({item, navigation}) => {
               console.log('i: ', i);
               console.log('e: ', e);
             }}
-          /> */}
-        </View>
+          />
+        </View> */}
         <View
           style={{
             maxHeight: height / 3,
@@ -127,7 +127,7 @@ const RenderProfile = ({item, navigation}) => {
             <View onStartShouldSetResponder={() => true}>
               <Text
                 // onLayout={onLayout}
-                numberOfLines={textShow ? undefined : 1}
+                numberOfLines={textShow ? undefined : 3}
                 style={styles.txtMessage}>
                 {item.content}
               </Text>

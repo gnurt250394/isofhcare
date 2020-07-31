@@ -74,8 +74,7 @@ const ChatScreen = ({
     _setState(state => ({...state, ...data}));
   };
   const flatList = useRef(null);
-  const socket = useRef(null);
-  const count = useRef(0);
+  const timeout = useRef(null);
   const txtMessage = useRef(null);
   const imagePicker = useRef(null);
   const dataIds = useRef([]);
@@ -172,6 +171,14 @@ const ChatScreen = ({
       }
     } catch (error) {}
   };
+  const readQuestion = async () => {
+    try {
+      let res = await questionProvider.readQuestion(item.id);
+      console.log('res: ', res);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
   useEffect(() => {
     const socket = io('http://10.0.0.98:8000', {
       host: 'http://10.0.0.98',
@@ -189,7 +196,13 @@ const ChatScreen = ({
       setData(state => [...data2, ...state]);
       onScrollToEnd();
     });
-    return () => {};
+    timeout.current = setInterval(() => {
+      readQuestion();
+    }, 2 * 60 * 1000);
+    return () => {
+      if (timeout.current) clearInterval(timeout.current);
+      socket.disconnect();
+    };
   }, []);
 
   const selectImage = () => {
@@ -259,7 +272,7 @@ const ChatScreen = ({
   const send = e => {
     onBackdropPress();
     e.preventDefault();
-    if (!state.newMessage || !state.newMessage.trim()) {
+    if ((!state.newMessage || !state.newMessage.trim()) && !listImage.length) {
       setTimeout(() => {
         snackbar.show('Nhập nội dung cần gửi');
       }, 1000);
@@ -270,7 +283,7 @@ const ChatScreen = ({
     setState({
       newMessage: '',
     });
-    setListImage([])
+    setListImage([]);
 
     txtMessage.current.clear();
     // Keyboard.dismiss();
@@ -351,27 +364,31 @@ const ChatScreen = ({
         data={data}
         inverted={true}
         ListFooterComponent={listFooter}
-        renderItem={({item, index}) => (
+        renderItem={props => (
           <View>
-            {item?.userId == userApp?.currentUser?.id ? (
+            {
+            (props.item?.userId != item.doctorInfo.id &&
+              props.item?.userId == userApp?.currentUser?.id) ||
+            (
+              props.item?.userId == userApp?.currentUser?.id) ? (
               <MyMessage
-                isLast={index == 0}
-                message={item}
-                preMessage={index == 0 ? null : data[index - 1]}
+                isLast={props.index == 0}
+                message={props.item}
+                preMessage={props.index == 0 ? null : data[props.index - 1]}
               />
             ) : (
               <TheirMessage
-                // chatProfile={getChatProfile(item.userId)}
-                isLast={index == 0}
-                message={item}
-                preMessage={index == 0 ? null : data[index - 1]}
+                // chatProfile={getChatProfile(props.item.userId)}
+                isLast={props.index == 0}
+                message={props.item}
+                info={item.doctorInfo}
+                preMessage={props.index == 0 ? null : data[props.index - 1]}
               />
             )}
           </View>
         )}
       />
-      {item?.userInfo?.id == userApp?.currentUser?.id &&
-      (item.status == 'ACCEPT' || item.status == 'REPLY') ? (
+      {item.status == 'ACCEPT' || item.status == 'REPLY' ? (
         <ChatView
           keyboardVerticalOffset={keyboardVerticalOffset || 110}
           behavior="padding">
