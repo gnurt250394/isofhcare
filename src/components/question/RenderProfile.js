@@ -17,7 +17,7 @@ import CustomMenu from '@components/CustomMenu';
 import questionProvider from '@data-access/question-provider';
 import {withNavigation} from 'react-navigation';
 const icSupport = require('@images/new/user.png');
-const {height} = Dimensions.get('screen');
+const {height, width} = Dimensions.get('screen');
 
 const RenderProfile = ({item, navigation}) => {
   const [isShow, setIsShow] = useState(false);
@@ -193,8 +193,8 @@ const RenderProfile = ({item, navigation}) => {
 
 const styles = StyleSheet.create({
   imgQuestion: {
-    width: 100,
-    height: 100,
+    width: width / 4,
+    height: width / 4,
     marginTop: 5,
     marginRight: 5,
   },
