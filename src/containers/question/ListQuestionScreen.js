@@ -49,15 +49,10 @@ class ListQuestionScreen extends Component {
       this.onFocus.remove();
     }
   };
-  getListQuestions = async () => {
+  getListQuestions = async value => {
     try {
-      const {page, size, value, specialId} = this.state;
-      let res = await questionProvider.listQuestionSocial(
-        value,
-        specialId,
-        page,
-        size,
-      );
+      const {page, size} = this.state;
+      let res = await questionProvider.listQuestionSocial(value, page, size);
       console.log('res: ', res);
       this.setState({isLoading: false});
       if (res?.content) {
@@ -71,12 +66,10 @@ class ListQuestionScreen extends Component {
       this.setState({isLoading: false});
     }
   };
-  onSearch = () => {};
   onSelected = item => {
-    this.setState(
-      {specialId: item.id, isLoading: true, page: 0},
-      this.getListQuestions,
-    );
+    this.setState({specialId: item.name, isLoading: true, page: 0}, () => {
+      this.getListQuestions(this.state.specialId);
+    });
   };
   onChangeText = value => {
     this.setState({value}, () => {
@@ -84,7 +77,9 @@ class ListQuestionScreen extends Component {
         clearTimeout(this.timeout);
       }
       this.timeout = setTimeout(() => {
-        this.setState({isLoading: true, page: 0}, this.getListQuestions);
+        this.setState({isLoading: true, page: 0}, () => {
+          this.getListQuestions(this.state.value);
+        });
       }, 500);
     });
   };

@@ -110,15 +110,16 @@ class ItemQuestion extends Component {
                 : null}
             </Text>
           ) : null}
-
-          <Text
-            style={{
-              paddingLeft: 20,
-              fontSize: 13,
-              color: '#00000090',
-            }}>
-            2 trả lời
-          </Text>
+          {item.commentNo ? (
+            <Text
+              style={{
+                paddingLeft: 20,
+                fontSize: 13,
+                color: '#00000090',
+              }}>
+              {item.commentNo} trả lời
+            </Text>
+          ) : null}
         </View>
       </TouchableOpacity>
     );

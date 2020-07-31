@@ -13,6 +13,7 @@ import {
   StyleSheet,
   Platform,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -33,7 +34,7 @@ import connectionUtils from '@utils/connection-utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ChatScreen from '@containers/chat/ChatScreen';
 import CustomMenu from '@components/CustomMenu';
-
+const {width, height} = Dimensions.get('window');
 class DetailQuestionScreen extends Component {
   constructor(props) {
     super(props);
@@ -180,15 +181,22 @@ class DetailQuestionScreen extends Component {
                 style={styles.txtMessage}>
                 {item.content}
               </Text>
-              {textShow && item?.images?.length
-                ? item.images.map((e, i) => {
-                    return (
-                      <TouchableOpacity key={i} onPress={this.showImage(i)}>
-                        <Image source={{uri: e}} style={styles.imgQuestion} />
-                      </TouchableOpacity>
-                    );
-                  })
-                : null}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
+                {textShow && item?.images?.length
+                  ? item.images.map((e, i) => {
+                      return (
+                        <TouchableOpacity key={i} onPress={this.showImage(i)}>
+                          <Image source={{uri: e}} style={styles.imgQuestion} />
+                        </TouchableOpacity>
+                      );
+                    })
+                  : null}
+              </View>
             </View>
           </ScrollView>
 
@@ -314,8 +322,10 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   imgQuestion: {
-    width: '100%',
-    height: 200,
+    width: width / 4,
+    height: width / 4,
+    marginTop: 5,
+    marginRight: 5,
   },
 
   txtTime: {

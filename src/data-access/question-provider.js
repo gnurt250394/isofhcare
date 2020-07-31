@@ -27,27 +27,27 @@ export default {
       );
     });
   },
-  listQuestionSocial(value, specialId, page, size) {
+  listQuestionSocial(value, page, size) {
     return new Promise((resolve, reject) => {
       let params =
         '?page=' +
         page +
         '&size=' +
         size +
-        (value ? '&searchValue=' + value : '') +
-        (specialId ? '&specializationId=' + specialId : '');
-      // reject();
-      client.requestApi(
-        'get',
-        client.serviceChats +
-          constants.api.question.list_question_social +
-          params,
-        {},
-        (s, e) => {
-          if (s) resolve(s);
-          else reject(e);
-        },
-      );
+        (value ? '&searchValue=' + value : '') 
+        // (specialId ? '&specializationId=' + specialId : '');
+        // reject();
+        client.requestApi(
+          'get',
+          client.serviceChats +
+            constants.api.question.list_question_social +
+            params,
+          {},
+          (s, e) => {
+            if (s) resolve(s);
+            else reject(e);
+          },
+        );
     });
   },
   sendMessage(id, content, images) {
