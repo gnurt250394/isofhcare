@@ -366,11 +366,7 @@ const ChatScreen = ({
         ListFooterComponent={listFooter}
         renderItem={props => (
           <View>
-            {
-            (props.item?.userId != item.doctorInfo.id &&
-              props.item?.userId == userApp?.currentUser?.id) ||
-            (
-              props.item?.userId == userApp?.currentUser?.id) ? (
+            {props.item?.userId != item?.doctorInfo?.id ? (
               <MyMessage
                 isLast={props.index == 0}
                 message={props.item}
