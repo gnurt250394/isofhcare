@@ -1,6 +1,6 @@
-import React, {createContext, useEffect, useRef} from 'react';
+import React, { createContext, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import firebase from 'react-native-firebase';
@@ -9,9 +9,9 @@ import constants from '@resources/strings';
 
 const WebSocketContext = createContext(null);
 
-export {WebSocketContext};
+export { WebSocketContext };
 
-export default ({children}) => {
+export default ({ children }) => {
   let socket = useRef();
   const tokenFirebase = useRef('');
   let ws;
@@ -36,7 +36,7 @@ export default ({children}) => {
           // const url = 'http://192.168.1.5:4443';
           // const url = 'http://192.168.43.31:4443';
           // const url = 'http://10.0.50.134:4443';
-          const url = 'http://18.223.30.123:4443';
+          const url = 'http://35.197.134.160:3333';
           socket.current = io.connect(url, {
             transports: ['websocket'],
             query: {
