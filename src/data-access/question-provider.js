@@ -34,20 +34,20 @@ export default {
         page +
         '&size=' +
         size +
-        (value ? '&searchValue=' + value : '') 
-        // (specialId ? '&specializationId=' + specialId : '');
-        // reject();
-        client.requestApi(
-          'get',
-          client.serviceChats +
-            constants.api.question.list_question_social +
-            params,
-          {},
-          (s, e) => {
-            if (s) resolve(s);
-            else reject(e);
-          },
-        );
+        (value ? '&searchValue=' + value : '');
+      // (specialId ? '&specializationId=' + specialId : '');
+      // reject();
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_question_social +
+          params,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
     });
   },
   sendMessage(id, content, images) {
@@ -69,14 +69,17 @@ export default {
       );
     });
   },
-  listAnwser(id, page, size) {
+  listAnwser(id, direction, page, size) {
     return new Promise((resolve, reject) => {
       // reject();
+      let params =
+        `?page=${page}&size=${size}` + (direction ? '&direction=ASC' : '');
       client.requestApi(
         'get',
         client.serviceChats +
           constants.api.question.list_anwser +
-          `/${id}/comments?page=${page}&size=${size}`,
+          `/${id}/comments` +
+          params,
         {},
         (s, e) => {
           if (s) resolve(s);
@@ -123,6 +126,22 @@ export default {
         (s, e) => {
           if (s) resolve(s);
           if (e) reject(e);
+        },
+      );
+    });
+  },
+  deleteMessage(idQuestion, idMessage) {
+    return new Promise((resolve, reject) => {
+      // reject();
+      client.requestApi(
+        'delete',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${idQuestion}/comments/${idMessage}`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
         },
       );
     });
