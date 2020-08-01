@@ -229,7 +229,7 @@ function CallScreen({}, ref) {
   useEffect(() => {
     const didmount = async () => {
       try {
-        // await initCall(true);
+        await initCall(true);
         await context.connectSocket(userApp.loginToken);
         context.listen('connect', onConnected);
         context.listen(constants.socket_type.OFFER, onOffer);
