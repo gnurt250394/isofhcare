@@ -130,7 +130,12 @@ class NotificationScreen extends Component {
       item.notification.title.endsWith('}')
     ) {
       let obj = JSON.parse(item.notification.title);
-      title = obj.content;
+      console.log('obj: ', obj);
+      title =
+        obj.question.doctorInfo.academicDegree +
+        ', ' +
+        obj.question.doctorInfo.name +
+        ' đã gửi cho bạn 1 tin nhắn.';
     } else {
       title = item.notification.title;
     }
@@ -510,7 +515,7 @@ class NotificationScreen extends Component {
                     : styles.title
                 }
                 ellipsizeMode="tail">
-                  {this.renderLabel(item)}
+                {this.renderLabel(item)}
               </Text>
               {this.isToday(item) && (
                 <Text style={styles.txtTime}>

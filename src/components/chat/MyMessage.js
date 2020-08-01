@@ -68,7 +68,7 @@ class MyMessage extends React.Component {
         style={[
           styles.containerMessage,
           {
-            marginBottom: this.props.isLast ? 30 : 0,
+            // marginBottom: this.props.isLast ? 30 : 0,
             marginTop: !this.state.showDate && this.state.showAuthor ? 20 : 0,
           },
         ]}>

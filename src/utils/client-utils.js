@@ -198,7 +198,8 @@ module.exports = {
         }
       })
       .catch(e => {
-        if (funRes) funRes(undefined, e);
+        if (e.status >= 200 && e.status < 300) funRes(true, undefined);
+        else funRes(undefined, e);
       });
   },
 

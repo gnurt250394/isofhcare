@@ -114,7 +114,7 @@ class ListQuestionScreen extends Component {
   }
 
   goToDetailQuestion = item => () => {
-    this.props.navigation.navigate('detailQuestion', {item});
+    this.props.navigation.navigate('detailQuestion', {item, social: true});
   };
   keyExtractor = (item, index) => `${index}`;
   renderItem = ({item, index}) => {

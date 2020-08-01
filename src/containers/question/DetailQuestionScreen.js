@@ -34,12 +34,14 @@ import connectionUtils from '@utils/connection-utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ChatScreen from '@containers/chat/ChatScreen';
 import CustomMenu from '@components/CustomMenu';
+import SocialChatScreen from '@containers/chat/SocialChatScreen';
 const {width, height} = Dimensions.get('window');
 class DetailQuestionScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       item: this.props.navigation.getParam('item', {}),
+      social: this.props.navigation.getParam('social', {}),
       textShow: false,
       data: [
         {
@@ -241,7 +243,7 @@ class DetailQuestionScreen extends Component {
 
         <Text style={styles.txtLabelChat}>Xem thêm câu trả lời</Text>
         <View style={styles.containerChat}>
-          <ChatScreen item={this.state.item} isShowText={false} />
+          <SocialChatScreen item={this.state.item}  isShowText={false} />
         </View>
       </ActivityPanel>
     );

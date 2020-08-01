@@ -20,6 +20,7 @@ import {
   AppState,
   FlatList,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import dateUtisl from 'mainam-react-native-date-utils';
@@ -38,6 +39,9 @@ import KeyboardShift from '@components/question/KeyboardShift';
 import ModalConfirmSend from '@components/chat/ModalConfirmSend';
 import questionProvider from '@data-access/question-provider';
 import connectionUtils from '@utils/connection-utils';
+import {RectButton} from 'react-native-gesture-handler';
+
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
@@ -50,6 +54,7 @@ const ChatScreen = ({
   messageWarning,
   keyboardVerticalOffset,
   navigation,
+  social,
 }) => {
   // room = navigation ? navigation.getParam('item', {})
   const userApp = useSelector(state => state.auth.userApp);
@@ -75,6 +80,8 @@ const ChatScreen = ({
   };
   const flatList = useRef(null);
   const timeout = useRef(null);
+  const row = useRef([]);
+  const prevOpenedRow = useRef(null);
   const txtMessage = useRef(null);
   const imagePicker = useRef(null);
   const dataIds = useRef([]);
@@ -119,7 +126,7 @@ const ChatScreen = ({
   };
   const getListAnwser = async () => {
     try {
-      let res = await questionProvider.listAnwser(item.id, page, size);
+      let res = await questionProvider.listAnwser(item.id, false, page, size);
       console.log('res: ', res);
       if (res?.content) formatData(res.content);
       else formatData([]);
@@ -342,9 +349,46 @@ const ChatScreen = ({
     }
   };
   const removeImage = index => () => {
-    var imageUris = listImage;
+    var imageUris = [...listImage];
     imageUris.splice(index, 1);
     setListImage(imageUris);
+  };
+  const onDelete = (message, index) => async () => {
+    try {
+      let res = await questionProvider.deleteMessage(item.id, message.id);
+      console.log('res: ', res);
+      if (res) {
+        let list = data.filter(e => e.id != message.id);
+        setData(list);
+      } else {
+        snackbar.show('Xoá câu trả lời thất bại', 'danger');
+      }
+    } catch (error) {
+      snackbar.show('Xoá câu trả lời thất bại', 'danger');
+      console.log('error: ', error);
+    }
+    row.current[index] && row.current[index].close();
+  };
+  const renderRightActions = (item, index) => progress => {
+    return (
+      <View style={[styles.animButton, {marginTop: index == 0 ? 30 : 0}]}>
+        <RectButton
+          style={[styles.buttonSwiable]}
+          onPress={onDelete(item, index)}>
+          <Text style={styles.actionText}>Xoá</Text>
+        </RectButton>
+      </View>
+    );
+  };
+  const closeRow = index => () => {
+    if (
+      prevOpenedRow.current &&
+      row.current[index] &&
+      prevOpenedRow.current !== row.current[index]
+    ) {
+      prevOpenedRow.current.close();
+    }
+    prevOpenedRow.current = row.current[index];
   };
   return (
     // <ActivityPanel
@@ -353,165 +397,177 @@ const ChatScreen = ({
     //   showFullScreen={true}
     //   containerStyle={{backgroundColor: '#afcccc'}}
     //   isLoading={state.isLoading}>
-    <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
-      <FlatList
-        style={{flex: 1, paddingBottom: 20}}
-        ref={flatList}
-        keyExtractor={(item, index) => index.toString()}
-        extraData={state}
-        onEndReached={onLoadMore}
-        onEndReachedThreshold={0.7}
-        data={data}
-        inverted={true}
-        ListFooterComponent={listFooter}
-        renderItem={props => (
-          <View>
-            {props.item?.userId != item?.doctorInfo?.id ? (
-              <MyMessage
-                isLast={props.index == 0}
-                message={props.item}
-                preMessage={props.index == 0 ? null : data[props.index - 1]}
-              />
-            ) : (
-              <TheirMessage
-                // chatProfile={getChatProfile(props.item.userId)}
-                isLast={props.index == 0}
-                message={props.item}
-                info={item.doctorInfo}
-                preMessage={props.index == 0 ? null : data[props.index - 1]}
-              />
-            )}
-          </View>
-        )}
-      />
-      {item.status == 'ACCEPT' || item.status == 'REPLY' ? (
-        <ChatView
-          keyboardVerticalOffset={keyboardVerticalOffset || 110}
-          behavior="padding">
-          {state.typing && state.typing.length != 0 ? (
-            <View style={styles.containerTyping}>
-              <Text style={styles.txtTyping}>
-                <Text style={{fontWeight: 'bold'}}>{state.typing[0]}</Text>
-                {state.typing.length > 1
-                  ? ' và ' + (state.typing.length - 1) + ' người khác'
-                  : ''}{' '}
-                đang gõ
-              </Text>
-              <TypingAnimation
-                dotColor="black"
-                dotMargin={5}
-                dotAmplitude={3}
-                dotSpeed={0.15}
-                dotRadius={2.5}
-                dotX={12}
-                dotY={6}
-                show={true}
-                style={styles.dotAnimation}
-              />
-            </View>
-          ) : null}
-          <View style={styles.containerSendMes}>
-            <TouchableOpacity
-              style={styles.buttonSelectImage}
-              onPress={selectImage}>
-              <ScaleImage
-                source={require('@images/image.png')}
-                width={25}
-                style={{resizeMode: 'contain'}}
-              />
-            </TouchableOpacity>
-            <View
-              style={[
-                styles.containerInput,
-                Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
-              ]}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                {listImage.length
-                  ? listImage.map((item, index) => (
-                      <View key={index} style={styles.groupImagePicker}>
-                        <View style={styles.groupImage}>
-                          <Image
-                            source={{uri: item.url}}
-                            resizeMode="cover"
-                            style={styles.imagePicker}
-                          />
-                          {item.error ? (
-                            <View style={styles.imageError}>
-                              <ScaleImage
-                                source={require('@images/ic_warning.png')}
-                                width={40}
-                              />
-                            </View>
-                          ) : item.loading ? (
-                            <View style={styles.imageLoading}>
-                              <ScaleImage
-                                source={require('@images/loading.gif')}
-                                width={20}
-                              />
-                            </View>
-                          ) : null}
-                        </View>
-                        <TouchableOpacity
-                          onPress={removeImage(index)}
-                          style={styles.buttonClose}>
-                          <ScaleImage
-                            source={require('@images/new/ic_close.png')}
-                            width={15}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    ))
-                  : null}
+    <TouchableWithoutFeedback
+      onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
+      <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+        <FlatList
+          style={{flex: 1, paddingBottom: 20}}
+          ref={flatList}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={state}
+          onEndReached={onLoadMore}
+          onEndReachedThreshold={0.7}
+          data={data}
+          inverted={true}
+          ListFooterComponent={listFooter}
+          renderItem={props => (
+            <Swipeable
+              ref={ref => (row.current[props.index] = ref)}
+              friction={2}
+              enabled={!social}
+              leftThreshold={30}
+              rightThreshold={40}
+              onSwipeableOpen={closeRow(props.index)}
+              renderRightActions={renderRightActions(props.item, props.index)}>
+              <View>
+                {props.item?.userId != item?.doctorInfo?.id ? (
+                  <MyMessage
+                    isLast={props.index == 0}
+                    message={props.item}
+                    preMessage={props.index == 0 ? null : data[props.index - 1]}
+                  />
+                ) : (
+                  <TheirMessage
+                    // chatProfile={getChatProfile(props.item.userId)}
+                    isLast={props.index == 0}
+                    message={props.item}
+                    info={item.doctorInfo}
+                    preMessage={props.index == 0 ? null : data[props.index - 1]}
+                  />
+                )}
               </View>
-              <TextInput
-                ref={txtMessage}
-                style={styles.inputMes}
-                placeholderTextColor="#cacaca"
-                underlineColorAndroid="transparent"
-                placeholder={'Nhập nội dung cần gửi'}
-                onChangeText={onChangeText}
-                multiline={true}
-                autoCorrect={false}
-                value={state.newMessage}
-                onFocus={() => {
-                  onScrollToEnd();
-                }}
-              />
+            </Swipeable>
+          )}
+        />
+        {item.status == 'ACCEPT' || item.status == 'REPLY' ? (
+          <ChatView
+            keyboardVerticalOffset={keyboardVerticalOffset || 110}
+            behavior="padding">
+            {state.typing && state.typing.length != 0 ? (
+              <View style={styles.containerTyping}>
+                <Text style={styles.txtTyping}>
+                  <Text style={{fontWeight: 'bold'}}>{state.typing[0]}</Text>
+                  {state.typing.length > 1
+                    ? ' và ' + (state.typing.length - 1) + ' người khác'
+                    : ''}{' '}
+                  đang gõ
+                </Text>
+                <TypingAnimation
+                  dotColor="black"
+                  dotMargin={5}
+                  dotAmplitude={3}
+                  dotSpeed={0.15}
+                  dotRadius={2.5}
+                  dotX={12}
+                  dotY={6}
+                  show={true}
+                  style={styles.dotAnimation}
+                />
+              </View>
+            ) : null}
+            <View style={styles.containerSendMes}>
+              <TouchableOpacity
+                style={styles.buttonSelectImage}
+                onPress={selectImage}>
+                <ScaleImage
+                  source={require('@images/image.png')}
+                  width={25}
+                  style={{resizeMode: 'contain'}}
+                />
+              </TouchableOpacity>
+              <View
+                style={[
+                  styles.containerInput,
+                  Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
+                ]}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  {listImage.length
+                    ? listImage.map((item, index) => (
+                        <View key={index} style={styles.groupImagePicker}>
+                          <View style={styles.groupImage}>
+                            <Image
+                              source={{uri: item.url}}
+                              resizeMode="cover"
+                              style={styles.imagePicker}
+                            />
+                            {item.error ? (
+                              <View style={styles.imageError}>
+                                <ScaleImage
+                                  source={require('@images/ic_warning.png')}
+                                  width={40}
+                                />
+                              </View>
+                            ) : item.loading ? (
+                              <View style={styles.imageLoading}>
+                                <ScaleImage
+                                  source={require('@images/loading.gif')}
+                                  width={20}
+                                />
+                              </View>
+                            ) : null}
+                          </View>
+                          <TouchableOpacity
+                            onPress={removeImage(index)}
+                            style={styles.buttonClose}>
+                            <ScaleImage
+                              source={require('@images/new/ic_close.png')}
+                              width={15}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ))
+                    : null}
+                </View>
+                <TextInput
+                  ref={txtMessage}
+                  style={styles.inputMes}
+                  placeholderTextColor="#cacaca"
+                  underlineColorAndroid="transparent"
+                  placeholder={'Nhập nội dung cần gửi'}
+                  onChangeText={onChangeText}
+                  multiline={true}
+                  autoCorrect={false}
+                  value={state.newMessage}
+                  onFocus={() => {
+                    onScrollToEnd();
+                  }}
+                />
+              </View>
+              <TouchableOpacity style={styles.buttonSend} onPress={send}>
+                <ScaleImage
+                  source={require('@images/new/ic_send.png')}
+                  height={19}
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.buttonSend} onPress={send}>
-              <ScaleImage
-                source={require('@images/new/ic_send.png')}
-                height={19}
-              />
-            </TouchableOpacity>
-          </View>
-        </ChatView>
-      ) : null}
-      {isShowText ? (
-        <Text
-          style={[
-            {
-              color:
-                item.status == 'REJECT' || item.status == 'DONE'
-                  ? '#00000060'
-                  : '#00BA99',
-            },
-            styles.txtWarning,
-          ]}>
-          {_renderStatus()}
-        </Text>
-      ) : null}
+          </ChatView>
+        ) : null}
+        {isShowText ? (
+          <Text
+            style={[
+              {
+                color:
+                  item.status == 'REJECT' || item.status == 'DONE'
+                    ? '#00000060'
+                    : '#00BA99',
+              },
+              styles.txtWarning,
+            ]}>
+            {_renderStatus()}
+          </Text>
+        ) : null}
 
-      <ImagePicker ref={imagePicker} />
-      {/* <ModalConfirmSend
+        <ImagePicker ref={imagePicker} />
+        {/* <ModalConfirmSend
         isVisible={state.isVisible}
         onBackdropPress={onBackdropPress}
         onSend={send}
       /> */}
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
     // </ActivityPanel>
   );
 };
@@ -519,6 +575,24 @@ const ChatScreen = ({
 export default ChatScreen;
 
 const styles = StyleSheet.create({
+  actionText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  animButton: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  buttonSwiable: {
+    backgroundColor: 'red',
+    minHeight: 40,
+    borderRadius: 5,
+    padding: 5,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   buttonSelectImage: {
     marginTop: 10,
     width: 60,
