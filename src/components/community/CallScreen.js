@@ -286,7 +286,7 @@ function CallScreen({}, ref) {
         {token: tokenFirebase.current, platform: Platform.OS},
         data => {
           console.log('data: ', data);
-          socket.current.disconnect();
+          context.socket.disconnect();
         },
       );
       removeEvent();
