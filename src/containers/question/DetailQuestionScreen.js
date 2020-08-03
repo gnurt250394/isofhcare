@@ -288,6 +288,7 @@ const styles = StyleSheet.create({
   containerContent: {
     padding: 10,
     backgroundColor: '#00CBA720',
+    maxHeight: height / 5,
   },
   buttonBack: {
     padding: 10,
