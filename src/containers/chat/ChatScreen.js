@@ -439,7 +439,7 @@ const ChatScreen = ({
             </Swipeable>
           )}
         />
-        {item.status == 'ACCEPT' || item.status == 'REPLY' ? (
+        { item.status == 'REPLY' ? (
           <ChatView
             keyboardVerticalOffset={keyboardVerticalOffset || 110}
             behavior="padding">
