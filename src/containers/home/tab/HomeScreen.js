@@ -224,6 +224,11 @@ class HomeScreen extends Component {
         }
       });
     }
+    if (this.props.userApp.isLogin && this.callRef) {
+      CallManager.register(this.callRef);
+    } else if (!this.props.userApp.isLogin && this.callRef) {
+      CallManager.unregister(this.callRef);
+    }
   }
   logout() {
     this.props.dispatch(redux.userLogout());
@@ -451,7 +456,9 @@ class HomeScreen extends Component {
             </View>
           </ScrollView>
         </View>
-        <CallScreen ref={ref => (this.callRef = ref)} />
+        {this.props.userApp.isLogin ? (
+          <CallScreen ref={ref => (this.callRef = ref)} />
+        ) : null}
         <PushController />
         <Deeplink />
       </ActivityPanel>
