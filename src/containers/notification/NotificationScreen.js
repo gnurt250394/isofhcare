@@ -135,7 +135,7 @@ class NotificationScreen extends Component {
         obj.question.doctorInfo.academicDegree +
         ', ' +
         obj.question.doctorInfo.name +
-        ' đã gửi cho bạn 1 tin nhắn.';
+        ' đã trả lời câu hỏi của bạn.';
     } else {
       title = item.notification.title;
     }
