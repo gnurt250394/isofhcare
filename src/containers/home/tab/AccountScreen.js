@@ -185,7 +185,7 @@ class AccountScreen extends Component {
 
   navigate_to = (router, params) => () => {
     if (router) {
-     NavigationService.reset(router, params);
+     NavigationService.navigate(router, params);
     } else {
       snackbar.show(constants.msg.app.in_development);
     }
