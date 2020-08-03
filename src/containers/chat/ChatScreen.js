@@ -411,35 +411,38 @@ const ChatScreen = ({
           inverted={true}
           ListFooterComponent={listFooter}
           renderItem={props => (
-            <Swipeable
-              ref={ref => (row.current[props.index] = ref)}
-              friction={2}
-              enabled={!social}
-              leftThreshold={30}
-              rightThreshold={40}
-              onSwipeableOpen={closeRow(props.index)}
-              renderRightActions={renderRightActions(props.item, props.index)}>
-              <View>
-                {props.item?.userId != item?.doctorInfo?.id ? (
+            <View>
+              {props.item?.userId != item?.doctorInfo?.id ? (
+                <Swipeable
+                  ref={ref => (row.current[props.index] = ref)}
+                  friction={2}
+                  enabled={!social}
+                  leftThreshold={30}
+                  rightThreshold={40}
+                  onSwipeableOpen={closeRow(props.index)}
+                  renderRightActions={renderRightActions(
+                    props.item,
+                    props.index,
+                  )}>
                   <MyMessage
                     isLast={props.index == 0}
                     message={props.item}
                     preMessage={props.index == 0 ? null : data[props.index - 1]}
                   />
-                ) : (
-                  <TheirMessage
-                    // chatProfile={getChatProfile(props.item.userId)}
-                    isLast={props.index == 0}
-                    message={props.item}
-                    info={item.doctorInfo}
-                    preMessage={props.index == 0 ? null : data[props.index - 1]}
-                  />
-                )}
-              </View>
-            </Swipeable>
+                </Swipeable>
+              ) : (
+                <TheirMessage
+                  // chatProfile={getChatProfile(props.item.userId)}
+                  isLast={props.index == 0}
+                  message={props.item}
+                  info={item.doctorInfo}
+                  preMessage={props.index == 0 ? null : data[props.index - 1]}
+                />
+              )}
+            </View>
           )}
         />
-        { item.status == 'REPLY' ? (
+        {item.status == 'REPLY' ? (
           <ChatView
             keyboardVerticalOffset={keyboardVerticalOffset || 110}
             behavior="padding">
