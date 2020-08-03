@@ -121,7 +121,7 @@ const RenderProfile = ({item, navigation}) => {
         </View> */}
         <View
           style={{
-            maxHeight: height / 3,
+            maxHeight: height / 6,
           }}>
           <ScrollView ref={scrollRef} bounces={false}>
             <View onStartShouldSetResponder={() => true}>
