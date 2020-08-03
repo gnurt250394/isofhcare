@@ -27,15 +27,15 @@ export default {
       );
     });
   },
-  listQuestionSocial(value, page, size) {
+  listQuestionSocial(value, specialId, page, size) {
     return new Promise((resolve, reject) => {
       let params =
         '?page=' +
         page +
         '&size=' +
         size +
-        (value ? '&searchValue=' + value : '');
-      // (specialId ? '&specializationId=' + specialId : '');
+        (value ? '&searchValue=' + value : '') +
+        (specialId ? '&specializationId=' + specialId : '');
       // reject();
       client.requestApi(
         'get',

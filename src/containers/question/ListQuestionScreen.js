@@ -29,7 +29,7 @@ class ListQuestionScreen extends Component {
     super(props);
     this.state = {
       tabIndex: 0,
-
+      refreshing: false,
       data: [],
       isLoading: true,
       page: 0,
@@ -51,10 +51,15 @@ class ListQuestionScreen extends Component {
   };
   getListQuestions = async value => {
     try {
-      const {page, size} = this.state;
-      let res = await questionProvider.listQuestionSocial(value, page, size);
+      const {page, size, value, specialId} = this.state;
+      let res = await questionProvider.listQuestionSocial(
+        value,
+        specialId,
+        page,
+        size,
+      );
       console.log('res: ', res);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, refreshing: false});
       if (res?.content) {
         this.formatData(res.content);
       } else {
@@ -63,12 +68,12 @@ class ListQuestionScreen extends Component {
     } catch (error) {
       console.log('error: ', error);
       this.formatData([]);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, refreshing: false});
     }
   };
   onSelected = item => {
-    this.setState({specialId: item.name, isLoading: true, page: 0}, () => {
-      this.getListQuestions(this.state.specialId);
+    this.setState({specialId: item.id, isLoading: true, page: 0}, () => {
+      this.getListQuestions();
     });
   };
   onChangeText = value => {
@@ -78,7 +83,7 @@ class ListQuestionScreen extends Component {
       }
       this.timeout = setTimeout(() => {
         this.setState({isLoading: true, page: 0}, () => {
-          this.getListQuestions(this.state.value);
+          this.getListQuestions();
         });
       }, 500);
     });
@@ -101,6 +106,12 @@ class ListQuestionScreen extends Component {
     if (data.length >= (page + 1) * size) {
       this.setState(pre => ({page: pre.page + 1}), this.getListQuestions);
     }
+  };
+  _onRefresh = () => {
+    this.setState(
+      {refreshing: true, page: 0, value: '', specialId: ''},
+      this.getListQuestions,
+    );
   };
   onClickCreateMenu = () =>
     this.props.navigation.navigate('createQuestionStep1');
@@ -198,6 +209,8 @@ class ListQuestionScreen extends Component {
           keyExtractor={this.keyExtractor}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0.7}
+          onRefresh={this._onRefresh}
+          refreshing={this.state.refreshing}
         />
       </ActivityPanel>
     );
