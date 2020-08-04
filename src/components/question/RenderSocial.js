@@ -41,10 +41,10 @@ const icSupport = require('@images/new/user.png');
 
 const RenderSocial = ({navigation, item, social}) => {
   const [textShow, setTextShow] = useState(true);
-  
+
   const onShowText = () => {
     setTextShow(pre => {
-      return {textShow: !pre.textShow};
+      return !pre;
     });
   };
   const showImage = i => () => {
@@ -57,12 +57,11 @@ const RenderSocial = ({navigation, item, social}) => {
   };
   return (
     <View>
-      
       <View style={styles.containerContent}>
-        <View >
+        <View>
           <Text
             // onLayout={onLayout}
-            numberOfLines={textShow ? undefined : 3}
+            // numberOfLines={textShow ? undefined : 3}
             style={styles.txtMessage}>
             {item.content}
           </Text>
@@ -72,7 +71,7 @@ const RenderSocial = ({navigation, item, social}) => {
               alignItems: 'center',
               width: '100%',
             }}>
-            {textShow && item?.images?.length
+            { item?.images?.length
               ? item.images.map((e, i) => {
                   return (
                     <TouchableOpacity key={i} onPress={showImage(i)}>
@@ -89,25 +88,24 @@ const RenderSocial = ({navigation, item, social}) => {
                         : null
                     } */}
         <View style={styles.containerSpecialist}>
-          <Text
-            numberOfLines={textShow ? undefined : 1}
-            style={styles.groupSpecialist}>
-            {item.specializations.length
-              ? item.specializations.map((e, i) => {
-                  return (
-                    <Text
-                      key={i}
-                      style={styles.txtSpecialist}
-                      numberOfLines={1}>
-                      {e.specializationName}
-                      {i != item.specializations.length - 1 ? ', ' : ''}
-                    </Text>
-                  );
-                })
-              : null}
-          </Text>
+          {item.specializations.length ? (
+            <Text
+              numberOfLines={textShow ? undefined : 1}
+              style={styles.groupSpecialist}>
+              {item.specializations.map((e, i) => {
+                return (
+                  <Text key={i} style={styles.txtSpecialist} numberOfLines={1}>
+                    {e.specializationName}
+                    {i != item.specializations.length - 1 ? ', ' : ''}
+                  </Text>
+                );
+              })}
+            </Text>
+          ) : (
+            <View />
+          )}
 
-          <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
+          {/* <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
             <Text style={styles.txtHide}>
               {!textShow ? 'Xem thêm' : 'Rút gọn'}
             </Text>
@@ -119,11 +117,9 @@ const RenderSocial = ({navigation, item, social}) => {
               source={require('@images/new/down.png')}
               height={9}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
-
-     
     </View>
   );
 };

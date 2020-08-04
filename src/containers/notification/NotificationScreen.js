@@ -172,7 +172,7 @@ class NotificationScreen extends Component {
         }
         item.notification.watched = 1;
         this.setState({data: [...this.state.data]});
-        switch (data.type) {
+        switch (data?.type) {
           // case 1:
           //   this.openQuestion(data.id);
           //   break;

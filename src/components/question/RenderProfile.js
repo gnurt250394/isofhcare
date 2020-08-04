@@ -123,7 +123,7 @@ const RenderProfile = ({item, navigation}) => {
         <View>
           <Text
             // onLayout={onLayout}
-            numberOfLines={textShow ? undefined : 3}
+            // numberOfLines={textShow ? undefined : 3}
             style={styles.txtMessage}>
             {item.content}
           </Text>
@@ -133,7 +133,7 @@ const RenderProfile = ({item, navigation}) => {
               alignItems: 'center',
               width: '100%',
             }}>
-            {textShow && item?.images?.length
+            {item?.images?.length
               ? item.images.map((e, i) => {
                   return (
                     <TouchableOpacity key={i} onPress={showImage(i)}>
@@ -147,7 +147,7 @@ const RenderProfile = ({item, navigation}) => {
         <View style={styles.containerSpecialist}>
           {item.specializations.length ? (
             <Text
-              numberOfLines={textShow ? undefined : 1}
+              // numberOfLines={textShow ? undefined : 1}
               style={styles.groupSpecialist}>
               {item.specializations.length
                 ? item.specializations.map((e, i) => {
@@ -166,7 +166,7 @@ const RenderProfile = ({item, navigation}) => {
           ) : (
             <View />
           )}
-          <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
+          {/* <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
             <Text style={styles.txtHide}>
               {!textShow ? 'Xem thêm' : 'Rút gọn'}
             </Text>
@@ -178,7 +178,7 @@ const RenderProfile = ({item, navigation}) => {
               source={require('@images/new/down.png')}
               height={9}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </View>
