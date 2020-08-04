@@ -42,7 +42,7 @@ class ListQuestionScreen extends Component {
   componentDidMount() {
     // this.getListSpecialist();
     this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0}, this.getListQuestions);
+      this.setState({page: 0, isLoading: true}, this.getListQuestions);
     });
   }
   componentWillUnmount = () => {
@@ -150,6 +150,7 @@ class ListQuestionScreen extends Component {
     return (
       <ActivityPanel
         // title={constants.title.advisory_online}
+        backButtonClick={() => this.props.navigation.goBack()}
         titleView={
           <View style={styles.containerTitle}>
             <TextInput
