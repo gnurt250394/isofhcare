@@ -23,6 +23,7 @@ import ListQuestion from '@components/question/ListQuestion';
 import {IndicatorViewPager} from 'mainam-react-native-viewpager';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import ItemQuestion from '@components/question/ItemQuestion';
+import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
 const {width, height} = Dimensions.get('screen');
 class ListMyQuestionScreen extends Component {
   constructor(props) {
@@ -117,7 +118,6 @@ class ListMyQuestionScreen extends Component {
     return (
       <ActivityPanel
         title={'Câu hỏi của bạn'}
-        isLoading={this.state.isLoading}
         titleStyle={[
           this.props.userApp.isLogin ? {marginRight: 0} : {},
           {color: '#FFF'},
@@ -156,17 +156,21 @@ class ListMyQuestionScreen extends Component {
             backgroundColor: '#bbbbbb80',
           }}
         />
-        <FlatList
-          data={this.state.data}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={this.ItemSeparator}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={0.7}
-          onRefresh={this.onRefresh}
-          refreshing={this.state.refreshing}
-        />
+        {this.state.isLoading ? (
+          <RenderPlaceHolder />
+        ) : (
+          <FlatList
+            data={this.state.data}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={this.ItemSeparator}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0.7}
+            onRefresh={this.onRefresh}
+            refreshing={this.state.refreshing}
+          />
+        )}
       </ActivityPanel>
     );
   }

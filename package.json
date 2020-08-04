@@ -116,6 +116,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rn-fetch-blob": "^0.10.16",
+    "rn-placeholder": "^3.0.1",
     "socket.io-client": "^2.3.0"
   },
   "devDependencies": {

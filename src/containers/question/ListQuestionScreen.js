@@ -23,6 +23,7 @@ import ListQuestion from '@components/question/ListQuestion';
 import {IndicatorViewPager} from 'mainam-react-native-viewpager';
 import ItemQuestion from '@components/question/ItemQuestion';
 import ListSpecialQuestion from '@components/question/ListSpecialQuestion';
+import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
 const {width, height} = Dimensions.get('screen');
 class ListQuestionScreen extends Component {
   constructor(props) {
@@ -129,7 +130,13 @@ class ListQuestionScreen extends Component {
   };
   keyExtractor = (item, index) => `${index}`;
   renderItem = ({item, index}) => {
-    return <ItemQuestion item={item} onPress={this.goToDetailQuestion(item)} social={true} />;
+    return (
+      <ItemQuestion
+        item={item}
+        onPress={this.goToDetailQuestion(item)}
+        social={true}
+      />
+    );
   };
   ItemSeparator = () => {
     return <View style={styles.lineBetwenItem} />;
@@ -168,7 +175,6 @@ class ListQuestionScreen extends Component {
         }
         titleViewStyle={styles.titleViewStyle}
         menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
-        isLoading={this.state.isLoading}
         titleStyle={[
           this.props.userApp.isLogin ? {marginRight: 0} : {},
           {color: '#FFF'},
@@ -201,17 +207,21 @@ class ListQuestionScreen extends Component {
           </TouchableOpacity>
         </View>
         <ListSpecialQuestion onSelected={this.onSelected} />
-        <FlatList
-          data={this.state.data}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={this.ItemSeparator}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={0.7}
-          onRefresh={this._onRefresh}
-          refreshing={this.state.refreshing}
-        />
+        {this.state.isLoading ? (
+          <RenderPlaceHolder />
+        ) : (
+          <FlatList
+            data={this.state.data}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={this.ItemSeparator}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0.7}
+            onRefresh={this._onRefresh}
+            refreshing={this.state.refreshing}
+          />
+        )}
       </ActivityPanel>
     );
   }
