@@ -44,7 +44,7 @@ class DetailMessageScreen extends Component {
         
         <ChatScreen
           isShowText={true}
-          keyboardVerticalOffset={300}
+          keyboardVerticalOffset={110}
           item={this.state.item}
         />
       </ActivityPanel>

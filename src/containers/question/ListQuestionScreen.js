@@ -42,7 +42,7 @@ class ListQuestionScreen extends Component {
   componentDidMount() {
     // this.getListSpecialist();
     this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0, isLoading: true}, this.getListQuestions);
+      this.setState({page: 0}, this.getListQuestions);
     });
   }
   componentWillUnmount = () => {
@@ -208,9 +208,9 @@ class ListQuestionScreen extends Component {
           </TouchableOpacity>
         </View>
         <ListSpecialQuestion onSelected={this.onSelected} />
-        {this.state.isLoading ? (
+        {/* {this.state.isLoading ? (
           <RenderPlaceHolder />
-        ) : (
+        ) : ( */}
           <FlatList
             data={this.state.data}
             showsVerticalScrollIndicator={false}
@@ -222,7 +222,7 @@ class ListQuestionScreen extends Component {
             onRefresh={this._onRefresh}
             refreshing={this.state.refreshing}
           />
-        )}
+        {/* )} */}
       </ActivityPanel>
     );
   }
