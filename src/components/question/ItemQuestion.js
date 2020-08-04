@@ -48,9 +48,9 @@ class ItemQuestion extends Component {
         });
   };
   render() {
-    let {item, onPress} = this.props;
+    let {item, onPress, social} = this.props;
     const icSupport = require('@images/new/user.png');
-    const avatar =  icSupport;
+    const avatar = icSupport;
     return (
       <TouchableOpacity onPress={onPress} style={styles.containerItem}>
         <View style={styles.containerProfile}>
@@ -84,7 +84,12 @@ class ItemQuestion extends Component {
             </Text>
           </View>
         </View>
-        <Text style={[styles.txtComment,{color:item.userReaded?"#00000050":"#000"}]} numberOfLines={3}>
+        <Text
+          style={[
+            styles.txtComment,
+            {color: !social && item.userReaded ? '#00000050' : '#000'},
+          ]}
+          numberOfLines={3}>
           {item.content}
         </Text>
         {item?.images?.length ? (
