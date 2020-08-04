@@ -174,7 +174,7 @@ class ItemDoctor extends Component {
                                     }
                                 </View>
                                 <View style={styles.containerButton}>
-                                    <Button textStyle={{ textAlign: 'center' }} label={`Đặt lịch\nhẹn`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} source={require("@images/new/videoCall/ic_call.png")} />
+                                    <Button textStyle={{ textAlign: 'center' }} label={`Tư vấn\ntrực tuyến`} style={styles.txtAdvisory} onPress={this.onCallVideo(item)} source={require("@images/new/videoCall/ic_call.png")} />
                                     <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                                 </View>
                             </View>
