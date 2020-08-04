@@ -156,9 +156,9 @@ class ListMyQuestionScreen extends Component {
             backgroundColor: '#bbbbbb80',
           }}
         />
-        {/* {this.state.isLoading ? (
+        {this.state.isLoading ? (
           <RenderPlaceHolder />
-        ) : ( */}
+        ) : (
           <FlatList
             data={this.state.data}
             showsVerticalScrollIndicator={false}
@@ -170,7 +170,7 @@ class ListMyQuestionScreen extends Component {
             onRefresh={this.onRefresh}
             refreshing={this.state.refreshing}
           />
-        {/* )} */}
+        )}
       </ActivityPanel>
     );
   }

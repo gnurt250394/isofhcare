@@ -219,21 +219,21 @@ class ListQuestionScreen extends Component {
           </TouchableOpacity>
         </View>
         <ListSpecialQuestion onSelected={this.onSelected} />
-        {/* {this.state.isLoading ? (
+        {this.state.isLoading ? (
           <RenderPlaceHolder />
-        ) : ( */}
-          <FlatList
-            data={this.state.data}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={this.ItemSeparator}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-            onEndReached={this._onEndReached}
-            onEndReachedThreshold={0.7}
-            onRefresh={this._onRefresh}
-            refreshing={this.state.refreshing}
-          />
-        {/* )} */}
+        ) : (
+        <FlatList
+          data={this.state.data}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={this.ItemSeparator}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+          onEndReached={this._onEndReached}
+          onEndReachedThreshold={0.7}
+          onRefresh={this._onRefresh}
+          refreshing={this.state.refreshing}
+        />
+        )}
       </ActivityPanel>
     );
   }
