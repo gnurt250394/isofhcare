@@ -41,8 +41,7 @@ class DetailMessageScreen extends Component {
     const {item, isShow} = this.state;
     return (
       <ActivityPanel title="Tư vấn">
-        <RenderProfile item={item} />
-        <Text style={styles.txtAllQuestion}>Tất cả câu trả lời</Text>
+        
         <ChatScreen
           isShowText={true}
           keyboardVerticalOffset={300}

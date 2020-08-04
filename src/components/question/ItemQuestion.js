@@ -50,9 +50,7 @@ class ItemQuestion extends Component {
   render() {
     let {item, onPress} = this.props;
     const icSupport = require('@images/new/user.png');
-    const avatar = item?.userInfo?.avatar
-      ? {uri: item?.userInfo?.avatar.absoluteUrl()}
-      : icSupport;
+    const avatar =  icSupport;
     return (
       <TouchableOpacity onPress={onPress} style={styles.containerItem}>
         <View style={styles.containerProfile}>

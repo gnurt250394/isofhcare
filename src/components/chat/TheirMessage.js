@@ -59,7 +59,7 @@ class TheirMessage extends React.Component {
     if (info?.name) {
       name = info?.name;
     }
-    console.log('name: ', name);
+    
     return name
       .split?.(' ')
       .pop()
@@ -69,8 +69,8 @@ class TheirMessage extends React.Component {
   };
   render() {
     let {isShowProfile, message, chatProfile, info} = this.props;
-    console.log('message: ', message);
-    console.log('info: ', info);
+    
+    
     if (!message)
       message = {
         message: '',
@@ -78,7 +78,7 @@ class TheirMessage extends React.Component {
       };
     const icSupport = require('@images/new/user.png');
     let avatar = info?.avatar ? {uri: info?.avatar} : icSupport;
-    console.log('avatar: ', avatar);
+    
     return (
       <View style={{marginBottom: this.props.isLast ? 30 : 0, flex: 1}}>
         {this.state.showDate ? (

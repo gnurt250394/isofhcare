@@ -43,6 +43,7 @@ import {RectButton} from 'react-native-gesture-handler';
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
+import RenderProfile from '@components/question/RenderProfile';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -72,6 +73,7 @@ const ChatScreen = ({
     isVisible: false,
   });
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
@@ -128,9 +130,11 @@ const ChatScreen = ({
     try {
       let res = await questionProvider.listAnwser(item.id, false, page, size);
       console.log('res: ', res);
+      setLoading(false);
       if (res?.content) formatData(res.content);
       else formatData([]);
     } catch (error) {
+      setLoading(false);
       formatData([]);
       console.log('error: ', error);
     }
@@ -150,12 +154,16 @@ const ChatScreen = ({
   };
   const onLoadMore = () => {
     if (data.length >= (page + 1) * size) {
+      setLoading(true);
       setPage(page => page + 1);
     }
   };
   useEffect(() => {
+    if (loading) getListAnwser();
+  }, [page, loading]);
+  useEffect(() => {
     getListAnwser();
-  }, [page]);
+  }, []);
   const sendMessage = async () => {
     try {
       let res = await questionProvider.sendMessage(
@@ -296,9 +304,9 @@ const ChatScreen = ({
     // Keyboard.dismiss();
   };
   const onScrollToEnd = () => {
+    console.log('flatList.current: ', flatList.current);
     setTimeout(() => {
-      if (flatList.current)
-        flatList.current.scrollToOffset({animated: true, offset: 0});
+      if (flatList.current) flatList.current.scrollToEnd({animated: true});
     }, 500);
   };
   const getChatProfile = id => {
@@ -324,17 +332,25 @@ const ChatScreen = ({
     setState({isVisible: true});
   };
   const listFooter = () => {
-    if (data.length >= (page + 1) * size)
-      return (
-        <View style={{alignItems: 'center'}}>
-          <ActivityIndicator
-            style={{margin: 5}}
-            color={'#3161AD'}
-            size="small"
-          />
-        </View>
-      );
-    else return null;
+    if (data.length >= (page + 1) * size) {
+      if (loading) {
+        return (
+          <View style={{alignItems: 'center'}}>
+            <ActivityIndicator
+              style={{margin: 5}}
+              color={'#3161AD'}
+              size="small"
+            />
+          </View>
+        );
+      } else {
+        return (
+          <TouchableOpacity style={styles.buttonLoading} onPress={onLoadMore}>
+            <Text style={styles.txtLoading}>Xem thêm câu trả lời</Text>
+          </TouchableOpacity>
+        );
+      }
+    } else return null;
   };
   const _renderStatus = () => {
     switch (item.status) {
@@ -391,23 +407,18 @@ const ChatScreen = ({
     prevOpenedRow.current = row.current[index];
   };
   return (
-    // <ActivityPanel
-    //   style={{flex: 1}}
-    //   title={room.roomName}
-    //   showFullScreen={true}
-    //   containerStyle={{backgroundColor: '#afcccc'}}
-    //   isLoading={state.isLoading}>
-    <TouchableWithoutFeedback
-      onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
-      <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+    // <TouchableWithoutFeedback
+    //   onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
+    <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+      <ScrollView ref={flatList}>
+        <RenderProfile item={item} />
+
         <FlatList
           style={{flex: 1, paddingBottom: 20}}
-          ref={flatList}
           keyExtractor={(item, index) => index.toString()}
           extraData={state}
-          onEndReached={onLoadMore}
-          onEndReachedThreshold={0.7}
           data={data}
+          scrollEnabled={false}
           inverted={true}
           ListFooterComponent={listFooter}
           renderItem={props => (
@@ -442,142 +453,150 @@ const ChatScreen = ({
             </View>
           )}
         />
-        {item.status == 'REPLY' ? (
-          <ChatView
-            keyboardVerticalOffset={keyboardVerticalOffset || 110}
-            behavior="padding">
-            {state.typing && state.typing.length != 0 ? (
-              <View style={styles.containerTyping}>
-                <Text style={styles.txtTyping}>
-                  <Text style={{fontWeight: 'bold'}}>{state.typing[0]}</Text>
-                  {state.typing.length > 1
-                    ? ' và ' + (state.typing.length - 1) + ' người khác'
-                    : ''}{' '}
-                  đang gõ
-                </Text>
-                <TypingAnimation
-                  dotColor="black"
-                  dotMargin={5}
-                  dotAmplitude={3}
-                  dotSpeed={0.15}
-                  dotRadius={2.5}
-                  dotX={12}
-                  dotY={6}
-                  show={true}
-                  style={styles.dotAnimation}
-                />
-              </View>
-            ) : null}
-            <View style={styles.containerSendMes}>
-              <TouchableOpacity
-                style={styles.buttonSelectImage}
-                onPress={selectImage}>
-                <ScaleImage
-                  source={require('@images/image.png')}
-                  width={25}
-                  style={{resizeMode: 'contain'}}
-                />
-              </TouchableOpacity>
-              <View
-                style={[
-                  styles.containerInput,
-                  Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
-                ]}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                  }}>
-                  {listImage.length
-                    ? listImage.map((item, index) => (
-                        <View key={index} style={styles.groupImagePicker}>
-                          <View style={styles.groupImage}>
-                            <Image
-                              source={{uri: item.url}}
-                              resizeMode="cover"
-                              style={styles.imagePicker}
-                            />
-                            {item.error ? (
-                              <View style={styles.imageError}>
-                                <ScaleImage
-                                  source={require('@images/ic_warning.png')}
-                                  width={40}
-                                />
-                              </View>
-                            ) : item.loading ? (
-                              <View style={styles.imageLoading}>
-                                <ScaleImage
-                                  source={require('@images/loading.gif')}
-                                  width={20}
-                                />
-                              </View>
-                            ) : null}
-                          </View>
-                          <TouchableOpacity
-                            onPress={removeImage(index)}
-                            style={styles.buttonClose}>
-                            <ScaleImage
-                              source={require('@images/new/ic_close.png')}
-                              width={15}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      ))
-                    : null}
-                </View>
-                <TextInput
-                  ref={txtMessage}
-                  style={styles.inputMes}
-                  placeholderTextColor="#cacaca"
-                  underlineColorAndroid="transparent"
-                  placeholder={'Nhập nội dung cần gửi'}
-                  onChangeText={onChangeText}
-                  multiline={true}
-                  autoCorrect={false}
-                  value={state.newMessage}
-                  onFocus={() => {
-                    onScrollToEnd();
-                  }}
-                />
-              </View>
-              <TouchableOpacity style={styles.buttonSend} onPress={send}>
-                <ScaleImage
-                  source={require('@images/new/ic_send.png')}
-                  height={19}
-                />
-              </TouchableOpacity>
-            </View>
-          </ChatView>
-        ) : null}
-        {isShowText ? (
-          <Text
-            style={[
-              {
-                color:
-                  item.status == 'REJECT' || item.status == 'DONE'
-                    ? '#00000060'
-                    : '#00BA99',
-              },
-              styles.txtWarning,
-            ]}>
-            {_renderStatus()}
-          </Text>
-        ) : null}
+      </ScrollView>
 
-        <ImagePicker ref={imagePicker} />
-        {/* <ModalConfirmSend
+      {item.status == 'REPLY' ? (
+        <ChatView
+          keyboardVerticalOffset={keyboardVerticalOffset || 110}
+          behavior="padding">
+          {state.typing && state.typing.length != 0 ? (
+            <View style={styles.containerTyping}>
+              <Text style={styles.txtTyping}>
+                <Text style={{fontWeight: 'bold'}}>{state.typing[0]}</Text>
+                {state.typing.length > 1
+                  ? ' và ' + (state.typing.length - 1) + ' người khác'
+                  : ''}{' '}
+                đang gõ
+              </Text>
+              <TypingAnimation
+                dotColor="black"
+                dotMargin={5}
+                dotAmplitude={3}
+                dotSpeed={0.15}
+                dotRadius={2.5}
+                dotX={12}
+                dotY={6}
+                show={true}
+                style={styles.dotAnimation}
+              />
+            </View>
+          ) : null}
+          <View style={styles.containerSendMes}>
+            <TouchableOpacity
+              style={styles.buttonSelectImage}
+              onPress={selectImage}>
+              <ScaleImage
+                source={require('@images/image.png')}
+                width={25}
+                style={{resizeMode: 'contain'}}
+              />
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.containerInput,
+                Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
+              ]}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                {listImage.length
+                  ? listImage.map((item, index) => (
+                      <View key={index} style={styles.groupImagePicker}>
+                        <View style={styles.groupImage}>
+                          <Image
+                            source={{uri: item.url}}
+                            resizeMode="cover"
+                            style={styles.imagePicker}
+                          />
+                          {item.error ? (
+                            <View style={styles.imageError}>
+                              <ScaleImage
+                                source={require('@images/ic_warning.png')}
+                                width={40}
+                              />
+                            </View>
+                          ) : item.loading ? (
+                            <View style={styles.imageLoading}>
+                              <ScaleImage
+                                source={require('@images/loading.gif')}
+                                width={20}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
+                        <TouchableOpacity
+                          onPress={removeImage(index)}
+                          style={styles.buttonClose}>
+                          <ScaleImage
+                            source={require('@images/new/ic_close.png')}
+                            width={15}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ))
+                  : null}
+              </View>
+              <TextInput
+                ref={txtMessage}
+                style={styles.inputMes}
+                placeholderTextColor="#cacaca"
+                underlineColorAndroid="transparent"
+                placeholder={'Nhập nội dung cần gửi'}
+                onChangeText={onChangeText}
+                multiline={true}
+                autoCorrect={false}
+                value={state.newMessage}
+                onFocus={() => {
+                  onScrollToEnd();
+                }}
+              />
+            </View>
+            <TouchableOpacity style={styles.buttonSend} onPress={send}>
+              <ScaleImage
+                source={require('@images/new/ic_send.png')}
+                height={19}
+              />
+            </TouchableOpacity>
+          </View>
+        </ChatView>
+      ) : null}
+      {isShowText ? (
+        <Text
+          style={[
+            {
+              color:
+                item.status == 'REJECT' || item.status == 'DONE'
+                  ? '#00000060'
+                  : '#00BA99',
+            },
+            styles.txtWarning,
+          ]}>
+          {_renderStatus()}
+        </Text>
+      ) : null}
+
+      <ImagePicker ref={imagePicker} />
+      {/* <ModalConfirmSend
         isVisible={state.isVisible}
         onBackdropPress={onBackdropPress}
         onSend={send}
       /> */}
-      </View>
-    </TouchableWithoutFeedback>
-    // </ActivityPanel>
+    </View>
+    // </TouchableWithoutFeedback>
   );
 };
 
 export default ChatScreen;
 
 const styles = StyleSheet.create({
+  txtLoading: {
+    fontWeight: 'bold',
+  },
+  buttonLoading: {
+    paddingLeft: 10,
+    paddingBottom: 10,
+  },
   actionText: {
     color: '#FFF',
     fontWeight: 'bold',
