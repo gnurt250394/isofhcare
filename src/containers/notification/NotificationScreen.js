@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  DeviceEventEmitter
 } from 'react-native';
 import {connect} from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -47,16 +48,26 @@ class NotificationScreen extends Component {
       );
   }
   componentDidMount() {
+    DeviceEventEmitter.addListener(
+      'hardwareBackPress',
+      this.handleHardwareBack.bind(this),
+    );
     this.onFocus = this.props.navigation.addListener('didFocus', () => {
       this.props.dispatch(redux.getUnreadNotificationCount());
       this.onRefresh();
     });
   }
   componentWillUnmount = () => {
+    DeviceEventEmitter.removeAllListeners('hardwareBackPress');
     if (this.onFocus) {
       console.log('this.onFocus: ', this.onFocus);
       this.onFocus.remove();
     }
+  };
+
+  handleHardwareBack = () => {
+    this.props.navigation.goBack();
+    return true;
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.refreshNotification) {
