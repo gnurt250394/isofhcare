@@ -20,8 +20,8 @@ const RenderPlaceHolder = ({data = [...new Array(10).fill({})]}) => {
               <PlaceholderLine width={15} height={10} />
             </View>
           </View>
-          <PlaceholderLine width={'95%'} />
-          <PlaceholderLine width={'95%'} />
+          <PlaceholderLine width={95} />
+          <PlaceholderLine width={95} />
           <PlaceholderLine width={50} />
         </Placeholder>
       </Card>
