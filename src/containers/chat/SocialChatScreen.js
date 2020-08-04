@@ -43,6 +43,7 @@ import {RectButton} from 'react-native-gesture-handler';
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
+import RenderSocial from '@components/question/RenderSocial';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -72,6 +73,7 @@ const SocialChatScreen = ({
     isVisible: false,
   });
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
@@ -128,9 +130,11 @@ const SocialChatScreen = ({
     try {
       let res = await questionProvider.listAnwser(item.id, true, page, size);
       console.log('res: ', res);
+      setLoading(false);
       if (res?.content) formatData(res.content);
       else formatData([]);
     } catch (error) {
+      setLoading(false);
       formatData([]);
       console.log('error: ', error);
     }
@@ -151,24 +155,36 @@ const SocialChatScreen = ({
   const onLoadMore = () => {
     if (data.length >= (page + 1) * size) {
       setPage(page => page + 1);
+      setLoading(true);
     }
   };
   useEffect(() => {
     getListAnwser();
-  }, [page]);
+  }, []);
+  useEffect(() => {
+    if (loading) getListAnwser();
+  }, [page, loading]);
 
   const listFooter = () => {
-    if (data.length >= (page + 1) * size)
-      return (
-        <View style={{alignItems: 'center'}}>
-          <ActivityIndicator
-            style={{margin: 5}}
-            color={'#3161AD'}
-            size="small"
-          />
-        </View>
-      );
-    else return null;
+    if (data.length >= (page + 1) * size) {
+      if (loading) {
+        return (
+          <View style={{alignItems: 'center'}}>
+            <ActivityIndicator
+              style={{margin: 5}}
+              color={'#3161AD'}
+              size="small"
+            />
+          </View>
+        );
+      } else {
+        return (
+          <TouchableOpacity onPress={onLoadMore} style={styles.buttonLoading}>
+            <Text style={styles.txtLoading}>Xem thêm câu trả lời</Text>
+          </TouchableOpacity>
+        );
+      }
+    } else return null;
   };
   const _renderStatus = () => {
     switch (item.status) {
@@ -184,60 +200,53 @@ const SocialChatScreen = ({
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
-      <FlatList
-        style={{flex: 1, paddingBottom: 20}}
-        ref={flatList}
-        keyExtractor={(item, index) => index.toString()}
-        extraData={state}
-        onEndReached={onLoadMore}
-        onEndReachedThreshold={0.7}
-        data={data}
-        ListFooterComponent={listFooter}
-        renderItem={props => (
-          <View>
-            {props.item?.userId != item?.doctorInfo?.id ? (
-              <MyMessage
-                isLast={props.index == 0}
-                message={props.item}
-                preMessage={props.index == 0 ? null : data[props.index - 1]}
-              />
-            ) : (
-              <TheirMessage
-                // chatProfile={getChatProfile(props.item.userId)}
-                isLast={props.index == 0}
-                message={props.item}
-                info={item.doctorInfo}
-                preMessage={props.index == 0 ? null : data[props.index - 1]}
-              />
-            )}
-          </View>
-        )}
-      />
-
-      {isShowText ? (
-        <Text
-          style={[
-            {
-              color:
-                item.status == 'REJECT' || item.status == 'DONE'
-                  ? '#00000060'
-                  : '#00BA99',
-            },
-            styles.txtWarning,
-          ]}>
-          {_renderStatus()}
-        </Text>
-      ) : null}
-
-      <ImagePicker ref={imagePicker} />
-    </View>
+    <ScrollView>
+      <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+        <RenderSocial item={item} social={social} />
+        <FlatList
+          style={{flex: 1, paddingBottom: 20}}
+          ref={flatList}
+          keyExtractor={(item, index) => index.toString()}
+          extraData={state}
+          data={data}
+          scrollEnabled={false}
+          ListFooterComponent={listFooter}
+          renderItem={props => (
+            <View>
+              {props.item?.userId != item?.doctorInfo?.id ? (
+                <MyMessage
+                  isLast={props.index == 0}
+                  message={props.item}
+                  preMessage={props.index == 0 ? null : data[props.index - 1]}
+                />
+              ) : (
+                <TheirMessage
+                  // chatProfile={getChatProfile(props.item.userId)}
+                  isLast={props.index == 0}
+                  message={props.item}
+                  info={item.doctorInfo}
+                  preMessage={props.index == 0 ? null : data[props.index - 1]}
+                />
+              )}
+            </View>
+          )}
+        />
+        <ImagePicker ref={imagePicker} />
+      </View>
+    </ScrollView>
   );
 };
 
 export default SocialChatScreen;
 
 const styles = StyleSheet.create({
+  txtLoading: {
+    fontWeight: 'bold',
+  },
+  buttonLoading: {
+    alignSelf: 'center',
+    padding: 10,
+  },
   actionText: {
     color: '#FFF',
     fontWeight: 'bold',

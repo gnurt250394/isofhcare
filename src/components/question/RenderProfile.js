@@ -69,7 +69,7 @@ const RenderProfile = ({item, navigation}) => {
   return (
     <View style={[styles.containerItem]}>
       <View style={styles.containerMessage}>
-        {/* <View style={styles.containerName}>
+        <View style={styles.containerName}>
           <ImageLoad
             resizeMode="cover"
             imageStyle={styles.boderImage}
@@ -99,7 +99,7 @@ const RenderProfile = ({item, navigation}) => {
               {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}{' '}
             </Text>
           </View>
-          <CustomMenu
+          {/* <CustomMenu
             MenuSelectOption={
               <View style={styles.buttonMenu}>
                 <ScaleImage
@@ -117,38 +117,32 @@ const RenderProfile = ({item, navigation}) => {
               console.log('i: ', i);
               console.log('e: ', e);
             }}
-          />
-        </View> */}
-        <View
-          style={{
-            maxHeight: height / 6,
-          }}>
-          <ScrollView ref={scrollRef} bounces={false}>
-            <View onStartShouldSetResponder={() => true}>
-              <Text
-                // onLayout={onLayout}
-                numberOfLines={textShow ? undefined : 3}
-                style={styles.txtMessage}>
-                {item.content}
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  width: '100%',
-                }}>
-                {textShow && item?.images?.length
-                  ? item.images.map((e, i) => {
-                      return (
-                        <TouchableOpacity key={i} onPress={showImage(i)}>
-                          <Image source={{uri: e}} style={styles.imgQuestion} />
-                        </TouchableOpacity>
-                      );
-                    })
-                  : null}
-              </View>
-            </View>
-          </ScrollView>
+          /> */}
+        </View>
+
+        <View>
+          <Text
+            // onLayout={onLayout}
+            numberOfLines={textShow ? undefined : 3}
+            style={styles.txtMessage}>
+            {item.content}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            {textShow && item?.images?.length
+              ? item.images.map((e, i) => {
+                  return (
+                    <TouchableOpacity key={i} onPress={showImage(i)}>
+                      <Image source={{uri: e}} style={styles.imgQuestion} />
+                    </TouchableOpacity>
+                  );
+                })
+              : null}
+          </View>
         </View>
         <View style={styles.containerSpecialist}>
           {item.specializations.length ? (

@@ -73,7 +73,7 @@ export default {
     return new Promise((resolve, reject) => {
       // reject();
       let params =
-        `?page=${page}&size=${size}` + (direction ? '&direction=ASC' : '');
+        `?page=${page}&size=${size}` + (direction ? '&orderBy=id&direction=ASC' : '');
       client.requestApi(
         'get',
         client.serviceChats +

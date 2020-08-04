@@ -30,33 +30,29 @@ class SelectSpecialistScreen extends Component {
       size: 20,
       isLoading: true,
     };
+    this.listSpecialist = listSelected;
   }
   componentDidMount() {
     this.onRefresh();
   }
   selectSpecilist(item, index) {
-    let data = [...this.state.listSpecialistSearch];
+    let data = [...this.state.listSelected];
 
-    let len = data.filter(e => e.checked);
-    if (len.length >= 3) {
-      let i = len.findIndex(e => e.id == item.id);
-      if (i != -1) {
-        data[index].checked = !item.checked;
-      } else {
-        len[0].checked = false;
-        data[index].checked = !item.checked;
-      }
+    let i = data.findIndex(e => e.id == item.id);
+
+    if (i == -1 && data.length >= 3) {
+      data.shift();
+      data.push(item);
     } else {
-      data[index].checked = !item.checked;
+      if (i != -1) {
+        data.splice(i, 1);
+      } else {
+        data.push(item);
+      }
     }
-    this.setState({listSpecialistSearch: data});
-    // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-    // if (callback) {
-    //     callback(specialist);
-    //     this.props.navigation.pop();
-    //     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, specialist);
-
-    // }
+    this.setState({
+      listSelected: data,
+    });
   }
 
   onRefresh = () => {
@@ -69,9 +65,10 @@ class SelectSpecialistScreen extends Component {
         this.setState({
           refreshing: false,
           isLoading: false,
+          isSearch: false,
         });
-        if (s) {
-          this.formatData(s.content);
+        if (s?.content?.length) {
+          this.formatData(s?.content);
         } else {
           this.formatData([]);
         }
@@ -81,6 +78,7 @@ class SelectSpecialistScreen extends Component {
         this.setState({
           isLoading: false,
           refreshing: false,
+          isSearch: false,
         });
       });
   };
@@ -118,7 +116,7 @@ class SelectSpecialistScreen extends Component {
     this.setState({searchValue: s});
   };
   onSearch = () => {
-    this.setState({isLoading: true}, () => {
+    this.setState({isLoading: true, isSearch: true}, () => {
       bookingDoctorProvider
         .search_list_specialists(this.state.searchValue)
         .then(s => {
@@ -155,7 +153,7 @@ class SelectSpecialistScreen extends Component {
     }
   };
   renderSearchButton() {
-    let listSelected = this.state.listSpecialistSearch.filter(e => e.checked);
+    let listSelected = this.state.listSelected;
     if (listSelected.length) {
       return (
         <TouchableOpacity
@@ -191,12 +189,13 @@ class SelectSpecialistScreen extends Component {
   };
   footerComponent = () => <View style={{height: 10}} />;
   renderItem = ({item, index}) => {
+    const isChecked = this.state.listSelected.find(e => e.id == item.id);
     return (
       <TouchableOpacity onPress={this.selectSpecilist.bind(this, item, index)}>
         <View
           style={[
             styles.containerItem,
-            {backgroundColor: item.checked ? '#00BA9930' : '#FFF'},
+            {backgroundColor: isChecked ? '#00BA9930' : '#FFF'},
           ]}>
           <Text style={styles.txtItemName}>{item.name}</Text>
         </View>
