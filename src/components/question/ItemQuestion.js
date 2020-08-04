@@ -84,7 +84,7 @@ class ItemQuestion extends Component {
             </Text>
           </View>
         </View>
-        <Text style={styles.txtComment} numberOfLines={3}>
+        <Text style={[styles.txtComment,{color:item.userReaded?"#00000050":"#000"}]} numberOfLines={3}>
           {item.content}
         </Text>
         {item?.images?.length ? (

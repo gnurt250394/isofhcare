@@ -21,7 +21,7 @@ const {height, width} = Dimensions.get('screen');
 
 const RenderProfile = ({item, navigation}) => {
   const [isShow, setIsShow] = useState(false);
-  const [textShow, setTextShow] = useState(false);
+  const [textShow, setTextShow] = useState(true);
   const [data, setData] = useState({});
   const scrollRef = useRef();
   const source = item?.userInfo?.image

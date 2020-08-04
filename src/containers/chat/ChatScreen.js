@@ -129,14 +129,12 @@ const ChatScreen = ({
   const getListAnwser = async () => {
     try {
       let res = await questionProvider.listAnwser(item.id, false, page, size);
-      console.log('res: ', res);
       setLoading(false);
       if (res?.content) formatData(res.content);
       else formatData([]);
     } catch (error) {
       setLoading(false);
       formatData([]);
-      console.log('error: ', error);
     }
   };
   const formatData = data => {
@@ -163,6 +161,7 @@ const ChatScreen = ({
   }, [page, loading]);
   useEffect(() => {
     getListAnwser();
+    onScrollToEnd();
   }, []);
   const sendMessage = async () => {
     try {
@@ -171,7 +170,7 @@ const ChatScreen = ({
         state.newMessage,
         listImage.map(e => e.url),
       );
-      console.log('res: ', res);
+
       if (res) {
         let list = [...data];
         // let i = data.findIndex(
@@ -189,10 +188,7 @@ const ChatScreen = ({
   const readQuestion = async () => {
     try {
       let res = await questionProvider.readQuestion(item.id);
-      console.log('res: ', res);
-    } catch (error) {
-      console.log('error: ', error);
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     const socket = io('http://10.0.0.98:8000', {
@@ -201,16 +197,14 @@ const ChatScreen = ({
       autoConnect: true,
     });
     socket.connect();
-    console.log('socket: ', socket);
     socket.on(constants.socket_type.QUESTION + item.id, (res, callback) => {
-      console.log('data: ', res);
       let data2 = [];
-
       data2.push(res);
       setState({isLoading: false});
       setData(state => [...data2, ...state]);
       onScrollToEnd();
     });
+    readQuestion();
     timeout.current = setInterval(() => {
       readQuestion();
     }, 2 * 60 * 1000);
@@ -251,7 +245,6 @@ const ChatScreen = ({
                   if (!temp) {
                     imageUris.push({uri: image.path, loading: true});
                     imageProvider.upload(image.path, image.mime, (s, e) => {
-                      console.log('s: ', s);
                       if (s.success) {
                         if (s.data && s.data.length > 0) {
                           let imageUris = listImage;
@@ -304,7 +297,6 @@ const ChatScreen = ({
     // Keyboard.dismiss();
   };
   const onScrollToEnd = () => {
-    console.log('flatList.current: ', flatList.current);
     setTimeout(() => {
       if (flatList.current) flatList.current.scrollToEnd({animated: true});
     }, 500);
@@ -372,7 +364,6 @@ const ChatScreen = ({
   const onDelete = (message, index) => async () => {
     try {
       let res = await questionProvider.deleteMessage(item.id, message.id);
-      console.log('res: ', res);
       if (res) {
         let list = data.filter(e => e.id != message.id);
         setData(list);
@@ -381,7 +372,6 @@ const ChatScreen = ({
       }
     } catch (error) {
       snackbar.show('Xoá câu trả lời thất bại', 'danger');
-      console.log('error: ', error);
     }
     row.current[index] && row.current[index].close();
   };
@@ -592,6 +582,7 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   txtLoading: {
     fontWeight: 'bold',
+    color: '#00CBA7',
   },
   buttonLoading: {
     paddingLeft: 10,
