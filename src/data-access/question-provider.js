@@ -88,6 +88,22 @@ export default {
       );
     });
   },
+  readQuestion(id) {
+    return new Promise((resolve, reject) => {
+      // reject();
+      client.requestApi(
+        'put',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${id}/ping`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
   getDetailQuestion(id) {
     return new Promise((resolve, reject) => {
       // reject();

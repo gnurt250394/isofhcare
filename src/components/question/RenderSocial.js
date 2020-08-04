@@ -40,7 +40,7 @@ const {width, height} = Dimensions.get('window');
 const icSupport = require('@images/new/user.png');
 
 const RenderSocial = ({navigation, item, social}) => {
-  const [textShow, setTextShow] = useState(false);
+  const [textShow, setTextShow] = useState(true);
   
   const onShowText = () => {
     setTextShow(pre => {

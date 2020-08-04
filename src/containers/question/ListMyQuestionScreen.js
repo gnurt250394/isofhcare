@@ -29,23 +29,32 @@ class ListMyQuestionScreen extends Component {
     super(props);
     this.state = {
       tabIndex: 0,
-      specialist: [ ],
+      specialist: [],
       data: [],
       isLoading: true,
       page: 0,
       size: 20,
+      refreshing: false,
     };
   }
   componentDidMount() {
-    // this.getListSpecialist()
-    this.getListQuestions();
+    const {navigation} = this.props;
+    this.focusListener = navigation.addListener('didFocus', () => {
+      this.getListQuestions();
+      // The screen is focused
+      // Call any action
+    });
+  }
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener && this.focusListener.remove();
   }
   getListQuestions = async () => {
     try {
       const {page, size} = this.state;
       let res = await questionProvider.getListMyQuestion(page, size);
       console.log('res: ', res);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, refreshing: false});
       if (res?.content) {
         this.formatData(res.content);
       } else {
@@ -53,7 +62,7 @@ class ListMyQuestionScreen extends Component {
       }
     } catch (error) {
       this.formatData([]);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false, refreshing: false});
     }
   };
   formatData = data => {
@@ -74,6 +83,9 @@ class ListMyQuestionScreen extends Component {
     if (data.length >= (page + 1) * size) {
       this.setState(pre => ({page: pre.page + 1}), this.getListQuestions);
     }
+  };
+  onRefresh = () => {
+    this.setState({page: 0, refreshing: true}, this.getListQuestions);
   };
   onClickCreateMenu = () =>
     this.props.navigation.navigate('createQuestionStep1');
@@ -152,6 +164,8 @@ class ListMyQuestionScreen extends Component {
           keyExtractor={this.keyExtractor}
           onEndReached={this._onEndReached}
           onEndReachedThreshold={0.7}
+          onRefresh={this.onRefresh}
+          refreshing={this.state.refreshing}
         />
       </ActivityPanel>
     );
