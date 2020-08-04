@@ -221,16 +221,28 @@ const TabNavigatorComponent = createBottomTabNavigator(
         ),
       },
     },
-    // communityTab: {
-    //   screen: AccountScreen,
-    //   navigationOptions: {
-    //     tabBarLabel: "Cộng đồng",
-    //     tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
-    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
-    //       snackbar.show("Chức năng đang phát triển");
-    //     },
-    //   }
-    // },
+    communityTab: {
+      screen: ListQuestionScreen,
+      navigationOptions: {
+        tabBarLabel: 'Cộng đồng',
+        tabBarIcon: ({tintColor}) => (
+          <ScaledImage
+            touchable={false}
+            height={20}
+            source={require('@images/new/homev2/ic_community_menu.png')}
+            style={{tintColor: tintColor}}
+          />
+        ),
+        tabBarOnPress: ({navigation, defaultHandler}) => {
+          if (userProvider.isLogin) {
+            console.log('userProvider.isLogin: ', userProvider.isLogin);
+            defaultHandler();
+          } else {
+            NavigationService.navigate('login');
+          }
+        },
+      },
+    },
     // drugTab: {
     //   screen: DrugScreen,
     //   navigationOptions: {
@@ -246,27 +258,27 @@ const TabNavigatorComponent = createBottomTabNavigator(
     //     },
     //   }
     // },
-    bookingTab: {
-      screen: ListBookingHistoryScreen,
-      navigationOptions: {
-        tabBarLabel: 'Lich hẹn',
-        tabBarIcon: ({tintColor}) => (
-          <ScaledImage
-            height={23}
-            source={require('@images/new/homev2/ic_booking_home.png')}
-            style={{tintColor: tintColor}}
-          />
-        ),
-        tabBarOnPress: ({navigation, defaultHandler}) => {
-          if (userProvider.isLogin) {
-            console.log('userProvider.isLogin: ', userProvider.isLogin);
-            defaultHandler();
-          } else {
-            NavigationService.navigate('login');
-          }
-        },
-      },
-    },
+    // bookingTab: {
+    //   screen: ListBookingHistoryScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: 'Lich khám',
+    //     tabBarIcon: ({tintColor}) => (
+    //       <ScaledImage
+    //         height={23}
+    //         source={require('@images/new/homev2/ic_booking_home.png')}
+    //         style={{tintColor: tintColor}}
+    //       />
+    //     ),
+    //     tabBarOnPress: ({navigation, defaultHandler}) => {
+    //       if (userProvider.isLogin) {
+    //         console.log('userProvider.isLogin: ', userProvider.isLogin);
+    //         defaultHandler();
+    //       } else {
+    //         NavigationService.navigate('login');
+    //       }
+    //     },
+    //   },
+    // },
     // ehealthTab: {
     //   screen: EHealthNavigator,
     //   navigationOptions: {
