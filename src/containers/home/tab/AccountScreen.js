@@ -9,6 +9,7 @@ import {
   Linking,
   StyleSheet,
   Dimensions,
+  DeviceEventEmitter
 } from "react-native";
 import { connect } from "react-redux";
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -71,13 +72,22 @@ class AccountScreen extends Component {
         this.getDetailUser()
       });
     }
+    DeviceEventEmitter.addListener(
+      'hardwareBackPress',
+      this.handleHardwareBack.bind(this),
+    );
 
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
       this.onFocus.remove()
     }
+    DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   }
+  handleHardwareBack = () => {
+    this.props.navigation.goBack();
+    return true;
+  };
   selectImage() {
     if (this.imagePicker) {
       this.imagePicker.open(true, 200, 200, image => {

@@ -9,6 +9,7 @@ import {
   TextInput,
   FlatList,
   Image,
+  DeviceEventEmitter,
 } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import {connect} from 'react-redux';
@@ -41,6 +42,10 @@ class ListQuestionScreen extends Component {
   }
   componentDidMount() {
     // this.getListSpecialist();
+    DeviceEventEmitter.addListener(
+      'hardwareBackPress',
+      this.handleHardwareBack.bind(this),
+    );
     this.onFocus = this.props.navigation.addListener('didFocus', () => {
       this.setState({page: 0}, this.getListQuestions);
     });
@@ -49,6 +54,12 @@ class ListQuestionScreen extends Component {
     if (this.onFocus) {
       this.onFocus.remove();
     }
+    DeviceEventEmitter.removeAllListeners('hardwareBackPress');
+  };
+
+  handleHardwareBack = () => {
+    this.props.navigation.goBack();
+    return true;
   };
   getListQuestions = async value => {
     try {
