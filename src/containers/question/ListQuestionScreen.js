@@ -129,7 +129,7 @@ class ListQuestionScreen extends Component {
   };
   keyExtractor = (item, index) => `${index}`;
   renderItem = ({item, index}) => {
-    return <ItemQuestion item={item} onPress={this.goToDetailQuestion(item)} />;
+    return <ItemQuestion item={item} onPress={this.goToDetailQuestion(item)} social={true} />;
   };
   ItemSeparator = () => {
     return <View style={styles.lineBetwenItem} />;
