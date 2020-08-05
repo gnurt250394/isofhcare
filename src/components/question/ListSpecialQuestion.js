@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 const {height, width} = Dimensions.get('screen');
-const ListSpecialQuestion = ({onSelected}) => {
+const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
   const [specialist, setSpecialist] = useState([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
   useEffect(() => {
-    getListSpecialist();
-  }, [page]);
+    onFocus && getListSpecialist();
+  }, [page, onFocus]);
   const getListSpecialist = () => {
     bookingDoctorProvider
       .get_list_specialists(page, size)
@@ -50,6 +50,15 @@ const ListSpecialQuestion = ({onSelected}) => {
   };
   const onSelectSpecial = item => () => {
     onSelected && onSelected(item);
+    let data = [...specialist];
+    data.forEach(e => {
+      if (e.id == item.id) {
+        e.selected = true;
+      } else {
+        e.selected = false;
+      }
+    });
+    setSpecialist(data);
     console.log('item: ', item);
   };
   const renderListSpecialist = ({item, index}) => {
@@ -59,17 +68,16 @@ const ListSpecialQuestion = ({onSelected}) => {
         style={[
           styles.containerItemSpecialist,
           {
-            // backgroundColor: '#00CBA7',
-            backgroundColor:
-              index == 0 || index % 3 == 0
-                ? '#AA6550'
-                : index % 2 != 0
-                ? '#E8505B'
-                : '#FF8A00',
+            backgroundColor: !item.selected ? '#FFF' : '#3161AD',
           },
         ]}>
         {/* <ScaleImage source={require('@images/new/user.png')} width={19} /> */}
-        <Text style={{color: '#FFF'}} numberOfLines={2}>
+        <Text
+          style={{
+            color: item.selected ? '#FFF' : '#3161AD',
+            fontWeight: 'bold',
+          }}
+          numberOfLines={2}>
           {item.name}
         </Text>
       </TouchableOpacity>
@@ -106,6 +114,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     borderRadius: 30,
     padding: 15,
+    borderColor: '#3161AD',
+    borderWidth: 1,
   },
 });
 export default memo(ListSpecialQuestion);

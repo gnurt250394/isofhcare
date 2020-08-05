@@ -26,6 +26,7 @@ import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
+import ModalConfirm from '@components/question/ModalConfirm';
 
 const {width, height} = Dimensions.get('screen');
 const padding = Platform.select({
@@ -36,6 +37,7 @@ class CreateQuestionStep1Screen extends Component {
   constructor(props) {
     super(props);
     let post = this.props.navigation.getParam('post', null);
+    let replace = this.props.navigation.getParam('replace', null);
     if (post != null && post.post) {
       post = post.post;
     } else {
@@ -44,6 +46,7 @@ class CreateQuestionStep1Screen extends Component {
     this.state = {
       imageUris: [],
       post: post,
+      replace,
       title: post ? post.title : '',
       content: post ? post.content : '',
       isPrivate: post ? post.isPrivate == 1 : false,
@@ -52,6 +55,7 @@ class CreateQuestionStep1Screen extends Component {
       age: '',
       checked: false,
       specialist: [],
+      isVisible: false,
     };
   }
   componentDidMount() {
@@ -256,9 +260,7 @@ class CreateQuestionStep1Screen extends Component {
                   constants.msg.question.create_question_success,
                   'success',
                 );
-                this.props.navigation.navigate('listQuestion', {
-                  reloadTime: new Date().getTime(),
-                });
+                this.setState({isVisible: true});
                 dataCacheProvider.save(
                   this.props.userApp.currentUser.id,
                   constants.key.storage.LASTEST_INFO,
@@ -284,6 +286,17 @@ class CreateQuestionStep1Screen extends Component {
         snackbar.show(constants.msg.app.not_internet, 'danger');
       });
   }
+  onSend = () => {
+    if (this.state.replace) {
+      this.props.navigation.goBack();
+    } else {
+      this.props.navigation.replace('listMyQuestion', {
+        replace: true,
+        reloadTime: new Date().getTime(),
+      });
+    }
+    this.setState({isVisible: false});
+  };
 
   render() {
     const icSupport = require('@images/new/user.png');
@@ -353,7 +366,7 @@ class CreateQuestionStep1Screen extends Component {
                         min: constants.msg.question.age_greater_than_1,
                         max: constants.msg.question.age_less_than_150,
                         number: constants.msg.question.invalid_age,
-                        required: "Vui lòng nhập tuổi",
+                        required: 'Vui lòng nhập tuổi',
                       },
                     }}
                     value={this.state.age}
@@ -580,6 +593,7 @@ class CreateQuestionStep1Screen extends Component {
         </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == 'ios' && <KeyboardSpacer />}
+        <ModalConfirm isVisible={this.state.isVisible} onSend={this.onSend} />
       </ActivityPanel>
     );
   }
