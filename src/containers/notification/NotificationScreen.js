@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  DeviceEventEmitter
+  DeviceEventEmitter,
 } from 'react-native';
 import {connect} from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -174,11 +174,8 @@ class NotificationScreen extends Component {
             this.setState({isLoading: false});
           });
         let question = {};
-        if (
-          item.notification.title.startsWith('{') &&
-          item.notification.title.endsWith('}')
-        ) {
-          let obj = JSON.parse(item.notification.title);
+        if (data.data) {
+          let obj = JSON.parse(data.data);
           question = obj.question;
         }
         item.notification.watched = 1;
@@ -357,6 +354,7 @@ class NotificationScreen extends Component {
     });
   }
   openQuestion = item => {
+    if (!item) return;
     NavigationService.navigate('detailMessage', {item});
   };
   openBooking(id) {
