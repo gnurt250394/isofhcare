@@ -11,7 +11,7 @@ import {Card} from 'native-base';
 const RenderPlaceHolder = ({data = [...new Array(10).fill({})]}) => {
   return data.map((e, i) => {
     return (
-      <Card style={styles.card}>
+      <Card key={i} style={styles.card}>
         <Placeholder Animation={ShineOverlay} style={styles.placeContainer}>
           <View style={styles.row}>
             <PlaceholderMedia style={[styles.placeMedia]} />
