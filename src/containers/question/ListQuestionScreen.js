@@ -38,6 +38,7 @@ class ListQuestionScreen extends Component {
       size: 20,
       value: '',
       specialId: '',
+      onFocus: true,
     };
   }
   componentDidMount() {
@@ -47,12 +48,18 @@ class ListQuestionScreen extends Component {
       this.handleHardwareBack.bind(this),
     );
     this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0}, this.getListQuestions);
+      this.setState({page: 0, onFocus: true}, this.getListQuestions);
+    });
+    this.didBlur = this.props.navigation.addListener('didBlur', () => {
+      this.setState({onFocus: false, specialId: '', value: ''});
     });
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
       this.onFocus.remove();
+    }
+    if (this.didBlur) {
+      this.didBlur.remove();
     }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   };
@@ -84,9 +91,12 @@ class ListQuestionScreen extends Component {
     }
   };
   onSelected = item => {
-    this.setState({specialId: item.id, isLoading: true, page: 0}, () => {
-      this.getListQuestions();
-    });
+    this.setState(
+      {specialId: item.id, isLoading: true, page: 0, onFocus: false},
+      () => {
+        this.getListQuestions();
+      },
+    );
   };
   onChangeText = value => {
     this.setState({value}, () => {
@@ -121,7 +131,7 @@ class ListQuestionScreen extends Component {
   };
   _onRefresh = () => {
     this.setState(
-      {refreshing: true, page: 0, value: '', specialId: ''},
+      {refreshing: true, page: 0, value: '', specialId: '', onFocus: true},
       this.getListQuestions,
     );
   };
@@ -218,21 +228,24 @@ class ListQuestionScreen extends Component {
             <Text>Hãy viết câu hỏi của bạn</Text>
           </TouchableOpacity>
         </View>
-        <ListSpecialQuestion onSelected={this.onSelected} />
+        <ListSpecialQuestion
+          onSelected={this.onSelected}
+          onFocus={this.state.onFocus}
+        />
         {this.state.isLoading ? (
           <RenderPlaceHolder />
         ) : (
-        <FlatList
-          data={this.state.data}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={this.ItemSeparator}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          onEndReached={this._onEndReached}
-          onEndReachedThreshold={0.7}
-          onRefresh={this._onRefresh}
-          refreshing={this.state.refreshing}
-        />
+          <FlatList
+            data={this.state.data}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={this.ItemSeparator}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+            onEndReached={this._onEndReached}
+            onEndReachedThreshold={0.7}
+            onRefresh={this._onRefresh}
+            refreshing={this.state.refreshing}
+          />
         )}
       </ActivityPanel>
     );
