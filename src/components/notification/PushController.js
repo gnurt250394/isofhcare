@@ -116,26 +116,10 @@ class PushController extends Component {
       if (type == 5) {
         this.openTicket(notification.data.id);
       }
-      let title = '';
-      title = notification.title;
-      let body = '';
+      let title = notification.title;
       let data = notification.data;
-      if (
-        notification.body.startsWith('{') &&
-        notification.body.endsWith('}')
-      ) {
-        let obj = JSON.parse(notification.body);
-        data = {...data, question: obj.question};
 
-        console.log('obj: ', obj);
-        body =
-          obj.question.doctorInfo.academicDegree +
-          '. ' +
-          obj.question.doctorInfo.name +
-          ' đã trả lời câu hỏi của bạn.';
-      } else {
-        body = notification?.body || '';
-      }
+      let body = notification?.body || '';
       let fbNotification = null;
       if (type == -1) {
         fbNotification = new firebase.notifications.Notification()
@@ -183,9 +167,11 @@ class PushController extends Component {
         notificationOpen.notification &&
         notificationOpen.notification.data
       ) {
-        var id =
-          notificationOpen?.notification?.data?.id ||
-          notificationOpen?.notification?.data?.question;
+        var id = notificationOpen?.notification?.data?.id;
+        let question = {};
+        if (notificationOpen?.notification?.data?.data) {
+          question = JSON.parse(notificationOpen?.notification?.data?.data);
+        }
         const type = notificationOpen.notification.data.type;
 
         switch (type) {
@@ -213,7 +199,7 @@ class PushController extends Component {
             this.openBooking(id);
             break;
           case '16':
-            this.openQuestion(id);
+            this.openQuestion(question?.question);
             break;
           case '-1':
             break;
@@ -355,7 +341,7 @@ class PushController extends Component {
     });
   }
   openQuestion = item => {
-    if (!this.props.userApp.isLogin) return;
+    if (!this.props.userApp.isLogin || !item) return;
     NavigationService.navigate('detailMessage', {item});
   };
   getInitialNotification(notificationOpen) {
@@ -367,20 +353,15 @@ class PushController extends Component {
           .removeDeliveredNotification(
             notificationOpen.notification.notificationId,
           );
-        const id =
-          notificationOpen?.notification?.data?.id ||
-          notificationOpen?.notification?.data?.question;
+        const id = notificationOpen?.notification?.data?.id;
+        let question = {};
+        if (notificationOpen?.notification?.data?.data) {
+          question = JSON.parse(notificationOpen?.notification?.data?.data);
+        }
         console.log('id: ', id);
         const type = notificationOpen.notification.data.type;
         console.log('type: ', type);
-        let question = {};
-        if (
-          item.notification.title.startsWith('{') &&
-          item.notification.title.endsWith('}')
-        ) {
-          let obj = JSON.parse(item.notification.title);
-          question = obj.question;
-        }
+
         switch (type) {
           // case '2':
           //     this.openQuestion(id);
@@ -405,7 +386,7 @@ class PushController extends Component {
             this.openBooking(id);
             break;
           case '16':
-            this.openQuestion(id);
+            this.openQuestion(question?.question);
             break;
           case 'NEWS': {
             NavigationService.navigate('detailNewsHighlight', {item: {id}});
