@@ -65,8 +65,8 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         )
     }
     const onGoToTest = () => {
-        snackbar.show('Tính năng đang phát triển')
-        // navigation.navigate('')
+        // snackbar.show('Tính năng đang phát triển')
+        navigation.navigate('introCovid')
     }
     return (
         <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">

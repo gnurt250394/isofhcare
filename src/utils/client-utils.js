@@ -78,6 +78,7 @@ module.exports = {
   serviceBooking: "http://123.24.206.9:8082/",
   serviceImage: "http://123.24.206.9:38288/v1/",
   serviceChats: "http://10.0.0.98:8085/",
+  serviceCovid: "http://10.0.50.203:49396/",
   
   response: {
     ok(data, message) {
@@ -198,7 +199,7 @@ module.exports = {
         }
       })
       .catch(e => {
-        if (e.status >= 200 && e.status < 300) funRes(true, undefined);
+        if (e.status >= 200 && e.status < 300) funRes( e.data ? e.data : true, undefined);
         else funRes(undefined, e);
       });
   },
