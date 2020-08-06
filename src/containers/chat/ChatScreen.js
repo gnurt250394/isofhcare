@@ -436,13 +436,16 @@ const ChatScreen = ({
     <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
       <GiftedChat
         messages={data}
-        alwaysShowSend={true}
+        // alwaysShowSend={true}
         dateFormat={'DD/MM/YYYY'}
         renderTime={() => null}
         inverted={false}
         onPressActionButton={selectImage}
         renderUsernameOnMessage={true}
         loadEarlier={true}
+        messagesContainerStyle={{
+          paddingBottom:20
+        }}
         renderLoadEarlier={props => {
           return (
             <View>
@@ -459,7 +462,6 @@ const ChatScreen = ({
           );
         }}
         renderMessageText={props => {
-          console.log('props: ', props);
           return (
             <Text
               style={{
