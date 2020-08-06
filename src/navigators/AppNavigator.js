@@ -165,6 +165,9 @@ import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
 import ListMyQuestionScreen from '@containers/question/ListMyQuestionScreen';
 import DetailMessageScreen from '@containers/question/DetailMessageScreen';
+import IntroCovidScreen from '@containers/covid/IntroCovidScreen';
+import TestCovidScreen from '@containers/covid/TestCovidScreen';
+import TestResultScreen from '@containers/covid/TestResultScreen';
 
 const ProfileNavigation = createStackNavigator(
   {
@@ -503,6 +506,9 @@ const RootNavigator = (route = 'splash') =>
       chat: {screen: ChatScreen},
       listMyQuestion: ListMyQuestionScreen,
       detailMessage: {screen: DetailMessageScreen},
+      introCovid: {screen: IntroCovidScreen},
+      testCovid: {screen: TestCovidScreen},
+      testResult: {screen: TestResultScreen},
     },
     {
       initialRouteName: route,
@@ -515,6 +521,9 @@ const RootNavigator = (route = 'splash') =>
       //     backgroundColor: 'transparent',
       //   },
       // }),
+      defaultNavigationOptions: {
+        gesturesEnabled: false,
+      },
       header: null,
       gesturesEnabled: false,
       navigationOptions: {
@@ -529,5 +538,15 @@ const RootNavigator = (route = 'splash') =>
       },
     },
   );
+const defaultStackGetStateForAction = RootNavigator().router.getStateForAction;
+
+RootNavigator().router.getStateForAction = (action, state) => {
+  console.log('state: ', state);
+  if (state.index === 0 && action.type === NavigationActions.BACK) {
+    return null;
+  }
+
+  return defaultStackGetStateForAction(action, state);
+};
 let AppContainer = route => createAppContainer(RootNavigator(route));
 export {AppContainer};

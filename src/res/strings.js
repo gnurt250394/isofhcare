@@ -1037,6 +1037,11 @@ module.exports = {
         isofhcare_service + 'consultation/questions/social',
       list_anwser: isofhcare_service + 'consultation/questions',
     },
+    covid:{
+      surveys:"v1/surveys",
+      questions:'v1/questions',
+      annswer:'v1/questionnaireId/questionnaires/',
+    },
     comment: {
       create: isofhcare_service + 'comment/create',
       search: isofhcare_service + 'comment/search',
