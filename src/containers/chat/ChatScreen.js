@@ -155,7 +155,6 @@ const ChatScreen = ({
             e.user = {_id: e.userId};
             if (e.userId == item?.userInfo?.id) {
               e.user = {...item.userInfo, _id: e.userId};
-              e.createdAt = e.createdAt.toDateObject();
             } else if (e.userId == item?.doctorInfo?.id) {
               e.user = {...item.doctorInfo, _id: e.userId};
             }
@@ -211,10 +210,8 @@ const ChatScreen = ({
         let newKeys = {id: '_id', content: 'text', images: 'image'};
         if (res.userId == item?.userInfo?.id) {
           res.user = {...item.userInfo, _id: res.userId};
-          res.createdAt = res.createdAt.toDateObject();
         } else if (res.userId == item?.doctorInfo?.id) {
           res.user = {...item.doctorInfo, _id: res.userId};
-          res.createdAt = res.createdAt.toDateObject();
         }
         res = formatMessage(res, newKeys);
         console.log('res: ', res);
@@ -240,7 +237,6 @@ const ChatScreen = ({
       let newKeys = {id: '_id', content: 'text', images: 'image'};
       if (res.userId == item?.doctorInfo?.id) {
         res.user = {...item.doctorInfo, _id: res.userId};
-        res.createdAt = res.createdAt.toDateObject();
         res.received = true;
       }
       res = formatMessage(res, newKeys);
@@ -749,6 +745,7 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   },
   containerInput: {
+    flex:1,
     backgroundColor: '#00000010',
     // maxHeight: 100,
     margin: 5,
