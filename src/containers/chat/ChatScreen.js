@@ -315,17 +315,6 @@ const ChatScreen = ({
         .catch(e => {
           snackbar.show(constants.msg.app.not_internet, 'danger');
         });
-    });
-  };
-  const getListAnwser = async () => {
-    try {
-      let res = await questionProvider.listAnwser(item.id, false, page, size);
-      setLoading(false);
-      if (res?.content) formatData(res.content);
-      else formatData([]);
-    } catch (error) {
-      setLoading(false);
-      formatData([]);
     }
   };
 
@@ -745,7 +734,7 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   },
   containerInput: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#00000010',
     // maxHeight: 100,
     margin: 5,
