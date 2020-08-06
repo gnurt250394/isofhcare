@@ -43,7 +43,7 @@ class ActivityPanel extends Component {
                 backButtonClick={this.backPress}
                 showMessengerClicked={this.msgPress}
                 {...this.props}
-                icBack={require('@images/new/ic_back.png')}
+                // icBack={}
                 titleStyle={[styles.titleStyle, this.props.titleStyle]}
                 actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle, this.props.actionbarStyle]}
             />
