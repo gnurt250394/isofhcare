@@ -47,25 +47,36 @@ class TypingAnimation extends React.PureComponent {
           y={this.state.y1}
           radius={dotRadius}
           style={dotStyles}
-          dotColor={dotColor}
+          dotColor={'#FE718D'}
         />
         <Dot
           x={dotX}
           y={this.state.y2}
           radius={dotRadius}
           style={dotStyles}
-          dotColor={dotColor}
+          dotColor={'#F47E60'}
         />
         <Dot
           x={dotX + dotRadius + dotMargin}
           y={this.state.y3}
           radius={dotRadius}
           style={dotStyles}
-          dotColor={dotColor}
+          dotColor={'#F8B26A'}
         />
       </View>
     );
   }
 }
-
+TypingAnimation.defaultProps = {
+  style: {},
+  dotStyles: {},
+  dotColor: 'black',
+  dotMargin: 3,
+  dotAmplitude: 3,
+  dotSpeed: 0.15,
+  show: true,
+  dotRadius: 2.5,
+  dotY: 6,
+  dotX: 12,
+};
 export default TypingAnimation;
