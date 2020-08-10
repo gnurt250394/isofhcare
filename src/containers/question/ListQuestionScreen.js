@@ -59,7 +59,7 @@ class ListQuestionScreen extends Component {
           offsetAnim,
         ),
         0,
-        NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
+        NAVBAR_HEIGHT,
       ),
     };
   }
@@ -72,7 +72,7 @@ class ListQuestionScreen extends Component {
       this._scrollValue = value;
       this._clampedScrollValue = Math.min(
         Math.max(this._clampedScrollValue + diff, 0),
-        NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
+        NAVBAR_HEIGHT,
       );
     });
     this.state.offsetAnim.addListener(({value}) => {
@@ -112,7 +112,7 @@ class ListQuestionScreen extends Component {
   _onMomentumScrollEnd = () => {
     const toValue =
       this._scrollValue > NAVBAR_HEIGHT &&
-      this._clampedScrollValue > (NAVBAR_HEIGHT - STATUS_BAR_HEIGHT) / 2
+      this._clampedScrollValue > NAVBAR_HEIGHT / 2
         ? this._offsetValue + NAVBAR_HEIGHT
         : this._offsetValue - NAVBAR_HEIGHT;
 
@@ -226,12 +226,12 @@ class ListQuestionScreen extends Component {
     const {clampedScroll} = this.state;
 
     const navbarTranslate = clampedScroll.interpolate({
-      inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
-      outputRange: [0, -(NAVBAR_HEIGHT - STATUS_BAR_HEIGHT)],
+      inputRange: [0, NAVBAR_HEIGHT],
+      outputRange: [0, -NAVBAR_HEIGHT],
       extrapolate: 'clamp',
     });
     const navbarOpacity = clampedScroll.interpolate({
-      inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
+      inputRange: [0, NAVBAR_HEIGHT],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
@@ -359,8 +359,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: NAVBAR_HEIGHT,
-    zIndex: 0,
-    paddingTop: STATUS_BAR_HEIGHT,
+    backgroundColor:'#fff'
   },
   lineBetwenItem: {
     backgroundColor: '#00000010',
