@@ -9,6 +9,7 @@ import {
   TextInput,
   FlatList,
   Image,
+  Animated,
   DeviceEventEmitter,
 } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
@@ -26,9 +27,16 @@ import ItemQuestion from '@components/question/ItemQuestion';
 import ListSpecialQuestion from '@components/question/ListSpecialQuestion';
 import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
 const {width, height} = Dimensions.get('screen');
+
+const NAVBAR_HEIGHT = 180;
+const STATUS_BAR_HEIGHT = Platform.select({ios: 20, android: 24});
+
+const AnimatedListView = Animated.createAnimatedComponent(FlatList);
 class ListQuestionScreen extends Component {
   constructor(props) {
     super(props);
+    const scrollAnim = new Animated.Value(0);
+    const offsetAnim = new Animated.Value(0);
     this.state = {
       tabIndex: 0,
       refreshing: false,
@@ -39,9 +47,37 @@ class ListQuestionScreen extends Component {
       value: '',
       specialId: '',
       onFocus: true,
+      scrollAnim,
+      offsetAnim,
+      clampedScroll: Animated.diffClamp(
+        Animated.add(
+          scrollAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+            extrapolateLeft: 'clamp',
+          }),
+          offsetAnim,
+        ),
+        0,
+        NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
+      ),
     };
   }
+  _clampedScrollValue = 0;
+  _offsetValue = 0;
+  _scrollValue = 0;
   componentDidMount() {
+    this.state.scrollAnim.addListener(({value}) => {
+      const diff = value - this._scrollValue;
+      this._scrollValue = value;
+      this._clampedScrollValue = Math.min(
+        Math.max(this._clampedScrollValue + diff, 0),
+        NAVBAR_HEIGHT - STATUS_BAR_HEIGHT,
+      );
+    });
+    this.state.offsetAnim.addListener(({value}) => {
+      this._offsetValue = value;
+    });
     // this.getListSpecialist();
     DeviceEventEmitter.addListener(
       'hardwareBackPress',
@@ -55,6 +91,8 @@ class ListQuestionScreen extends Component {
     });
   }
   componentWillUnmount = () => {
+    if (this.state.scrollAnim) this.state.scrollAnim.removeAllListeners();
+    if (this.state.offsetAnim) this.state.offsetAnim.removeAllListeners();
     if (this.onFocus) {
       this.onFocus.remove();
     }
@@ -62,6 +100,27 @@ class ListQuestionScreen extends Component {
       this.didBlur.remove();
     }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
+  };
+  _onScrollEndDrag = () => {
+    this._scrollEndTimer = setTimeout(this._onMomentumScrollEnd, 250);
+  };
+
+  _onMomentumScrollBegin = () => {
+    clearTimeout(this._scrollEndTimer);
+  };
+
+  _onMomentumScrollEnd = () => {
+    const toValue =
+      this._scrollValue > NAVBAR_HEIGHT &&
+      this._clampedScrollValue > (NAVBAR_HEIGHT - STATUS_BAR_HEIGHT) / 2
+        ? this._offsetValue + NAVBAR_HEIGHT
+        : this._offsetValue - NAVBAR_HEIGHT;
+
+    Animated.timing(this.state.offsetAnim, {
+      toValue,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
   };
 
   handleHardwareBack = () => {
@@ -164,6 +223,18 @@ class ListQuestionScreen extends Component {
   };
 
   render() {
+    const {clampedScroll} = this.state;
+
+    const navbarTranslate = clampedScroll.interpolate({
+      inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
+      outputRange: [0, -(NAVBAR_HEIGHT - STATUS_BAR_HEIGHT)],
+      extrapolate: 'clamp',
+    });
+    const navbarOpacity = clampedScroll.interpolate({
+      inputRange: [0, NAVBAR_HEIGHT - STATUS_BAR_HEIGHT],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
     const icSupport = require('@images/new/user.png');
     const avatar = this.props?.userApp?.currentUser?.avatar
       ? {uri: this.props.userApp.currentUser.avatar.absoluteUrl()}
@@ -201,57 +272,96 @@ class ListQuestionScreen extends Component {
           this.props.userApp.isLogin ? {marginRight: 0} : {},
           {color: '#FFF'},
         ]}>
-        <View style={styles.containerQuestion}>
-          <ImageLoad
-            resizeMode="cover"
-            imageStyle={styles.boderImage}
-            borderRadius={20}
-            customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-            placeholderSource={icSupport}
-            style={styles.avatar}
-            loadingStyle={{size: 'small', color: 'gray'}}
-            source={avatar}
-            defaultImage={() => {
-              return (
-                <ScaleImage
+        <View
+          style={{
+            flex: 1,
+            zIndex: 0,
+          }}>
+          <View>
+            {this.state.isLoading ? (
+              <RenderPlaceHolder />
+            ) : (
+              <AnimatedListView
+                data={this.state.data}
+                renderItem={this.renderItem}
+                keyExtractor={this.keyExtractor}
+                onEndReached={this._onEndReached}
+                onEndReachedThreshold={0.7}
+                onRefresh={this._onRefresh}
+                contentContainerStyle={{
+                  paddingTop: NAVBAR_HEIGHT,
+                }}
+                refreshing={this.state.refreshing}
+                ItemSeparatorComponent={this.ItemSeparator}
+                scrollEventThrottle={1}
+                onMomentumScrollBegin={this._onMomentumScrollBegin}
+                onMomentumScrollEnd={this._onMomentumScrollEnd}
+                onScrollEndDrag={this._onScrollEndDrag}
+                onScroll={Animated.event(
+                  [{nativeEvent: {contentOffset: {y: this.state.scrollAnim}}}],
+                  {useNativeDriver: true},
+                )}
+              />
+            )}
+            <Animated.View
+              style={[
+                styles.conntainerSpecialAnim,
+                {
+                  transform: [{translateY: navbarTranslate}],
+                  opacity: navbarOpacity,
+                },
+              ]}
+              onLayout={({nativeEvent}) =>
+                this.setState({height: nativeEvent.layout.height})
+              }>
+              <View style={styles.containerQuestion}>
+                <ImageLoad
                   resizeMode="cover"
-                  source={icSupport}
-                  width={90}
-                  style={styles.imgDefault}
+                  imageStyle={styles.boderImage}
+                  borderRadius={20}
+                  customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                  placeholderSource={icSupport}
+                  style={styles.avatar}
+                  loadingStyle={{size: 'small', color: 'gray'}}
+                  source={avatar}
+                  defaultImage={() => {
+                    return (
+                      <ScaleImage
+                        resizeMode="cover"
+                        source={icSupport}
+                        width={90}
+                        style={styles.imgDefault}
+                      />
+                    );
+                  }}
                 />
-              );
-            }}
-          />
-          <TouchableOpacity
-            style={styles.buttonQuestion}
-            onPress={this.onClickCreateMenu}>
-            <Text>Hãy viết câu hỏi của bạn</Text>
-          </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonQuestion}
+                  onPress={this.onClickCreateMenu}>
+                  <Text>Hãy viết câu hỏi của bạn</Text>
+                </TouchableOpacity>
+              </View>
+              <ListSpecialQuestion
+                onSelected={this.onSelected}
+                onFocus={this.state.onFocus}
+              />
+            </Animated.View>
+          </View>
         </View>
-        <ListSpecialQuestion
-          onSelected={this.onSelected}
-          onFocus={this.state.onFocus}
-        />
-        {this.state.isLoading ? (
-          <RenderPlaceHolder />
-        ) : (
-          <FlatList
-            data={this.state.data}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={this.ItemSeparator}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-            onEndReached={this._onEndReached}
-            onEndReachedThreshold={0.7}
-            onRefresh={this._onRefresh}
-            refreshing={this.state.refreshing}
-          />
-        )}
       </ActivityPanel>
     );
   }
 }
 const styles = StyleSheet.create({
+  conntainerSpecialAnim: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: NAVBAR_HEIGHT,
+    zIndex: 0,
+    paddingTop: STATUS_BAR_HEIGHT,
+  },
   lineBetwenItem: {
     backgroundColor: '#00000010',
     height: 6,

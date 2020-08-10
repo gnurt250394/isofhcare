@@ -8,13 +8,14 @@ import {
   Text,
 } from 'react-native';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+import NavigationService from '@navigators/NavigationService';
 const {height, width} = Dimensions.get('screen');
-const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
+const ListSpecialQuestion = ({onSelected, onFocus}) => {
   const [specialist, setSpecialist] = useState([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(20);
   useEffect(() => {
-    onFocus && getListSpecialist();
+    if (onFocus) getListSpecialist();
   }, [page, onFocus]);
   const getListSpecialist = () => {
     bookingDoctorProvider
@@ -37,7 +38,7 @@ const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
       }
     } else {
       if (page == 0) {
-        setSpecialist(preState => data);
+        setSpecialist(preState => [{name: 'Tất cả', id: 0}, ...data]);
       } else {
         setSpecialist(preState => [...preState, ...data]);
       }
@@ -68,7 +69,8 @@ const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
         style={[
           styles.containerItemSpecialist,
           {
-            backgroundColor: !item.selected ? '#FFF' : '#3161AD',
+            // backgroundColor: '#00CBA7',
+            backgroundColor: item.selected ? '#3161AD' : '#FFF',
           },
         ]}>
         {/* <ScaleImage source={require('@images/new/user.png')} width={19} /> */}
@@ -83,17 +85,54 @@ const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
       </TouchableOpacity>
     );
   };
+  const _onSelected = item => {
+    let data = specialist.map(e => {
+      if (e.id == item.id) {
+        e.selected = true;
+      } else {
+        e.selected = false;
+      }
+      return e;
+    });
+    setSpecialist(data);
+    onSelected(item);
+  };
   const keyExtractor = (item, index) => `${index}`;
-
+  const goToListSpecial = () => {
+    NavigationService.navigate('listSpecialist', {
+      onSelected: _onSelected,
+    });
+  };
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: '#00000010',
+        paddingVertical: 10,
+      }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 15,
+          paddingBottom: 8,
+          paddingTop: 9,
+        }}>
+        <Text>Chuyên khoa</Text>
+        <TouchableOpacity onPress={goToListSpecial} hitSlop={styles.hislop}>
+          <Text
+            style={{
+              color: '#0094FF',
+            }}>
+            Xem tất cả chuyên khoa
+          </Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={specialist}
         showsHorizontalScrollIndicator={false}
         bounces={false}
         contentContainerStyle={{
-          backgroundColor: '#00000010',
-          paddingVertical: 10,
           paddingRight: 10,
         }}
         renderItem={renderListSpecialist}
@@ -107,14 +146,21 @@ const ListSpecialQuestion = ({onSelected, onFocus = true}) => {
 };
 
 const styles = StyleSheet.create({
+  hislop: {
+    top: 10,
+    bottom: 10,
+    right: 10,
+    left: 10,
+  },
   containerItemSpecialist: {
     maxWidth: width / 2.5,
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
     borderRadius: 30,
-    padding: 15,
-    borderColor: '#3161AD',
+    padding: 10,
+    paddingHorizontal: 15,
+    borderColor: '#3161AD50',
     borderWidth: 1,
   },
 });
