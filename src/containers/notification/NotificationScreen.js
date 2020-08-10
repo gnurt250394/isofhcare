@@ -176,7 +176,7 @@ class NotificationScreen extends Component {
         let question = {};
         if (data.data) {
           let obj = JSON.parse(data.data);
-          question = obj.question;
+          question = obj;
         }
         item.notification.watched = 1;
         this.setState({data: [...this.state.data]});
@@ -206,7 +206,8 @@ class NotificationScreen extends Component {
             this.openBooking(data.id);
             break;
           case 16:
-            this.openQuestion(question);
+          case 15:
+            this.openQuestion(question?.question || question);
             break;
 
           case 'NEWS': {

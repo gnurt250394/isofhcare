@@ -199,7 +199,8 @@ class PushController extends Component {
             this.openBooking(id);
             break;
           case '16':
-            this.openQuestion(question?.question);
+          case '15':
+            this.openQuestion(question?.question || question);
             break;
           case '-1':
             break;
@@ -385,8 +386,9 @@ class PushController extends Component {
           case '13':
             this.openBooking(id);
             break;
+          case '15':
           case '16':
-            this.openQuestion(question?.question);
+            this.openQuestion(question?.question || question);
             break;
           case 'NEWS': {
             NavigationService.navigate('detailNewsHighlight', {item: {id}});
