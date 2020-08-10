@@ -79,7 +79,7 @@ const ListSpecialQuestion = ({onSelected, onFocus}) => {
             color: item.selected ? '#FFF' : '#3161AD',
             fontWeight: 'bold',
           }}
-          numberOfLines={2}>
+          numberOfLines={1}>
           {item.name}
         </Text>
       </TouchableOpacity>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   containerItemSpecialist: {
-    maxWidth: width / 2.5,
+    // maxWidth: width / 2.5,
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
