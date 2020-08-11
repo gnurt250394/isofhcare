@@ -226,8 +226,8 @@ const ChatScreen = ({
     } catch (error) {}
   };
   useEffect(() => {
-    const socket = io('http://10.0.0.98:8000', {
-      host: 'http://10.0.0.98',
+    const socket = io('http://35.198.240.51:8000', {
+      host: 'http://35.198.240.51',
       port: 8000,
       autoConnect: true,
     });
