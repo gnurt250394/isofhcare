@@ -15,7 +15,7 @@ const ModalConfirm = ({onBackdropPress, isVisible, onSend}) => {
       <View style={styles.container}>
         <Text style={styles.txtLabel}>Bạn đã gửi câu hỏi thành công !</Text>
         <Text style={styles.txtLabel}>
-          Các bác sĩ sẽ trả lời câu hỏi của bạn trọng thời gian sớm nhất.
+          Các bác sĩ sẽ trả lời câu hỏi của bạn trong thời gian sớm nhất.
         </Text>
         <View style={styles.groupButton}>
           <TouchableOpacity
