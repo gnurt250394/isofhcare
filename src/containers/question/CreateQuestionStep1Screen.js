@@ -315,207 +315,222 @@ class CreateQuestionStep1Screen extends Component {
           color: '#FFF',
           paddingLeft: 70,
         }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          bounces={false}
-          style={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-          // keyboardDismissMode='on-drag'
-        >
-          <View style={styles.containerCard}>
-            {/* <View style={styles.minus}></View> */}
-            <Form
-              ref={ref => (this.form = ref)}
-              onValueChange={this.onValueChange}>
-              <Field style={styles.fieldAge}>
-                <ImageLoad
-                  resizeMode="cover"
-                  imageStyle={styles.boderImage}
-                  borderRadius={25}
-                  customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-                  placeholderSource={icSupport}
-                  style={styles.avatar}
-                  loadingStyle={{size: 'small', color: 'gray'}}
-                  source={avatar}
-                  defaultImage={() => {
-                    return (
-                      <ScaledImage
-                        resizeMode="cover"
-                        source={icSupport}
-                        width={90}
-                        style={styles.imgDefault}
-                      />
-                    );
-                  }}
-                />
-                <Field
-                  style={{
-                    paddingLeft: 10,
-                  }}>
-                  <Text style={[styles.label]}>{constants.questions.age}</Text>
-                  <TextField
-                    hideError={true}
-                    validate={{
-                      rules: {
-                        min: 1,
-                        max: 150,
-                        number: true,
-                        required: true,
-                      },
-                      messages: {
-                        min: constants.msg.question.age_greater_than_1,
-                        max: constants.msg.question.age_less_than_150,
-                        number: constants.msg.question.invalid_age,
-                        required: 'Vui lòng nhập tuổi',
-                      },
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#F8F8F8',
+          }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+            style={styles.scroll}
+            keyboardShouldPersistTaps="handled"
+            // keyboardDismissMode='on-drag'
+          >
+            <View style={styles.containerCard}>
+              {/* <View style={styles.minus}></View> */}
+              <Form
+                ref={ref => (this.form = ref)}
+                onValueChange={this.onValueChange}>
+                <Field style={styles.fieldAge}>
+                  <ImageLoad
+                    resizeMode="cover"
+                    imageStyle={styles.boderImage}
+                    borderRadius={25}
+                    customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                    placeholderSource={icSupport}
+                    style={styles.avatar}
+                    loadingStyle={{size: 'small', color: 'gray'}}
+                    source={avatar}
+                    defaultImage={() => {
+                      return (
+                        <ScaledImage
+                          resizeMode="cover"
+                          source={icSupport}
+                          width={90}
+                          style={styles.imgDefault}
+                        />
+                      );
                     }}
-                    value={this.state.age}
-                    style={{marginTop: 6}}
-                    inputStyle={[
-                      styles.textinput,
-                      {paddingBottom: 8},
-                      styles.inputAge,
-                    ]}
-                    onChangeText={this.onChangeText('age')}
-                    onValidate={this.onValidateAge}
-                    returnKeyType={'next'}
-                    keyboardType="numeric"
-                    errorStyle={styles.errorStyle}
                   />
-                </Field>
-                <View style={{marginLeft: 10}}>
-                  <Text style={[styles.label]}>{constants.gender}</Text>
-                  <View style={styles.row}>
-                    <TouchableOpacity
-                      onPress={this.setGender(1)}
-                      style={styles.buttonGender}>
-                      <View
-                        style={[
-                          styles.borderSelected,
-                          this.state.gender == 1
-                            ? {
-                                backgroundColor: '#02C39A',
-                              }
-                            : {
-                                borderColor: '#00000070',
-                                borderWidth: 1,
-                              },
-                        ]}>
-                        {this.state.gender == 1 && (
-                          <ScaledImage
-                            source={require('@images/new/ic_checked.png')}
-                            height={15}
-                          />
-                        )}
-                      </View>
-                      <Text style={{marginLeft: 5}}>
-                        {constants.actionSheet.male}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={this.setGender(0)}
-                      style={styles.buttonGender}>
-                      <View
-                        style={[
-                          styles.borderSelected,
-                          this.state.gender == 0
-                            ? {
-                                backgroundColor: '#02C39A',
-                              }
-                            : {
-                                borderColor: '#00000070',
-                                borderWidth: 1,
-                              },
-                        ]}>
-                        {this.state.gender == 0 && (
-                          <ScaledImage
-                            source={require('@images/new/ic_checked.png')}
-                            height={15}
-                          />
-                        )
-                        // <View style={styles.selected}></View>
-                        }
-                      </View>
-                      <Text style={{marginLeft: 5}}>
-                        {constants.actionSheet.female}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Field>
-              <TouchableOpacity
-                onPress={this.onSelectSpecialist}
-                style={styles.buttonSelectSpecialist}>
-                <View style={styles.containerSpecialist}>
-                  <ScaledImage
-                    style={styles.image}
-                    height={13}
-                    source={require('@images/new/booking/ic_specialist.png')}
-                  />
-                  <View style={styles.groupSpecialist}>
-                    <Text>Chọn chuyên khoa</Text>
-                    <Text numberOfLines={1}>
-                      {this.state.specialist.length ? (
-                        this.state.specialist.map((item, i) => {
-                          return (
-                            <Text style={styles.txtNameSpecialist}>
-                              {i == 0 ? '' : ','} {item.name}
-                            </Text>
-                          );
-                        })
-                      ) : (
-                        <Text
-                          style={{
-                            color: 'red',
-                            fontStyle: 'italic',
-                          }}>
-                          Chưa chọn chuyên khoa
-                        </Text>
-                      )}
+                  <Field
+                    style={{
+                      paddingLeft: 10,
+                    }}>
+                    <Text style={[styles.label]}>
+                      {constants.questions.age}
                     </Text>
+                    <TextField
+                      hideError={true}
+                      validate={{
+                        rules: {
+                          min: 1,
+                          max: 150,
+                          number: true,
+                          required: true,
+                        },
+                        messages: {
+                          min: constants.msg.question.age_greater_than_1,
+                          max: constants.msg.question.age_less_than_150,
+                          number: constants.msg.question.invalid_age,
+                          required: 'Vui lòng nhập tuổi',
+                        },
+                      }}
+                      value={this.state.age}
+                      style={{marginTop: 6}}
+                      inputStyle={[
+                        styles.textinput,
+                        {paddingBottom: 8},
+                        styles.inputAge,
+                      ]}
+                      onChangeText={this.onChangeText('age')}
+                      onValidate={this.onValidateAge}
+                      returnKeyType={'next'}
+                      keyboardType="numeric"
+                      errorStyle={styles.errorStyle}
+                    />
+                  </Field>
+                  <View style={{marginLeft: 10}}>
+                    <Text style={[styles.label]}>{constants.gender}</Text>
+                    <View style={styles.row}>
+                      <TouchableOpacity
+                        onPress={this.setGender(1)}
+                        style={styles.buttonGender}>
+                        <View
+                          style={[
+                            styles.borderSelected,
+                            this.state.gender == 1
+                              ? {
+                                  backgroundColor: '#02C39A',
+                                }
+                              : {
+                                  borderColor: '#00000070',
+                                  borderWidth: 1,
+                                },
+                          ]}>
+                          {this.state.gender == 1 && (
+                            <ScaledImage
+                              source={require('@images/new/ic_checked.png')}
+                              height={15}
+                            />
+                          )}
+                        </View>
+                        <Text style={{marginLeft: 5}}>
+                          {constants.actionSheet.male}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={this.setGender(0)}
+                        style={styles.buttonGender}>
+                        <View
+                          style={[
+                            styles.borderSelected,
+                            this.state.gender == 0
+                              ? {
+                                  backgroundColor: '#02C39A',
+                                }
+                              : {
+                                  borderColor: '#00000070',
+                                  borderWidth: 1,
+                                },
+                          ]}>
+                          {this.state.gender == 0 && (
+                            <ScaledImage
+                              source={require('@images/new/ic_checked.png')}
+                              height={15}
+                            />
+                          )
+                          // <View style={styles.selected}></View>
+                          }
+                        </View>
+                        <Text style={{marginLeft: 5}}>
+                          {constants.actionSheet.female}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                      onPress={this.removeImage.bind(this, index)}
+                      style={styles.buttonClose}>
+                      <ScaledImage
+                        source={require('@images/new/ic_close.png')}
+                        width={16}
+                      />
+                    </TouchableOpacity>
                   </View>
-                </View>
-                <ScaledImage
-                  source={require('@images/new/booking/ic_next.png')}
-                  height={14}
+                </Field>
+                <TouchableOpacity
+                  onPress={this.onSelectSpecialist}
+                  style={styles.buttonSelectSpecialist}>
+                  <View style={styles.containerSpecialist}>
+                    <ScaledImage
+                      style={styles.image}
+                      height={13}
+                      source={require('@images/new/booking/ic_specialist.png')}
+                    />
+                    <View style={styles.groupSpecialist}>
+                      <Text>Chọn chuyên khoa</Text>
+                      <Text numberOfLines={1}>
+                        {this.state.specialist.length ? (
+                          this.state.specialist.map((item, i) => {
+                            return (
+                              <Text style={styles.txtNameSpecialist}>
+                                {i == 0 ? '' : ','} {item.name}
+                              </Text>
+                            );
+                          })
+                        ) : (
+                          <Text
+                            style={{
+                              color: 'red',
+                              fontStyle: 'italic',
+                            }}>
+                            Chưa chọn chuyên khoa
+                          </Text>
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+                  <ScaledImage
+                    source={require('@images/new/booking/ic_next.png')}
+                    height={14}
+                  />
+                </TouchableOpacity>
+                <TextField
+                  validate={{
+                    rules: {
+                      required: true,
+                      minlength: 1,
+                      maxlength: 2000,
+                    },
+                    messages: {
+                      required: constants.msg.question.please_input_content,
+                      maxlength: constants.msg.question.not_allow_2000_keyword,
+                    },
+                  }}
+                  placeholder={'Viết câu hỏi của bạn'}
+                  inputStyle={[styles.textinput, styles.inputContent]}
+                  errorStyle={styles.errorStyle}
+                  onChangeText={this.onChangeText('content')}
+                  value={this.state.content}
+                  autoCapitalize={'none'}
+                  returnKeyType={'next'}
+                  underlineColorAndroid="transparent"
+                  // autoFocus={true}
+                  multiline={true}
+                  autoCorrect={false}
                 />
-              </TouchableOpacity>
-              <TextField
-                validate={{
-                  rules: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 2000,
-                  },
-                  messages: {
-                    required: constants.msg.question.please_input_content,
-                    maxlength: constants.msg.question.not_allow_2000_keyword,
-                  },
-                }}
-                placeholder={'Viết câu hỏi của bạn'}
-                inputStyle={[styles.textinput, styles.inputContent]}
-                errorStyle={styles.errorStyle}
-                onChangeText={this.onChangeText('content')}
-                value={this.state.content}
-                autoCapitalize={'none'}
-                returnKeyType={'next'}
-                underlineColorAndroid="transparent"
-                // autoFocus={true}
-                multiline={true}
-                autoCorrect={false}
-              />
-            </Form>
-            <View style={{}}>
-              <Text style={[styles.errorStyle]}>{this.state.ageError}</Text>
-              <View
-                onPress={this.checkShareComment}
-                style={[
-                  styles.buttonGender,
-                  {
-                    paddingHorizontal: 10,
-                  },
-                ]}>
-                {/* <View
+              </Form>
+              <View style={{}}>
+                <Text style={[styles.errorStyle]}>{this.state.ageError}</Text>
+                <View
+                  onPress={this.checkShareComment}
+                  style={[
+                    styles.buttonGender,
+                    {
+                      paddingHorizontal: 10,
+                    },
+                  ]}>
+                  {/* <View
                   style={[
                     styles.borderSelected,
                     this.state.checked
@@ -534,63 +549,72 @@ class CreateQuestionStep1Screen extends Component {
                     />
                   )}
                 </View> */}
-                <Text style={{marginLeft: 5, paddingRight: 10}}>
-                  Câu hỏi của bạn sẽ được chia sẻ trên cộng đồng với{' '}
-                  <Text style={{color: '#02C39A'}}>chế độ ẩn danh</Text>
-                </Text>
-              </View>
-              <Text style={[styles.label, {marginTop: 20}]}>
+                  <Text
+                    style={{marginLeft: 5, paddingRight: 10, color: '#02C39A'}}>
+                    * Câu hỏi của bạn sẽ được chia sẻ trên cộng đồng với chế độ
+                    ẩn danh
+                  </Text>
+                </View>
+                {/* <Text style={[styles.label, {marginTop: 20}]}>
                 {constants.upload_image}
-              </Text>
-              <View style={styles.containerListImage}>
-                {this.state.imageUris.map((item, index) => (
-                  <View key={index} style={styles.groupImagePicker}>
-                    <View style={styles.groupImage}>
-                      <Image
-                        source={{uri: item.uri}}
-                        resizeMode="cover"
-                        style={styles.imagePicker}
-                      />
-                      {item.error ? (
-                        <View style={styles.imageError}>
-                          <ScaledImage
-                            source={require('@images/ic_warning.png')}
-                            width={40}
-                          />
-                        </View>
-                      ) : item.loading ? (
-                        <View style={styles.imageLoading}>
-                          <ScaledImage
-                            source={require('@images/loading.gif')}
-                            width={40}
-                          />
-                        </View>
-                      ) : null}
+              </Text> */}
+                <View style={styles.containerListImage}>
+                  {this.state.imageUris.map((item, index) => (
+                    <View key={index} style={styles.groupImagePicker}>
+                      <View style={styles.groupImage}>
+                        <Image
+                          source={{uri: item.uri}}
+                          resizeMode="cover"
+                          style={styles.imagePicker}
+                        />
+                        {item.error ? (
+                          <View style={styles.imageError}>
+                            <ScaledImage
+                              source={require('@images/ic_warning.png')}
+                              width={40}
+                            />
+                          </View>
+                        ) : item.loading ? (
+                          <View style={styles.imageLoading}>
+                            <ScaledImage
+                              source={require('@images/loading.gif')}
+                              width={40}
+                            />
+                          </View>
+                        ) : null}
+                      </View>
+                      <TouchableOpacity
+                        onPress={this.removeImage.bind(this, index)}
+                        style={styles.buttonClose}>
+                        <ScaledImage
+                          source={require('@images/new/ic_close.png')}
+                          width={16}
+                        />
+                      </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                      onPress={this.removeImage.bind(this, index)}
-                      style={styles.buttonClose}>
-                      <ScaledImage
-                        source={require('@images/new/ic_close.png')}
-                        width={16}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-                {!this.state.imageUris || this.state.imageUris.length < 5 ? (
-                  <TouchableOpacity
-                    onPress={this.selectImage.bind(this)}
-                    style={styles.buttonSelectImage}>
-                    <ScaledImage
-                      width={80}
-                      source={require('@images/new/ic_new_image.png')}
-                    />
-                  </TouchableOpacity>
-                ) : null}
+                  ))}
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
+          {!this.state.imageUris || this.state.imageUris.length < 5 ? (
+            <TouchableOpacity
+              onPress={this.selectImage.bind(this)}
+              style={styles.buttonSelectImage}>
+              <ScaledImage
+                width={20}
+                source={require('@images/new/ic_image_green.png')}
+              />
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  paddingLeft: 10,
+                }}>
+                Thêm ảnh liên quan
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == 'ios' && <KeyboardSpacer />}
         <ModalConfirm isVisible={this.state.isVisible} onSend={this.onSend} />
@@ -600,9 +624,15 @@ class CreateQuestionStep1Screen extends Component {
 }
 const styles = StyleSheet.create({
   buttonSelectImage: {
-    marginTop: 10,
-    width: 80,
-    height: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    padding: 10,
+    paddingBottom: 15,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderColor: '#00000020',
+    borderWidth: 1,
   },
   buttonClose: {
     position: 'absolute',
@@ -758,7 +788,6 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     position: 'relative',
-    backgroundColor: '#02C39A10',
   },
   label: {
     color: '#000000',

@@ -173,7 +173,7 @@ class NotificationScreen extends Component {
           .catch(e => {
             this.setState({isLoading: false});
           });
-        let question = {};
+        let question = null;
         if (data.data) {
           let obj = JSON.parse(data.data);
           question = obj;
