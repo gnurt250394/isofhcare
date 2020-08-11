@@ -448,14 +448,6 @@ class CreateQuestionStep1Screen extends Component {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                      onPress={this.removeImage.bind(this, index)}
-                      style={styles.buttonClose}>
-                      <ScaledImage
-                        source={require('@images/new/ic_close.png')}
-                        width={16}
-                      />
-                    </TouchableOpacity>
                   </View>
                 </Field>
                 <TouchableOpacity
