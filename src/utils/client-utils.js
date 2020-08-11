@@ -73,7 +73,7 @@ module.exports = {
   serverApi: server_url + "/",
   serviceSchedule: "https://api.produce.isofhcare.com/",
   serviceBooking: "https://api.produce.isofhcare.com/",
-  serviceChats: "http://10.0.0.88:8085/",
+  serviceChats: "https://api.produce.isofhcare.com/",
   response: {
     ok(data, message) {
       if (!message) message = "";
