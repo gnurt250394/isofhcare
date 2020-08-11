@@ -117,20 +117,20 @@ class HomeScreen extends Component {
         //       });
         //   },
         // },
-        // {
-        //   icon: require("@images/new/homev2/ic_advisory.png"),
-        //   text: "Tư vấn",
-        //   onPress: () => {
-        //     snackbar.show('Tính năng đang phát triển')
-        //     return
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate("listQuestion");
-        //     else
-        //       this.props.navigation.navigate("login", {
-        //         nextScreen: { screen: "listQuestion", param: {} }
-        //       });
-        //   }
-        // },
+        {
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Hỏi bác sĩ",
+          onPress: () => {
+            // snackbar.show('Tính năng đang phát triển')
+            // return
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("createQuestionStep1");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "createQuestionStep1", param: {} }
+              });
+          }
+        },
         // {
         //   icon: require("@images/new/homev2/ic_voucher.png"),
         //   text: "Mã ưu đãi",

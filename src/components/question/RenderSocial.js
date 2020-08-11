@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, useState} from 'react';
 import {TouchableOpacity, ActivityIndicator} from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import {
@@ -35,118 +35,94 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ChatScreen from '@containers/chat/ChatScreen';
 import CustomMenu from '@components/CustomMenu';
 import SocialChatScreen from '@containers/chat/SocialChatScreen';
+import {withNavigation} from 'react-navigation';
 const {width, height} = Dimensions.get('window');
-class DetailQuestionScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      item: this.props.navigation.getParam('item', {}),
-      social: this.props.navigation.getParam('social', {}),
-      textShow: false,
-      data: [
-        {
-          id: 1,
-          message: 'abc',
-        },
-        {
-          id: 2,
-          message: 'abc',
-        },
-        {
-          id: 3,
-          message: 'abc',
-        },
-      ],
-    };
-  }
-   goBack = () => {
-    this.props.navigation.pop();
+const icSupport = require('@images/new/user.png');
+
+const RenderSocial = ({navigation, item, social}) => {
+  const [textShow, setTextShow] = useState(true);
+
+  const onShowText = () => {
+    setTextShow(pre => {
+      return !pre;
+    });
   };
-  render() {
-    const {item, textShow} = this.state;
-    console.log('item: ', item);
-    const icSupport = require('@images/new/user.png');
-    const avatar = icSupport;
-    return (
-      <ActivityPanel
-        style={styles.flex}
-        // title={constants.title.advisory_online}
-        showFullScreen={true}
-        actionbar={() => null}
-        hideBackButton={true}
-        isLoading={this.state.isLoading}>
-        <View style={styles.container}>
-          <TouchableOpacity style={styles.buttonBack} onPress={this.goBack}>
-            <ScaleImage
-              source={require('@images/new/ic_back.png')}
-              height={16}
-              style={{
-                tintColor: '#00000090',
-              }}
-            />
-          </TouchableOpacity>
-          <View style={styles.containerProfile}>
-            <ImageLoad
-              resizeMode="cover"
-              imageStyle={styles.boderImage}
-              borderRadius={20}
-              customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-              placeholderSource={icSupport}
-              style={styles.avatar}
-              loadingStyle={{size: 'small', color: 'gray'}}
-              source={icSupport}
-              defaultImage={() => {
-                return (
-                  <ScaleImage
-                    resizeMode="cover"
-                    source={icSupport}
-                    width={90}
-                    style={styles.imgDefault}
-                  />
-                );
-              }}
-            />
-            <View style={styles.groupName}>
-              <Text style={styles.txtname}>
-                {item?.gender == 1
-                  ? 'Nam'
-                  : item.gender == 0
-                  ? 'Nữ'
-                  : 'Ẩn danh'}
-                , {item?.age} tuổi
-              </Text>
-              <Text style={styles.txtTime}>
-                {item.createdAt.toDateObject('-').format('dd/MM/yyyy')}
-              </Text>
-            </View>
+  const showImage = i => () => {
+    navigation.navigate('photoViewer', {
+      index: i,
+      urls: item.images.map(item => {
+        return {uri: item};
+      }),
+    });
+  };
+  return (
+    <View>
+      <View style={styles.containerContent}>
+        <View>
+          <Text
+            // onLayout={onLayout}
+            // numberOfLines={textShow ? undefined : 3}
+            style={styles.txtMessage}>
+            {item.content}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+            }}>
+            { item?.images?.length
+              ? item.images.map((e, i) => {
+                  return (
+                    <TouchableOpacity key={i} onPress={showImage(i)}>
+                      <Image source={{uri: e}} style={styles.imgQuestion} />
+                    </TouchableOpacity>
+                  );
+                })
+              : null}
           </View>
-          {/* <CustomMenu
-            MenuSelectOption={
-              <View style={styles.buttonMenu}>
-                <ScaleImage
-                  source={require('@images/new/ic_more.png')}
-                  height={12}
-                  style={{resizeMode: 'contain'}}
-                />
-              </View>
-            }
-            options={[
-              {value: 'Báo cáo bài viết', id: 1},
-              {value: 'Ẩn bài viết', id: 2},
-            ]}
-            onSelected={(e, i) => {
-              console.log('i: ', i);
-              console.log('e: ', e);
-            }}
-          /> */}
         </View>
-        <View style={styles.containerChat}>
-          <SocialChatScreen item={this.state.item} isShowText={false} />
+
+        {/* {detail.image ?
+                        <Image source={{ uri: detail.image }} style={styles.imgQuestion} />
+                        : null
+                    } */}
+        <View style={styles.containerSpecialist}>
+          {item.specializations.length ? (
+            <Text
+              numberOfLines={textShow ? undefined : 1}
+              style={styles.groupSpecialist}>
+              {item.specializations.map((e, i) => {
+                return (
+                  <Text key={i} style={styles.txtSpecialist} numberOfLines={1}>
+                    {e.specializationName}
+                    {i != item.specializations.length - 1 ? ', ' : ''}
+                  </Text>
+                );
+              })}
+            </Text>
+          ) : (
+            <View />
+          )}
+
+          {/* <TouchableOpacity onPress={onShowText} style={styles.buttonHide}>
+            <Text style={styles.txtHide}>
+              {!textShow ? 'Xem thêm' : 'Rút gọn'}
+            </Text>
+            <ScaleImage
+              style={{
+                tintColor: '#00000070',
+                transform: [{rotate: !textShow ? '0deg' : '180deg'}],
+              }}
+              source={require('@images/new/down.png')}
+              height={9}
+            />
+          </TouchableOpacity> */}
         </View>
-      </ActivityPanel>
-    );
-  }
-}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   txtMessage: {
@@ -186,7 +162,6 @@ const styles = StyleSheet.create({
   containerContent: {
     padding: 10,
     backgroundColor: '#00CBA720',
-    maxHeight: height / 5,
   },
   buttonBack: {
     padding: 10,
@@ -263,9 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-function mapStateToProps(state) {
-  return {
-    userApp: state.auth.userApp,
-  };
-}
-export default connect(mapStateToProps)(DetailQuestionScreen);
+export default withNavigation(RenderSocial);
