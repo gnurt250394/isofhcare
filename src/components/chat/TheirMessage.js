@@ -77,7 +77,7 @@ class TheirMessage extends React.Component {
         createdDate: new Date(),
       };
     const icSupport = require('@images/new/user.png');
-    let avatar = info?.avatar ? {uri: info?.avatar} : icSupport;
+    let avatar = info?.avatar ? {uri: info?.avatar.absoluteUrl()} : icSupport;
     
     return (
       <View style={{marginBottom: this.props.isLast ? 30 : 0, flex: 1}}>
