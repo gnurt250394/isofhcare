@@ -233,14 +233,14 @@ const TabNavigatorComponent = createBottomTabNavigator(
             style={{tintColor: tintColor}}
           />
         ),
-        tabBarOnPress: ({navigation, defaultHandler}) => {
-          if (userProvider.isLogin) {
-            console.log('userProvider.isLogin: ', userProvider.isLogin);
-            defaultHandler();
-          } else {
-            NavigationService.navigate('login');
-          }
-        },
+      //   tabBarOnPress: ({navigation, defaultHandler}) => {
+      //     if (userProvider.isLogin) {
+      //       console.log('userProvider.isLogin: ', userProvider.isLogin);
+      //       defaultHandler();
+      //     } else {
+      //       NavigationService.navigate('login');
+      //     }
+      //   },
       },
     },
     // drugTab: {
