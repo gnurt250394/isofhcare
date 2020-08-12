@@ -168,13 +168,13 @@ class CreateQuestionStep1Screen extends Component {
                   imageProvider.upload(image.path, image.mime, (s, e) => {
                     console.log('s: ', s);
                     if (s.success) {
-                      if (s.data && s.data.length > 0) {
+                      if (s?.data?.data?.images?.length) {
                         let imageUris = this.state.imageUris;
                         imageUris.forEach(item => {
                           if (item.uri == s.uri) {
                             item.loading = false;
-                            item.url = s.data[0].fileDownloadUri;
-                            item.thumbnail = s.data[0].fileDownloadUri;
+                            item.url = s?.data?.data?.images[0].imageLink;
+                            item.thumbnail = s?.data?.data?.images[0].imageLink;
                           }
                         });
                         this.setState({
@@ -448,7 +448,6 @@ class CreateQuestionStep1Screen extends Component {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                   
                   </View>
                 </Field>
                 <TouchableOpacity
