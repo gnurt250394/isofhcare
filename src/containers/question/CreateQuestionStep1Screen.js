@@ -38,23 +38,24 @@ class CreateQuestionStep1Screen extends Component {
     super(props);
     let post = this.props.navigation.getParam('post', null);
     let replace = this.props.navigation.getParam('replace', null);
+    let state = this.props.navigation.getParam('state', null);
     if (post != null && post.post) {
       post = post.post;
     } else {
       post = null;
     }
     this.state = {
-      imageUris: [],
+      imageUris: state?.imageUris ? state.imageUris : [],
       post: post,
-      replace,
+      replace: state?.replace ? state.replace : replace,
       title: post ? post.title : '',
-      content: post ? post.content : '',
+      content: state?.content ? state.content : '',
       isPrivate: post ? post.isPrivate == 1 : false,
       btnSend: post ? 'Lưu' : 'Gửi',
-      gender: 1,
-      age: '',
-      checked: false,
-      specialist: [],
+      gender: state?.gender ? state?.gender : 0,
+      age: state?.age ? state?.age : '',
+      checked: state?.checked ? state.checked : false,
+      specialist: state?.specialist ? state?.specialist : [],
       isVisible: false,
     };
   }
@@ -216,7 +217,7 @@ class CreateQuestionStep1Screen extends Component {
     }
 
     if (!this.props.userApp.isLogin) {
-      this.props.navigation.navigate('login', {
+      this.props.navigation.replace('login', {
         nextScreen: {
           screen: 'createQuestionStep1',
           param: {
@@ -308,7 +309,7 @@ class CreateQuestionStep1Screen extends Component {
       <ActivityPanel
         style={{flex: 1}}
         title={'Đặt câu hỏi'}
-        menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
+        menuButton={this.menuCreate()}
         // showFullScreen={true}
         isLoading={this.state.isLoading}
         titleStyle={{

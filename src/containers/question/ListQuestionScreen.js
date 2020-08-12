@@ -195,15 +195,7 @@ class ListQuestionScreen extends Component {
     );
   };
   onClickCreateMenu = () => {
-    if (!this.props.userApp.isLogin) {
-      this.props.navigation.navigate('login', {
-        nextScreen: {
-          screen: 'createQuestionStep1',
-          param: {},
-        },
-      });
-      return;
-    }
+    
     this.props.navigation.navigate('createQuestionStep1');
   };
   onMyQuestion = () => this.props.navigation.navigate('listMyQuestion');
