@@ -194,8 +194,18 @@ class ListQuestionScreen extends Component {
       this.getListQuestions,
     );
   };
-  onClickCreateMenu = () =>
+  onClickCreateMenu = () => {
+    if (!this.props.userApp.isLogin) {
+      this.props.navigation.navigate('login', {
+        nextScreen: {
+          screen: 'createQuestionStep1',
+          param: {},
+        },
+      });
+      return;
+    }
     this.props.navigation.navigate('createQuestionStep1');
+  };
   onMyQuestion = () => this.props.navigation.navigate('listMyQuestion');
   menuCreate() {
     return (
@@ -359,7 +369,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: NAVBAR_HEIGHT,
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
   lineBetwenItem: {
     backgroundColor: '#00000010',
