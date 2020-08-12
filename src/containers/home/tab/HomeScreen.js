@@ -123,12 +123,12 @@ class HomeScreen extends Component {
           onPress: () => {
             // snackbar.show('Tính năng đang phát triển')
             // return
-            if (this.props.userApp.isLogin)
+            // if (this.props.userApp.isLogin)
               this.props.navigation.navigate("createQuestionStep1");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "createQuestionStep1", param: {} }
-              });
+            // else
+            //   this.props.navigation.navigate("login", {
+            //     nextScreen: { screen: "createQuestionStep1", param: {} }
+            //   });
           }
         },
         // {
@@ -162,7 +162,7 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_icd.png"),
           text: "Tra cứu mã bệnh",
           onPress: () => {
-            this.props.navigation.navigate("searchIcd");
+            this.props.navigation.navigate('searchIcd');
 
             // this.props.navigation.navigate("videoCall", {
             //   from: this.props.userApp?.currentUser?.id || "",
