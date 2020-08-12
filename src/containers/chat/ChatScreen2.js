@@ -92,6 +92,7 @@ const ChatScreen = ({
     isVisible: false,
   });
   const [data, setData] = useState([]);
+  const [height, setHeight] = useState(50);
   const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState([]);
   const [page, setPage] = useState(0);
@@ -458,8 +459,7 @@ const ChatScreen = ({
                     paddingBottom: 5,
                     color: '#00BA99',
                   }}>
-                  {objectUtils.renderAcademic(item.doctorInfo.academicDegree)}
-                  {item.doctorInfo.name}
+                  {objectUtils.renderAcademic(item.doctorInfo.academicDegree)}. {item.doctorInfo.name}
                 </Text>
               ) : null}
               <Bubble {...props} />
@@ -572,10 +572,15 @@ const ChatScreen = ({
         renderComposer={props => {
           if (item.status == 'REPLY')
             return (
-              <View style={styles.containerSendMes}>
+              <View
+                style={[
+                  styles.containerSendMes,
+                  {height: height < 50 ? 50 : height},
+                ]}>
                 <View
                   style={[
                     styles.containerInput,
+                    // {height: height},
                     Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
                   ]}>
                   <View
@@ -622,17 +627,18 @@ const ChatScreen = ({
                   </View>
                   <TextInput
                     ref={txtMessage}
-                    style={styles.inputMes}
+                    style={[styles.inputMes, {height: height}]}
                     placeholderTextColor="#cacaca"
                     underlineColorAndroid="transparent"
                     placeholder={'Nhập nội dung cần gửi'}
                     onChangeText={onChangeText}
                     multiline={true}
                     autoCorrect={false}
-                    value={state.newMessage}
-                    onFocus={() => {
-                      onScrollToEnd();
+                    onContentSizeChange={props => {
+                      console.log('props: ', props.nativeEvent.contentSize);
+                      setHeight(props.nativeEvent.contentSize.height);
                     }}
+                    value={state.newMessage}
                   />
                 </View>
               </View>

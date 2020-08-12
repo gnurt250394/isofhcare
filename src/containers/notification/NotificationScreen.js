@@ -25,6 +25,7 @@ import bookingProvider from '@data-access/booking-provider';
 import NavigationService from '@navigators/NavigationService';
 
 import clientUtils from '@utils/client-utils';
+import objectUtils from '@utils/object-utils';
 
 class NotificationScreen extends Component {
   constructor(props) {
@@ -143,8 +144,7 @@ class NotificationScreen extends Component {
       let obj = JSON.parse(item.notification.title);
       console.log('obj: ', obj);
       title =
-        obj.question.doctorInfo.academicDegree +
-        ', ' +
+        objectUtils.renderAcademic(obj.question.doctorInfo.academicDegree) +
         obj.question.doctorInfo.name +
         ' đã trả lời câu hỏi của bạn.';
     } else {

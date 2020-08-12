@@ -26,6 +26,7 @@ import constants from '@resources/strings';
 import Barcode from 'mainam-react-native-barcode';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 import CallManager from '@components/community/CallManager';
+import objectUtils from '@utils/object-utils';
 class DetailHistoryBookingScreen extends Component {
   constructor(props) {
     super(props);
@@ -532,12 +533,7 @@ class DetailHistoryBookingScreen extends Component {
                     </Text>
                     <View style={styles.viewInfoLocation}>
                       <Text style={styles.txClinic}>
-                        {this.state.booking.doctor &&
-                          this.state.booking.doctor.academicDegree
-                          ? this.renderAcademic(
-                            this.state.booking.doctor.academicDegree,
-                          ) + '. '
-                          : ''}
+                        {objectUtils.renderAcademic(this.state.booking.doctor.academicDegree)}
                         {this.state.booking.doctor.name}
                       </Text>
                     </View>
