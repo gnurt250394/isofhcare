@@ -7,6 +7,7 @@ import { Card } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import Button from '../doctor/Button';
 import Modal from "@components/modal";
+import objectUtils from '@utils/object-utils';
 
 class ItemHospital extends Component {
     constructor(props) {
@@ -95,7 +96,7 @@ class ItemHospital extends Component {
 
                         </View>
                         <View style={styles.paddingLeft5}>
-                            <Text style={styles.txtNameDoctor}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '. ' : ''}{item.name}</Text>
+                            <Text style={styles.txtNameDoctor}>{objectUtils.renderAcademic(item.academicDegree)}{item.name}</Text>
                             <Text numberOfLines={1} style={styles.txtHospitalName} >{item.contact.address}</Text>
                             <View style={styles.containerButton}>
                                 <View style={{

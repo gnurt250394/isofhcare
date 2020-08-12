@@ -8,6 +8,7 @@ import QRCode from 'react-native-qrcode-svg';
 import Modal from "@components/modal";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
+import objectUtils from '@utils/object-utils';
 
 class CreateBookingDoctorSuccessScreen extends Component {
     constructor(props) {
@@ -158,7 +159,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bác sĩ:</Text>
-                                <Text style={styles.text}>{this.renderAcademic(booking.doctor.academicDegree)} {booking.doctor.name}</Text>
+                                <Text style={styles.text}>{objectUtils.renderAcademic(booking.doctor.academicDegree)} {booking.doctor.name}</Text>
                             </View>
                             <View style={styles.between} />
                             <View style={styles.row}>
