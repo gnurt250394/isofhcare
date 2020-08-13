@@ -6,6 +6,7 @@ import StarRating from 'react-native-star-rating';
 import Button from "@components/booking/doctor/Button";
 import { connect } from 'react-redux';
 import NavigationService from "@navigators/NavigationService";
+import objectUtils from '@utils/object-utils';
 
 class ItemDoctorOfHospital extends Component {
     constructor(props) {
@@ -101,7 +102,7 @@ class ItemDoctorOfHospital extends Component {
                     }}
                 />
                 <View style={styles.containerProfile}>
-                    <Text style={styles.txtName}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '. ' : ''}{item.name}</Text>
+                    <Text style={styles.txtName}>{objectUtils.renderAcademic(item.academicDegree)}{item.name}</Text>
                     {/* <Text style={styles.txtSpecialist}>{item.specialist}</Text> */}
                     <StarRating
                         disabled={true}

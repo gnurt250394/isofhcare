@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import dateUtils from 'mainam-react-native-date-utils';
+import objectUtils from '@utils/object-utils';
 export default function Timer(props) {
   const WARNING_TIME = 25 * 60 * 1000;
   const TOTAL_TIME = 31 * 60 * 1000;
@@ -93,9 +94,8 @@ export default function Timer(props) {
       <Text style={styles.userId}>
         {state?.booking?.name
           ? state.booking.name
-          : state.booking?.doctor?.academicDegree
-          ? renderAcademic(state.booking.doctor.academicDegree)
-          : ''}
+          :objectUtils.renderAcademic(state?.booking?.doctor?.academicDegree)
+          }
         {state.booking?.doctor?.name || ''}
       </Text>
       {state.mediaConnected ? (

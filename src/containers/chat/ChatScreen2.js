@@ -92,6 +92,7 @@ const ChatScreen = ({
     isVisible: false,
   });
   const [data, setData] = useState([]);
+  const [height, setHeight] = useState(50);
   const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState([]);
   const [page, setPage] = useState(0);
@@ -335,6 +336,7 @@ const ChatScreen = ({
     });
     setListImage([]);
 
+    txtMessage.current.clear();
     // Keyboard.dismiss();
   };
   const onScrollToEnd = () => {
@@ -344,7 +346,6 @@ const ChatScreen = ({
   };
 
   const onChangeText = s => {
-    console.log('s: ', s);
     setState({newMessage: s});
   };
   const onBackdropPress = () => {
@@ -458,8 +459,7 @@ const ChatScreen = ({
                     paddingBottom: 5,
                     color: '#00BA99',
                   }}>
-                  {objectUtils.renderAcademic(item.doctorInfo.academicDegree)}
-                  {item.doctorInfo.name}
+                  {objectUtils.renderAcademic(item.doctorInfo.academicDegree)}. {item.doctorInfo.name}
                 </Text>
               ) : null}
               <Bubble {...props} />
@@ -570,92 +570,75 @@ const ChatScreen = ({
             );
         }}
         renderComposer={props => {
-          console.log('props: ', props);
           if (item.status == 'REPLY')
             return (
               <View
                 style={[
                   styles.containerSendMes,
-                  {
-                    height:
-                      props.composerHeight < 50 ? 50 : props.composerHeight,
-                  },
+                  {height: height < 50 ? 50 : height},
                 ]}>
                 <View
                   style={[
                     styles.containerInput,
-                    {
-                      height:
-                        props.composerHeight < 50 ? 50 : props.composerHeight,
-                    },
+                    // {height: height},
+                    Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
                   ]}>
-                  {listImage.length ? (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
-                      {listImage.map((item, index) => (
-                        <View key={index} style={styles.groupImagePicker}>
-                          <View style={styles.groupImage}>
-                            <Image
-                              source={{uri: item.url}}
-                              resizeMode="cover"
-                              style={styles.imagePicker}
-                            />
-                            {item.error ? (
-                              <View style={styles.imageError}>
-                                <ScaleImage
-                                  source={require('@images/ic_warning.png')}
-                                  width={40}
-                                />
-                              </View>
-                            ) : item.loading ? (
-                              <View style={styles.imageLoading}>
-                                <ScaleImage
-                                  source={require('@images/loading.gif')}
-                                  width={20}
-                                />
-                              </View>
-                            ) : null}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flex: 1,
+                    }}>
+                    {listImage.length
+                      ? listImage.map((item, index) => (
+                          <View key={index} style={styles.groupImagePicker}>
+                            <View style={styles.groupImage}>
+                              <Image
+                                source={{uri: item.url}}
+                                resizeMode="cover"
+                                style={styles.imagePicker}
+                              />
+                              {item.error ? (
+                                <View style={styles.imageError}>
+                                  <ScaleImage
+                                    source={require('@images/ic_warning.png')}
+                                    width={40}
+                                  />
+                                </View>
+                              ) : item.loading ? (
+                                <View style={styles.imageLoading}>
+                                  <ScaleImage
+                                    source={require('@images/loading.gif')}
+                                    width={20}
+                                  />
+                                </View>
+                              ) : null}
+                            </View>
+                            <TouchableOpacity
+                              onPress={removeImage(index)}
+                              style={styles.buttonClose}>
+                              <ScaleImage
+                                source={require('@images/new/ic_close.png')}
+                                width={15}
+                              />
+                            </TouchableOpacity>
                           </View>
-                          <TouchableOpacity
-                            onPress={removeImage(index)}
-                            style={styles.buttonClose}>
-                            <ScaleImage
-                              source={require('@images/new/ic_close.png')}
-                              width={15}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      ))}
-                    </View>
-                  ) : null}
-                  {/* <TextInput
+                        ))
+                      : null}
+                  </View>
+                  <TextInput
                     ref={txtMessage}
-                    style={styles.inputMes}
+                    style={[styles.inputMes, {height: height}]}
                     placeholderTextColor="#cacaca"
                     underlineColorAndroid="transparent"
                     placeholder={'Nhập nội dung cần gửi'}
                     onChangeText={onChangeText}
                     multiline={true}
                     autoCorrect={false}
-                    value={state.newMessage}
-                    onFocus={() => {
-                      onScrollToEnd();
+                    onContentSizeChange={props => {
+                      console.log('props: ', props.nativeEvent.contentSize);
+                      setHeight(props.nativeEvent.contentSize.height);
                     }}
-                  /> */}
-                  <Composer
-                    {...props}
-                    ref={txtMessage}
-                    textInputStyle={styles.inputMes}
-                    placeholderTextColor="#cacaca"
-                    underlineColorAndroid="transparent"
-                    placeholder={'Nhập nội dung cần gửi'}
-                    onTextChanged={onChangeText}
-                    multiline={true}
-                    autoCorrect={false}
-                    text={state.newMessage}
+                    value={state.newMessage}
                   />
                 </View>
               </View>
@@ -773,7 +756,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
   },
   inputMes: {
     color: '#000',
