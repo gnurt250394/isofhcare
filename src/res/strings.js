@@ -919,12 +919,12 @@ module.exports = {
       getAllCountry: isofhcare_service + 'country/get-all',
       districtGetByProvince: isofhcare_service + 'district/get-by-province',
       zoneGetByDistrict: isofhcare_service + 'zone/get-by-district',
-      getAllProvince: isofhcare_service + "province/get-all",
+      getAllProvince: isofhcare_service + 'province/get-all',
       getAllNations: isofhcare_service + 'nations',
       getAllJobs: isofhcare_service + 'jobs',
     },
     upload: {
-      image: "images"
+      image: 'images',
     },
     user: {
       login: isofhcare_service + 'user/login',
@@ -1032,14 +1032,13 @@ module.exports = {
       review: isofhcare_service + 'post/review',
       get_result_review: isofhcare_service + 'post/get-result-review',
       list_my_question: isofhcare_service + 'consultation/questions',
-      list_question_social:
-        isofhcare_service + 'consultation/questions/social',
+      list_question_social: isofhcare_service + 'consultation/questions/social',
       list_anwser: isofhcare_service + 'consultation/questions',
     },
-    covid:{
-      surveys:"v1/surveys",
-      questions:'v1/questions',
-      annswer:'v1/questionnaireId/questionnaires/',
+    covid: {
+      surveys: 'v1/surveys',
+      questions: 'v1/questions',
+      annswer: 'v1/questionnaireId/questionnaires/',
     },
     comment: {
       create: isofhcare_service + 'comment/create',
@@ -1084,11 +1083,10 @@ module.exports = {
       check_otp: isofhcare_service + 'medical-records/check-otp',
       resend_otp: isofhcare_service + 'medical-records/resend-otp',
       confirm: isofhcare_service + 'medical-records/confirm',
-      get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record',
+      get_details_medical:
+        isofhcare_service + 'medical-records/get-detail-medical-record',
       verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
       fill_phone: isofhcare_service + 'user/fill-phone',
-
-
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',
@@ -1160,6 +1158,11 @@ module.exports = {
     },
     icd: {
       search: isofhcare_service + 'catalog/v1/diseases/search',
+    },
+    monitoring: {
+      height_weight: isofhcare_service + 'monitoring/height-weight',
+      body_temperature: isofhcare_service + 'monitoring/body-temperature',
+      blood_pressure: isofhcare_service + 'monitoring/blood-pressure',
     },
   },
 };
