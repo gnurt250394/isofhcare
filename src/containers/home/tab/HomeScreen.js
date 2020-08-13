@@ -118,49 +118,31 @@ class HomeScreen extends Component {
         //   },
         // },
         {
-          icon: require("@images/new/homev2/ic_advisory.png"),
-          text: "Hỏi bác sĩ",
+          icon: require('@images/new/homev2/ic_advisory.png'),
+          text: 'Hỏi bác sĩ',
           onPress: () => {
             // snackbar.show('Tính năng đang phát triển')
             // return
             // if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("createQuestionStep1");
+            this.props.navigation.navigate('createQuestionStep1');
             // else
             //   this.props.navigation.navigate("login", {
             //     nextScreen: { screen: "createQuestionStep1", param: {} }
             //   });
-          }
+          },
         },
-        // {
-        //   icon: require("@images/new/homev2/ic_voucher.png"),
-        //   text: "Mã ưu đãi",
-        //   onPress: () => {
-        //     snackbar.show('Tính năng đang phát triển')
-        //     return
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate("myVoucher");
-        //     else
-        //       this.props.navigation.navigate("login", {
-        //         nextScreen: { screen: 'myVoucher' }
-        //       });
-        //   }
-        // },
-        // {
-        //   icon: require("@images/new/homev2/ic_drug.png"),
-        //   text: "Thuốc",
-        //   onPress: () => {
-        //     // if (this.props.userApp.isLogin)
-        //     //   this.props.navigation.navigate("drugTab");
-        //     // else
-        //     //   this.props.navigation.navigate("login", {
-        //     //     nextScreen: { screen: 'drugTab' }
-        //     //   });
-        //     snackbar.show('Tính năng đang phát triển')
-        //   }
-        // },
         {
-          icon: require("@images/new/homev2/ic_icd.png"),
-          text: "Tra cứu mã bệnh",
+          icon: require('@images/new/covid/ic_covid.png'),
+          text: 'Kiểm tra COVID-19',
+          onPress: () => {
+            // snackbar.show('Tính năng đang phát triển')
+            // return
+            this.props.navigation.navigate('introCovid');
+          },
+        },
+        {
+          icon: require('@images/new/homev2/ic_icd.png'),
+          text: 'Tra cứu mã bệnh',
           onPress: () => {
             this.props.navigation.navigate('searchIcd');
 
@@ -224,7 +206,6 @@ class HomeScreen extends Component {
         }
       });
     }
-    
   }
   logout() {
     this.props.dispatch(redux.userLogout());
