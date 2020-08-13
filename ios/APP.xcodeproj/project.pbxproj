@@ -48,6 +48,7 @@
 		7E68977B9B55474C929F04D3 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AAAFC9E36CFD4FED9E2A5972 /* Entypo.ttf */; };
 		7F53F40D556342C996C8F040 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FB24FE7D309474089316B42 /* Fontisto.ttf */; };
 		86A4D448432C4E6DA7E636C7 /* Muli-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 515AC9303BDF424AAE67BFB9 /* Muli-Medium.ttf */; };
+		870AACC524E6908A001A6D7D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870AACC424E6908A001A6D7D /* File.swift */; };
 		8E6E20C51C384DC6A9EFED6C /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FD84D1F518C4D019D11C4AF /* FontAwesome5_Regular.ttf */; };
 		8EA5ED9C06974D70A2A021FB /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A41C0A4A7AD4763A6DFC475 /* Entypo.ttf */; };
 		92DE0AB5FCD24B559359225A /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EC17DF645EE457F806B8901 /* Zocial.ttf */; };
@@ -258,6 +259,8 @@
 		61B2ADBB99CE46C49480FDFD /* Muli-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Muli-ExtraBold.ttf"; path = "../src/res/fonts/Muli-ExtraBold.ttf"; sourceTree = "<group>"; };
 		7CEDB2BF4202484D98AE6692 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		84F0479BB34140D392391591 /* libReactNativeGetLocationLibrary.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeGetLocationLibrary.a; sourceTree = "<group>"; };
+		870AACC424E6908A001A6D7D /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		870AACC924E6923F001A6D7D /* APP-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "APP-Bridging-Header.h"; sourceTree = "<group>"; };
 		87FF6F9401DF40E6B9073A43 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		9265A86F40CD0B366B209805 /* Pods-APP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.release.xcconfig"; path = "Target Support Files/Pods-APP/Pods-APP.release.xcconfig"; sourceTree = "<group>"; };
 		934E4A6A72C34425A5638465 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
@@ -372,6 +375,7 @@
 		13B07FAE1A68108700A75B9A /* APP */ = {
 			isa = PBXGroup;
 			children = (
+				870AACC924E6923F001A6D7D /* APP-Bridging-Header.h */,
 				30C14F4D2453698900E83530 /* call_phone.mp3 */,
 				30C14F4E2453698A00E83530 /* not_listen.mp3 */,
 				0CC780F4230C32FC00809AD8 /* APP.entitlements */,
@@ -384,6 +388,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				870AACC424E6908A001A6D7D /* File.swift */,
 			);
 			name = APP;
 			sourceTree = "<group>";
@@ -1017,6 +1022,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				870AACC524E6908A001A6D7D /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1069,6 +1075,7 @@
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1100,6 +1107,7 @@
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				HEADER_SEARCH_PATHS = (
