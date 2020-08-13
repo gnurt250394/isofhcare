@@ -86,7 +86,6 @@ class Kernel extends Component {
     })
   }
   render() {
-    console.log(this.props, 'propssssssss');
     const RootApp = AppContainer(constants.route)
     return (
       <Provider store={store}>

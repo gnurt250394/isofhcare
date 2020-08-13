@@ -3,7 +3,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TouchableOpacity, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import ic_back from '@images/new/left_arrow.png';
+import ic_back from '@images/new/ic_back.png';
 import ic_msg from '@images/ic_msg.png';
 const { width, height } = Dimensions.get('window');
 
@@ -30,8 +30,8 @@ class Actionbar extends Component {
                         this.props.backButton ?
                             this.props.backButton :
                             !this.props.hideBackButton ?
-                                <TouchableOpacity onPress={this.backButtonClick} style={styles.buttonBack}>
-                                    <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={16}></ScaleImage>
+                                <TouchableOpacity onPress={this.backButtonClick} style={[styles.buttonBack,this.props.buttonBackStyle]}>
+                                    <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={18}></ScaleImage>
                                 </TouchableOpacity>
                                 :
                                 <View style={styles.containerBack}>
