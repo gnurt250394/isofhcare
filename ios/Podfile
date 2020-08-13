@@ -50,7 +50,7 @@ target 'APP' do
   # pod 'AppCenter/Crashes', '~> 2.3.0'
   # pod 'AppCenter/Analytics', '~> 2.3.0'
   # pod 'AppCenterReactNativeShared', '~> 2.3.0'
-  
+  pod 'RNCharts', :path => '../node_modules/react-native-charts-wrapper'
   #firebase
   pod 'Firebase', '~> 6.2.0'
   pod 'Firebase/Messaging', '~> 6.2.0'
