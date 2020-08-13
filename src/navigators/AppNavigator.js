@@ -168,6 +168,7 @@ import DetailMessageScreen from '@containers/question/DetailMessageScreen';
 import IntroCovidScreen from '@containers/covid/IntroCovidScreen';
 import TestCovidScreen from '@containers/covid/TestCovidScreen';
 import TestResultScreen from '@containers/covid/TestResultScreen';
+import HealthMonitoringScreen from '@containers/ehealth/healthMonitoring/HealthMonitoringScreen';
 
 const ProfileNavigation = createStackNavigator(
   {
@@ -509,6 +510,7 @@ const RootNavigator = (route = 'splash') =>
       introCovid: {screen: IntroCovidScreen},
       testCovid: {screen: TestCovidScreen},
       testResult: {screen: TestResultScreen},
+      healthMonitoring: {screen: HealthMonitoringScreen},
     },
     {
       initialRouteName: route,
