@@ -22,7 +22,6 @@ const realWidth = height > width ? width : height;
 const realHeight = height > width ? height : width;
 const TestResultScreen = ({navigation}) => {
   const [data, setData] = useState(state => navigation.getParam('data', {}));
-  
   const [scrollY, setScrollY] = useState(new Animated.Value(0));
   const scrollRef = useRef();
   const timeout = useRef();
@@ -128,16 +127,22 @@ const TestResultScreen = ({navigation}) => {
   useEffect(() => {}, [navigation]);
   useEffect(() => {
     scrollY.addListener(({value}) => {
-      if (value < 50) {
+      if (value < 60) {
         if (timeout.current) clearTimeout(timeout.current);
+        timeout.current = setTimeout(() => {
+          scrollRef.current.getNode().scrollTo({
+            y: 0,
+            animated: true,
+          });
+        }, 250);
         return;
       }
       if (value < 145) {
         if (timeout.current) clearTimeout(timeout.current);
+
         timeout.current = setTimeout(() => {
-          
           scrollRef.current.getNode().scrollTo({
-            y: 0,
+            y: 145,
             animated: true,
           });
         }, 250);

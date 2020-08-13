@@ -240,19 +240,21 @@ const TestCovid = ({navigation}) => {
     getDataMessage(item?.directQuestion?.ordinal);
   };
   const renderAnswer = () => {
-    if (type) {
-      if (type == 'NUMBER') {
-        return (
-          <TextInput
-            placeholder="Nhập giá trị"
-            style={styles.innput}
-            value={value}
-            maxLength={3}
-            keyboardType="numeric"
-            onChangeText={setValue}
-          />
-        );
-      }
+    if (type == 'NUMBER') {
+      return (
+        <TextInput
+          placeholder="Nhập giá trị"
+          style={styles.innput}
+          value={value}
+          maxLength={3}
+          keyboardType="numeric"
+          onChangeText={setValue}
+        />
+      );
+    }
+  };
+  const renderAnswerSelect = () => {
+    if (type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX') {
       return (
         <View style={[styles.containerList, {flexWrap: 'wrap'}]}>
           {listAnswer?.length
@@ -340,9 +342,8 @@ const TestCovid = ({navigation}) => {
           user={{
             _id: 1,
           }}
-          // minComposerHeight={200}
           isTyping={isTyping}
-          minInputToolbarHeight={type == 'NUMBER' ? 100 : 200}
+          minInputToolbarHeight={120}
           renderFooter={() => {
             if (isTyping)
               return (
@@ -404,24 +405,59 @@ const TestCovid = ({navigation}) => {
             if (typeof type == 'undefined') {
               return null;
             }
-            return (
-              <View style={{flex: 1}}>
-                {renderAnswer()}
-                {isShowContinue ? (
-                  <TouchableOpacity
-                    onPress={onContinue}
-                    style={styles.buttonContinue}>
-                    <ScaledImage
-                      source={require('@images/new/covid/ic_next.png')}
-                      height={20}
-                    />
-                    <Text style={styles.txtContinue}>Tiếp tục</Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-            );
+            if (type == 'NUMBER' || type == '')
+              return (
+                <View style={{flex: 1}}>
+                  {renderAnswer()}
+                  {isShowContinue ? (
+                    <TouchableOpacity
+                      onPress={onContinue}
+                      style={styles.buttonContinue}>
+                      <ScaledImage
+                        source={require('@images/new/covid/ic_next.png')}
+                        height={20}
+                      />
+                      <Text style={styles.txtContinue}>Tiếp tục</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              );
+              return null
           }}
         />
+        {type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX' ? (
+          <View style={{paddingBottom: 20}}>
+            <Text
+              style={{
+                color: '#3161AD',
+                fontSize: 16,
+                fontWeight: 'bold',
+                paddingLeft: 15,
+                paddingRight:5,
+                paddingBottom: 5,
+                textAlign:'center'
+              }}>
+              {type == 'MULTIPLE_CHOICE'
+                ? 'Chọn một hoặc nhiều đáp án sau đó bấm tiếp tục.'
+                : type == 'CHECKBOX'
+                ? 'Chọn một đáp án duy nhất.'
+                : ''}
+            </Text>
+
+            {renderAnswerSelect()}
+            {isShowContinue && type == 'MULTIPLE_CHOICE' ? (
+              <TouchableOpacity
+                onPress={onContinue}
+                style={styles.buttonContinue}>
+                <ScaledImage
+                  source={require('@images/new/covid/ic_next.png')}
+                  height={20}
+                />
+                <Text style={styles.txtContinue}>Tiếp tục</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        ) : null}
       </View>
     </ActivityPanel>
   );
