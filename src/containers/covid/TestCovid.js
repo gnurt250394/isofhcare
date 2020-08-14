@@ -39,12 +39,6 @@ const TestCovid = ({navigation}) => {
   const getSurveys = async () => {
     try {
       let res = await covidProvider.getListLabel();
-      res.text = res.intro;
-      res._id = stringUtils.guid();
-      res.user = {_id: 2, avatar: require('@images/new/covid/ic_robot.png')};
-
-      setIsShowContinue(true);
-      setData([res]);
       getListQuestion(res.id);
     } catch (error) {
       snackbar.show('Có lỗi xảy ra, vui lòng thử lại.', 'danger');
@@ -55,6 +49,12 @@ const TestCovid = ({navigation}) => {
       let res = await covidProvider.getListQuestion(surveysId);
 
       let list = res?.template?.questions;
+      res.text = res?.template?.intro;
+      res._id = stringUtils.guid();
+      res.user = {_id: 2, avatar: require('@images/new/covid/ic_robot.png')};
+
+      setIsShowContinue(true);
+      setData([res]);
       setQuestionParentId(res.id);
       list.forEach(e => {
         e.text = e.content;
@@ -177,8 +177,11 @@ const TestCovid = ({navigation}) => {
       if (i == -1) {
         obj = listQuestionAll.current.shift();
       } else {
-        obj = listQuestionAll.current.splice(i, 1).shift();
+        listQuestionAll.current = listQuestionAll.current.slice(i);
+        obj = listQuestionAll.current.shift();
       }
+      
+      
       if (!obj) {
         createAnswer();
         return;
@@ -360,7 +363,7 @@ const TestCovid = ({navigation}) => {
         ],
         {cancelable: true},
       );
-      else navigation.goBack()
+    else navigation.goBack();
   };
   return (
     <ActivityPanel backButtonClick={handleBack} title="Bài test COVID - 19">
