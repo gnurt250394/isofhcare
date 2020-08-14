@@ -12,6 +12,7 @@ import {
   Platform,
   TouchableOpacity,
   Animated,
+  Image,
 } from 'react-native';
 import {Svg, Circle, TSpan} from 'react-native-svg';
 import PreventativeMethod from '@components/covid/PreventativeMethod';
@@ -22,21 +23,14 @@ const realWidth = height > width ? width : height;
 const realHeight = height > width ? height : width;
 const TestResultScreen = ({navigation}) => {
   const [data, setData] = useState(state => navigation.getParam('data', {}));
+  const [offsetAnim, setOffsetAnim] = useState(new Animated.Value(0));
   const [scrollY, setScrollY] = useState(new Animated.Value(0));
   const scrollRef = useRef();
-  const timeout = useRef();
+  const _scrollEndTimer = useRef(null);
+  const _scrollValue = useRef(0);
   function handleBackButton() {
     return true;
   }
-  //For header background color from transparent to header color
-  const _getHeaderBackgroundColor = () => {
-    return scrollY.interpolate({
-      inputRange: [0, 140],
-      outputRange: ['rgba(0,0,0,0.0)', '#00CBA7'],
-      extrapolate: 'clamp',
-      useNativeDriver: true,
-    });
-  };
 
   //For header image opacity
   const _getHeaderImageOpacity = () => {
@@ -47,15 +41,28 @@ const TestResultScreen = ({navigation}) => {
       useNativeDriver: true,
     });
   };
-
-  const relativeWidth = num => (realWidth * num) / 100;
-  const relativeHeight = num => (realHeight * num) / 100;
+  const _getHeaderBackground = () => {
+    return scrollY.interpolate({
+      inputRange: [0, 140],
+      outputRange: ['#00000000', '#00BA99'],
+      extrapolate: 'clamp',
+      useNativeDriver: true,
+    });
+  };
+  const _getIconColor = () => {
+    return scrollY.interpolate({
+      inputRange: [0, 140],
+      outputRange: ['#000', '#FFF'],
+      extrapolate: 'clamp',
+      useNativeDriver: true,
+    });
+  };
 
   //artist profile image position from left
   const _getImageLeftPosition = () => {
     return scrollY.interpolate({
       inputRange: [0, 80, 140],
-      outputRange: [width / 2 - 50, 38, 10],
+      outputRange: [width / 2 - 50, 38, 50],
       extrapolate: 'clamp',
       useNativeDriver: true,
     });
@@ -65,13 +72,15 @@ const TestResultScreen = ({navigation}) => {
   const _getImageTopPosition = () => {
     return scrollY.interpolate({
       inputRange: [0, 140],
-      outputRange: [
-        Platform.select({
-          android: width / 1.3 / 2 - StatusBar.currentHeight,
-          ios: width / 1.3 / 2 - 20,
-        }),
-        Platform.OS === 'ios' ? 18 : 20,
-      ],
+      outputRange: [width / 1.3 / 2, 50],
+      extrapolate: 'clamp',
+      useNativeDriver: true,
+    });
+  };
+  const _getTextTopPosition = () => {
+    return scrollY.interpolate({
+      inputRange: [0, 140],
+      outputRange: [width / 1.3 / 2 + 100, 50],
       extrapolate: 'clamp',
       useNativeDriver: true,
     });
@@ -100,16 +109,16 @@ const TestResultScreen = ({navigation}) => {
   const _getScrollPaddingBottom = () => {
     return scrollY.interpolate({
       inputRange: [0, 140],
-      outputRange: [width / 1.3 / 2 - 20, 55],
+      outputRange: [width / 1.3 / 2 + 50, 55],
       extrapolate: 'clamp',
       useNativeDriver: true,
     });
   };
 
-  const _getBorderWidth = () => {
+  const _getFontSize = () => {
     return scrollY.interpolate({
       inputRange: [0, 140],
-      outputRange: [0, 10],
+      outputRange: [17, 0],
       extrapolate: 'clamp',
       useNativeDriver: true,
     });
@@ -124,45 +133,12 @@ const TestResultScreen = ({navigation}) => {
     });
   };
 
-  useEffect(() => {}, [navigation]);
   useEffect(() => {
     scrollY.addListener(({value}) => {
-      if (value < 60) {
-        if (timeout.current) clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
-          scrollRef.current.getNode().scrollTo({
-            y: 0,
-            animated: true,
-          });
-        }, 250);
-        return;
-      }
-      if (value < 145) {
-        if (timeout.current) clearTimeout(timeout.current);
-
-        timeout.current = setTimeout(() => {
-          scrollRef.current.getNode().scrollTo({
-            y: 145,
-            animated: true,
-          });
-        }, 250);
-      } else {
-        if (timeout.current) clearTimeout(timeout.current);
-      }
-      // const diff = value - _scrollValue.current;
-      // _scrollValue.current = value;
-      // _clampedScrollValue.current = Math.min(
-      //   Math.max(_clampedScrollValue.current + diff, 0),
-      //   NAVBAR_HEIGHT,
-      // );
+      _scrollValue.current = value;
     });
-    DeviceEventEmitter.addListener('hardwareBackPress', handleBackButton);
     return () => {
       if (scrollY) scrollY.removeAllListeners();
-      DeviceEventEmitter.removeAllListeners(
-        'hardwareBackPress',
-        handleBackButton,
-      );
     };
   }, []);
   const getSource = () => {
@@ -202,7 +178,7 @@ const TestResultScreen = ({navigation}) => {
     }
   };
   const onTest = () => {
-    navigation.replace('testCovid');
+    navigation.navigate('introCovid');
   };
   const goHome = () => {
     navigation.navigate('home');
@@ -214,6 +190,31 @@ const TestResultScreen = ({navigation}) => {
       navigation.navigate('addBooking1');
     }
   };
+  const _onScrollEndDrag = () => {
+    _scrollEndTimer.current = setTimeout(_onMomentumScrollEnd, 2000);
+  };
+
+  const _onMomentumScrollBegin = () => {
+    if (_scrollEndTimer.current) clearTimeout(_scrollEndTimer.current);
+  };
+
+  const _onMomentumScrollEnd = () => {
+    const toValue =
+      _scrollValue.current < 140 && _scrollValue.current > 60
+        ? 140
+        : _scrollValue.current < 60 && _scrollValue.current > 0
+        ? 0
+        : null;
+    if (toValue || toValue == 0) {
+      scrollRef.current.getNode().scrollTo({
+        y: toValue,
+        animated: true,
+      });
+    } else {
+      _onMomentumScrollBegin();
+    }
+  };
+  const goBack = () => navigation.goBack();
   return (
     <View
       style={{
@@ -226,11 +227,29 @@ const TestResultScreen = ({navigation}) => {
           style={[styles.containerHeader, {opacity: _getHeaderImageOpacity()}]}
         />
 
-        <Text style={[styles.txtHeader]}>Kết quả kiểm tra</Text>
-
+        <Animated.View
+          style={[
+            styles.groupHeader2,
+            {
+              backgroundColor: _getHeaderBackground(),
+            },
+          ]}>
+          <TouchableOpacity onPress={goBack} style={styles.buttonBack}>
+            <Animated.Image
+              source={require('@images/new/ic_back.png')}
+              style={[]}
+              style={[styles.ic_back, {tintColor: _getIconColor()}]}
+            />
+          </TouchableOpacity>
+          <Animated.Text style={[styles.txtHeader, {color: _getIconColor()}]}>
+            Kết quả kiểm tra
+          </Animated.Text>
+          <View style={styles.ic_back} />
+        </Animated.View>
         <Animated.Image
           source={getSource()}
           style={{
+            position: 'absolute',
             height: _getImageHeight(),
             width: _getImageWidth(),
             resizeMode: 'contain',
@@ -245,9 +264,12 @@ const TestResultScreen = ({navigation}) => {
             styles.txtStatus,
 
             {
+              position: 'absolute',
+              alignSelf: 'center',
               color: getColor(),
+              fontSize: _getFontSize(),
               opacity: _getNormalTitleOpacity(),
-              transform: [{translateY: _getImageTopPosition()}],
+              transform: [{translateY: _getTextTopPosition()}],
             },
           ]}>
           {data?.level?.name}
@@ -255,6 +277,9 @@ const TestResultScreen = ({navigation}) => {
       </View>
       <Animated.ScrollView
         ref={scrollRef}
+        onScrollEndDrag={_onScrollEndDrag}
+        onMomentumScrollEnd={_onMomentumScrollEnd}
+        onMomentumScrollBegin={_onMomentumScrollBegin}
         scrollEventThrottle={16}
         contentContainerStyle={{
           paddingBottom: 50,
@@ -316,12 +341,27 @@ const TestResultScreen = ({navigation}) => {
 export default TestResultScreen;
 
 const styles = StyleSheet.create({
+  buttonBack: {
+    paddingHorizontal: 15,
+  },
+  ic_back: {
+    height: 18,
+    width: 18,
+    resizeMode: 'contain',
+  },
+  groupHeader2: {
+    paddingTop: 50,
+    paddingBottom: 15,
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   txtHeader: {
-    top: 50,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 17,
-    paddingBottom: 10,
+    paddingRight: 30,
   },
   txtHome: {
     textDecorationLine: 'underline',
@@ -361,7 +401,6 @@ const styles = StyleSheet.create({
   },
   txtStatus: {
     fontWeight: 'bold',
-    fontSize: 17,
     paddingTop: 10,
     textAlign: 'center',
   },

@@ -8,6 +8,8 @@ import {
   TextInput,
   DeviceEventEmitter,
   Alert,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {useSelector} from 'react-redux';
@@ -18,11 +20,12 @@ import TypingAnimation from '@components/chat/TypingAnimation';
 import LinearGradient from 'react-native-linear-gradient';
 import snackbar from '@utils/snackbar-utils';
 import useBackButton from '@components/useBackButton';
-
+import CustomSlider from '@components/covid/CustomSlider';
+const {width, height} = Dimensions.get('window');
 const TestCovid = ({navigation}) => {
   const [data, setData] = useState([]);
   const [listAnswer, setListAnswer] = useState([]);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(20);
   const [currentQuestion, setCurrentQuestion] = useState({});
   const [isTyping, setIsTyping] = useState(false);
   const [questionParentId, setQuestionParentId] = useState('');
@@ -31,6 +34,7 @@ const TestCovid = ({navigation}) => {
   const userApp = useSelector(state => state.auth.userApp);
   const listFinal = useRef([]);
   const listQuestionAll = useRef([]);
+  const answerResponse = useRef(null);
 
   const getSurveys = async () => {
     try {
@@ -83,7 +87,7 @@ const TestCovid = ({navigation}) => {
         currentQuestion.mandatory &&
         listAnswer.filter(e => e.checked).length == 0
       ) {
-        snackbar('Vui lòng chọn ít nhất 1 câu trả lời', 'danger');
+        snackbar.show('Vui lòng chọn ít nhất 1 câu trả lời', 'danger');
         return;
       }
       let dataAnswer = listAnswer
@@ -95,25 +99,41 @@ const TestCovid = ({navigation}) => {
           ...e,
         }));
       listFinal.current.push({
-        id: currentQuestion.id,
+        id: currentQuestion?.id,
         answers: dataAnswer.map(e => ({
           uid: e.uid,
         })),
       });
       let direction = dataAnswer.find(e => e.directQuestion);
-      setData(state => GiftedChat.append(state, dataAnswer));
+      if (dataAnswer.length) {
+        setData(state => GiftedChat.append(state, dataAnswer));
+      } else {
+        setData(state =>
+          GiftedChat.append(state, [
+            {_id: stringUtils.guid(), text: 'Tiếp tục', user: {_id: 1}},
+          ]),
+        );
+      }
       setIsShowContinue(false);
       getDataMessage(direction?.directQuestion?.ordinal);
       return;
     }
     if (currentQuestion.mandatory && !value) {
-      snackbar('Vui lòng nhập câu trả lời', 'danger');
+      snackbar.show('Vui lòng nhập câu trả lời', 'danger');
       return;
     }
 
-    if (value) {
+    if (value && type == 'NUMBER') {
       if (value > 120) {
         snackbar.show('Số tuổi không vượt quá 120 tuổi', 'danger');
+        return;
+      }
+      if (value < 1) {
+        snackbar.show('Số tuổi không nhỏ hơn 1', 'danger');
+        return;
+      }
+      if (!Number.isInteger(Number(value))) {
+        snackbar.show('Số tuổi phải là số nguyên', 'danger');
         return;
       }
 
@@ -145,7 +165,6 @@ const TestCovid = ({navigation}) => {
     getDataMessage();
   };
   const getDataMessage = directQuestion => {
-    setValue('');
     setType(undefined);
     setListAnswer([]);
     setIsTyping(true);
@@ -172,10 +191,13 @@ const TestCovid = ({navigation}) => {
       setType(obj.format);
       setIsTyping(false);
       setData(state => GiftedChat.append(state, obj));
-    }, 1500);
+    }, 1000);
   };
-  const createAnswer = async () => {
+  const createAnswer = async isBack => {
     try {
+      if (isBack && !listFinal.current.length) {
+        return;
+      }
       if (!listFinal.current.length) {
         snackbar.show('Bạn chưa chọn câu hỏi nào', 'danger');
         return;
@@ -185,13 +207,15 @@ const TestCovid = ({navigation}) => {
         questionParentId,
         listFinal.current,
       );
-      if (res) {
-        navigation.replace('testResult', {
+      if (res && !isBack) {
+        answerResponse.current = res;
+        setIsTyping(false);
+        navigation.navigate('testResult', {
           data: res,
         });
       }
     } catch (error) {
-      snackbar.show('Có lỗi xảy ra, vui lòng thử lại.', 'danger');
+      if (!isBack) snackbar.show('Có lỗi xảy ra, vui lòng thử lại.', 'danger');
     }
   };
   const onSelectAnswer = item => () => {
@@ -239,91 +263,104 @@ const TestCovid = ({navigation}) => {
     });
     getDataMessage(item?.directQuestion?.ordinal);
   };
-  const renderAnswer = () => {
-    if (type == 'NUMBER') {
-      return (
-        <TextInput
-          placeholder="Nhập giá trị"
-          style={styles.innput}
-          value={value}
-          maxLength={3}
-          keyboardType="numeric"
-          onChangeText={setValue}
-        />
-      );
-    }
-  };
+
   const renderAnswerSelect = () => {
+    if (type == 'NUMBER') {
+      return <CustomSlider min={1} max={120} onValueChange={setValue} />;
+    }
     if (type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX') {
       return (
-        <View style={[styles.containerList, {flexWrap: 'wrap'}]}>
-          {listAnswer?.length
-            ? listAnswer.map((e, i) => {
-                if (typeof e?.content?.value == 'string') {
-                  return (
-                    <TouchableOpacity
-                      key={i}
-                      onPress={onSelectAnswer(e)}
-                      style={[styles.buttonSelect]}>
-                      {type == 'MULTIPLE_CHOICE' && e.checked ? (
-                        <LinearGradient
-                          start={{x: 0, y: 0}}
-                          end={{x: 1, y: 0}}
-                          colors={['#EB5569', '#FEB692']}
-                          style={{
-                            padding: 10,
-                            borderRadius: 5,
-                          }}>
-                          <Text
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={{
+            flexGrow: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          horizontal={type == 'CHECKBOX' ? true : false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          <View
+            style={[
+              styles.containerList,
+              {flexWrap: type == 'CHECKBOX' ? 'nowrap' : 'wrap'},
+            ]}>
+            {listAnswer?.length
+              ? listAnswer.map((e, i) => {
+                  if (typeof e?.content?.value == 'string') {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={onSelectAnswer(e)}
+                        style={[styles.buttonSelect]}>
+                        {type == 'MULTIPLE_CHOICE' && e.checked ? (
+                          <LinearGradient
+                            start={{x: 0, y: 0}}
+                            end={{x: 1, y: 0}}
+                            colors={['#EB5569', '#FEB692']}
                             style={{
-                              textAlign: 'center',
-                              color:
-                                type == 'MULTIPLE_CHOICE' && e.checked
-                                  ? '#FFF'
-                                  : '#000',
+                              padding: 10,
+                              borderRadius: 5,
                             }}>
+                            <Text
+                              style={{
+                                textAlign: 'center',
+                                color:
+                                  type == 'MULTIPLE_CHOICE' && e.checked
+                                    ? '#FFF'
+                                    : '#000',
+                              }}>
+                              {e?.content?.value}
+                            </Text>
+                          </LinearGradient>
+                        ) : (
+                          <Text style={{textAlign: 'center', padding: 10}}>
                             {e?.content?.value}
                           </Text>
-                        </LinearGradient>
-                      ) : (
-                        <Text style={{textAlign: 'center', padding: 10}}>
-                          {e?.content?.value}
+                        )}
+                      </TouchableOpacity>
+                    );
+                  } else if (typeof e?.content?.value == 'object') {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={onSelectAnswer(e)}
+                        style={[styles.buttonSelect, {padding: 10}]}>
+                        <Text style={{textAlign: 'center'}}>
+                          Từ {e.content.value.minimum} đến{' '}
+                          {e.content.value.maximum}
                         </Text>
-                      )}
-                    </TouchableOpacity>
-                  );
-                } else if (typeof e?.content?.value == 'object') {
-                  return (
-                    <TouchableOpacity
-                      key={i}
-                      onPress={onSelectAnswer(e)}
-                      style={[styles.buttonSelect, {padding: 10}]}>
-                      <Text style={{textAlign: 'center'}}>
-                        Từ {e.content.value.minimum} đến{' '}
-                        {e.content.value.maximum}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                } else return null;
-              })
-            : null}
-        </View>
+                      </TouchableOpacity>
+                    );
+                  } else return null;
+                })
+              : null}
+          </View>
+        </ScrollView>
       );
     }
   };
   const handleBack = () => {
-    Alert.alert(
-      'Thông báo',
-      'Bạn muốn huỷ làm bài test?',
-      [
-        {
-          text: 'Không',
-          style: 'cancel',
-        },
-        {text: 'Có', onPress: () => navigation.goBack()},
-      ],
-      {cancelable: true},
-    );
+    if (!answerResponse.current)
+      Alert.alert(
+        'Thông báo',
+        'Bạn muốn huỷ làm bài test?',
+        [
+          {
+            text: 'Không',
+            style: 'cancel',
+          },
+          {
+            text: 'Có',
+            onPress: () => {
+              createAnswer(true);
+              navigation.goBack();
+            },
+          },
+        ],
+        {cancelable: true},
+      );
+      else navigation.goBack()
   };
   return (
     <ActivityPanel backButtonClick={handleBack} title="Bài test COVID - 19">
@@ -343,7 +380,6 @@ const TestCovid = ({navigation}) => {
             _id: 1,
           }}
           isTyping={isTyping}
-          minInputToolbarHeight={120}
           renderFooter={() => {
             if (isTyping)
               return (
@@ -394,70 +430,51 @@ const TestCovid = ({navigation}) => {
                     padding: 10,
                     maxWidth: '80%',
                   }}>
-                  <Text style={{textAlign: 'center', color: '#000'}}>
+                  <Text style={{textAlign: 'left', color: '#000'}}>
                     {props.currentMessage.text}
                   </Text>
                 </View>
               );
             }
           }}
-          renderInputToolbar={props => {
-            if (typeof type == 'undefined') {
-              return null;
-            }
-            if (type == 'NUMBER' || type == '')
-              return (
-                <View style={{flex: 1}}>
-                  {renderAnswer()}
-                  {isShowContinue ? (
-                    <TouchableOpacity
-                      onPress={onContinue}
-                      style={styles.buttonContinue}>
-                      <ScaledImage
-                        source={require('@images/new/covid/ic_next.png')}
-                        height={20}
-                      />
-                      <Text style={styles.txtContinue}>Tiếp tục</Text>
-                    </TouchableOpacity>
-                  ) : null}
-                </View>
-              );
-              return null
-          }}
+          maxComposerHeight={0}
+          maxInputLength={0}
+          composerHeight={0}
+          renderInputToolbar={() => null}
         />
-        {type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX' ? (
-          <View style={{paddingBottom: 20}}>
-            <Text
+        {/* {type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX' ? ( */}
+        <View style={{paddingBottom: 20}}>
+          {/* <Text
               style={{
                 color: '#3161AD',
                 fontSize: 16,
                 fontWeight: 'bold',
                 paddingLeft: 15,
-                paddingRight:5,
+                paddingRight: 5,
                 paddingBottom: 5,
-                textAlign:'center'
+                textAlign: 'center',
               }}>
               {type == 'MULTIPLE_CHOICE'
                 ? 'Chọn một hoặc nhiều đáp án sau đó bấm tiếp tục.'
                 : type == 'CHECKBOX'
                 ? 'Chọn một đáp án duy nhất.'
                 : ''}
-            </Text>
+            </Text> */}
 
-            {renderAnswerSelect()}
-            {isShowContinue && type == 'MULTIPLE_CHOICE' ? (
-              <TouchableOpacity
-                onPress={onContinue}
-                style={styles.buttonContinue}>
-                <ScaledImage
-                  source={require('@images/new/covid/ic_next.png')}
-                  height={20}
-                />
-                <Text style={styles.txtContinue}>Tiếp tục</Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-        ) : null}
+          {renderAnswerSelect()}
+          {isShowContinue && typeof type != 'undefined' ? (
+            <TouchableOpacity
+              onPress={onContinue}
+              style={styles.buttonContinue}>
+              <ScaledImage
+                source={require('@images/new/covid/ic_next.png')}
+                height={20}
+              />
+              <Text style={styles.txtContinue}>Tiếp tục</Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        {/* ) : null} */}
       </View>
     </ActivityPanel>
   );
@@ -481,6 +498,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 10,
     paddingHorizontal: 10,
+    alignSelf: 'center',
   },
   buttonSelect: {
     backgroundColor: '#FFF',
@@ -489,7 +507,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     borderRadius: 5,
     marginLeft: 10,
-    maxWidth: '48%',
+    maxWidth: width / 2 - 10,
     marginBottom: 6,
     elevation: 2,
   },
