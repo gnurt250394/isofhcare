@@ -283,7 +283,7 @@ class AddBookingDoctorScreen extends Component {
                         detailSchedule.room,
                         idUser,
                         img,
-                        this.state.isOnline
+                        detailSchedule.blockTime
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {

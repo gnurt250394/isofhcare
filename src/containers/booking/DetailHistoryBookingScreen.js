@@ -328,7 +328,7 @@ class DetailHistoryBookingScreen extends Component {
   getTimeOnline = () => {
     if (
       this.state.booking.timeDiff < 0 &&
-      this.state.booking.timeDiff > -30 * 60 * 1000
+      this.state.booking.timeDiff > -this.state.booking.blockTime * 60 * 1000
     ) {
       return true;
     } else {
@@ -464,55 +464,54 @@ class DetailHistoryBookingScreen extends Component {
                 </View>
                 {isOnline ? (
                   this.getTimeOnline() &&
-                    (this.state.booking.status == 'ACCEPTED' ||
-                      this.state.booking.status == 'CHECKIN') ? (
-                      <View
-                        style={[
-                          styles.flex,
-                          {
-                            borderLeftColor: '#00000050',
-                            borderLeftWidth: 1,
-                          },
-                        ]}>
-                        <TouchableOpacity
-                          onPress={this.onCallVideo}
-                          style={styles.buttonBookingCall}>
-                          <ScaledImage
-                            width={20}
-                            height={20}
-                            source={require('@images/new/videoCall/ic_call.png')}
-                          />
-                          <Text
-                            style={
-                              styles.txtBookingCall
-                            }>{`Gọi tư vấn`}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View
+                  (this.state.booking.status == 'ACCEPTED' ||
+                    this.state.booking.status == 'CHECKIN') ? (
+                    <View
+                      style={[
+                        styles.flex,
+                        {
+                          borderLeftColor: '#00000050',
+                          borderLeftWidth: 1,
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        onPress={this.onCallVideo}
+                        style={styles.buttonBookingCall}>
+                        <ScaledImage
+                          width={20}
+                          height={20}
+                          source={require('@images/new/videoCall/ic_call.png')}
+                        />
+                        <Text
+                          style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View
+                      style={[
+                        styles.flex,
+                        {
+                          borderLeftColor: '#00000050',
+                          borderLeftWidth: 1,
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        disabled={true}
+                        onPress={this.onCallVideo}
                         style={[
                           styles.buttonBookingCall,
                           {backgroundColor: '#ffcf99'},
                         ]}>
-                        <TouchableOpacity
-                          disabled={true}
-                          onPress={this.onCallVideo}
-                          style={[
-                            styles.buttonBookingCall,
-                            { backgroundColor: '#ffcf99' },
-                          ]}>
-                          <ScaledImage
-                            width={20}
-                            height={20}
-                            source={require('@images/new/videoCall/ic_call.png')}
-                          />
-                          <Text
-                            style={
-                              styles.txtBookingCall
-                            }>{`Gọi tư vấn`}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    )
+                        <ScaledImage
+                          width={20}
+                          height={20}
+                          source={require('@images/new/videoCall/ic_call.png')}
+                        />
+                        <Text
+                          style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )
                 ) : null}
               </View>
               {/** bác sĩ */}
@@ -530,7 +529,9 @@ class DetailHistoryBookingScreen extends Component {
                     </Text>
                     <View style={styles.viewInfoLocation}>
                       <Text style={styles.txClinic}>
-                        {objectUtils.renderAcademic(this.state.booking.doctor.academicDegree)}
+                        {objectUtils.renderAcademic(
+                          this.state.booking.doctor.academicDegree,
+                        )}
                         {this.state.booking.doctor.name}
                       </Text>
                     </View>
