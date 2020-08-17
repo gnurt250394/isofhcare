@@ -308,7 +308,7 @@ const TestResultScreen = ({navigation}) => {
           <View style={styles.containerGuide}>
             <Text style={styles.txtTitleGuide}>Nên làm gì tiếp theo?</Text>
             {data?.advice?.suggestion?.guides?.length
-              ? data?.advice?.suggestion?.guides.map((e, i) => {
+              ? data?.suggestion?.guides.map((e, i) => {
                   return (
                     <View key={i} style={styles.containerGuideList}>
                       <ScaledImage
