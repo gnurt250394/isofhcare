@@ -22,6 +22,7 @@ import RNCallKeepManager from '@components/RNCallKeepManager'
 import KeepAwake from 'react-native-keep-awake';
 import Timer from "./Timer";
 import soundUtils from "@utils/sound-utils";
+import objectUtils from "@utils/object-utils";
 const muteImg = require("@images/new/videoCall/mute.png");
 const muteImg_selected = require("@images/new/videoCall/mute_selected.png");
 
@@ -85,36 +86,8 @@ class VideoCallScreen extends Component {
     renderAcademic = (doctor) => {
         let name = ''
         if (doctor?.name || doctor?.academicDegree) {
-            let academicDegree = ''
-            switch (doctor?.academicDegree) {
-                case 'BS': academicDegree = 'BS. '
-                    break;
-                case 'ThS': academicDegree = 'ThS. '
-                    break;
-                case 'TS': academicDegree = 'TS. '
-                    break;
-                case 'PGS': academicDegree = 'PGS. '
-                    break;
-                case 'GS': academicDegree = 'GS. '
-                    break;
-                case 'BSCKI': academicDegree = 'BSCKI. '
-                    break;
-                case 'BSCKII': academicDegree = 'BSCKII. '
-                    break;
-                case 'GSTS': academicDegree = 'GS.TS. '
-                    break;
-                case 'PGSTS': academicDegree = 'PGS.TS. '
-                    break;
-                case 'ThsBS': academicDegree = 'ThS.BS. '
-                    break;
-                case 'ThsBSCKII': academicDegree = 'ThS.BSCKII. '
-                    break;
-                case 'TSBS': academicDegree = 'TS.BS. '
-                    break;
-                default: academicDegree = ''
-                    break;
-            }
-            name = academicDegree + doctor.name
+            
+            name = objectUtils.renderAcademic(doctor?.academicDegree) + doctor.name
         }
         return name
     }

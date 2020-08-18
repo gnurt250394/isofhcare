@@ -20,6 +20,7 @@ import RNCallKeep from "react-native-callkeep";
 import InCallManager from 'react-native-incall-manager';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 import VoipPushNotification from 'react-native-voip-push-notification';
+import objectUtils from "@utils/object-utils";
 class InitialVideoCall extends Component {
   constructor(props) {
     super(props);
@@ -136,36 +137,7 @@ class InitialVideoCall extends Component {
   renderAcademic = (doctor) => {
     let name = ''
     if (doctor?.name || doctor?.academicDegree) {
-      let academicDegree = ''
-      switch (doctor?.academicDegree) {
-        case 'BS': academicDegree = 'BS. '
-          break;
-        case 'ThS': academicDegree = 'ThS. '
-          break;
-        case 'TS': academicDegree = 'TS. '
-          break;
-        case 'PGS': academicDegree = 'PGS. '
-          break;
-        case 'GS': academicDegree = 'GS. '
-          break;
-        case 'BSCKI': academicDegree = 'BSCKI. '
-          break;
-        case 'BSCKII': academicDegree = 'BSCKII. '
-          break;
-        case 'GSTS': academicDegree = 'GS.TS. '
-          break;
-        case 'PGSTS': academicDegree = 'PGS.TS. '
-          break;
-        case 'ThsBS': academicDegree = 'ThS.BS. '
-          break;
-        case 'ThsBSCKII': academicDegree = 'ThS.BSCKII. '
-          break;
-        case 'TSBS': academicDegree = 'TS.BS. '
-          break;
-        default: academicDegree = ''
-          break;
-      }
-      name = academicDegree + doctor.name
+      name = objectUtils.renderAcademic(doctor?.academicDegree) + doctor.name
     }
     return name
   }
