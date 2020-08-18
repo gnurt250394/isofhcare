@@ -17,26 +17,29 @@ const BmiAndBsa = () => {
   const [dataBsa, setDataBsa] = useState([]);
   const [data, setData] = useState([]);
   const [timeCharts, setTimeCharts] = useState([]);
-  const [page, setPage] = useState([]);
-  const [size, setSize] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(20);
   const [nearestData, setNearestData] = useState({});
+
   const onBackdropPress = () => {
     setIsVisible(false);
   };
-
+  const splitDate = date => {
+    var tzOffset = '+07:00';
+    let date2 = new Date(date.split('+')[0] + tzOffset);
+    return date2;
+  };
   const getHeightWeight = async () => {
     try {
-      let res = await monitoringProvider.getHeightWeight(0, 20);
+      let res = await monitoringProvider.getHeightWeight(page, size);
 
       if (res?.content?.length) {
         setData(res.content);
         let resultBmi = res?.content.reduce((r, a) => {
           r['values'] = r['values'] || [];
-          r['values'].push({
+          r['values'].unshift({
             y: a.bmi,
-            marker: `${a.date.toDateObject().format('dd/MM/yyyy')}\n BMI: ${
-              a.bmi
-            }`,
+            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BMI: ${a.bmi}`,
           });
           r.label = 'Chỉ số khối (BMI)';
           r.color = '#FFAAAA';
@@ -46,18 +49,19 @@ const BmiAndBsa = () => {
           r['values'] = r['values'] || [];
           r['values'].push({
             y: a.bsa,
-            marker: `${a.date.toDateObject().format('dd/MM/yyyy')}\n BMI: ${
-              a.bsa
-            }`,
+            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BMI: ${a.bsa}`,
           });
           r.label = 'Chỉ số diện tích bề mặt cơ thể (BSA)';
           r.color = '#D6D6D6';
           return r;
         }, Object.create(null));
-        let time = res.content.map(e => e.date.toDateObject().format('dd/MM'));
+        let time = res.content
+          .map(e => splitDate(e.date).format('dd/MM'))
+          .reverse();
         setTimeCharts(time);
         setDataBmi([resultBmi]);
         setDataBsa([resultBsa]);
+
         setNearestData(res.content[0]);
       }
     } catch (error) {}
@@ -66,7 +70,6 @@ const BmiAndBsa = () => {
     getHeightWeight();
   }, [page]);
   const onCreateSuccess = data => {
-    console.log('data: ', data);
     getHeightWeight();
   };
   const onLoadMore = () => {
@@ -79,39 +82,48 @@ const BmiAndBsa = () => {
     let params = {
       label: '',
       status: '',
+      color: '',
     };
     if (bmi > 0 && bmi < 16) {
       params.label = 'Gầy độ III';
+      params.color = '#7F121F';
       params.status =
         'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 16 && bmi < 17) {
       params.label = 'Gầy độ II';
+      params.color = '#7F121F';
       params.status =
         'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 17 && bmi < 18.5) {
       params.label = 'Gầy độ I';
+      params.color = '#FF8A00';
       params.status =
         'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 18.5 && bmi < 25) {
       params.label = 'Chỉ số BMI bình thường';
+      params.color = '#3161AD';
       params.status =
         'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 25 && bmi < 30) {
       params.label = 'Thừa cân';
+      params.color = '#FF8A00';
       params.status =
         'Bạn cần phải điều chỉnh chế độ ăn hợp lí, theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 30 && bmi < 35) {
       params.label = 'Béo phì độ I';
+      params.color = '#FF8A00';
       params.status =
-        'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
+        'Bạn cần phải điều chỉnh chế độ ăn hợp lí, theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi >= 35 && bmi < 40) {
       params.label = 'Béo phì độ II';
+      params.color = '#7F121F';
       params.status =
-        'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
+        'Bạn cần phải điều chỉnh chế độ ăn hợp lí, theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (bmi > 40) {
       params.label = 'Béo phì độ III';
+      params.color = '#7F121F';
       params.status =
-        'Bạn nên bổ sung dinh dưỡng để tăng chuyển hóa trao đổi chất hoặc đi khám tại CSYT gần nhất.';
+        'Bạn cần phải điều chỉnh chế độ ăn hợp lí, theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     }
     return params;
   };
@@ -132,7 +144,7 @@ const BmiAndBsa = () => {
               />
             </View>
             <View style={styles.conntainerTextPoint}>
-              <Text style={styles.txtPoint}>{nearestData?.height||0} cm</Text>
+              <Text style={styles.txtPoint}>{nearestData?.height || 0} cm</Text>
               <Text>Chiều cao</Text>
             </View>
           </View>
@@ -144,7 +156,7 @@ const BmiAndBsa = () => {
               />
             </View>
             <View style={styles.conntainerTextPoint}>
-              <Text style={styles.txtPoint}>{nearestData?.weight||0} kg</Text>
+              <Text style={styles.txtPoint}>{nearestData?.weight || 0} kg</Text>
               <Text>Cân nặng</Text>
             </View>
           </View>
@@ -160,7 +172,11 @@ const BmiAndBsa = () => {
           </View>
         </View>
         {renderStatus().label ? (
-          <View style={styles.containerDescription}>
+          <View
+            style={[
+              styles.containerDescription,
+              {backgroundColor: renderStatus().color},
+            ]}>
             <Text style={styles.txtTitleDescription}>
               {renderStatus().label}
             </Text>

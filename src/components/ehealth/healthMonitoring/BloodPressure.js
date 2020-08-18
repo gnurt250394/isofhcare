@@ -21,7 +21,11 @@ const BloodPressure = () => {
   const onBackdropPress = () => {
     setIsVisible(false);
   };
-
+  const splitDate = date => {
+    var tzOffset = '+07:00';
+    let date2 = new Date(date.split('+')[0] + tzOffset);
+    return date2;
+  };
   const groupData = (data, key) => {
     data.map((e, i) => {});
   };
@@ -39,19 +43,23 @@ const BloodPressure = () => {
       if (res?.content?.length) {
         let group = [];
 
-        let dataSystolic = res.content.map(item => ({
-          y: item.systolic,
-          marker: `${item.date
-            .toDateObject()
-            .format('dd/MM/yyyy')}\n Tâm thu: ${item.systolic}`,
-        }));
+        let dataSystolic = res.content
+          .map(item => ({
+            y: item.systolic,
+            marker: `${splitDate(item.date).format('dd/MM/yyyy')}\n Tâm thu: ${
+              item.systolic
+            }`,
+          }))
+          .reverse();
 
-        let dataDiastolic = res.content.map(item => ({
-          y: item.diastolic,
-          marker: `${item.date
-            .toDateObject()
-            .format('dd/MM/yyyy')}\n Tâm trương: ${item.diastolic}`,
-        }));
+        let dataDiastolic = res.content
+          .map(item => ({
+            y: item.diastolic,
+            marker: `${splitDate(item.date).format(
+              'dd/MM/yyyy',
+            )}\n Tâm trương: ${item.diastolic}`,
+          }))
+          .reverse();
         group.push({
           values: dataSystolic,
           label: 'HA tâm thu',
@@ -62,7 +70,10 @@ const BloodPressure = () => {
           label: 'HA tâm trương',
           color: '#FFAAAA',
         });
-        let time = res.content.map(e => e.date.toDateObject().format('dd/MM'));
+        let time = res.content
+          .map(e => splitDate(e.date).format('dd/MM'))
+          .reverse();
+        
         setTimeCharts(time);
         setData(group);
         setNearestData(res.content[0]);
@@ -70,7 +81,7 @@ const BloodPressure = () => {
     } catch (error) {}
   };
   const onCreateSuccess = data => {
-    console.log('data: ', data);
+    
     getBloodPressure();
   };
   useEffect(() => {
@@ -82,9 +93,11 @@ const BloodPressure = () => {
     let params = {
       label: '',
       status: '',
+      color :'#7F121F'
     };
     if (diastolic < 60 && systolic < 90) {
       params.label = 'Huyết áp thấp';
+      params.color = '#FF8A00';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
@@ -94,6 +107,7 @@ const BloodPressure = () => {
       systolic < 80
     ) {
       params.label = 'Huyết áp bình thường';
+      params.color = '#3161AD';
       params.status =
         'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
@@ -103,6 +117,7 @@ const BloodPressure = () => {
       systolic < 90
     ) {
       params.label = 'Tiền cao huyết áp ';
+      params.color = '#FF8A00';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
@@ -112,6 +127,7 @@ const BloodPressure = () => {
       systolic < 100
     ) {
       params.label = 'Cao huyết áp cấp độ 1';
+      params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
@@ -121,10 +137,12 @@ const BloodPressure = () => {
       systolic < 110
     ) {
       params.label = 'Cao huyết áp cấp độ 2';
+      params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (diastolic >= 180 && systolic >= 110) {
       params.label = 'Cao huyết áp cấp độ 3';
+      params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     }
@@ -147,7 +165,9 @@ const BloodPressure = () => {
               />
             </View>
             <View style={styles.conntainerTextPoint}>
-              <Text style={styles.txtPoint}>{nearestData?.systolic||0} mmHg</Text>
+              <Text style={styles.txtPoint}>
+                {nearestData?.systolic || 0} mmHg
+              </Text>
               <Text>Tâm thu</Text>
             </View>
           </View>
@@ -159,7 +179,9 @@ const BloodPressure = () => {
               />
             </View>
             <View style={styles.conntainerTextPoint}>
-              <Text style={styles.txtPoint}>{nearestData?.diastolic||0} mmHg</Text>
+              <Text style={styles.txtPoint}>
+                {nearestData?.diastolic || 0} mmHg
+              </Text>
               <Text>Tâm trương</Text>
             </View>
           </View>
@@ -175,7 +197,7 @@ const BloodPressure = () => {
           </View>
         </View>
         {renderStatus().label ? (
-          <View style={styles.containerDescription}>
+          <View style={[styles.containerDescription,{backgroundColor:renderStatus().color}]}>
             <Text style={styles.txtTitleDescription}>
               {renderStatus().label}
             </Text>

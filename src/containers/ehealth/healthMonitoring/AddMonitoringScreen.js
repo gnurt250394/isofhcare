@@ -56,6 +56,14 @@ const AddMonitoringScreen = ({
   };
   const createHeightWeight = async () => {
     try {
+      if (value < 0 || value > 250) {
+        snackbar.show('Chiều cao phải nằm trong khoảng từ 1 đến 250', 'danger');
+        return;
+      }
+      if (value2 < 0 || value2 > 500) {
+        snackbar.show('Cân nặng phải nằm trong khoảng từ 1 đến 500', 'danger');
+        return;
+      }
       let res = await monitoringProvider.createHeightWeight(
         date,
         value,
@@ -67,7 +75,7 @@ const AddMonitoringScreen = ({
         snackbar.show('Tạo ' + label + ' thành công', 'success');
       }
     } catch (error) {
-      console.log('error: ', error);
+      snackbar.show('Tạo ' + label + ' thất bại', 'danger');
     }
   };
   const createBodyTemperature = async () => {
@@ -80,6 +88,10 @@ const AddMonitoringScreen = ({
         time.getMinutes(),
       );
       day.setHours(day.getHours() + 7);
+      if (value2 < 0 || value2 > 45) {
+        snackbar.show('Nhiệt độ phải trong khoảng từ 1 đến 45', 'danger');
+        return;
+      }
       let res = await monitoringProvider.createBodyTemperature(day, value2);
       if (res) {
         onCreateSuccess(res);
@@ -87,11 +99,25 @@ const AddMonitoringScreen = ({
         snackbar.show('Tạo ' + label + ' thành công', 'success');
       }
     } catch (error) {
-      console.log('error: ', error);
+      snackbar.show('Tạo ' + label + ' thất bại', 'danger');
     }
   };
   const createBloodPressure = async () => {
     try {
+      if (value <= 0 || value > 200) {
+        snackbar.show(
+          'Huyết áp tâm thu chỉ nằm trong khoảng từ 1 đến 200',
+          'danger',
+        );
+        return;
+      }
+      if (value2 <= 0 || value2 > 150) {
+        snackbar.show(
+          'Huyết áp tâm trương chỉ nằm trong khoảng từ 1 đến 150',
+          'danger',
+        );
+        return;
+      }
       let res = await monitoringProvider.createBloodPressure(
         date,
         value,
@@ -103,7 +129,7 @@ const AddMonitoringScreen = ({
         snackbar.show('Tạo ' + label + ' thành công', 'success');
       }
     } catch (error) {
-      console.log('error: ', error);
+      snackbar.show('Tạo ' + label + ' thất bại', 'danger');
     }
   };
   const onCreate = () => {
@@ -119,7 +145,6 @@ const AddMonitoringScreen = ({
       snackbar.show('Vui lòng nhập ' + label3, 'danger');
       return;
     }
-    console.log('type: ', type);
     switch (type) {
       case 'TEMP':
         createBodyTemperature();
@@ -234,7 +259,7 @@ const AddMonitoringScreen = ({
                     ? 'Nhập nhiệt độ'
                     : ''
                 }
-                maxLength={3}
+                maxLength={type == 'BMI' ? 4 : 3}
                 value={value2}
                 onChangeText={setValue2}
               />

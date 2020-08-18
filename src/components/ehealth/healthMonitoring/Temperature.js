@@ -21,7 +21,11 @@ const Temperature = () => {
   const onBackdropPress = () => {
     setIsVisible(false);
   };
-
+  const splitDate = date => {
+    var tzOffset = '+07:00';
+    let date2 = new Date(date.split('+')[0] + tzOffset);
+    return date2;
+  };
   const getBodyTemperature = async () => {
     try {
       let res = await monitoringProvider.getBodyTemperature(0, 20);
@@ -29,19 +33,23 @@ const Temperature = () => {
       if (res?.content?.length) {
         let group = [];
 
-        let dataBodyTemperature = res.content.map(item => ({
-          y: item.bodyTemperature,
-          marker: `${item.date
-            .toDateObject()
-            .format('HH:mm, dd/MM/yyyy')}\n Nhiệt độ: ${item.bodyTemperature} °C`,
-        }));
+        let dataBodyTemperature = res.content
+          .map(item => ({
+            y: item.bodyTemperature,
+            marker: `${splitDate(item.date).format(
+              'HH:mm, dd/MM/yyyy',
+            )}\n Nhiệt độ: ${item.bodyTemperature} °C`,
+          }))
+          .reverse();
 
         group.push({
           values: dataBodyTemperature,
           label: 'Nhiệt độ',
           color: '#D6D6D6',
         });
-        let time = res.content.map(e => e.date.toDateObject().format('dd/MM'));
+        let time = res.content
+          .map(e => splitDate(e.date).format('dd/MM'))
+          .reverse();
         setTimeCharts(time);
         setData(group);
         setNearestData(res.content[0]);
@@ -59,28 +67,35 @@ const Temperature = () => {
     let params = {
       label: '',
       status: '',
+      color: '',
     };
     if (temp < 36) {
       params.label = 'Hạ thân nhiệt';
+      params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (temp >= 36 && temp < 37.5) {
       params.label = 'Nhiệt độ bình thường';
+      params.color = '#3161AD';
       params.status =
         'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (temp >= 38 && temp < 39) {
       params.label = 'Sốt nhẹ';
+      params.color = '#FF8A00';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (temp >= 39 && temp < 40) {
       params.label = 'Sốt vừa';
+      params.color = '#FF8A00';
       params.status =
         'Hãy lấy thân nhiệt mỗi 1-2h khi cơ thể còn sốt cao. Uống thuốc hạ sốt theo đơn của bác sĩ.';
     } else if (temp >= 40 && temp < 41.1) {
       params.label = 'Sốt cao';
+      params.color = '#7F121F';
       params.status = 'Cần đến khám ngay tại cơ sở y tế gần nhất.	';
     } else if (temp > 41.1) {
       params.label = 'Sốt kịch phát';
+      params.color = '#7F121F';
       params.status = 'Cần đến khám ngay tại cơ sở y tế gần nhất.	';
     }
     return params;
@@ -103,7 +118,7 @@ const Temperature = () => {
             </View>
             <View style={styles.conntainerTextPoint}>
               <Text style={styles.txtPoint}>
-                {nearestData?.bodyTemperature||0} °C
+                {nearestData?.bodyTemperature || 0} °C
               </Text>
               <Text>Nhiệt độ</Text>
             </View>
@@ -120,7 +135,7 @@ const Temperature = () => {
           </View>
         </View>
         {renderStatus().label ? (
-          <View style={styles.containerDescription}>
+          <View style={[styles.containerDescription,{backgroundColor:renderStatus().color}]}>
             <Text style={styles.txtTitleDescription}>
               {renderStatus().label}
             </Text>
