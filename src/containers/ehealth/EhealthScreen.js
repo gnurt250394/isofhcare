@@ -201,8 +201,8 @@ class EhealthScreen extends Component {
             <View style={styles.groupName}>
               <Text style={styles.txtName}>{userApp?.currentUser?.name}</Text>
               <Text>
-                ({userApp?.currentUser?.dob?.toDateObject().format('dd/MM/yyyy')}{' '}
-                - {userApp?.currentUser?.dob?.toDateObject().getAge()} tuổi)
+                ({userApp?.currentUser?.dob?.toDateObject('-').format('dd/MM/yyyy')}{' '}
+                - {userApp?.currentUser?.dob?.toDateObject('-').getAge()} tuổi)
               </Text>
             </View>
             <View style={styles.lineBettwen} />
