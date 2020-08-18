@@ -26,6 +26,7 @@ import constants from '@resources/strings';
 import Barcode from 'mainam-react-native-barcode';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 import CallManager from '@components/community/CallManager';
+import objectUtils from '@utils/object-utils';
 class DetailHistoryBookingScreen extends Component {
   constructor(props) {
     super(props);
@@ -327,7 +328,7 @@ class DetailHistoryBookingScreen extends Component {
   getTimeOnline = () => {
     if (
       this.state.booking.timeDiff < 0 &&
-      this.state.booking.timeDiff > -30 * 60 * 1000
+      this.state.booking.timeDiff > -this.state.booking.blockTime * 60 * 1000
     ) {
       return true;
     } else {
@@ -492,8 +493,11 @@ class DetailHistoryBookingScreen extends Component {
                   ) : (
                     <View
                       style={[
-                        styles.buttonBookingCall,
-                        {backgroundColor: '#ffcf99'},
+                        styles.flex,
+                        {
+                          borderLeftColor: '#00000050',
+                          borderLeftWidth: 1,
+                        },
                       ]}>
                       <TouchableOpacity
                         disabled={true}
@@ -529,12 +533,9 @@ class DetailHistoryBookingScreen extends Component {
                     </Text>
                     <View style={styles.viewInfoLocation}>
                       <Text style={styles.txClinic}>
-                        {this.state.booking.doctor &&
-                        this.state.booking.doctor.academicDegree
-                          ? this.renderAcademic(
-                              this.state.booking.doctor.academicDegree,
-                            ) + '. '
-                          : ''}
+                        {objectUtils.renderAcademic(
+                          this.state.booking.doctor.academicDegree,
+                        )}
                         {this.state.booking.doctor.name}
                       </Text>
                     </View>

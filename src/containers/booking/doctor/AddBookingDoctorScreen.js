@@ -25,6 +25,7 @@ import StarRating from 'react-native-star-rating';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ViewHeader from '@components/booking/doctor/ViewHeader';
 import profileProvider from '@data-access/profile-provider'
+import objectUtils from '@utils/object-utils';
 
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
@@ -282,7 +283,7 @@ class AddBookingDoctorScreen extends Component {
                         detailSchedule.room,
                         idUser,
                         img,
-                        this.state.isOnline
+                        detailSchedule.blockTime
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
@@ -583,7 +584,7 @@ class AddBookingDoctorScreen extends Component {
                         }
                         <ViewHeader
                             source={require("@images/new/booking/ic_serviceType.png")}
-                            name={profileDoctor ? this.renderAcademic(profileDoctor.academicDegree) + profileDoctor.name : null}
+                            name={profileDoctor ? objectUtils.renderAcademic(profileDoctor.academicDegree) + profileDoctor.name : null}
                             subName={''}
                             label={'Bác sĩ'}
                         />

@@ -11,6 +11,7 @@ import snackbar from '@utils/snackbar-utils';
 import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux';
 import NavigationService from '@navigators/NavigationService'
+import objectUtils from '@utils/object-utils';
 class ItemDoctor extends Component {
     constructor(props) {
         super(props);
@@ -155,7 +156,7 @@ class ItemDoctor extends Component {
                                 }}>{item.appointments ? item.appointments + ' lượt ĐK' : ''} </Text>
                             </View>
                             <View style={styles.paddingLeft5}>
-                                <Text style={styles.txtNameDoctor}>{item.academicDegree ? this.renderAcademic(item.academicDegree) + '. ' : ''}{item.name}</Text>
+                                <Text style={styles.txtNameDoctor}>{objectUtils.renderAcademic(item.academicDegree)}{item.name}</Text>
                                 <View style={styles.flexRow}>
                                     {item.specializations && item.specializations.length > 0 ?
                                         item.specializations.slice(0, 2).map((e, i) => {

@@ -13,6 +13,7 @@ import voucherProvider from '@data-access/voucher-provider'
 
 import ButtonPayment from '@components/booking/ButtonPayment';
 import ButtonSelectPaymentMethod from '@components/booking/ButtonSelectPaymentMethod';
+import objectUtils from '@utils/object-utils';
 
 class ConfirmBookingDoctorScreen extends Component {
     constructor(props) {
@@ -260,7 +261,7 @@ class ConfirmBookingDoctorScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bác sĩ:</Text>
-                                <Text style={styles.text}>{this.renderAcademic(booking.doctor.academicDegree)}{booking.doctor.name}</Text>
+                                <Text style={styles.text}>{objectUtils.renderAcademic(booking.doctor.academicDegree)}{booking.doctor.name}</Text>
                             </View>
                             <View style={styles.between} />
                             <View style={styles.row}>

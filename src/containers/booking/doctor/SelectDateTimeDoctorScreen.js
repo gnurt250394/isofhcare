@@ -13,6 +13,7 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import objectUtils from '@utils/object-utils';
 
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
@@ -694,7 +695,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         keyboardDismissMode="on-drag">
 
                         <Card style={styles.containerCalendar}>
-                            <Text style={styles.txtTitleHeader}>{this.renderAcademic(item.academicDegree)}{item?.name}</Text>
+                            <Text style={styles.txtTitleHeader}>{objectUtils.renderAcademic(item?.academicDegree)}{item?.name}</Text>
                             <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
                             <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
@@ -731,7 +732,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>{this.renderAcademic(item.academicDegree)}{item?.name} không có lịch làm việc trong thời gian này</Text>
+                                <Text style={styles.txtHelp}>{objectUtils.renderAcademic(item.academicDegree)}{item?.name} không có lịch làm việc trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>

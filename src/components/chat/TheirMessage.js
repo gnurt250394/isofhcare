@@ -15,6 +15,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import {connect} from 'react-redux';
 import constants from '@resources/strings';
 import {withNavigation} from 'react-navigation';
+import objectUtils from '@utils/object-utils';
 
 class TheirMessage extends React.Component {
   constructor(props) {
@@ -59,7 +60,7 @@ class TheirMessage extends React.Component {
     if (info?.name) {
       name = info?.name;
     }
-    
+
     return name
       .split?.(' ')
       .pop()
@@ -69,8 +70,7 @@ class TheirMessage extends React.Component {
   };
   render() {
     let {isShowProfile, message, chatProfile, info} = this.props;
-    
-    
+
     if (!message)
       message = {
         message: '',
@@ -124,7 +124,8 @@ class TheirMessage extends React.Component {
             ]}>
             {!isShowProfile && info?.id == message.userId ? (
               <Text style={styles.txtNameProfile}>
-                {info?.academicDegree}. {info?.name}
+                {objectUtils.renderAcademic(info?.academicDegree)}
+                {info?.name}
               </Text>
             ) : null}
             {message.images.length ? (

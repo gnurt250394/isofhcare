@@ -23,6 +23,7 @@ import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
+import objectUtils from "@utils/object-utils";
 
 const dataRate = [
   { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
@@ -319,7 +320,7 @@ class DetailsDoctorScreen extends Component {
                   style={styles.imgDefault}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree ? this.renderAcademic(profileDoctor.academicDegree) + '. ' : ''}{profileDoctor.name}</Text>
+                  <Text style={styles.nameDoctor}>{objectUtils.renderAcademic(profileDoctor?.academicDegree)}{profileDoctor.name}</Text>
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>

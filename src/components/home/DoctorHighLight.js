@@ -4,6 +4,7 @@ import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
 import { useSelector } from 'react-redux'
+import objectUtils from '@utils/object-utils'
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 const DoctorHighLight = memo(({ navigation, refreshing }) => {
@@ -73,7 +74,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
                     />
                 </View>
                 {/* </Card> */}
-                <Text style={styles.txContensDoctor}>{item.academicDegree ? renderAcademic(item.academicDegree) + '. ' : ''}{item.name ? item.name : ""}</Text>
+                <Text style={styles.txContensDoctor}>{objectUtils.renderAcademic(item.academicDegree)}{item.name ? item.name : ""}</Text>
 
             </TouchableOpacity>
         )
