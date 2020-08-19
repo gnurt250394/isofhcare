@@ -274,6 +274,7 @@ const AddMonitoringScreen = ({
         mode={mode}
         isVisible={toggelDatePicker}
         onConfirm={confirmDate}
+        maximumDate={new Date()}
         onCancel={onCancelDate}
         cancelTextIOS={'Hủy bỏ'}
         titleIOS={'Chọn ngày'}
