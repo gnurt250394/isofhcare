@@ -51,7 +51,11 @@ const TestCovid = ({navigation}) => {
       let list = res?.template?.questions;
       res.text = res?.template?.intro;
       res._id = stringUtils.guid();
-      res.user = {_id: 2, avatar: require('@images/new/covid/ic_robot.png')};
+      res.createdAt = new Date();
+      res.user = {
+        _id: 2,
+        avatar: require('@images/new/covid/ic_robot.png'),
+      };
 
       setIsShowContinue(true);
       setData([res]);
@@ -98,6 +102,11 @@ const TestCovid = ({navigation}) => {
           user: {_id: 1},
           ...e,
         }));
+      let obj = listAnswer.find(e => e.type == 'DEFAULT');
+      if (dataAnswer.length == 0 && obj) {
+        dataAnswer.push(obj);
+      }
+      
       listFinal.current.push({
         id: currentQuestion?.id,
         answers: dataAnswer.map(e => ({
@@ -105,7 +114,7 @@ const TestCovid = ({navigation}) => {
         })),
       });
       let direction = dataAnswer.find(e => e.directQuestion);
-      if (dataAnswer.length) {
+      if (dataAnswer.length && !obj) {
         setData(state => GiftedChat.append(state, dataAnswer));
       } else {
         setData(state =>
@@ -180,8 +189,6 @@ const TestCovid = ({navigation}) => {
         listQuestionAll.current = listQuestionAll.current.slice(i);
         obj = listQuestionAll.current.shift();
       }
-      
-      
       if (!obj) {
         createAnswer();
         return;
@@ -290,6 +297,8 @@ const TestCovid = ({navigation}) => {
             ]}>
             {listAnswer?.length
               ? listAnswer.map((e, i) => {
+                  
+                  if (e.type == 'DEFAULT') return null;
                   if (typeof e?.content?.value == 'string') {
                     return (
                       <TouchableOpacity

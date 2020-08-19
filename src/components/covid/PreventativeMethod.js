@@ -7,7 +7,7 @@ const PreventativeMethod = () => {
     <View style={styles.container}>
       <Text style={styles.txtHeader}>BIỆN PHÁP NGĂN NGỪA</Text>
       <Text style={styles.txtContent}>
-        Hiện tại, chưa có vắc xin ngăn ngừa COVID-19. Tránh tiếp xúc với virus
+        Hiện tại, chưa có vắc xin ngăn ngừa COVID-19 tại Việt Nam. Tránh tiếp xúc với virus
         là cách tốt nhất để ngăn ngừa lây nhiễm. Các biện pháp tiêu chuẩn để
         ngăn chặn sự lây lan của virus đường hô hấp, bao gồm:
       </Text>
