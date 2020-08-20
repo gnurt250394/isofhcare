@@ -114,32 +114,8 @@ const BloodPressure = () => {
       status: '',
       color: '#7F121F',
     };
-    if (diastolic < 60 || systolic < 90) {
-      params.label = 'Huyết áp thấp';
-      params.color = '#FF8A00';
-      params.status =
-        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (
-      (systolic >= 90 && systolic < 120) &&
-      (diastolic >= 60 && diastolic < 80)
-    ) {
-      params.label = 'Huyết áp bình thường';
-      params.color = '#3161AD';
-      params.status =
-        'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (
-      (systolic >= 120 && systolic < 140) ||
-      (diastolic >= 80 && diastolic < 90)
-    ) {
-      params.label = 'Tiền cao huyết áp ';
-      params.color = '#FF8A00';
-      params.status =
-        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (
-      (systolic >= 140 && systolic < 160) ||
-      (diastolic >= 90 && diastolic < 100)
-    ) {
-      params.label = 'Cao huyết áp cấp độ 1';
+    if (systolic >= 180 || diastolic >= 110) {
+      params.label = 'Cao huyết áp cấp độ 3';
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
@@ -151,11 +127,36 @@ const BloodPressure = () => {
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (systolic >= 180 && diastolic >= 110) {
-      params.label = 'Cao huyết áp cấp độ 3';
+    } else if (
+      (systolic >= 140 && systolic < 160) ||
+      (diastolic >= 90 && diastolic < 100)
+    ) {
+      params.label = 'Cao huyết áp cấp độ 1';
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
+    } else if (
+      (systolic >= 120 && systolic < 140) ||
+      (diastolic >= 80 && diastolic < 90)
+    ) {
+      params.label = 'Tiền cao huyết áp ';
+      params.color = '#FF8A00';
+      params.status =
+        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
+    } else if (diastolic < 60 || systolic < 90) {
+      params.label = 'Huyết áp thấp';
+      params.color = '#FF8A00';
+      params.status =
+        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
+    } else if (
+      systolic >= 90 &&
+      systolic < 120 &&
+      (diastolic >= 60 && diastolic < 80)
+    ) {
+      params.label = 'Huyết áp bình thường';
+      params.color = '#3161AD';
+      params.status =
+        'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else {
       params.label = 'Cao huyết áp cấp độ 3';
       params.color = '#7F121F';
