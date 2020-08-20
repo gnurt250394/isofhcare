@@ -103,10 +103,13 @@ const TestCovid = ({navigation}) => {
           ...e,
         }));
       let obj = listAnswer.find(e => e.type == 'DEFAULT');
+      console.log('obj: ', obj);
+      console.log('dataAnswer: ', dataAnswer);
       if (dataAnswer.length == 0 && obj) {
         dataAnswer.push(obj);
       }
-      
+      console.log('dataAnswer: ', dataAnswer);
+
       listFinal.current.push({
         id: currentQuestion?.id,
         answers: dataAnswer.map(e => ({
@@ -114,7 +117,7 @@ const TestCovid = ({navigation}) => {
         })),
       });
       let direction = dataAnswer.find(e => e.directQuestion);
-      if (dataAnswer.length && !obj) {
+      if (dataAnswer.length && !dataAnswer.find(e => e.type == 'DEFAULT')) {
         setData(state => GiftedChat.append(state, dataAnswer));
       } else {
         setData(state =>
@@ -297,7 +300,6 @@ const TestCovid = ({navigation}) => {
             ]}>
             {listAnswer?.length
               ? listAnswer.map((e, i) => {
-                  
                   if (e.type == 'DEFAULT') return null;
                   if (typeof e?.content?.value == 'string') {
                     return (
