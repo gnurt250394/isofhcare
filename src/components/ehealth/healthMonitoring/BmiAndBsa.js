@@ -14,11 +14,12 @@ import monitoringProvider from '@data-access/monitoring-provider';
 const BmiAndBsa = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [dataBmi, setDataBmi] = useState([]);
+  const [listInit, setListInit] = useState([]);
   const [dataBsa, setDataBsa] = useState([]);
   const [data, setData] = useState([]);
   const [timeCharts, setTimeCharts] = useState([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(20);
+  const [size, setSize] = useState(9);
   const [nearestData, setNearestData] = useState({});
 
   const onBackdropPress = () => {
@@ -34,39 +35,56 @@ const BmiAndBsa = () => {
       let res = await monitoringProvider.getHeightWeight(page, size);
 
       if (res?.content?.length) {
-        setData(res.content);
-        let resultBmi = res?.content.reduce((r, a) => {
-          r['values'] = r['values'] || [];
-          r['values'].unshift({
-            y: a.bmi,
-            marker: `${splitDate(a.date).format(
-              'dd/MM/yyyy',
-            )}\n BMI: ${parseFloat(a.bmi).toFixed(1)}`,
-          });
-          r.label = 'Chỉ số khối (BMI)';
-          r.color = '#FFAAAA';
-          return r;
-        }, Object.create(null));
-        let resultBsa = res?.content.reduce((r, a) => {
-          r['values'] = r['values'] || [];
-          r['values'].unshift({
-            y: a.bsa,
-            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BSA: ${parseFloat(a.bsa).toFixed(1)}`,
-          });
-          r.label = 'Chỉ số diện tích bề mặt cơ thể (BSA)';
-          r.color = '#D6D6D6';
-          return r;
-        }, Object.create(null));
-        let time = res.content
-          .map(e => splitDate(e.date).format('dd/MM'))
-          .reverse();
-        setTimeCharts(time);
-        setDataBmi([resultBmi]);
-        setDataBsa([resultBsa]);
-
-        setNearestData(res.content[0]);
+        formatData(res.content);
       }
     } catch (error) {}
+  };
+  useEffect(() => {
+    if (listInit.length) {
+      let resultBmi = listInit.reduce((r, a) => {
+        r['values'] = r['values'] || [];
+        r['values'].unshift({
+          y: a.bmi,
+          marker: `${splitDate(a.date).format(
+            'dd/MM/yyyy',
+          )}\n BMI: ${parseFloat(a.bmi).toFixed(1)}`,
+        });
+        r.label = 'Chỉ số khối (BMI)';
+        r.color = '#FFAAAA';
+        return r;
+      }, Object.create(null));
+      let resultBsa = listInit.reduce((r, a) => {
+        r['values'] = r['values'] || [];
+        r['values'].unshift({
+          y: a.bsa,
+          marker: `${splitDate(a.date).format(
+            'dd/MM/yyyy',
+          )}\n BSA: ${parseFloat(a.bsa).toFixed(1)}`,
+        });
+        r.label = 'Chỉ số diện tích bề mặt cơ thể (BSA)';
+        r.color = '#D6D6D6';
+        return r;
+      }, Object.create(null));
+      let time = listInit
+        .map(e => splitDate(e.date).format('dd/MM'))
+        .reverse();
+      setTimeCharts(time);
+      setDataBmi([resultBmi]);
+      setDataBsa([resultBsa]);
+
+      setNearestData(listInit[0]);
+    }
+  }, [listInit]);
+  const formatData = data => {
+    if (data.length == 0) {
+      setListInit([]);
+    } else {
+      if (page == 0) {
+        setListInit(data);
+      } else {
+        setListInit(state => [...state, ...data]);
+      }
+    }
   };
   useEffect(() => {
     getHeightWeight();
@@ -75,8 +93,8 @@ const BmiAndBsa = () => {
     getHeightWeight();
   };
   const onLoadMore = () => {
-    if ((page + 1) * size >= data.length) {
-      setPage(page => page + 1);
+    if ((page + 1) * size <= listInit.length) {
+      setPage(state => state + 1);
     }
   };
   const renderStatus = () => {
@@ -194,6 +212,7 @@ const BmiAndBsa = () => {
               time={timeCharts}
               data={dataBmi}
               loadMore={onLoadMore}
+              page={page}
             />
           </View>
         ) : null}
@@ -204,6 +223,7 @@ const BmiAndBsa = () => {
               time={timeCharts}
               data={dataBsa}
               loadMore={onLoadMore}
+              page={page}
             />
           </View>
         ) : null}

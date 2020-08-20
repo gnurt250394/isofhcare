@@ -14,9 +14,10 @@ import monitoringProvider from '@data-access/monitoring-provider';
 const Temperature = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [data, setData] = useState([]);
+  const [listInit, setListInit] = useState([]);
   const [timeCharts, setTimeCharts] = useState([]);
-  const [page, setPage] = useState([]);
-  const [size, setSize] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(9);
   const [nearestData, setNearestData] = useState({});
   const onBackdropPress = () => {
     setIsVisible(false);
@@ -28,39 +29,58 @@ const Temperature = () => {
   };
   const getBodyTemperature = async () => {
     try {
-      let res = await monitoringProvider.getBodyTemperature(0, 20);
+      let res = await monitoringProvider.getBodyTemperature(page, size);
 
       if (res?.content?.length) {
-        let group = [];
-
-        let dataBodyTemperature = res.content
-          .map(item => ({
-            y: item.bodyTemperature,
-            marker: `${splitDate(item.date).format(
-              'HH:mm, dd/MM/yyyy',
-            )}\n Nhiệt độ: ${item.bodyTemperature} °C`,
-          }))
-          .reverse();
-
-        group.push({
-          values: dataBodyTemperature,
-          label: 'Nhiệt độ',
-          color: '#D6D6D6',
-        });
-        let time = res.content
-          .map(e => splitDate(e.date).format('dd/MM'))
-          .reverse();
-        setTimeCharts(time);
-        setData(group);
-        setNearestData(res.content[0]);
+        formatData(res.content);
       }
     } catch (error) {}
   };
   useEffect(() => {
+    if (listInit.length) {
+      let group = [];
+
+      let dataBodyTemperature = listInit
+        .map(item => ({
+          y: item.bodyTemperature,
+          marker: `${splitDate(item.date).format(
+            'HH:mm, dd/MM/yyyy',
+          )}\n Nhiệt độ: ${item.bodyTemperature} °C`,
+        }))
+        .reverse();
+
+      group.push({
+        values: dataBodyTemperature,
+        label: 'Nhiệt độ',
+        color: '#D6D6D6',
+      });
+      let time = listInit.map(e => splitDate(e.date).format('dd/MM')).reverse();
+      setTimeCharts(time);
+      setData(group);
+      setNearestData(listInit[0]);
+    }
+  }, [listInit]);
+  const formatData = data => {
+    if (data.length == 0) {
+      setListInit([]);
+    } else {
+      if (page == 0) {
+        setListInit(data);
+      } else {
+        setListInit(state => [...state, ...data]);
+      }
+    }
+  };
+  useEffect(() => {
     getBodyTemperature();
-  }, []);
+  }, [page]);
   const onCreateSuccess = data => {
     getBodyTemperature();
+  };
+  const onLoadMore = () => {
+    if ((page + 1) * size <= listInit.length) {
+      setPage(state => state + 1);
+    }
   };
   const renderStatus = () => {
     let temp = nearestData.bodyTemperature;
@@ -135,7 +155,11 @@ const Temperature = () => {
           </View>
         </View>
         {renderStatus().label ? (
-          <View style={[styles.containerDescription,{backgroundColor:renderStatus().color}]}>
+          <View
+            style={[
+              styles.containerDescription,
+              {backgroundColor: renderStatus().color},
+            ]}>
             <Text style={styles.txtTitleDescription}>
               {renderStatus().label}
             </Text>
@@ -147,7 +171,13 @@ const Temperature = () => {
         {data.length ? (
           <View>
             <Text style={styles.txtLabelChart}>Biểu đồ nhiệt độ</Text>
-            <ChartComponent data={data} time={timeCharts} />
+            <ChartComponent
+              data={data}
+              time={timeCharts}
+              loadMore={onLoadMore}
+              page={page}
+              isLoading={listInit.length >= (page + 1) * size}
+            />
           </View>
         ) : null}
       </View>
