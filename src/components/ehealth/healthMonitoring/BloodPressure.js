@@ -73,7 +73,6 @@ const BloodPressure = () => {
         let time = res.content
           .map(e => splitDate(e.date).format('dd/MM'))
           .reverse();
-        
         setTimeCharts(time);
         setData(group);
         setNearestData(res.content[0]);
@@ -81,7 +80,6 @@ const BloodPressure = () => {
     } catch (error) {}
   };
   const onCreateSuccess = data => {
-    
     getBloodPressure();
   };
   useEffect(() => {
@@ -93,54 +91,51 @@ const BloodPressure = () => {
     let params = {
       label: '',
       status: '',
-      color :'#7F121F'
+      color: '#7F121F',
     };
-    if (diastolic < 60 && systolic < 90) {
+    if (diastolic < 60 || systolic < 90) {
       params.label = 'Huyết áp thấp';
       params.color = '#FF8A00';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
-      diastolic >= 90 &&
-      diastolic < 120 &&
-      systolic >= 60 &&
-      systolic < 80
+      (systolic >= 90 && systolic < 120) ||
+      (diastolic >= 60 && diastolic < 80)
     ) {
       params.label = 'Huyết áp bình thường';
       params.color = '#3161AD';
       params.status =
         'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
-      diastolic >= 120 &&
-      diastolic < 140 &&
-      systolic >= 80 &&
-      systolic < 90
+      (systolic >= 120 && systolic < 140) ||
+      (diastolic >= 80 && diastolic < 90)
     ) {
       params.label = 'Tiền cao huyết áp ';
       params.color = '#FF8A00';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
-      diastolic >= 140 &&
-      diastolic < 160 &&
-      systolic >= 90 &&
-      systolic < 100
+      (systolic >= 140 && systolic < 160) ||
+      (diastolic >= 90 && diastolic < 100)
     ) {
       params.label = 'Cao huyết áp cấp độ 1';
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else if (
-      diastolic >= 160 &&
-      diastolic < 180 &&
-      systolic >= 100 &&
-      systolic < 110
+      (systolic >= 160 && systolic < 180) ||
+      (diastolic >= 100 && diastolic < 110)
     ) {
       params.label = 'Cao huyết áp cấp độ 2';
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (diastolic >= 180 && systolic >= 110) {
+    } else if (systolic >= 180 && diastolic >= 110) {
+      params.label = 'Cao huyết áp cấp độ 3';
+      params.color = '#7F121F';
+      params.status =
+        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
+    } else {
       params.label = 'Cao huyết áp cấp độ 3';
       params.color = '#7F121F';
       params.status =
@@ -197,7 +192,11 @@ const BloodPressure = () => {
           </View>
         </View>
         {renderStatus().label ? (
-          <View style={[styles.containerDescription,{backgroundColor:renderStatus().color}]}>
+          <View
+            style={[
+              styles.containerDescription,
+              {backgroundColor: renderStatus().color},
+            ]}>
             <Text style={styles.txtTitleDescription}>
               {renderStatus().label}
             </Text>

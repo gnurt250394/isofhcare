@@ -221,9 +221,11 @@ const AddMonitoringScreen = ({
                           required: true,
                           checkDate: value => {
                             let now = new Date();
+                            console.log('date.compareDate(now): ', date.compareDate(now));
                             if (
+                              date.compareDate(now) == 0 &&
                               value.replace(':', '') >
-                              now.format('HH:mm').replace(':', '')
+                                now.format('HH:mm').replace(':', '')
                             ) {
                               return false;
                             }
