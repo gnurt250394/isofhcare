@@ -31,8 +31,8 @@ const HealthMonitoringScreen = () => {
               {userApp?.currentUser?.dob?.toDateObject('-').getAge()} tuổi)
             </Text>
           </View>
-          <View style={styles.lineBettwen} />
-          <View style={styles.buttonHealth}>
+          {/* <View style={styles.lineBettwen} /> */}
+          {/* <View style={styles.buttonHealth}>
             <Text
               style={{
                 color: '#00000080',
@@ -40,7 +40,7 @@ const HealthMonitoringScreen = () => {
               Chỉ số sức khoẻ
             </Text>
             <Text style={styles.txtFollow}>Bình thường</Text>
-          </View>
+          </View> */}
         </View>
 
         {/** tab */}

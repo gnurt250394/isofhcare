@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,10 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import monitoringProvider from '@data-access/monitoring-provider';
 import snackbar from '@utils/snackbar-utils';
 
+import Form from 'mainam-react-native-form-validate/Form';
+import Field from 'mainam-react-native-form-validate/Field';
+import TextField from 'mainam-react-native-form-validate/TextField';
+
 const AddMonitoringScreen = ({
   isVisible,
   onBackdropPress,
@@ -28,10 +32,13 @@ const AddMonitoringScreen = ({
 }) => {
   const [toggelDatePicker, setToggelDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [errorValue, setErrorValue] = useState({});
+  const [errorTime, setErrorTime] = useState('');
   const [time, setTime] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [value, setValue] = useState();
   const [value2, setValue2] = useState();
+  const form = useRef();
   const onnHideModal = () => {
     onBackdropPress();
     setDate(new Date());
@@ -56,14 +63,6 @@ const AddMonitoringScreen = ({
   };
   const createHeightWeight = async () => {
     try {
-      if (value < 0 || value > 250) {
-        snackbar.show('Chiều cao phải nằm trong khoảng từ 1 đến 250', 'danger');
-        return;
-      }
-      if (value2 < 0 || value2 > 500) {
-        snackbar.show('Cân nặng phải nằm trong khoảng từ 1 đến 500', 'danger');
-        return;
-      }
       let res = await monitoringProvider.createHeightWeight(
         date,
         value,
@@ -88,10 +87,6 @@ const AddMonitoringScreen = ({
         time.getMinutes(),
       );
       day.setHours(day.getHours() + 7);
-      if (value2 < 0 || value2 > 45) {
-        snackbar.show('Nhiệt độ phải trong khoảng từ 1 đến 45', 'danger');
-        return;
-      }
       let res = await monitoringProvider.createBodyTemperature(day, value2);
       if (res) {
         onCreateSuccess(res);
@@ -104,24 +99,10 @@ const AddMonitoringScreen = ({
   };
   const createBloodPressure = async () => {
     try {
-      if (value <= 0 || value > 200) {
-        snackbar.show(
-          'Huyết áp tâm thu chỉ nằm trong khoảng từ 1 đến 200',
-          'danger',
-        );
-        return;
-      }
-      if (value2 <= 0 || value2 > 150) {
-        snackbar.show(
-          'Huyết áp tâm trương chỉ nằm trong khoảng từ 1 đến 150',
-          'danger',
-        );
-        return;
-      }
       let res = await monitoringProvider.createBloodPressure(
         date,
-        value,
         value2,
+        value,
       );
       if (res) {
         onCreateSuccess(res);
@@ -133,16 +114,7 @@ const AddMonitoringScreen = ({
     }
   };
   const onCreate = () => {
-    if (!date) {
-      snackbar.show('Vui lòng chọn ngày', 'danger');
-      return;
-    }
-    if (!value && type != 'TEMP') {
-      snackbar.show('Vui lòng nhập ' + label2, 'danger');
-      return;
-    }
-    if (!value2) {
-      snackbar.show('Vui lòng nhập ' + label3, 'danger');
+    if (!form.current.isValid()) {
       return;
     }
     switch (type) {
@@ -189,81 +161,240 @@ const AddMonitoringScreen = ({
               </TouchableOpacity>
             </View>
             <Text style={styles.txtSubLabel}>Nhập chỉ số hiện tại của bạn</Text>
-            <View>
-              <Text style={styles.txtLabel2}>Ngày đo</Text>
-              <TouchableOpacity
-                onPress={onShowDatePicker('date')}
-                style={styles.buttonSelectTime}>
-                <Text
-                  style={{
-                    color: !isNaN(date) ? '#000' : '#00000060',
-                  }}>
-                  {!isNaN(date) ? date.format('dd/MM/yyyy') : 'Chọn ngày'}
-                </Text>
-                <ScaledImage
-                  source={require('@images/new/calendar.png')}
-                  height={19}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                paddingVertical: 14,
-              }}>
-              <Text style={styles.txtLabel2}>{label2}</Text>
-              {type == 'TEMP' ? (
-                <TouchableOpacity
-                  onPress={onShowDatePicker('time')}
-                  style={styles.buttonSelectTime}>
-                  <Text
-                    style={{
-                      color: !isNaN(time) ? '#000' : '#00000060',
-                    }}>
-                    {!isNaN(time) ? time.format('HH:mm') : 'Chọn thời gian'}
-                  </Text>
-                  <ScaledImage
-                    source={require('@images/new/calendar.png')}
-                    height={19}
+            <Form ref={form}>
+              <Field>
+                <Field>
+                  <Text style={styles.txtLabel2}>Ngày đo</Text>
+                  <TextField
+                    getComponent={value => {
+                      return (
+                        <TouchableOpacity
+                          onPress={onShowDatePicker('date')}
+                          style={styles.buttonSelectTime}>
+                          <Text
+                            style={{
+                              color: !isNaN(date) ? '#000' : '#00000060',
+                            }}>
+                            {!isNaN(date)
+                              ? date.format('dd/MM/yyyy')
+                              : 'Chọn ngày'}
+                          </Text>
+                          <ScaledImage
+                            source={require('@images/new/calendar.png')}
+                            height={19}
+                          />
+                        </TouchableOpacity>
+                      );
+                    }}
                   />
-                </TouchableOpacity>
-              ) : (
-                <TextInput
-                  keyboardType={type == 'BLOOD' ? 'number-pad' : 'numeric'}
-                  style={styles.buttonSelectTime}
-                  placeholder={
-                    type == 'BLOOD'
-                      ? 'Nhập chỉ số tâm thu'
-                      : type == 'BMI'
-                      ? 'Nhập chiều cao'
-                      : type == 'TEMP'
-                      ? 'Chọn thời gian'
-                      : ''
-                  }
-                  value={value}
-                  maxLength={3}
-                  onChangeText={setValue}
-                />
-              )}
-            </View>
-            <View>
-              <Text style={styles.txtLabel2}>{label3}</Text>
-              <TextInput
-                keyboardType={type == 'BLOOD' ? 'number-pad' : 'numeric'}
-                style={styles.buttonSelectTime}
-                placeholder={
-                  type == 'BLOOD'
-                    ? 'Nhập chỉ số tâm trương'
-                    : type == 'BMI'
-                    ? 'Nhập cân nặng'
-                    : type == 'TEMP'
-                    ? 'Nhập nhiệt độ'
-                    : ''
-                }
-                maxLength={type == 'BMI' ? 4 : 3}
-                value={value2}
-                onChangeText={setValue2}
-              />
-            </View>
+                </Field>
+                <Field
+                  style={{
+                    paddingVertical: 14,
+                  }}>
+                  <Text style={styles.txtLabel2}>{label2}</Text>
+                  {type == 'TEMP' ? (
+                    <TextField
+                      getComponent={() => {
+                        return (
+                          <TouchableOpacity
+                            onPress={onShowDatePicker('time')}
+                            style={styles.buttonSelectTime}>
+                            <Text
+                              style={{
+                                color: !isNaN(time) ? '#000' : '#00000060',
+                              }}>
+                              {!isNaN(time)
+                                ? time.format('HH:mm')
+                                : 'Chọn thời gian'}
+                            </Text>
+                            <ScaledImage
+                              source={require('@images/new/calendar.png')}
+                              height={19}
+                            />
+                          </TouchableOpacity>
+                        );
+                      }}
+                      hideError={true}
+                      validate={{
+                        rules: {
+                          required: true,
+                          checkDate: value => {
+                            let now = new Date();
+                            if (
+                              value.replace(':', '') >
+                              now.format('HH:mm').replace(':', '')
+                            ) {
+                              return false;
+                            }
+                            return true;
+                          },
+                        },
+                        messages: {
+                          required: 'Vui lòng chọn thời gian',
+                          checkDate:
+                            'Giờ đo không được lớn hơn thời gian hiện tại.',
+                        },
+                      }}
+                      onValidate={(valid, messages) => {
+                        console.log('messages: ', messages);
+                        console.log('valid: ', valid);
+                        if (valid) {
+                          setErrorTime('');
+                        } else {
+                          setErrorTime(messages);
+                        }
+                      }}
+                      value={time.format('HH:mm')}
+                    />
+                  ) : (
+                    <TextField
+                      hideError={true}
+                      validate={{
+                        rules: {
+                          required: true,
+                          checkLength: value => {
+                            let max = 0,
+                              min = 0;
+                            if (type == 'BMI') {
+                              max = 250;
+                              min = 0;
+                            } else if (type == 'BLOOD') {
+                              max = 200;
+                              min = 0;
+                            }
+
+                            if (value <= min || value > max) {
+                              return false;
+                            } else {
+                              return true;
+                            }
+                          },
+                        },
+                        messages: {
+                          required:
+                            type == 'BLOOD'
+                              ? 'Vui lòng nhập huyết áp tâm thu'
+                              : type == 'BMI'
+                              ? 'Vui lòng nhập chiều cao'
+                              : type == 'TEMP'
+                              ? 'Vui lòng nhập thời gian'
+                              : '',
+                          checkLength:
+                            type == 'BLOOD'
+                              ? 'Huyết áp tâm thu chỉ nằm trong khoảng từ 1 đến 200'
+                              : type == 'BMI'
+                              ? 'Chiều cao chỉ nằm trong khoảng từ 1 đến 250'
+                              : '',
+                        },
+                      }}
+                      onValidate={(valid, messages) => {
+                        if (valid) {
+                          setErrorValue({...errorValue, value: ''});
+                        } else {
+                          setErrorValue({...errorValue, value: messages});
+                        }
+                      }}
+                      keyboardType={type == 'BLOOD' ? 'number-pad' : 'numeric'}
+                      inputStyle={styles.buttonSelectTime}
+                      placeholder={
+                        type == 'BLOOD'
+                          ? 'Nhập chỉ số tâm thu'
+                          : type == 'BMI'
+                          ? 'Nhập chiều cao'
+                          : type == 'TEMP'
+                          ? 'Chọn thời gian'
+                          : ''
+                      }
+                      value={value}
+                      maxLength={3}
+                      onChangeText={setValue}
+                    />
+                  )}
+                  <Field>
+                    {errorTime || errorValue.value ? (
+                      <Text style={styles.txtError}>
+                        {errorTime || errorValue.value}
+                      </Text>
+                    ) : null}
+                  </Field>
+                </Field>
+                <Field>
+                  <Text style={styles.txtLabel2}>{label3}</Text>
+                  <TextField
+                    hideError={true}
+                    validate={{
+                      rules: {
+                        required: true,
+                        checkLength: value => {
+                          let max = 0,
+                            min = 0;
+                          if (type == 'TEMP') {
+                            max = 45;
+                            min = 0;
+                          } else if (type == 'BMI') {
+                            max = 500;
+                            min = 0;
+                          } else if (type == 'BLOOD') {
+                            max = 150;
+                            min = 0;
+                          }
+                          if (value <= min || value > max) {
+                            return false;
+                          } else {
+                            return true;
+                          }
+                        },
+                      },
+                      messages: {
+                        required:
+                          type == 'BLOOD'
+                            ? 'Vui lòng nhập huyết áp tâm trương'
+                            : type == 'BMI'
+                            ? 'Vui lòng nhập cân nặng'
+                            : type == 'TEMP'
+                            ? 'Vui lòng nhập nhiệt độ'
+                            : '',
+                        checkLength:
+                          type == 'BLOOD'
+                            ? 'Huyết áp tâm trương chỉ nằm trong khoảng từ 1 đến 150'
+                            : type == 'BMI'
+                            ? 'Cân nặng chỉ nằm trong khoảng từ 1 đến 500'
+                            : type == 'TEMP'
+                            ? 'Nhiệt độ chỉ trong khoảng từ 1 đến 45'
+                            : '',
+                      },
+                    }}
+                    onValidate={(valid, messages) => {
+                      if (valid) {
+                        setErrorValue({...errorValue, value2: ''});
+                      } else {
+                        setErrorValue({...errorValue, value2: messages});
+                      }
+                    }}
+                    keyboardType={type == 'BLOOD' ? 'number-pad' : 'numeric'}
+                    inputStyle={styles.buttonSelectTime}
+                    placeholder={
+                      type == 'BLOOD'
+                        ? 'Nhập chỉ số tâm trương'
+                        : type == 'BMI'
+                        ? 'Nhập cân nặng'
+                        : type == 'TEMP'
+                        ? 'Nhập nhiệt độ'
+                        : ''
+                    }
+                    maxLength={type == 'BMI' ? 4 : 3}
+                    value={value2}
+                    onChangeText={setValue2}
+                  />
+                  <Field>
+                    {errorValue.value2 ? (
+                      <Text style={styles.txtError}>{errorValue.value2}</Text>
+                    ) : null}
+                  </Field>
+                </Field>
+              </Field>
+            </Form>
             <TouchableOpacity onPress={onCreate} style={styles.buttonnAdd}>
               <Text style={styles.txtAdd}>THÊM CHỈ SỐ</Text>
             </TouchableOpacity>
@@ -289,6 +420,10 @@ const AddMonitoringScreen = ({
 export default AddMonitoringScreen;
 
 const styles = StyleSheet.create({
+  txtError: {
+    color: 'red',
+    paddingLeft: 15,
+  },
   txtAdd: {
     color: '#FFF',
     fontWeight: 'bold',

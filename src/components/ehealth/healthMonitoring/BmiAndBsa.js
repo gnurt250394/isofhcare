@@ -39,7 +39,9 @@ const BmiAndBsa = () => {
           r['values'] = r['values'] || [];
           r['values'].unshift({
             y: a.bmi,
-            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BMI: ${a.bmi}`,
+            marker: `${splitDate(a.date).format(
+              'dd/MM/yyyy',
+            )}\n BMI: ${parseFloat(a.bmi).toFixed(1)}`,
           });
           r.label = 'Chỉ số khối (BMI)';
           r.color = '#FFAAAA';
@@ -47,9 +49,9 @@ const BmiAndBsa = () => {
         }, Object.create(null));
         let resultBsa = res?.content.reduce((r, a) => {
           r['values'] = r['values'] || [];
-          r['values'].push({
+          r['values'].unshift({
             y: a.bsa,
-            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BMI: ${a.bsa}`,
+            marker: `${splitDate(a.date).format('dd/MM/yyyy')}\n BSA: ${parseFloat(a.bsa).toFixed(1)}`,
           });
           r.label = 'Chỉ số diện tích bề mặt cơ thể (BSA)';
           r.color = '#D6D6D6';
