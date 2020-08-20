@@ -924,7 +924,8 @@ module.exports = {
       getAllJobs: isofhcare_service + 'jobs',
     },
     upload: {
-      image: 'images',
+      image: '/upload/image',
+      file: '/upload/file',
     },
     user: {
       login: isofhcare_service + 'user/login',

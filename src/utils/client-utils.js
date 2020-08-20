@@ -76,7 +76,7 @@ module.exports = {
   serverApi: server_url + "/",
   serviceSchedule: "http://123.24.206.9:8080/",
   serviceBooking: "http://123.24.206.9:8082/",
-  serviceImage: "http://123.24.206.9:38288/v1/",
+  serviceImage: "https://api.produce.isofhcare.com/isofhcare/",
   serviceChats: "http://10.0.0.98:8085/",
   serviceCovid: "http://10.0.0.88:49396/",
   
@@ -99,7 +99,7 @@ module.exports = {
   },
   uploadFile(url, uri, type, funRes) {
     const data = new FormData();
-    data.append("files", {
+    data.append("file", {
       uri: uri,
       type: type ? type : "image/jpeg", // or photo.type
       name: uri ? uri.replace(/^.*[\\\/]/, '') : 'test.png'
