@@ -13,6 +13,11 @@ const CustomSlider = ({max, min, onValueChange}) => {
   };
   return (
     <View style={styles.container}>
+      <View style={styles.textCon}>
+        <Text style={styles.colorGrey}>{minDistance} tuổi</Text>
+        <Text style={styles.colorYellow}>{distance + ' tuổi'}</Text>
+        <Text style={styles.colorGrey}>{maxDistance} tuổi</Text>
+      </View>
       <Slider
         style={{width: 300}}
         step={1}
@@ -25,11 +30,6 @@ const CustomSlider = ({max, min, onValueChange}) => {
         maximumTrackTintColor="#d3d3d3"
         minimumTrackTintColor="#FEB692"
       />
-      <View style={styles.textCon}>
-        <Text style={styles.colorGrey}>{minDistance} tuổi</Text>
-        <Text style={styles.colorYellow}>{distance + ' tuổi'}</Text>
-        <Text style={styles.colorGrey}>{maxDistance} tuổi</Text>
-      </View>
     </View>
   );
 };
