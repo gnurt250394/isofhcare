@@ -90,7 +90,7 @@ class ChartComponent extends React.Component {
         },
       });
       this.setState(newState, () => {
-        this.refs.chart.moveViewToX(2);
+        this.refs.chart.moveViewToX(preProps.page == 0 ? 9 : 2);
       });
     }
     if (this.props.time != preProps.time) {
@@ -164,7 +164,7 @@ class ChartComponent extends React.Component {
               text: '',
             }}
             yAxis={{
-              left:{
+              left: {
                 // valueFormatter: 'largeValue',
                 // axisMinimum: 10,
                 // drawAxisLine: false,
@@ -174,7 +174,7 @@ class ChartComponent extends React.Component {
                 // },
               },
               right: {
-                inverted:true,
+                inverted: true,
                 enabled: false,
               },
             }}

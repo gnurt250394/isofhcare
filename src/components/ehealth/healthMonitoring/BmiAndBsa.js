@@ -65,9 +65,7 @@ const BmiAndBsa = () => {
         r.color = '#D6D6D6';
         return r;
       }, Object.create(null));
-      let time = listInit
-        .map(e => splitDate(e.date).format('dd/MM'))
-        .reverse();
+      let time = listInit.map(e => splitDate(e.date).format('dd/MM')).reverse();
       setTimeCharts(time);
       setDataBmi([resultBmi]);
       setDataBsa([resultBsa]);
@@ -90,7 +88,11 @@ const BmiAndBsa = () => {
     getHeightWeight();
   }, [page]);
   const onCreateSuccess = data => {
-    getHeightWeight();
+    if (page == 0) {
+      getHeightWeight();
+    } else {
+      setPage(0);
+    }
   };
   const onLoadMore = () => {
     if ((page + 1) * size <= listInit.length) {
