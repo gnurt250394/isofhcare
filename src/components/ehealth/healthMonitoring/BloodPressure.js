@@ -162,10 +162,10 @@ const BloodPressure = () => {
       params.status =
         'Tuy nhiên, bạn vẫn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     } else {
-      params.label = 'Cao huyết áp cấp độ 3';
-      params.color = '#7F121F';
-      params.status =
-        'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
+      // params.label = 'Cao huyết áp cấp độ 3';
+      // params.color = '#7F121F';
+      // params.status =
+      //   'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
     }
     return params;
   };

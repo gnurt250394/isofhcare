@@ -113,7 +113,7 @@ const Temperature = () => {
       params.color = '#FF8A00';
       params.status =
         'Hãy lấy thân nhiệt mỗi 1-2h khi cơ thể còn sốt cao. Uống thuốc hạ sốt theo đơn của bác sĩ.';
-    } else if (temp >= 40 && temp < 41.1) {
+    } else if (temp >= 40 && temp <= 41.1) {
       params.label = 'Sốt cao';
       params.color = '#7F121F';
       params.status = 'Cần đến khám ngay tại cơ sở y tế gần nhất.	';
