@@ -15,12 +15,14 @@ import {LineChart} from 'react-native-charts-wrapper';
 const distanceToLoadMore = 10;
 const pageSize = 10;
 class ChartComponent extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.isLoading = false;
     this.xMin = 6;
-    this.xMax = 10;
+    this.xMax = 7;
+    this.page = this.props.page;
+    this.size = (this.props.page + 1) * this.xMax;
 
     this.state = {
       data: {},
@@ -29,28 +31,28 @@ class ChartComponent extends React.Component {
         granularity: 1,
         // axisLineWidth: 3,
         position: 'BOTTOM',
-        labelCount: 10,
-        // avoidFirstLastClipping: true,
+        labelCount: 6,
+        avoidFirstLastClipping: true,
       },
     };
   }
 
   componentDidMount() {
-    this.mockLoadDataFromServer(-pageSize, pageSize).then(data => {
-      let newState = update(this.state, {
-        data: {
-          $set: {
-            dataSets: this.getDataChart(this.props.data),
-          },
+    let newState = update(this.state, {
+      data: {
+        $set: {
+          dataSets: this.getDataChart(this.props.data),
         },
-      });
-      this.setState(newState);
-      this.setState({
-        visibleRange: {x: {min: 6, max: 10}},
-      });
-      this.setState({
-        xAxis: {...this.state.xAxis, valueFormatter: this.props.time},
-      });
+      },
+    });
+    this.setState(newState, () => {
+      this.refs.chart.moveViewToX(9);
+    });
+    this.setState({
+      visibleRange: {x: {min: this.xMin, max: this.xMax}},
+    });
+    this.setState({
+      xAxis: {...this.state.xAxis, valueFormatter: this.props.time},
     });
   }
 
@@ -76,6 +78,9 @@ class ChartComponent extends React.Component {
     return data;
   };
   componentWillReceiveProps = preProps => {
+    console.log('preProps: ', preProps);
+    this.page = preProps.page;
+    this.size = (preProps.page + 1) * this.xMax;
     if (this.props.data != preProps.data) {
       let newState = update(this.state, {
         data: {
@@ -84,11 +89,9 @@ class ChartComponent extends React.Component {
           },
         },
       });
-      this.setState(newState);
-      console.log(
-        'this.getDataChart(preProps.data): ',
-        this.getDataChart(preProps.data),
-      );
+      this.setState(newState, () => {
+        this.refs.chart.moveViewToX(2);
+      });
     }
     if (this.props.time != preProps.time) {
       this.setState(pre => ({
@@ -98,15 +101,6 @@ class ChartComponent extends React.Component {
         },
       }));
     }
-  };
-  mockLoadDataFromServer = (from, to) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        //
-
-        resolve(this.getDataChart(this.props.data));
-      }, 50);
-    });
   };
 
   handleChange = event => {
@@ -128,22 +122,12 @@ class ChartComponent extends React.Component {
           this.isLoading,
       );
       if (!this.isLoading) {
-        if (
-          this.xMin > left - distanceToLoadMore ||
-          right + distanceToLoadMore > this.xMax
-        ) {
+        if (left < 2) {
           this.isLoading = true;
+
           if (this.timeout) clearTimeout(this.timeout);
           this.timeout = setTimeout(() => {
             this.props.loadMore && this.props.loadMore();
-            console.log(
-              'left - distanceToLoadMore: ',
-              left - distanceToLoadMore,
-            );
-            console.log(
-              'right + distanceToLoadMore: ',
-              right + distanceToLoadMore,
-            );
             this.isLoading = false;
           }, 500);
 
@@ -180,13 +164,24 @@ class ChartComponent extends React.Component {
               text: '',
             }}
             yAxis={{
+              left:{
+                // valueFormatter: 'largeValue',
+                // axisMinimum: 10,
+                // drawAxisLine: false,
+                // gridDashedLine: {
+                //   lineLength: 5,
+                //   spaceLength: 5,
+                // },
+              },
               right: {
+                inverted:true,
                 enabled: false,
               },
             }}
             touchEnabled={true}
             dragEnabled={true}
             scaleEnabled={true}
+            syncX={true}
             scaleXEnabled={true}
             legend={{
               form: 'LINE',
