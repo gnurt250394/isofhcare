@@ -41,7 +41,7 @@ const IntroCovidScreen = ({}) => {
               chọn, giúp người dùng có thể nhanh chóng biết được mình có khả
               năng bị lây nhiễm virus COVID-19 hay không. Tính năng được phát
               triển dựa trên nguồn tài liệu từ Tổ chức Y tế Thế giới (WHO) và
-              Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh của Mĩ (CDC) nên đảm
+              Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh của Mỹ (CDC) nên đảm
               bảo độ chính xác tiêu chuẩn.
             </Text>
             <Text style={styles.txtTitle}>
