@@ -85,7 +85,11 @@ const BloodPressure = () => {
     }
   }, [listInit]);
   const onCreateSuccess = data => {
-    getBloodPressure();
+    if (page == 0) {
+      getBloodPressure();
+    } else {
+      setPage(0);
+    }
   };
   const formatData = data => {
     if (data.length == 0) {

@@ -75,7 +75,11 @@ const Temperature = () => {
     getBodyTemperature();
   }, [page]);
   const onCreateSuccess = data => {
-    getBodyTemperature();
+    if (page == 0) {
+      getBodyTemperature();
+    } else {
+      setPage(0);
+    }
   };
   const onLoadMore = () => {
     if ((page + 1) * size <= listInit.length) {
