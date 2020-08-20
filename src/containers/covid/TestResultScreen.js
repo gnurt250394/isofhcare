@@ -23,6 +23,11 @@ const realWidth = height > width ? width : height;
 const realHeight = height > width ? height : width;
 const TestResultScreen = ({navigation}) => {
   const [data, setData] = useState(state => navigation.getParam('data', {}));
+  const [suggestion, setSuggestion] = useState(state =>
+    (data?.suggestion?.guides || []).concat(
+      data?.advice?.suggestion?.guides || [],
+    ),
+  );
   const [offsetAnim, setOffsetAnim] = useState(new Animated.Value(0));
   const [scrollY, setScrollY] = useState(new Animated.Value(0));
   const scrollRef = useRef();
@@ -305,25 +310,25 @@ const TestResultScreen = ({navigation}) => {
               <Text style={styles.txtWhite}>Đặt lịch hẹn khám tại CSYT</Text>
             </TouchableOpacity>
           ) : null}
-          <View style={styles.containerGuide}>
-            <Text style={styles.txtTitleGuide}>Nên làm gì tiếp theo?</Text>
-            {data?.advice?.suggestion?.guides?.length
-              ? data?.suggestion?.guides.map((e, i) => {
-                  return (
-                    <View key={i} style={styles.containerGuideList}>
-                      <ScaledImage
-                        source={require('@images/new/covid/ic_add_green.png')}
-                        height={12}
-                        style={{
-                          marginTop: 3,
-                        }}
-                      />
-                      <Text style={styles.txtGuide}>{e}</Text>
-                    </View>
-                  );
-                })
-              : null}
-          </View>
+          {suggestion?.length ? (
+            <View style={styles.containerGuide}>
+              <Text style={styles.txtTitleGuide}>Nên làm gì tiếp theo?</Text>
+              {suggestion?.map((e, i) => {
+                return (
+                  <View key={i} style={styles.containerGuideList}>
+                    <ScaledImage
+                      source={require('@images/new/covid/ic_add_green.png')}
+                      height={12}
+                      style={{
+                        marginTop: 3,
+                      }}
+                    />
+                    <Text style={styles.txtGuide}>{e}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
 
           <PreventativeMethod />
           <TouchableOpacity onPress={onTest} style={styles.buttonnTest}>
