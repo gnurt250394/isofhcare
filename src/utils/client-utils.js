@@ -74,6 +74,7 @@ module.exports = {
   serviceSchedule: "https://api.produce.isofhcare.com/",
   serviceBooking: "https://api.produce.isofhcare.com/",
   serviceChats: "https://api.produce.isofhcare.com/",
+  serviceCovid: "https://api.produce.isofhcare.com/survey/",
   response: {
     ok(data, message) {
       if (!message) message = "";
@@ -193,7 +194,7 @@ module.exports = {
         }
       })
       .catch(e => {
-        if (e.status >= 200 && e.status < 300) funRes(true, undefined);
+        if (e.status >= 200 && e.status < 300) funRes( e.data ? e.data : true, undefined);
         else funRes(undefined, e);
       });
   },
