@@ -224,14 +224,14 @@ class SelectServiceScreen extends Component {
                             :
                             <View style={{ width: 20 }} />
                         } */}
-                        {/* <TouchableOpacity
+                        <TouchableOpacity
                             onPress={this.detalService(item)}
                             style={{
                                 paddingVertical: 10,
                                 paddingHorizontal: 15,
                             }}>
                             <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
                         {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
                     </View>
                     {/* <Text numberOfLines={2}>
