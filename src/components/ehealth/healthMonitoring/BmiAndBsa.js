@@ -141,7 +141,7 @@ const BmiAndBsa = () => {
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải điều chỉnh chế độ ăn hợp lí, theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (bmi > 40) {
+    } else if (bmi >= 40) {
       params.label = 'Béo phì độ III';
       params.color = '#7F121F';
       params.status =
