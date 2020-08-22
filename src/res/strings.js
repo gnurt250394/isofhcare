@@ -108,6 +108,7 @@ module.exports = {
     MESSAGE: 'MESSAGE',
     TYPING: 'TYPING',
     QUESTION: 'QUESTION_',
+    ERROR: 'ERROR',
   },
   voucher: {
     use_now: 'SỬ DỤNG NGAY',
