@@ -332,7 +332,7 @@ class DetailHistoryBookingScreen extends Component {
     ) {
       return true;
     } else {
-      if (this.state.booking?.doctor?.id == 3729) {
+      if (this.state.booking?.doctor?.id == 667925) {
         return true;
       } else {
         return false;
