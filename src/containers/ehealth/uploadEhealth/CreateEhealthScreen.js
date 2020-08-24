@@ -362,6 +362,7 @@ class CreateEhealthScreen extends Component {
               compressImageMaxHeight: 1500,
             })
             .then(images => {
+              console.log('images: ', images);
               let listImages = [];
               if (images.length) listImages = [...images];
               else listImages.push(images);
@@ -524,6 +525,7 @@ class CreateEhealthScreen extends Component {
   };
   getImage = link => {
     let ext = link ? /[^\.]*$/.exec(link)[0] : 'txt';
+    console.log('ext: ', ext);
     let source = '';
     switch (ext) {
       case 'jpg':
@@ -565,42 +567,45 @@ class CreateEhealthScreen extends Component {
     return (
       <View style={styles.list_image}>
         {this.state.imageUris && this.state.imageUris.length
-          ? this.state.imageUris.map((item, index) => (
-              <View key={index} style={styles.containerImagePicker}>
-                <View style={styles.groupImagePicker}>
-                  <Image
-                    source={this.getImage(item.uri)}
-                    resizeMode="cover"
-                    style={styles.imagePicker}
-                  />
-                  {item.error ? (
-                    <View style={styles.groupImageError}>
-                      <ScaledImage
-                        source={require('@images/ic_warning.png')}
-                        width={40}
-                      />
-                    </View>
-                  ) : item.loading ? (
-                    <View style={styles.groupImageLoading}>
-                      <ScaledImage
-                        source={require('@images/loading.gif')}
-                        width={40}
-                      />
-                    </View>
-                  ) : (
-                    <View />
-                  )}
+          ? this.state.imageUris.map((item, index) => {
+            console.log('item: ', item);
+              return (
+                <View key={index} style={styles.containerImagePicker}>
+                  <View style={styles.groupImagePicker}>
+                    <Image
+                      source={this.getImage(item.url)}
+                      resizeMode="cover"
+                      style={styles.imagePicker}
+                    />
+                    {item.error ? (
+                      <View style={styles.groupImageError}>
+                        <ScaledImage
+                          source={require('@images/ic_warning.png')}
+                          width={40}
+                        />
+                      </View>
+                    ) : item.loading ? (
+                      <View style={styles.groupImageLoading}>
+                        <ScaledImage
+                          source={require('@images/loading.gif')}
+                          width={40}
+                        />
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                  </View>
+                  <TouchableOpacity
+                    onPress={this.removeImage.bind(this, index)}
+                    style={styles.buttonClose}>
+                    <ScaledImage
+                      source={require('@images/new/ic_close.png')}
+                      width={16}
+                    />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={this.removeImage.bind(this, index)}
-                  style={styles.buttonClose}>
-                  <ScaledImage
-                    source={require('@images/new/ic_close.png')}
-                    width={16}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))
+              );
+            })
           : null}
       </View>
     );
