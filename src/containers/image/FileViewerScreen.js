@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import {
   Text,
@@ -21,10 +21,11 @@ let dirs = RNFetchBlob.fs.dirs;
 
 function FileViewerScreen(props) {
   const [index, setIndex] = useState(props.navigation.getParam('index', 0));
-  const [urls, seturls] = useState(props.navigation.getParam('urls', []));
+  const [urls, seturls] = useState(props.navigation.getParam('urls', ''));
   console.log('urls: ', urls);
   const [visible, setIsVisible] = useState(true);
   const [id, setId] = useState(0);
+  const _webView = useRef();
   const close = () => {
     props.navigation.pop();
   };
@@ -86,7 +87,21 @@ function FileViewerScreen(props) {
       }
     });
   };
-
+  // const onNavigationStateChange = navState => {
+  //   var wb_url = navState.url;
+  //   console.log('wb_url: ', wb_url);
+  //   var lastPart = wb_url.substr(wb_url.lastIndexOf('.') + 1);
+  //   console.log('lastPart: ', lastPart);
+  //   if (lastPart == 'doc' || lastPart == 'xlsx' || lastPart == 'pdf') {
+  //     // var DEFAULT_URL = {
+  //     //   uri: 'http://docs.google.com/gview?embedded=true&url=' + wb_url,
+  //     // };
+  //     // seturls(DEFAULT_URL.uri);
+  //     setTimeout(() => {
+  //       _webView.current.stopLoading();
+  //     }, 2000);
+  //   }
+  // };
   return (
     <ActivityPanel
       containerStyle={{flex: 1}}
@@ -95,12 +110,20 @@ function FileViewerScreen(props) {
       title={''}>
       {/* <ImageView FooterComponent={footer} HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} /> */}
       <WebView
-        source={{uri: `https://docs.google.com/gview?embedded=true&url=${urls}`}}
-        allowFileAccess={false}
-        mixedContentMode="always"
-        mediaPlaybackRequiresUserAction={true}
+        ref={_webView}
+        source={{
+          uri: `https://docs.google.com/gview?embedded=true&url=${urls}`,
+        }}
+        style={{ flex: 1 }}
+        originWhitelist={["*"]}
+        useWebKit={true}
         startInLoadingState={true}
-        // injectedJavaScript={`document.getElementsByTagName("video")[0].controlsList="nodownload";`}
+        cacheEnabled={true}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        decelerationRate="normal"
+        scalesPageToFit={true}
+        automaticallyAdjustContentInsets={false}
       />
     </ActivityPanel>
   );
