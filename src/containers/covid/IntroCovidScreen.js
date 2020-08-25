@@ -37,11 +37,11 @@ const IntroCovidScreen = ({}) => {
           <View style={styles.containerIntro}>
             <Text style={styles.txtTitle}>Test COVID-19</Text>
             <Text style={styles.txtContent}>
-              Test COVID-19 Là một bài test nhanh sử dụng những câu hỏi lựa
+              Test COVID-19 là một bài test nhanh sử dụng những câu hỏi lựa
               chọn, giúp người dùng có thể nhanh chóng biết được mình có khả
               năng bị lây nhiễm virus COVID-19 hay không. Tính năng được phát
               triển dựa trên nguồn tài liệu từ Tổ chức Y tế Thế giới (WHO) và
-              Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh của Mỹ (CDC) nên đảm
+              Trung tâm kiểm soát và Phòng ngừa dịch bệnh của Mỹ (CDC) nên đảm
               bảo độ chính xác tiêu chuẩn.
             </Text>
             <Text style={styles.txtTitle}>
@@ -54,7 +54,7 @@ const IntroCovidScreen = ({}) => {
             </Text>
           </View>
           <TouchableOpacity  onPress={goToTest}style={styles.buttonStart}>
-            <Text style={styles.txtStart}>BĂT ĐẦU TEST</Text>
+            <Text style={styles.txtStart}>BẮT ĐẦU TEST</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
