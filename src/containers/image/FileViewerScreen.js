@@ -7,7 +7,7 @@ import {
   Platform,
   View,
   Dimensions,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -15,6 +15,7 @@ import Share from 'react-native-share';
 import permission from 'mainam-react-native-permission';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import HTML from 'react-native-render-html';
+import WebView from 'react-native-webview';
 
 let dirs = RNFetchBlob.fs.dirs;
 
@@ -88,14 +89,19 @@ function FileViewerScreen(props) {
 
   return (
     <ActivityPanel
-      containerStyle={{flex: 1, backgroundColor: '#000'}}
+      containerStyle={{flex: 1}}
       // hideActionbar={true}
       showFullScreen={true}
       title={''}>
-      <ScrollView style={{flex: 1}}>
-        {/* <ImageView FooterComponent={footer} HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} /> */}
-        <HTML uri={urls} imagesMaxWidth={Dimensions.get('window').width} />
-      </ScrollView>
+      {/* <ImageView FooterComponent={footer} HeaderComponent={header} onImageIndexChange={imageIndex => setId(imageIndex)} images={urls} imageIndex={index} visible={visible} onRequestClose={close} /> */}
+      <WebView
+        source={{uri: `https://docs.google.com/gview?embedded=true&url=${urls}`}}
+        allowFileAccess={false}
+        mixedContentMode="always"
+        mediaPlaybackRequiresUserAction={true}
+        startInLoadingState={true}
+        // injectedJavaScript={`document.getElementsByTagName("video")[0].controlsList="nodownload";`}
+      />
     </ActivityPanel>
   );
 }
