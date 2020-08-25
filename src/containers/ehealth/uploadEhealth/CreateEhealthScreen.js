@@ -568,7 +568,7 @@ class CreateEhealthScreen extends Component {
       <View style={styles.list_image}>
         {this.state.imageUris && this.state.imageUris.length
           ? this.state.imageUris.map((item, index) => {
-            console.log('item: ', item);
+              console.log('item: ', item);
               return (
                 <View key={index} style={styles.containerImagePicker}>
                   <View style={styles.groupImagePicker}>
@@ -820,7 +820,7 @@ class CreateEhealthScreen extends Component {
                 <View>
                   <Text style={styles.title}>Hoặc tải lên hình ảnh, file</Text>
                   <Text style={[styles.title, {fontSize: 14}]}>
-                    (.jpg, .png, .gif, .docx)
+                    (.jpg, .png, .gif, .docx, .xlsx, .pdf...)
                   </Text>
                 </View>
                 <TouchableOpacity
@@ -856,6 +856,8 @@ class CreateEhealthScreen extends Component {
           cancelTextIOS={constants.actionSheet.cancel2}
           confirmTextIOS={constants.actionSheet.confirm}
           date={this.state.dob || new Date()}
+          titleIOS={'Chọn ngày'}
+          locale={'vi'}
         />
         <SelectDocument ref={ref => (this.imagePicker = ref)} />
       </ActivityPanel>
