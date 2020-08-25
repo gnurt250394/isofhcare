@@ -49,7 +49,6 @@ class DetailsEhealthScreen extends Component {
           .uploadEhealth(null, this.state.id)
           .then(res => {
             if (res && res.code == 200) {
-              console.log('res: ', res);
               // this.props.navigation.pop()
               this.setState({
                 listEhealth: res.data,
@@ -91,25 +90,29 @@ class DetailsEhealthScreen extends Component {
       case 'xlr':
         return false;
       default:
-        source = '';
-        break;
+        return false;
     }
   };
-  showImage = (image, index, item) => {
+  showImage = (image, item) => {
     let isImg = this.checkImage(item);
-    // if (isImg) {
-    this.props.navigation.navigate('photoViewer', {
-      index: index,
-      urls: image.map(item => {
+    let img = image
+      .filter(e => this.checkImage(e) == true)
+      .map(item => {
         return {uri: item};
-      }),
-    });
-    // } else {
-    //   this.props.navigation.navigate('fileViewer', {
-    //     index: index,
-    //     urls: item,
-    //   });
-    // }
+      });
+    let index = img.findIndex(e => e == item);
+
+    if (isImg) {
+      this.props.navigation.navigate('photoViewer', {
+        index: index,
+        urls: img,
+      });
+    } else {
+      this.props.navigation.navigate('fileViewer', {
+        index: index,
+        urls: item,
+      });
+    }
   };
   edit = data => {
     let dataError = data ? '' : this.state.dataError;
@@ -131,7 +134,6 @@ class DetailsEhealthScreen extends Component {
       if (images && images.length) {
         dataOld.images = images;
       }
-      console.log('images: ', images);
     }
     this.props.navigation.navigate('createEhealth', {
       data: dataOld,
@@ -185,7 +187,7 @@ class DetailsEhealthScreen extends Component {
       this.state.listEhealth.medicalRecord.avatar
         ? {uri: this.state.listEhealth.medicalRecord.avatar}
         : icSupport;
-    console.log('source: ', source);
+
     return (
       <ActivityPanel
         titleStyle={{marginLeft: 50}}
@@ -296,11 +298,7 @@ class DetailsEhealthScreen extends Component {
                   {this.state.listEhealth.images.map((item, index) => (
                     <TouchableOpacity
                       onPress={() =>
-                        this.showImage(
-                          this.state.listEhealth.images,
-                          index,
-                          item,
-                        )
+                        this.showImage(this.state.listEhealth.images, item)
                       }
                       key={index}
                       style={styles.containerImagePicker}>
