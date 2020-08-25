@@ -24,6 +24,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ehealthProvider from '@data-access/ehealth-provider';
 import {Card} from 'native-base';
+import OpenFile from '@components/ehealth/OpenFile';
 
 class DetailsEhealthScreen extends Component {
   constructor(props) {
@@ -108,10 +109,11 @@ class DetailsEhealthScreen extends Component {
         urls: img,
       });
     } else {
-      this.props.navigation.navigate('fileViewer', {
-        index: index,
-        urls: item,
-      });
+      // this.props.navigation.navigate('fileViewer', {
+      //   index: index,
+      //   urls: item,
+      // });
+      OpenFile(item)
     }
   };
   edit = data => {
