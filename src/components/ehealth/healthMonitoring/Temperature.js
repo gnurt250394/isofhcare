@@ -98,7 +98,7 @@ const Temperature = () => {
       params.color = '#7F121F';
       params.status =
         'Bạn cần phải theo dõi thường xuyên hoặc đi khám tại CSYT gần nhất.';
-    } else if (temp >= 36 && temp < 37.5) {
+    } else if (temp >= 36 && temp < 38) {
       params.label = 'Nhiệt độ bình thường';
       params.color = '#3161AD';
       params.status =

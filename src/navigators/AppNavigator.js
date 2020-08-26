@@ -169,6 +169,7 @@ import IntroCovidScreen from '@containers/covid/IntroCovidScreen';
 import TestCovidScreen from '@containers/covid/TestCovidScreen';
 import TestResultScreen from '@containers/covid/TestResultScreen';
 import HealthMonitoringScreen from '@containers/ehealth/healthMonitoring/HealthMonitoringScreen';
+import FileViewerScreen from '@containers/image/FileViewerScreen';
 
 const ProfileNavigation = createStackNavigator(
   {
@@ -237,14 +238,14 @@ const TabNavigatorComponent = createBottomTabNavigator(
             style={{tintColor: tintColor}}
           />
         ),
-      //   tabBarOnPress: ({navigation, defaultHandler}) => {
-      //     if (userProvider.isLogin) {
-      //       console.log('userProvider.isLogin: ', userProvider.isLogin);
-      //       defaultHandler();
-      //     } else {
-      //       NavigationService.navigate('login');
-      //     }
-      //   },
+        //   tabBarOnPress: ({navigation, defaultHandler}) => {
+        //     if (userProvider.isLogin) {
+        //       console.log('userProvider.isLogin: ', userProvider.isLogin);
+        //       defaultHandler();
+        //     } else {
+        //       NavigationService.navigate('login');
+        //     }
+        //   },
       },
     },
     // drugTab: {
@@ -511,6 +512,7 @@ const RootNavigator = (route = 'splash') =>
       testCovid: {screen: TestCovidScreen},
       testResult: {screen: TestResultScreen},
       healthMonitoring: {screen: HealthMonitoringScreen},
+      fileViewer: {screen: FileViewerScreen},
     },
     {
       initialRouteName: route,
