@@ -105,18 +105,18 @@ class HomeScreen extends Component {
               });
           },
         },
-        // {
-        //   icon: require('@images/new/homev2/ic_ehealth.png'),
-        //   text: 'Hồ sơ sức khoẻ',
-        //   onPress: () => {
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate('ehealth');
-        //     else
-        //       this.props.navigation.navigate('login', {
-        //         nextScreen: {screen: 'ehealth'},
-        //       });
-        //   },
-        // },
+        {
+          icon: require('@images/new/homev2/ic_ehealth.png'),
+          text: 'Hồ sơ sức khoẻ',
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('ehealth');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: {screen: 'ehealth'},
+              });
+          },
+        },
         {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
