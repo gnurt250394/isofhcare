@@ -217,6 +217,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-dialogflow')
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
     compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
     implementation fileTree(dir: "libs", include: ["*.jar"])
