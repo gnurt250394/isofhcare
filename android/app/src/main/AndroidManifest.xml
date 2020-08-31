@@ -24,6 +24,8 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE"
             android:protectionLevel="signature" />
     <uses-permission android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
         android:name=".MainApplication"
         android:allowBackup="true"

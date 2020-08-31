@@ -14,15 +14,13 @@ import { connect } from "react-redux";
 import constants from "@resources/strings";
 
 const width = Dimensions.get("window").width;
-class FingerScreen extends Component {
+class Finger extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isShowFinger: false
     };
-    this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
-    console.log(this.props,'d')
   }
 
   render() {
@@ -35,7 +33,7 @@ class FingerScreen extends Component {
         />
         <Text style={styles.title}>{constants.touch_id_screens.header}</Text>
         <Text style={styles.details}>
-         {constants.touch_id_screens.details}
+          {constants.touch_id_screens.details}
         </Text>
         <View style={styles.viewBtn}>
           <TouchableOpacity onPress={this.onCancel} style={styles.viewCancel}>
@@ -47,19 +45,19 @@ class FingerScreen extends Component {
           <Modal
             animationType="fade"
             transparent={true}
-            isVisible={this.state.isShowFinger}
-            // onRequestClose={() => {}}
+            isVisible={true}
+          // onRequestClose={() => {}}
           >
             <FingerprintPopup
               isLogin={false}
               style={styles.popup}
               handlePopupDismissed={this.handleFingerprintDismissed}
-              handleCheckFingerFalse={() => {}}
-              handlePopupDismissedDone = {this.handleFingerprintDismissed}
+              handleCheckFingerFalse={() => { }}
+              handlePopupDismissedDone={this.handleFingerprintDismissed}
               style={styles.popup}
-              onNavigate = {this.onNavigate}
-              // nextScreen = {this.props.navigation.state.params.nextScreen}
-              
+              onNavigate={this.onNavigate}
+            // nextScreen = {this.props.navigation.state.params.nextScreen}
+
             />
           </Modal>
         </View>
@@ -140,4 +138,4 @@ function mapStateToProps(state) {
     navigation: state.navigation,
   };
 }
-export default connect(mapStateToProps)(FingerScreen);
+export default connect(mapStateToProps)(Finger);

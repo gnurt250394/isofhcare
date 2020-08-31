@@ -7,7 +7,7 @@ import {
   View,
   StyleSheet
 } from "react-native";
-// import FingerprintScanner from "react-native-fingerprint-scanner";
+import FingerprintScanner from "react-native-fingerprint-scanner";
 import ShakingText from "./ShakingText";
 import ScaledImage from "mainam-react-native-scaleimage";
 import dataCacheProvider from "../../data-access/datacache-provider";
@@ -30,20 +30,26 @@ class FingerprintPopup extends Component {
   }
 
   componentDidMount() {
-    if (this.state.isLogin) {
+    if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
+        title: 'Tittle',
+        subTitle: 'subTitle',
+        description: 'description',
+        cancelButton: 'cancelButton',
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
 
             if (!s || s.userId == '') {
-              Alert.alert(constants.touch_id_screens.touch_not_found);
+              snackbar.show(constants.touch_id_screens.touch_not_found);
             }
             if (s) {
+              console.log('s: ', s);
               userProvider
                 .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
+
                   switch (s.code) {
                     case 0:
                       var user = s.data.user;
@@ -51,6 +57,7 @@ class FingerprintPopup extends Component {
                         constants.msg.user.login_success,
                         "success"
                       );
+                      this.props.handlePopupDismissed();
                       this.props.dispatch(redux.userLogin(user));
                       if (this.props.nextScreen) {
                         this.props.onNavigate()
@@ -60,43 +67,49 @@ class FingerprintPopup extends Component {
                           showDraw: false
                         });
                       }
+                      this.props.handlePopupDismissed();
+
                       return;
                     case 4:
                       snackbar.show(
                         constants.msg.user.this_account_not_active,
                         "danger"
                       );
+                      this.props.handlePopupDismissed();
                       return;
                     case 3:
                       snackbar.show(
                         constants.msg.user.username_or_password_incorrect,
                         "danger"
                       );
+                      this.props.handlePopupDismissed();
                       return;
                     case 2:
-                      Alert.alert(
+                      snackbar.show(
                         constants.login_fail
                       );
+                      this.props.handlePopupDismissed();
+                      return
                     case 1:
                       snackbar.show(
                         constants.msg.user.account_blocked,
                         "danger"
                       );
+                      this.props.handlePopupDismissed();
                       return;
                   }
                 })
-                .catch(e => {});
+                .catch(e => {
+                  console.log('e: ', e);
+                  this.props.handlePopupDismissed();
+
+                });
             }
           });
 
-          this.props.handlePopupDismissed();
         })
         .catch(error => {
-          this.setState({
-            errorMessage: constants.touch_id_screens.touch_error,
-            error: true
-          });
-          this.description.shake();
+          this.props.handlePopupDismissed();
         });
     } else {
       FingerprintScanner.authenticate({
@@ -108,15 +121,17 @@ class FingerprintPopup extends Component {
             refreshToken: this.props.userApp.currentUser.loginToken
           });
           this.props.handlePopupDismissedDone();
-          Alert.alert("Thành công");
+          snackbar.show("Đăng ký xác thực thành công", 'success');
         })
         .catch(error => {
           console.log(error)
           this.setState({
-            errorMessage:constants.touch_id_screens.touch_error,
+            errorMessage: constants.touch_id_screens.touch_error,
             error: true
           });
-          this.description.shake();
+          this.props.handlePopupDismissedDone();
+
+          // this.description.shake();
 
           //
         });
@@ -128,56 +143,46 @@ class FingerprintPopup extends Component {
   }
 
   handleAuthenticationAttempted = error => {
-    if(this.props.isDismiss) {
-      this.props.isShowPass()
-      this.description.shake();
-    }else{
-      console.log('esl',this.props.isDismiss)
-      this.setState({ errorMessage:constants.touch_id_screens.touch_error, error: true });
-      this.description.shake();
-    }
-      
-    
+    this.props.handlePopupDismissed()
+
   };
 
   render() {
-    const { errorMessage, error } = this.state;
-    const { style, handlePopupDismissed } = this.props;
+    return false
+    // (
+    //   <View style={styles.container}>
+    //     <View style={[styles.contentContainer, style]}>
+    //       <Image
+    //         style={styles.logo}
+    //       // source={require('./assets/finger_print.png')}
+    //       />
 
-    return (
-      <View style={styles.container}>
-        <View style={[styles.contentContainer, style]}>
-          <Image
-            style={styles.logo}
-            // source={require('./assets/finger_print.png')}
-          />
-
-          <Text style={styles.heading}>{constants.touch_id_screens.header}</Text>
-          <ShakingText
-            ref={instance => {
-              this.description = instance;
-            }}
-            style={[
-              styles.description,
-              { color: error ? "#ea3d13" : "#a5a5a5" }
-            ]}
-          >
-            {errorMessage ||
-              constants.touch_id_screens.touch_error}
-          </ShakingText>
-          <ScaledImage
-            source={require("@images/new/fingerprint.png")}
-            height={40}
-          />
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={handlePopupDismissed}
-          >
-            <Text style={styles.buttonText}>{constants.touch_id_screens.back}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+    //       <Text style={styles.heading}>{constants.touch_id_screens.header}</Text>
+    //       <ShakingText
+    //         ref={instance => {
+    //           this.description = instance;
+    //         }}
+    //         style={[
+    //           styles.description,
+    //           { color: error ? "#ea3d13" : "#a5a5a5" }
+    //         ]}
+    //       >
+    //         {errorMessage ||
+    //           constants.touch_id_screens.touch_error}
+    //       </ShakingText>
+    //       <ScaledImage
+    //         source={require("@images/new/fingerprint.png")}
+    //         height={40}
+    //       />
+    //       <TouchableOpacity
+    //         style={styles.buttonContainer}
+    //         onPress={handlePopupDismissed}
+    //       >
+    //         <Text style={styles.buttonText}>{constants.touch_id_screens.back}</Text>
+    //       </TouchableOpacity>
+    //     </View>
+    //   </View>
+    // );
   }
 }
 const styles = StyleSheet.create({
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
 // };
 function mapStateToProps(state) {
   return {
-    navigation: state.navigation,
+    navigation: state.auth.navigation,
     userApp: state.auth.userApp
   };
 }
