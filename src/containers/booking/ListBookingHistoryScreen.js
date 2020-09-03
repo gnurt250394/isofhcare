@@ -125,7 +125,7 @@ class ListBookingHistoryScreen extends Component {
     }
     renderBookingOnline = (item) => {
 
-        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite,]}>Lich gọi tư vấn</Text>
+        return <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite,]}>Lịch gọi tư vấn</Text>
     }
     renderItem = ({ item }) => {
         let date = new Date(item.date)
