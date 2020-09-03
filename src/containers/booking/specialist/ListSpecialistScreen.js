@@ -34,8 +34,8 @@ class ListSpecialistScreen extends Component {
         .get_list_specialists(0,999)
         .then(res => {
           this.setState({refreshing: false});
-          if (res && res.content.length > 0) {
-            this.formatData(res.content);
+          if (res && res.length > 0) {
+            this.formatData(res);
           } else {
             this.formatData([]);
           }
