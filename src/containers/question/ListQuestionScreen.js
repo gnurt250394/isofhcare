@@ -83,11 +83,13 @@ class ListQuestionScreen extends Component {
       'hardwareBackPress',
       this.handleHardwareBack.bind(this),
     );
-    this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.setState({page: 0, onFocus: true}, this.getListQuestions);
+    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+      if (!payload?.action?.preserveFocus)
+        this.setState({page: 0, onFocus: true}, this.getListQuestions);
     });
-    this.didBlur = this.props.navigation.addListener('didBlur', () => {
-      this.setState({onFocus: false, specialId: '', value: ''});
+    this.didBlur = this.props.navigation.addListener('didBlur', payload => {
+      if (!payload?.action?.preserveFocus)
+        this.setState({onFocus: false, specialId: '', value: ''});
     });
   }
   componentWillUnmount = () => {
