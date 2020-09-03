@@ -40,12 +40,12 @@
 		</dict>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string/>
 			<key>CFBundleURLSchemes</key>
 			<array>
-			<string>momocomu20200526</string>
+				<string>momocomu20200526</string>
 			</array>
-   		</dict>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>

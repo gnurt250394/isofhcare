@@ -21,6 +21,8 @@ class FingerprintPopup extends Component {
   }
 
   componentDidMount() {
+    console.log('this.props.userApp.currentUser: ', this.props.userApp.currentUser);
+
     if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
         description: 'description',
@@ -100,7 +102,9 @@ class FingerprintPopup extends Component {
         .then(() => {
           dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
             userId: this.props.userApp.currentUser.id,
-            refreshToken: this.props.userApp.currentUser.loginToken
+            username: this.props.userApp.currentUser.phone || this.props.userApp.currentUser.username,
+            refreshToken: this.props.userApp.currentUser.loginToken,
+
           });
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
