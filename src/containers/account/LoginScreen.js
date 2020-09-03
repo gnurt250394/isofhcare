@@ -33,6 +33,7 @@ import NavigationService from "@navigators/NavigationService";
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import FingerprintPopup from "@components/account/FingerprintPopup";
 import Modal from "@components/modal";
+import dataCacheProvider from "../../data-access/datacache-provider";
 
 class LoginScreen extends Component {
 	constructor(props) {
@@ -43,10 +44,11 @@ class LoginScreen extends Component {
 			password: "",
 			secureTextEntry: true,
 			requirePass: true,
-			disabled: false
+			disabled: false,
+			isShowFinger: false
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
-		console.log('this.nextScreen ssssss: ', this.nextScreen);
+
 
 
 	}
@@ -61,11 +63,20 @@ class LoginScreen extends Component {
 		FingerprintScanner
 			.isSensorAvailable()
 			.then(biometryType => {
-				this.setState({ isSupportSensor: true })
-				console.log('biometryType: ', biometryType);
+				var phone = ''
+
+
+				dataCacheProvider.read('', constants.key.storage.KEY_FINGER, s => {
+					if (s) {
+						this.setState({ isSupportSensor: true, phone: s.username })
+					}
+				}).catch(e => {
+					this.setState({ isSupportSensor: true })
+
+				});
+
 			}).catch(error => {
 				this.setState({ isSupportSensor: false })
-
 
 			});
 
@@ -201,6 +212,7 @@ class LoginScreen extends Component {
 		this.props.navigation.navigate('home')
 	}
 	onFinger = () => {
+		console.log('press');
 		this.setState({
 			isShowFinger: true
 		})
@@ -209,12 +221,13 @@ class LoginScreen extends Component {
 		this.setState({
 			isShowFinger: false
 		});
-		console.log('handlePopupDismissed');
+
 		// this.props.navigation.navigate("home", {
 		// 	showDraw: false
 		// });
 	};
 	render() {
+		console.log(this.state.isShowFinger, 'this.state.isShowFinger');
 		return (
 
 			<ActivityPanel
@@ -258,6 +271,7 @@ class LoginScreen extends Component {
 													labelStyle={styles.labelStyle} placeholder={"SĐT/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={s => this.setState({ phone: s })}
 												errorStyle={styles.errorStyle}
+												value={this.state.phone}
 												validate={{
 													rules: {
 														required: true,
@@ -343,24 +357,17 @@ class LoginScreen extends Component {
 						}} >
 							<Text style={[styles.txSignUp, { textDecorationLine: 'underline' }]}>{"Về trang chủ"}</Text>
 						</TouchableOpacity>
-						<Modal
-							animationType="fade"
-							transparent={true}
-							isVisible={this.state.isShowFinger}
-						// onRequestClose={() => {}}
-						>
-							<FingerprintPopup
-								isLogin={false}
-								style={styles.popup}
-								handlePopupDismissed={this.handleFingerprintDismissed}
-								handleCheckFingerFalse={() => { }}
-								handlePopupDismissedDone={this.handleFingerprintDismissed}
-								style={styles.popup}
-								onNavigate={this.onNavigate}
-								nextScreen={this.props.navigation.getParam("nextScreen", null)}
+						{this.state.isShowFinger ? <FingerprintPopup
+							isLogin={false}
+							handlePopupDismissed={this.handleFingerprintDismissed}
+							handleCheckFingerFalse={() => { }}
+							handlePopupDismissedDone={this.handleFingerprintDismissed}
+							style={styles.popup}
+							handlePopupDismissedLegacy={this.handleFingerprintDismissed}
+							onNavigate={this.onNavigate}
+							nextScreen={this.props.navigation.getParam("nextScreen", null)}
 
-							/>
-						</Modal>
+						/> : null}
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
 					<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>

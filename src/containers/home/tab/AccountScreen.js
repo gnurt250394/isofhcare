@@ -285,8 +285,8 @@ class AccountScreen extends Component {
     // this.props.navigation.navigate('FingerSettingScreen')
     if (this.state.loginWithFinger) {
       dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
-        userId: -1,
-        refreshToken: -1
+        userId: null,
+        refreshToken: null
       });
       this.setState({
         loginWithFinger: false
