@@ -294,7 +294,7 @@ export default {
             client.requestApi(
                 "get",
                 client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}&sort=desc&properties=created`
+                `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}&sort=asc&properties=ordinalNumbers`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
