@@ -97,11 +97,11 @@ class DetailsEhealthScreen extends Component {
   showImage = (image, item) => {
     let isImg = this.checkImage(item);
     let img = image
-      .filter(e => this.checkImage(e) == true)
-      .map(item => {
-        return {uri: item};
-      });
-    let index = img.findIndex(e => e == item);
+    .filter(e => this.checkImage(e) == true)
+    .map(item => {
+      return {uri: item};
+    });
+    let index = img.findIndex(e => e.uri == item);
 
     if (isImg) {
       this.props.navigation.navigate('photoViewer', {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import NavigationService from '@navigators/NavigationService';
 import userProvider from '@data-access/user-provider';
 
@@ -34,7 +34,7 @@ import snackbar from '@utils/snackbar-utils';
 import SettingScreen from '@containers/profile/SettingScreen';
 
 //y ba dien tu
-import {EHealthNavigator} from '@ehealth/navigator';
+import { EHealthNavigator } from '@ehealth/navigator';
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
 
 //login
@@ -170,17 +170,19 @@ import TestCovidScreen from '@containers/covid/TestCovidScreen';
 import TestResultScreen from '@containers/covid/TestResultScreen';
 import HealthMonitoringScreen from '@containers/ehealth/healthMonitoring/HealthMonitoringScreen';
 import FileViewerScreen from '@containers/image/FileViewerScreen';
+import ChatBotScreen from '@containers/chat/ChatBotScreen';
+
 
 const ProfileNavigation = createStackNavigator(
   {
     selectProfile: SelectProfileScreen,
     createProfile: CreateProfileScreen,
-    listProfile: {screen: ListProfileScreen},
-    editProfile: {screen: EditProfileScreen},
-    selectProvince: {screen: SelectProvinceScreen},
-    selectDistrict: {screen: SelectDistrictScreen},
-    selectZone: {screen: SelectZoneScreen},
-    profile: {screen: ProfileScreen},
+    listProfile: { screen: ListProfileScreen },
+    editProfile: { screen: EditProfileScreen },
+    selectProvince: { screen: SelectProvinceScreen },
+    selectDistrict: { screen: SelectDistrictScreen },
+    selectZone: { screen: SelectZoneScreen },
+    profile: { screen: ProfileScreen },
   },
   {
     headerMode: 'none',
@@ -194,11 +196,11 @@ const ProfileNavigation = createStackNavigator(
 );
 const GetTicketNavigation = createStackNavigator(
   {
-    selectHealthFacilitiesScreen: {screen: SelectHealthFacilitiesScreen},
-    selectProfileMedical: {screen: SelectProfileMedicalScreen},
-    scanQRCode: {screen: ScanQRCodeScreen},
-    getTicketFinish: {screen: GetTicketFinishScreen},
-    confirmGetTicket: {screen: ConfirmGetTicketScreen},
+    selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
+    selectProfileMedical: { screen: SelectProfileMedicalScreen },
+    scanQRCode: { screen: ScanQRCodeScreen },
+    getTicketFinish: { screen: GetTicketFinishScreen },
+    confirmGetTicket: { screen: ConfirmGetTicketScreen },
   },
   {
     headerMode: 'none',
@@ -217,11 +219,11 @@ const TabNavigatorComponent = createBottomTabNavigator(
       screen: HomeScreen,
       navigationOptions: {
         tabBarLabel: 'Trang chủ',
-        tabBarIcon: ({tintColor}) => (
+        tabBarIcon: ({ tintColor }) => (
           <ScaledImage
             height={20}
             source={require('@images/new/homev2/ic_home_menu.png')}
-            style={{tintColor: tintColor}}
+            style={{ tintColor: tintColor }}
           />
         ),
       },
@@ -230,12 +232,12 @@ const TabNavigatorComponent = createBottomTabNavigator(
       screen: ListQuestionScreen,
       navigationOptions: {
         tabBarLabel: 'Cộng đồng',
-        tabBarIcon: ({tintColor}) => (
+        tabBarIcon: ({ tintColor }) => (
           <ScaledImage
             touchable={false}
             height={20}
             source={require('@images/new/homev2/ic_community_menu.png')}
-            style={{tintColor: tintColor}}
+            style={{ tintColor: tintColor }}
           />
         ),
         //   tabBarOnPress: ({navigation, defaultHandler}) => {
@@ -302,7 +304,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
     notificationTab: {
       screen: NotificationScreen,
       navigationOptions: {
-        tabBarOnPress: ({navigation, defaultHandler}) => {
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (userProvider.isLogin) {
             defaultHandler();
           } else {
@@ -312,7 +314,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
           }
         },
         tabBarLabel: 'Thông báo',
-        tabBarIcon: ({tintColor}) => (
+        tabBarIcon: ({ tintColor }) => (
           <NotificationBadge height={20} tintColor={tintColor} />
         ),
       },
@@ -328,11 +330,11 @@ const TabNavigatorComponent = createBottomTabNavigator(
         //   }
         // },
         tabBarLabel: 'Cá nhân',
-        tabBarIcon: ({tintColor}) => (
+        tabBarIcon: ({ tintColor }) => (
           <ScaledImage
             height={20}
             source={require('@images/new/homev2/ic_profile_menu.png')}
-            style={{tintColor: tintColor}}
+            style={{ tintColor: tintColor }}
           />
         ),
       },
@@ -369,7 +371,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
 //   }
 // );
 
-const handleCustomTransition = ({scenes}) => {
+const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
   const nextScene = scenes[scenes.length - 1];
   if (
@@ -394,129 +396,132 @@ const RootNavigator = (route = 'splash') =>
     {
       splash: SplashScreen,
       qrcodeScanner: QRCodeScannerScreen,
-      intro: {screen: IntroScreen},
-      about: {screen: AboutScreen},
-      terms: {screen: TermsScreen},
-      policy: {screen: PolicyScreen},
-      verifyPhone: {screen: VerifyPhoneNumberScreen},
+      intro: { screen: IntroScreen },
+      about: { screen: AboutScreen },
+      terms: { screen: TermsScreen },
+      policy: { screen: PolicyScreen },
+      verifyPhone: { screen: VerifyPhoneNumberScreen },
       //profile
-      selectProfile: {screen: SelectProfileScreen},
-      createProfile: {screen: CreateProfileScreen},
-      listProfileUser: {screen: ListProfileScreen},
-      editProfile: {screen: EditProfileScreen},
-      shareDataProfile: {screen: ShareDataProfileScreen},
-      selectProvince: {screen: SelectProvinceScreen},
-      selectDistrict: {screen: SelectDistrictScreen},
-      selectRelationship: {screen: SelectRelationshipScreen},
-      selectZone: {screen: SelectZoneScreen},
-      profile: {screen: ProfileScreen},
-      sendConfirmProfile: {screen: SendConfirmProfileScreen},
+      selectProfile: { screen: SelectProfileScreen },
+      createProfile: { screen: CreateProfileScreen },
+      listProfileUser: { screen: ListProfileScreen },
+      editProfile: { screen: EditProfileScreen },
+      shareDataProfile: { screen: ShareDataProfileScreen },
+      selectProvince: { screen: SelectProvinceScreen },
+      selectDistrict: { screen: SelectDistrictScreen },
+      selectRelationship: { screen: SelectRelationshipScreen },
+      selectZone: { screen: SelectZoneScreen },
+      profile: { screen: ProfileScreen },
+      sendConfirmProfile: { screen: SendConfirmProfileScreen },
       // listProfileUser: { screen: ListProfileScreen },
       //
       home: TabNavigatorComponent,
       homeTab: HomeScreen,
       notificationTab: NotificationScreen,
       ehealth: EHealthNavigator,
-      viewDetailEhealth: {screen: ViewEhealthDetailScreen},
+      viewDetailEhealth: { screen: ViewEhealthDetailScreen },
       //
-      login: {screen: LoginScreen},
-      forgotPassword: {screen: ForgotPasswordScreen},
-      confirmCode: {screen: ConfirmCodeScreen},
-      resetPassword: {screen: ResetPasswordScreen},
-      enterPassword: {screen: EnterPasswordScreen},
-      register: {screen: RegisterScreen},
-      otpPhoneNumber: {screen: OtpPhoneNumberScreen},
-      inputPhone: {screen: InputPhoneScreen},
+      login: { screen: LoginScreen },
+      forgotPassword: { screen: ForgotPasswordScreen },
+      confirmCode: { screen: ConfirmCodeScreen },
+      resetPassword: { screen: ResetPasswordScreen },
+      enterPassword: { screen: EnterPasswordScreen },
+      register: { screen: RegisterScreen },
+      otpPhoneNumber: { screen: OtpPhoneNumberScreen },
+      inputPhone: { screen: InputPhoneScreen },
       //
       listQuestion: ListQuestionScreen,
-      createQuestionStep1: {screen: CreateQuestionStep1Screen},
-      createQuestionStep2: {screen: CreateQuestionStep2Screen},
-      detailQuestion: {screen: DetailQuestionScreen},
-      detailsProfile: {screen: ProfileInfo},
-      detailsDoctor: {screen: DetailsDoctorScreen},
+      createQuestionStep1: { screen: CreateQuestionStep1Screen },
+      createQuestionStep2: { screen: CreateQuestionStep2Screen },
+      detailQuestion: { screen: DetailQuestionScreen },
+      detailsProfile: { screen: ProfileInfo },
+      detailsDoctor: { screen: DetailsDoctorScreen },
       // videoCall: { screen: VideoCallScreen },
       // booking navigation
       addBooking: AddBookingScreen,
       addBooking1: AddBookingScreen1,
-      selectHospital: {screen: SelectHospitalScreen},
-      selectHospitalByLocation: {screen: SelectHospitalByLocationScreen},
-      selectTime: {screen: SelectTimeScreen},
-      selectService: {screen: SelectServiceScreen},
-      selectServiceType: {screen: SelectServiceTypeScreen},
-      selectSpecialist: {screen: SelectSpecialistScreen},
-      confirmBooking: {screen: ConfirmBookingScreen},
-      createBookingSuccess: {screen: CreateBookingSuccessScreen},
-      paymentBookingError: {screen: PaymentBookingErrorScreen},
-      detailsHistory: {screen: DetailHistoryBookingScreen},
-      createProfile: {screen: CreateProfileScreen},
-      paymentVNPay: {screen: PaymentWithVNPayScreen},
-      filterSpecialist: {screen: FilterSpecialistScreen},
+      selectHospital: { screen: SelectHospitalScreen },
+      selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
+      selectTime: { screen: SelectTimeScreen },
+      selectService: { screen: SelectServiceScreen },
+      selectServiceType: { screen: SelectServiceTypeScreen },
+      selectSpecialist: { screen: SelectSpecialistScreen },
+      confirmBooking: { screen: ConfirmBookingScreen },
+      createBookingSuccess: { screen: CreateBookingSuccessScreen },
+      paymentBookingError: { screen: PaymentBookingErrorScreen },
+      detailsHistory: { screen: DetailHistoryBookingScreen },
+      createProfile: { screen: CreateProfileScreen },
+      paymentVNPay: { screen: PaymentWithVNPayScreen },
+      filterSpecialist: { screen: FilterSpecialistScreen },
       // selectProfile: { screen: SelectProfileScreen },
-      patientHistory: {screen: PatientHistoryScreen},
-      createBookingWithPayment: {screen: CreateBookingWithPaymentScreen},
+      patientHistory: { screen: PatientHistoryScreen },
+      createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 
       //get Ticket
       getTicket: GetTicketNavigation,
       //menu profile
-      setting: {screen: SettingScreen},
-      changePassword: {screen: ChangePasswordScreen},
+      setting: { screen: SettingScreen },
+      changePassword: { screen: ChangePasswordScreen },
       //drug
-      findDrug: {screen: FindDrugScreen},
-      selectLocation: {screen: SelectLocationScreen},
-      inputLocation: {screen: InputLocationScreen},
-      detailsDrug: {screen: DetailsDrugScreen},
-      drugStore: {screen: DrugStoreScreen},
+      findDrug: { screen: FindDrugScreen },
+      selectLocation: { screen: SelectLocationScreen },
+      inputLocation: { screen: InputLocationScreen },
+      detailsDrug: { screen: DetailsDrugScreen },
+      drugStore: { screen: DrugStoreScreen },
 
       //
-      specialist: {screen: SpecialistScreen},
+      specialist: { screen: SpecialistScreen },
 
-      detailsVoucher: {screen: DetailVoucherScreen},
-      hospital: {screen: HospitalScreen},
-      drugTab: {screen: DrugScreen},
-      editDrugScan: {screen: EditDrugScanScreen},
-      editDrugInput: {screen: EditDrugInputScreen},
-      hospitalByLocation: {screen: HospitalByLocationScreen},
-      photoViewer: {screen: PhotoViewerScreen},
-      myVoucher: {screen: MyVoucherScreen},
-      listDoctor: {screen: ListDoctorScreen},
-      addBookingDoctor: {screen: AddBookingDoctorScreen},
-      selectTimeDoctor: {screen: SelectDateTimeDoctorScreen},
-      listHospital: {screen: ListHospitalScreen},
-      listPaymentMethod: {screen: ListPaymentMethodScreen},
-      createBookingDoctorSuccess: {screen: CreateBookingDoctorSuccessScreen},
-      editProfile1: {screen: EditProfileScreen1},
-      selectAddress: {screen: SelectAddressScreen},
-      listSpecialistWithDoctor: {screen: ListSpecialistWithDoctorScreen},
-      ratingDoctor: {screen: RatingDoctorScreen},
-      listRatingDoctor: {screen: ListRatingDoctorScreen},
-      listBookingHistory: {screen: ListBookingHistoryScreen},
-      confirmBookingDoctor: {screen: ConfirmBookingDoctorScreen},
-      listSpecialist: {screen: ListSpecialistScreen},
-      tabDoctorAndHospital: {screen: TabDoctorAndHospitalScreen},
-      profileHospital: {screen: ProfileHospitalScreen},
-      mapHospital: {screen: MaphospitalScreen},
-      detalService: {screen: DetailServiceScreen},
-      listServices: {screen: ListServicesScreen},
-      listServicesDetail: {screen: ListServiceDetailScreen},
-      listOfServices: {screen: ListOfServiceScreen},
-      detailNewsHighlight: {screen: DetailNewHighLightScreen},
+      detailsVoucher: { screen: DetailVoucherScreen },
+      hospital: { screen: HospitalScreen },
+      drugTab: { screen: DrugScreen },
+      editDrugScan: { screen: EditDrugScanScreen },
+      editDrugInput: { screen: EditDrugInputScreen },
+      hospitalByLocation: { screen: HospitalByLocationScreen },
+      photoViewer: { screen: PhotoViewerScreen },
+      myVoucher: { screen: MyVoucherScreen },
+      listDoctor: { screen: ListDoctorScreen },
+      addBookingDoctor: { screen: AddBookingDoctorScreen },
+      selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
+      listHospital: { screen: ListHospitalScreen },
+      listPaymentMethod: { screen: ListPaymentMethodScreen },
+      createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
+      editProfile1: { screen: EditProfileScreen1 },
+      selectAddress: { screen: SelectAddressScreen },
+      listSpecialistWithDoctor: { screen: ListSpecialistWithDoctorScreen },
+      ratingDoctor: { screen: RatingDoctorScreen },
+      listRatingDoctor: { screen: ListRatingDoctorScreen },
+      listBookingHistory: { screen: ListBookingHistoryScreen },
+      confirmBookingDoctor: { screen: ConfirmBookingDoctorScreen },
+      listSpecialist: { screen: ListSpecialistScreen },
+      tabDoctorAndHospital: { screen: TabDoctorAndHospitalScreen },
+      profileHospital: { screen: ProfileHospitalScreen },
+      mapHospital: { screen: MaphospitalScreen },
+      detalService: { screen: DetailServiceScreen },
+      listServices: { screen: ListServicesScreen },
+      listServicesDetail: { screen: ListServiceDetailScreen },
+      listOfServices: { screen: ListOfServiceScreen },
+      detailNewsHighlight: { screen: DetailNewHighLightScreen },
       //icd
-      searchIcd: {screen: SearchIcdScreen},
-      code: {screen: CodeScreen},
-      historyCumulative: {screen: HistoryCumulativeScreen},
-      selectNations: {screen: SelectNationsSceen},
-      getJobs: {screen: SelectJobsSceen},
-      selectCountry: {screen: SelectCountrySceen},
-      editProfileUsername: {screen: EditProfileUsernameScreen},
-      groupChat: {screen: GroupChatScreen},
-      chat: {screen: ChatScreen},
+      searchIcd: { screen: SearchIcdScreen },
+      code: { screen: CodeScreen },
+      historyCumulative: { screen: HistoryCumulativeScreen },
+      selectNations: { screen: SelectNationsSceen },
+      getJobs: { screen: SelectJobsSceen },
+      selectCountry: { screen: SelectCountrySceen },
+      editProfileUsername: { screen: EditProfileUsernameScreen },
+      groupChat: { screen: GroupChatScreen },
+      chat: { screen: ChatScreen },
       listMyQuestion: ListMyQuestionScreen,
-      detailMessage: {screen: DetailMessageScreen},
-      introCovid: {screen: IntroCovidScreen},
-      testCovid: {screen: TestCovidScreen},
-      testResult: {screen: TestResultScreen},
-      healthMonitoring: {screen: HealthMonitoringScreen},
-      fileViewer: {screen: FileViewerScreen},
+      detailMessage: { screen: DetailMessageScreen },
+      introCovid: { screen: IntroCovidScreen },
+      testCovid: { screen: TestCovidScreen },
+      testResult: { screen: TestResultScreen },
+      healthMonitoring: { screen: HealthMonitoringScreen },
+      fileViewer: { screen: FileViewerScreen },
+      chatBot: { screen: ChatBotScreen },
+
+
     },
     {
       initialRouteName: route,
@@ -557,4 +562,4 @@ RootNavigator().router.getStateForAction = (action, state) => {
   return defaultStackGetStateForAction(action, state);
 };
 let AppContainer = route => createAppContainer(RootNavigator(route));
-export {AppContainer};
+export { AppContainer };

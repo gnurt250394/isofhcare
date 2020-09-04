@@ -115,6 +115,8 @@ target 'APP' do
   # pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
 
+  pod 'react-native-dialogflow', :path => '../node_modules/react-native-dialogflow'
+
 end
 
 # very important to have, unless you removed React dependencies for Libraries
