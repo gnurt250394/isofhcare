@@ -89,7 +89,7 @@ class ListMyQuestionScreen extends Component {
     this.setState({page: 0, refreshing: true}, this.getListQuestions);
   };
   onClickCreateMenu = () => {
-    this.props.navigation.navigate('createQuestionStep1', {
+    this.props.navigation.navigate('createQuestionStep', {
       replace: true,
     });
   };

@@ -219,7 +219,7 @@ class CreateQuestionStep1Screen extends Component {
     if (!this.props.userApp.isLogin) {
       this.props.navigation.replace('login', {
         nextScreen: {
-          screen: 'createQuestionStep1',
+          screen: 'createQuestionStep',
           param: {
             fromlogin: true,
             state: this.state,
