@@ -124,7 +124,7 @@ class HomeScreen extends Component {
             // snackbar.show('Tính năng đang phát triển')
             // return
             // if (this.props.userApp.isLogin)
-            this.props.navigation.navigate('createQuestionStep1');
+            this.props.navigation.navigate('createQuestionStep');
             // else
             //   this.props.navigation.navigate("login", {
             //     nextScreen: { screen: "createQuestionStep1", param: {} }

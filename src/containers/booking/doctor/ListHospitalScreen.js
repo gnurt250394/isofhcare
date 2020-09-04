@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import ItemHospital from '@components/booking/specialist/itemHospital';
 
 class ListHospitalScreen extends Component {
     constructor(props) {
@@ -30,19 +31,23 @@ class ListHospitalScreen extends Component {
             this.formatData([])
         })
     }
-    onFilter = (item) => () => {
-        this.props.navigation.pop()
-        let onSelected = this.props.navigation.getParam('onSelected')
-        if (onSelected) onSelected(item)
+    goDetailDoctor = (item) => () => {
+        this.props.navigation.navigate('profileHospital', {
+            item
+        })
+    }
+    addBookingDoctor = (hospital) => () => {
+        this.props.navigation.navigate('addBooking1', {
+            hospital,
+        })
     }
     renderItem = ({ item, index }) => {
         return (
-            <TouchableOpacity
-                onPress={this.onFilter(item)}
-                style={styles.containerItem}
-            >
-                <Text style={styles.txtName}>{item.name}</Text>
-            </TouchableOpacity>
+            <ItemHospital
+                item={item}
+                onPressDoctor={this.goDetailDoctor(item)}
+                onPressBooking={this.addBookingDoctor(item)}
+            />
         )
     }
     formatData = (data) => {
