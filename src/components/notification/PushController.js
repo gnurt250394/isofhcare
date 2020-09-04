@@ -220,6 +220,25 @@ class PushController extends Component {
             NavigationService.navigate('detailsDoctor', {item: {id}});
             break;
           }
+          case 'fanpage': {
+            Linking.canOpenURL('fb://page/1986302411660628')
+              .then(supported => {
+                console.log('supported: ', supported);
+                if (supported) {
+                  return Linking.openURL('fb://page/1986302411660628');
+                } else {
+                  return Linking.openURL('https://www.facebook.com/');
+                }
+              })
+              .catch(err => {
+                console.log('err: ', err);
+              });
+            break;
+          }
+          default:
+            if (type) {
+              NavigationService.navigate(type, {item: {id}});
+            }
         }
       }
     } catch (error) {
@@ -406,6 +425,25 @@ class PushController extends Component {
             NavigationService.navigate('detailsDoctor', {item: {id}});
             break;
           }
+          case 'fanpage': {
+            Linking.canOpenURL('fb://page/1986302411660628')
+              .then(supported => {
+                console.log('supported: ', supported);
+                if (supported) {
+                  return Linking.openURL('fb://page/1986302411660628');
+                } else {
+                  return Linking.openURL('https://www.facebook.com/');
+                }
+              })
+              .catch(err => {
+                console.log('err: ', err);
+              });
+            break;
+          }
+          default:
+            if (type) {
+              NavigationService.navigate(type, {item: {id}});
+            }
         }
       } catch (error) {
         console.log(error);

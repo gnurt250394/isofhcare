@@ -8,6 +8,7 @@ import {
   FlatList,
   StyleSheet,
   DeviceEventEmitter,
+  Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -53,15 +54,16 @@ class NotificationScreen extends Component {
       'hardwareBackPress',
       this.handleHardwareBack.bind(this),
     );
-    this.onFocus = this.props.navigation.addListener('didFocus', () => {
-      this.props.dispatch(redux.getUnreadNotificationCount());
-      this.onRefresh();
+    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+      if (!payload?.action?.preserveFocus) {
+        this.props.dispatch(redux.getUnreadNotificationCount());
+        this.onRefresh();
+      }
     });
   }
   componentWillUnmount = () => {
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
     if (this.onFocus) {
-      console.log('this.onFocus: ', this.onFocus);
       this.onFocus.remove();
     }
   };
@@ -142,21 +144,23 @@ class NotificationScreen extends Component {
       item.notification.title.endsWith('}')
     ) {
       let obj = JSON.parse(item.notification.title);
-      console.log('obj: ', obj);
+
       title =
         objectUtils.renderAcademic(obj.question.doctorInfo.academicDegree) +
         obj.question.doctorInfo.name +
         ' đã trả lời câu hỏi của bạn.';
+    } else if (item.notification.body) {
+      title = item.notification.body;
     } else {
       title = item.notification.title;
     }
     return title;
   };
   viewNotification(item) {
-    console.log('item: ', item);
     try {
       this.setState({isLoading: true}, () => {
         var data = JSON.parse(item.notification.value);
+        console.log('data: ', data);
         notificationProvider
           .setRead(item.notification.id)
           .then(s => {
@@ -226,8 +230,26 @@ class NotificationScreen extends Component {
             NavigationService.navigate('detailsDoctor', {item: data});
             break;
           }
+          case 'fanpage': {
+            Linking.canOpenURL('fb://page/1986302411660628')
+              .then(supported => {
+                console.log('supported: ', supported);
+                if (supported) {
+                  return Linking.openURL('fb://page/1986302411660628');
+                } else {
+                  return Linking.openURL('https://www.facebook.com/');
+                }
+              })
+              .catch(err => {
+                console.log('err: ', err);
+              });
+            break;
+          }
           default:
             this.setState({isLoading: false});
+            if (data?.type) {
+              NavigationService.navigate(data?.type, {item: data});
+            }
         }
       });
     } catch (error) {
@@ -287,7 +309,6 @@ class NotificationScreen extends Component {
                       isLoading: false,
                     },
                     () => {
-                      console.log(e);
                       snackbar.show(
                         constants.msg.notification.error_retry,
                         'danger',
@@ -328,7 +349,6 @@ class NotificationScreen extends Component {
               isLoading: false,
             },
             () => {
-              console.log(e);
               snackbar.show(constants.msg.notification.error_retry, 'danger');
             },
           );
@@ -419,9 +439,8 @@ class NotificationScreen extends Component {
     );
   }
   getNotificationType(item) {
-    console.log('item: ', item);
     try {
-      if (item.notification) {
+      if (item.notification && !item.notification.body) {
         let value = JSON.parse(item.notification.value);
         switch (value.type) {
           case 2:
@@ -437,6 +456,8 @@ class NotificationScreen extends Component {
           case 16:
             return constants.msg.notification.type.new_message;
         }
+      } else if (item.notification.body && item.notification.title) {
+        return item.notification.title;
       }
     } catch (error) {}
     return 'Thông báo';
