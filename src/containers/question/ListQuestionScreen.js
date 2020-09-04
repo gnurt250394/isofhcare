@@ -197,7 +197,7 @@ class ListQuestionScreen extends Component {
     );
   };
   onClickCreateMenu = () => {
-    this.props.navigation.navigate('createQuestionStep1');
+    this.props.navigation.navigate('createQuestionStep');
   };
   onMyQuestion = () => this.props.navigation.navigate('listMyQuestion');
   menuCreate() {
