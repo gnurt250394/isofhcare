@@ -9,7 +9,8 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 	Dimensions,
-	Keyboard
+	Keyboard,
+	Platform
 } from "react-native";
 import { Card, Item, Label, Input } from 'native-base';
 import { connect } from "react-redux";
@@ -29,6 +30,11 @@ import connectionUtils from "@utils/connection-utils";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InputPhone from '@components/account/InputPhone'
 import NavigationService from "@navigators/NavigationService";
+import FingerprintScanner from 'react-native-fingerprint-scanner';
+import FingerprintPopup from "@components/account/FingerprintPopup";
+import Modal from "@components/modal";
+import dataCacheProvider from "../../data-access/datacache-provider";
+
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -38,9 +44,11 @@ class LoginScreen extends Component {
 			password: "",
 			secureTextEntry: true,
 			requirePass: true,
-			disabled: false
+			disabled: false,
+			isShowFinger: false
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+
 
 
 	}
@@ -52,8 +60,33 @@ class LoginScreen extends Component {
 				userProvider.deviceToken = token;
 				firebase.messaging().subscribeToTopic("isofhcare_test");
 			});
-	}
+		FingerprintScanner
+			.isSensorAvailable()
+			.then(biometryType => {
+				var phone = ''
 
+
+				dataCacheProvider.read('', constants.key.storage.KEY_FINGER, s => {
+					if (s) {
+						this.setState({ isSupportSensor: true, phone: s.username })
+					}
+				}).catch(e => {
+					this.setState({ isSupportSensor: true })
+
+				});
+
+			}).catch(error => {
+				this.setState({ isSupportSensor: false })
+
+			});
+
+	}
+	onNavigate = () => {
+		this.props.navigation.replace(
+			this.nextScreen.screen,
+			this.nextScreen.param
+		);
+	}
 
 	register() {
 
@@ -175,10 +208,26 @@ class LoginScreen extends Component {
 			'tel:1900299983'
 		);
 	}
-	goHome=()=>{
+	goHome = () => {
 		this.props.navigation.navigate('home')
 	}
+	onFinger = () => {
+		console.log('press');
+		this.setState({
+			isShowFinger: true
+		})
+	}
+	handleFingerprintDismissed = () => {
+		this.setState({
+			isShowFinger: false
+		});
+
+		// this.props.navigation.navigate("home", {
+		// 	showDraw: false
+		// });
+	};
 	render() {
+		console.log(this.state.isShowFinger, 'this.state.isShowFinger');
 		return (
 
 			<ActivityPanel
@@ -222,6 +271,7 @@ class LoginScreen extends Component {
 													labelStyle={styles.labelStyle} placeholder={"SĐT/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={s => this.setState({ phone: s })}
 												errorStyle={styles.errorStyle}
+												value={this.state.phone}
 												validate={{
 													rules: {
 														required: true,
@@ -287,9 +337,12 @@ class LoginScreen extends Component {
 											</TouchableOpacity>
 										</View>
 									</Form>
-									<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
-										{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
-									</TouchableOpacity>
+									<View style={styles.viewBtn}>
+										<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
+											{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
+										</TouchableOpacity>
+										{this.state.isSupportSensor && <TouchableOpacity onPress={this.onFinger} style={styles.btnImgFinger}><ScaleImage style={styles.imgFinger} source={require('@images/new/finger/ic_finger_login.png')} height={40}></ScaleImage></TouchableOpacity>}
+									</View>
 								</Card>
 								<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
 							</View>
@@ -299,11 +352,22 @@ class LoginScreen extends Component {
 							<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={this.goHome} style={{
-							alignSelf:'center',
-							padding:30
+							alignSelf: 'center',
+							padding: 30
 						}} >
-							<Text style={[styles.txSignUp,{textDecorationLine:'underline'}]}>{"Về trang chủ"}</Text>
+							<Text style={[styles.txSignUp, { textDecorationLine: 'underline' }]}>{"Về trang chủ"}</Text>
 						</TouchableOpacity>
+						{this.state.isShowFinger ? <FingerprintPopup
+							isLogin={false}
+							handlePopupDismissed={this.handleFingerprintDismissed}
+							handleCheckFingerFalse={() => { }}
+							handlePopupDismissedDone={this.handleFingerprintDismissed}
+							style={styles.popup}
+							handlePopupDismissedLegacy={this.handleFingerprintDismissed}
+							onNavigate={this.onNavigate}
+							nextScreen={this.props.navigation.getParam("nextScreen", null)}
+
+						/> : null}
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
 					<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>
@@ -317,6 +381,22 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	btnImgFinger: {
+		alignItems: 'center',
+	},
+	popup: { width: DEVICE_WIDTH * 0.8 },
+
+	imgFinger: {
+		marginLeft: 10
+	},
+	viewBtn: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+		marginTop: 10,
+		paddingLeft: 10,
+
+	},
 	txNumber: {
 		fontWeight: 'bold',
 		color: '#fff',
@@ -442,7 +522,7 @@ const styles = StyleSheet.create({
 		paddingRight: 5,
 		fontSize: 14
 	},
-	btnLogin: { backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
+	btnLogin: { backgroundColor: '#00CBA7', borderRadius: 6, width: 235, height: 45, alignItems: 'center', justifyContent: 'center' },
 	txlg: { color: '#FFF', fontSize: 17 },
 	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 30 },
 	txSignUp: { color: '#FFF', fontSize: 17 },
