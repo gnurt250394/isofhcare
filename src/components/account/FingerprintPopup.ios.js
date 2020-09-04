@@ -25,7 +25,7 @@ class FingerprintPopup extends Component {
 
     if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
-        description: 'description',
+        // description: 'description',
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
