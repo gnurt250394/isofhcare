@@ -155,15 +155,15 @@ class HomeScreen extends Component {
             // });
           },
         },
-        {
-          icon: require('@images/new/covid/ic_covid.png'),
-          text: 'Test Chat Bot',
-          onPress: () => {
-            // snackbar.show('Tính năng đang phát triển')
-            // return
-            this.props.navigation.navigate('chatBot');
-          },
-        },
+        // {
+        //   icon: require('@images/new/covid/ic_covid.png'),
+        //   text: 'Test Chat Bot',
+        //   onPress: () => {
+        //     // snackbar.show('Tính năng đang phát triển')
+        //     // return
+        //     this.props.navigation.navigate('chatBot');
+        //   },
+        // },
       ],
       height: 0,
     };
