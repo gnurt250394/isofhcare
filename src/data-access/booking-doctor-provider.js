@@ -191,7 +191,7 @@ export default {
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.userId || doctor.id, name: doctor.name, phone: doctor.telephone, academicDegree: doctor.academicDegree }
             let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '', checkInPlace: hospitals && hospitals.checkInPlace || '', hotLine: hospitals && hospitals.hotLine || '', bank: hospitals && hospitals.transferInfo && hospitals.transferInfo.bank || '', accountNo: hospitals && hospitals.transferInfo && hospitals.transferInfo.accountNo || '', owner: hospitals && hospitals.transferInfo && hospitals.transferInfo.owner || '', branch: hospitals && hospitals.transferInfo && hospitals.transferInfo.branch || '', note: hospitals && hospitals.transferInfo && hospitals.transferInfo.note || '' }
-            
+
             room = {
                 "id": room.id,
                 "name": room.name,
@@ -302,7 +302,7 @@ export default {
             );
         });
     },
-   search_list_specialists(name) {
+    search_list_specialists(name) {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
