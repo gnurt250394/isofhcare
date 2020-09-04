@@ -132,8 +132,8 @@ android {
         applicationId "com.isofh.appisofhcaredev"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 94
-        versionName "6.7"
+        versionCode 95
+        versionName "6.8"
         ndk {
             // abiFilters "armeabi-v7a", "x86", "arm64-v8a"
             abiFilters  "armeabi-v7a", "arm64-v8a"
@@ -217,6 +217,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-dialogflow')
     implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
     compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
     implementation fileTree(dir: "libs", include: ["*.jar"])
