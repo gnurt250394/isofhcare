@@ -30,7 +30,8 @@ class FingerprintPopup extends Component {
       })
         .then(() => {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
-            if (!s || !s.userId) {
+            console.log(this.props.username, 's: ', s);
+            if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
             }
             else {
@@ -54,30 +55,30 @@ class FingerprintPopup extends Component {
                           showDraw: false
                         });
                       }
-                      return;
+                      break;
                     case 4:
                       snackbar.show(
                         constants.msg.user.this_account_not_active,
                         "danger"
                       );
-                      return;
+                      break;
                     case 3:
                       snackbar.show(
                         constants.msg.user.username_or_password_incorrect,
                         "danger"
                       );
-                      return;
+                      break;
                     case 2:
                       snackbar.show(
                         "Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại"
                       );
-
+                      break
                     case 1:
                       snackbar.show(
                         constants.msg.user.account_blocked,
                         "danger"
                       );
-                      return;
+                      break;
                   }
                 })
                 .catch(e => {
