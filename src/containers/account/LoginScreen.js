@@ -112,26 +112,6 @@ class LoginScreen extends Component {
 		} else this.props.navigation.navigate("home", { showDraw: false });
 	}
 
-	loginV2() {
-		Keyboard.dismiss();
-		if (!this.form.isValid()) {
-			return;
-		}
-		this.setState({ isLoading: true }, () => {
-			userProvider.loginV2(this.state.phone.trim(), this.state.password).then(s => {
-				this.setState({ isLoading: false });
-				if (s.code == 0) {
-					this.getDetails()
-				} else {
-					snackbar.show(s.message, "danger");
-				}
-			}).catch(e => {
-
-				this.setState({ isLoading: false });
-				snackbar.show(constants.msg.error_occur, "danger");
-			});
-		})
-	}
 	login() {
 		Keyboard.dismiss();
 		if (!this.form.isValid()) {
@@ -365,6 +345,7 @@ class LoginScreen extends Component {
 							style={styles.popup}
 							handlePopupDismissedLegacy={this.handleFingerprintDismissed}
 							onNavigate={this.onNavigate}
+							username={this.state.phone}
 							nextScreen={this.props.navigation.getParam("nextScreen", null)}
 
 						/> : null}
