@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
   SafeAreaView,
   Animated,
   StyleSheet,
+  PanResponder,
+  Easing,
+  Dimensions,
 } from 'react-native';
 import {withNavigation} from 'react-navigation';
+const {height, width} = Dimensions.get('window');
 const text = 'Xin chào tôi là mimi rất vui được trò truyện với bạn';
 class ChatBot extends React.PureComponent {
   animatedText = [];
@@ -21,7 +25,33 @@ class ChatBot extends React.PureComponent {
     this.timeout = null;
     this.state = {
       isShow: true,
+      showDraggable: true,
+      dropZoneValues: null,
+      pan: new Animated.ValueXY({x: 0, y: height - 150}),
     };
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([
+        null,
+        {
+          dx: this.state.pan.x,
+          dy: this.state.pan.y,
+        },
+      ]),
+      onPanResponderGrant: (event, gesture) => {
+        this.state.pan.setOffset({
+          x: this.state.pan.x._value,
+          y: this.state.pan.y._value,
+        });
+      },
+      onPanResponderRelease: (e, gesture) => {
+        this.state.pan.flattenOffset();
+      },
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        //return true if user is swiping, return false if it's a single click
+        return !(gestureState.dx === 0 && gestureState.dy === 0);
+      },
+    });
   }
   componentDidMount() {
     this.animated();
@@ -40,55 +70,67 @@ class ChatBot extends React.PureComponent {
     Animated.stagger(100, animations).start();
   };
   render() {
-    if (this.props?.navigation?.state?.routeName == 'chatBot') return null;
+    if (
+      this.props?.navigation?.state?.routeName == 'chatBot' ||
+      this.props?.navigation?.state?.routeName == 'splash' ||
+      this.props?.navigation?.state?.routeName == 'intro'
+    )
+      return null;
     return (
-      <SafeAreaView>
-        <TouchableOpacity
-          style={styles.buttonChat}
+      <Animated.View
+        {...this.panResponder.panHandlers}
+        // onTouchEndCapture={() => this.props.navigation.navigate('chatBot')}
+        style={[this.state.pan.getLayout(), styles.buttonChat]}>
+        <TouchableWithoutFeedback
           onPress={() => this.props.navigation.navigate('chatBot')}>
-          {this.state.isShow ? (
-            <View style={styles.containerText}>
-              <View
-                style={{
-                  backgroundColor: '#3161AD',
-                  height: 10,
-                  width: 10,
-                  position: 'absolute',
-                  right: -5,
-                  transform: [{rotate: '45deg'}],
-                }}
-              />
-              {this.arrText.map((item, index) => {
-                return (
-                  <Animated.Text
-                    key={index}
-                    style={[
-                      styles.txt,
-                      {
-                        opacity: this.animatedText[index],
-                        transform: [
-                          {
-                            translateY: Animated.multiply(
-                              this.animatedText[index],
-                              new Animated.Value(-3),
-                            ),
-                          },
-                        ],
-                      },
-                    ]}>
-                    {item}
-                  </Animated.Text>
-                );
-              })}
-            </View>
-          ) : null}
-
-          <Image
-            source={require('@images/new/ic_robot.gif')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-      </SafeAreaView>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+            }}>
+            <Image
+              source={require('@images/new/ic_robot.gif')}
+              style={styles.icon}
+            />
+            {this.state.isShow ? (
+              <View style={styles.containerText}>
+                <View
+                  style={{
+                    backgroundColor: '#3161AD',
+                    height: 10,
+                    width: 10,
+                    position: 'absolute',
+                    left: -5,
+                    transform: [{rotate: '45deg'}],
+                  }}
+                />
+                {this.arrText.map((item, index) => {
+                  return (
+                    <Animated.Text
+                      key={index}
+                      style={[
+                        styles.txt,
+                        {
+                          opacity: this.animatedText[index],
+                          transform: [
+                            {
+                              translateY: Animated.multiply(
+                                this.animatedText[index],
+                                new Animated.Value(-3),
+                              ),
+                            },
+                          ],
+                        },
+                      ]}>
+                      {item}
+                    </Animated.Text>
+                  );
+                })}
+              </View>
+            ) : null}
+          </View>
+        </TouchableWithoutFeedback>
+      </Animated.View>
     );
   }
 }
@@ -119,9 +161,5 @@ const styles = StyleSheet.create({
   },
   buttonChat: {
     position: 'absolute',
-    bottom: 15,
-    right: 10,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
 });
