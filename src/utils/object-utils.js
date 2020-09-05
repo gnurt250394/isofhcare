@@ -38,8 +38,8 @@ export default {
     if (academicDegree?.value == 'UNKNOW') {
       return '';
     } else {
-      if (academicDegree?.name) {
-        return academicDegree.name + ' ';
+      if (academicDegree?.value) {
+        return academicDegree.value + ' ';
       }
     }
   },
