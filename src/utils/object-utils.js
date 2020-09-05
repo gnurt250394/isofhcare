@@ -40,8 +40,9 @@ export default {
     } else {
       if (academicDegree?.value) {
         return academicDegree.value + ' ';
+      } else if (typeof academicDegree == 'string') {
+        return academicDegree + ' ';
       }
     }
   },
-
 };
