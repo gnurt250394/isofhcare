@@ -20,7 +20,6 @@ import {connect} from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import {SafeAreaView} from 'react-navigation';
 import {Card} from 'native-base';
-import ChatBot from '@components/ChatBot';
 
 class ActivityPanel extends Component {
   constructor(props) {
@@ -184,7 +183,6 @@ class ActivityPanel extends Component {
             </Activity>
           </SafeAreaView>
         </View>
-        <ChatBot />
       </View>
     );
   }
