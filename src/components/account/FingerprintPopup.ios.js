@@ -30,7 +30,6 @@ class FingerprintPopup extends Component {
     if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
         description: 'Dùng vân tay để đăng nhập isofhcare',
-        cancelButton: this.props.handlePopupDismissed(),
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
@@ -102,7 +101,6 @@ class FingerprintPopup extends Component {
     } else {
       FingerprintScanner.authenticate({
         description: 'Dùng vân tay để đăng ký xác thực isofhcare',
-        cancelButton: this.props.handlePopupDismissed(),
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
