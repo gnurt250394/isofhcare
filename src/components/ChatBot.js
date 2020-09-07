@@ -14,6 +14,7 @@ import {
 import {withNavigation} from 'react-navigation';
 import NavigationService from '@navigators/NavigationService';
 import ChatBotScreen from '@containers/chat/ChatBotScreen';
+import ChatHeads from './chatbot/ChatHeads';
 const {height, width} = Dimensions.get('window');
 const text = 'Xin chào tôi là mimi rất vui được trò truyện với bạn';
 class ChatBot extends React.PureComponent {
@@ -76,59 +77,27 @@ class ChatBot extends React.PureComponent {
   onHideChat = () => this.setState({showChat: false});
   onShowChat = () => this.setState({showChat: true});
   render() {
-    if (this.state.showChat) {
-      return <ChatBotScreen onHide={this.onHideChat} />;
-    } else
-      return (
-        <Animated.View
-          {...this.panResponder.panHandlers}
-          style={[this.state.pan.getLayout(), styles.buttonChat]}>
-          <TouchableWithoutFeedback onPress={this.onShowChat}>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <Image
-                source={require('@images/new/ic_robot.gif')}
-                style={styles.icon}
-              />
-              {this.state.isShow ? (
-                <View style={styles.containerText}>
-                  <View style={styles.groupText} />
-                  {this.arrText.map((item, index) => {
-                    return (
-                      <Animated.Text
-                        key={index}
-                        style={[
-                          styles.txt,
-                          {
-                            opacity: this.animatedText[index],
-                            transform: [
-                              {
-                                translateY: Animated.multiply(
-                                  this.animatedText[index],
-                                  new Animated.Value(-3),
-                                ),
-                              },
-                            ],
-                          },
-                        ]}>
-                        {item}
-                      </Animated.Text>
-                    );
-                  })}
-                </View>
-              ) : null}
-            </View>
-          </TouchableWithoutFeedback>
-        </Animated.View>
-      );
+    return (
+      <View style={styles.container} pointerEvents="box-none">
+        <ChatHeads onPress={this.onShowChat} />
+        {this.state.showChat ? (
+          <ChatBotScreen onHide={this.onHideChat} />
+        ) : null}
+      </View>
+    );
   }
 }
 
 export default ChatBot;
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
   groupText: {
     backgroundColor: '#3161AD',
     height: 10,
