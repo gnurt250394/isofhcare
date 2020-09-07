@@ -611,19 +611,14 @@ class AccountScreen extends Component {
             <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
           </View> */}
         </ScrollView>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          isVisible={this.state.isFinger}
-        // onRequestClose={() => {}}
-        >
-          <FingerprintPopup
-            isLogin={true}
-            handlePopupDismissed={this.handleFingerprintDismissed}
-            handlePopupDismissedDone={this.handlePopupDismissedDone}
-            style={styles.popup}
-          />
-        </Modal>
+
+        {this.state.isFinger && <FingerprintPopup
+          isLogin={true}
+          handlePopupDismissed={this.handleFingerprintDismissed}
+          handlePopupDismissedDone={this.handlePopupDismissedDone}
+          style={styles.popup}
+        />}
+
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ActivityPanel >
     );
