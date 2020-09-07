@@ -337,18 +337,19 @@ class LoginScreen extends Component {
 						}} >
 							<Text style={[styles.txSignUp, { textDecorationLine: 'underline' }]}>{"Về trang chủ"}</Text>
 						</TouchableOpacity>
-						{this.state.isShowFinger ? <FingerprintPopup
+						<FingerprintPopup
 							isLogin={false}
 							handlePopupDismissed={this.handleFingerprintDismissed}
 							handleCheckFingerFalse={() => { }}
 							handlePopupDismissedDone={this.handleFingerprintDismissed}
 							style={styles.popup}
+							isFinger={this.state.isShowFinger}
 							handlePopupDismissedLegacy={this.handleFingerprintDismissed}
 							onNavigate={this.onNavigate}
 							username={this.state.phone}
 							nextScreen={this.props.navigation.getParam("nextScreen", null)}
 
-						/> : null}
+						/>
 						<View style={styles.viewBottom}></View>
 					</KeyboardAwareScrollView>
 					<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>

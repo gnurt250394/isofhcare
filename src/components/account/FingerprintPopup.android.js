@@ -9,12 +9,15 @@ import {
   ViewPropTypes,
   Platform,
 } from 'react-native';
-
+import snackbar from "@utils/snackbar-utils";
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import styles from './FingerprintPopup.component.styles';
 import ShakingText from './ShakingText.component';
 import dataCacheProvider from "../../data-access/datacache-provider";
-
+import constants from "@resources/strings";
+import { connect } from "react-redux";
+import redux from "@redux-store";
+import userProvider from "@data-access/user-provider";
 
 // - this example component supports both the
 //   legacy device-specific (Android < v23) and
@@ -30,12 +33,8 @@ class BiometricPopup extends Component {
 
     this.description = null;
   }
-
-  componentDidMount() {
-    console.log(Platform.Version, 'Platform.Version');
-    if (this.requiresLegacyAuthentication()) {
-      this.authLegacy();
-    } else {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isFinger) {
       this.authCurrent();
     }
   }
@@ -44,17 +43,21 @@ class BiometricPopup extends Component {
     FingerprintScanner.release();
   }
 
-  requiresLegacyAuthentication() {
-    return Platform.Version < 23;
+  // requiresLegacyAuthentication() {
+  //   return Platform.Version < 23;
 
-  }
+  // }
 
-  authCurrent() {
+  authCurrent = () => {
     FingerprintScanner
-      .authenticate({ title: 'Dùng vân tay để đăng nhập' })
+      .authenticate({
+        title: 'Dùng vân tay để đăng nhập',
+        cancelButton: this.props.handlePopupDismissed()
+      })
       .then(() => {
-        if (!this.state.isLogin) {
+        if (!this.props.isLogin) {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
+            this.props.handlePopupDismissed();
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
             }
@@ -62,6 +65,7 @@ class BiometricPopup extends Component {
               userProvider
                 .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
+
                   switch (s.code) {
                     case 0:
                       var user = s.data.user;
@@ -103,10 +107,16 @@ class BiometricPopup extends Component {
                         "danger"
                       );
                       break;
+                    default:
+                      snackbar.show(
+                        "Có lỗi xảy ra, xin vui lòng thử lại"
+                      );
+                      break
                   }
                 })
                 .catch(e => {
-                  console.log('e: ', e);
+
+
                   this.props.handlePopupDismissed();
 
                 });
@@ -118,83 +128,88 @@ class BiometricPopup extends Component {
             username: this.props.userApp.currentUser.phone || this.props.userApp.currentUser.username,
             refreshToken: this.props.userApp.currentUser.loginToken,
 
+          }).catch(err => {
+
+
           });
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
         }
+      }).catch(err => {
+
         this.props.handlePopupDismissed();
       });
   }
 
-  authLegacy() {
-    FingerprintScanner
-      .authenticate({ onAttempt: this.handleAuthenticationAttemptedLegacy })
-      .then(() => {
-        this.props.handlePopupDismissedLegacy();
-        Alert.alert('Fingerprint Authentication', 'Authenticated successfully');
-      })
-      .catch((error) => {
-        this.setState({ errorMessageLegacy: error.message, biometricLegacy: error.biometric });
-        this.description.shake();
-      });
-  }
+  // authLegacy() {
+  //   FingerprintScanner
+  //     .authenticate({ onAttempt: this.handleAuthenticationAttemptedLegacy })
+  //     .then(() => {
+  //       this.props.handlePopupDismissedLegacy();
+  //       Alert.alert('Fingerprint Authentication', 'Authenticated successfully');
+  //     })
+  //     .catch((error) => {
+  //       this.setState({ errorMessageLegacy: error.message, biometricLegacy: error.biometric });
+  //       this.description.shake();
+  //     });
+  // }
 
   handleAuthenticationAttemptedLegacy = (error) => {
     this.setState({ errorMessageLegacy: error.message });
     this.description.shake();
   };
 
-  renderLegacy() {
-    const { errorMessageLegacy, biometricLegacy } = this.state;
-    const { style, handlePopupDismissedLegacy } = this.props;
-    console.log('Platform.Version: ', Platform.Version);
-    return (
-      <View style={styles.container}>
-        <View style={[styles.contentContainer, style]}>
+  // renderLegacy() {
+  //   const { errorMessageLegacy, biometricLegacy } = this.state;
+  //   const { style, handlePopupDismissedLegacy } = this.props;
+  //   
+  //   return (
+  //     <View style={styles.container}>
+  //       <View style={[styles.contentContainer, style]}>
 
-          {/* <Image
-            style={styles.logo}
-            source={require('./assets/finger_print.png')}
-          /> */}
+  //         {/* <Image
+  //           style={styles.logo}
+  //           source={require('./assets/finger_print.png')}
+  //         /> */}
 
-          <Text style={styles.heading}>
-            Biometric{'\n'}Authentication
-          </Text>
-          <ShakingText
-            ref={(instance) => { this.description = instance; }}
-            style={styles.description(!!errorMessageLegacy)}>
-            {errorMessageLegacy || `Scan your ${biometricLegacy} on the\ndevice scanner to continue`}
-          </ShakingText>
+  //         <Text style={styles.heading}>
+  //           Biometric{'\n'}Authentication
+  //         </Text>
+  //         <ShakingText
+  //           ref={(instance) => { this.description = instance; }}
+  //           style={styles.description(!!errorMessageLegacy)}>
+  //           {errorMessageLegacy || `Scan your ${biometricLegacy} on the\ndevice scanner to continue`}
+  //         </ShakingText>
 
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={handlePopupDismissedLegacy}
-          >
-            <Text style={styles.buttonText}>
-              BACK TO MAIN
-            </Text>
-          </TouchableOpacity>
+  //         <TouchableOpacity
+  //           style={styles.buttonContainer}
+  //           onPress={handlePopupDismissedLegacy}
+  //         >
+  //           <Text style={styles.buttonText}>
+  //             BACK TO MAIN
+  //           </Text>
+  //         </TouchableOpacity>
 
-        </View>
-      </View>
-    );
-  }
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
 
-  render = () => {
-    if (this.requiresLegacyAuthentication()) {
-      return this.renderLegacy();
-    }
-
-    // current API UI provided by native BiometricPrompt
-    return null;
+  render() {
+    return false;
   }
 }
 
-BiometricPopup.propTypes = {
-  onAuthenticate: PropTypes.func.isRequired,
-  handlePopupDismissedLegacy: PropTypes.func,
-  style: ViewPropTypes.style,
-};
-
-export default BiometricPopup;
+// BiometricPopup.propTypes = {
+//   onAuthenticate: PropTypes.func.isRequired,
+//   handlePopupDismissedLegacy: PropTypes.func,
+//   style: ViewPropTypes.style,
+// };
+function mapStateToProps(state) {
+  return {
+    navigation: state.auth.navigation,
+    userApp: state.auth.userApp
+  };
+}
+export default connect(mapStateToProps)(BiometricPopup);
