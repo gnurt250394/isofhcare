@@ -49,13 +49,14 @@ class BiometricPopup extends Component {
   // }
 
   authCurrent = () => {
-    FingerprintScanner
-      .authenticate({
-        title: 'Dùng vân tay để đăng nhập',
-        cancelButton: this.props.handlePopupDismissed()
-      })
-      .then(() => {
-        if (!this.props.isLogin) {
+
+    if (!this.props.isLogin) {
+      FingerprintScanner
+        .authenticate({
+          title: 'Dùng vân tay để đăng nhập',
+          cancelButton: this.props.handlePopupDismissed()
+        })
+        .then(() => {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
             this.props.handlePopupDismissed();
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
@@ -121,24 +122,33 @@ class BiometricPopup extends Component {
 
                 });
             }
-          });
-        } else {
+          })
+        }).catch(e => {
+
+          this.props.handlePopupDismissed();
+        })
+    } else {
+
+      FingerprintScanner
+        .authenticate({
+          title: 'Dùng vân tay để đăng nhập',
+          cancelButton: this.props.handlePopupDismissed()
+        })
+        .then(() => {
           dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
             userId: this.props.userApp.currentUser.id,
             username: this.props.userApp.currentUser.phone || this.props.userApp.currentUser.username,
             refreshToken: this.props.userApp.currentUser.loginToken,
-
-          }).catch(err => {
-
-
-          });
+          })
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
-        }
-      }).catch(err => {
+        }).catch(err => {
 
-        this.props.handlePopupDismissed();
-      });
+
+          this.props.handlePopupDismissed();
+        });
+    }
+
   }
 
   // authLegacy() {
