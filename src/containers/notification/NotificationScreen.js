@@ -149,6 +149,8 @@ class NotificationScreen extends Component {
         objectUtils.renderAcademic(obj.question.doctorInfo.academicDegree) +
         obj.question.doctorInfo.name +
         ' đã trả lời câu hỏi của bạn.';
+    } else if (item.notification.body) {
+      title = item.notification.body;
     } else {
       title = item.notification.title;
     }
@@ -229,17 +231,18 @@ class NotificationScreen extends Component {
             break;
           }
           case 'fanpage': {
-            Linking.canOpenURL('fb://page/1986302411660628').then(supported => {
-              console.log('supported: ', supported);
-              if (supported) {
-                return Linking.openURL('fb://page/1986302411660628');
-              } else {
-                return Linking.openURL('https://www.facebook.com/');
-              }
-            }).catch(err=>{
-              console.log('err: ', err);
-
-            });
+            Linking.canOpenURL('fb://page/1986302411660628')
+              .then(supported => {
+                console.log('supported: ', supported);
+                if (supported) {
+                  return Linking.openURL('fb://page/1986302411660628');
+                } else {
+                  return Linking.openURL('https://www.facebook.com/');
+                }
+              })
+              .catch(err => {
+                console.log('err: ', err);
+              });
             break;
           }
           default:
@@ -437,7 +440,7 @@ class NotificationScreen extends Component {
   }
   getNotificationType(item) {
     try {
-      if (item.notification) {
+      if (item.notification && !item.notification.body) {
         let value = JSON.parse(item.notification.value);
         switch (value.type) {
           case 2:
@@ -453,6 +456,8 @@ class NotificationScreen extends Component {
           case 16:
             return constants.msg.notification.type.new_message;
         }
+      } else if (item.notification.body && item.notification.title) {
+        return item.notification.title;
       }
     } catch (error) {}
     return 'Thông báo';
