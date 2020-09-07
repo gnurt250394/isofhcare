@@ -42,7 +42,7 @@ class AccountScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isShowFigner: false
+      isFinger: false
     };
   }
   showLoading = (loading, callback) => {
@@ -276,7 +276,6 @@ class AccountScreen extends Component {
     if (this.props.onLogout) this.props.onLogout();
   }
   handleFingerprintDismissed = () => {
-    console.log('handleFingerprintDismissed: ', handleFingerprintDismissed);
     this.setState({
       isFinger: false
     });
@@ -299,6 +298,7 @@ class AccountScreen extends Component {
 
   };
   handlePopupDismissedDone = () => {
+    console.log('done');
     this.setState({
       loginWithFinger: true,
       isFinger: false
@@ -306,6 +306,7 @@ class AccountScreen extends Component {
     })
   }
   render() {
+    console.log(this.state.isFinger, 'this.state.isFinger')
     return (
       <ActivityPanel
         style={{ flex: 1, }}
@@ -612,12 +613,13 @@ class AccountScreen extends Component {
           </View> */}
         </ScrollView>
 
-        {this.state.isFinger && <FingerprintPopup
+        <FingerprintPopup
           isLogin={true}
           handlePopupDismissed={this.handleFingerprintDismissed}
           handlePopupDismissedDone={this.handlePopupDismissedDone}
+          isFinger={this.state.isFinger}
           style={styles.popup}
-        />}
+        />
 
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ActivityPanel >

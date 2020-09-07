@@ -17,20 +17,25 @@ class FingerprintPopup extends Component {
       isLogin: this.props.isLogin
       // userId:this.props.userId
     };
-    console.log('this.nextScreen: ', this.props.nextScreen);
+
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isFinger) {
+      console.log('nextProps.isFinger: ', nextProps.isFinger);
+      this.authCurrent();
 
-  componentDidMount() {
-    console.log('this.props.userApp.currentUser: ', this.props.userApp.currentUser);
-
+    }
+  }
+  authCurrent = () => {
     if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
-        // description: 'description',
+        description: 'Dùng vân tay để đăng nhập isofhcare',
+        cancelButton: this.props.handlePopupDismissed(),
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
-            console.log(this.props.username, 's: ', s);
+
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
             }
@@ -82,7 +87,6 @@ class FingerprintPopup extends Component {
                   }
                 })
                 .catch(e => {
-                  console.log('e: ', e);
                   this.props.handlePopupDismissed();
 
                 });
@@ -97,7 +101,8 @@ class FingerprintPopup extends Component {
         });
     } else {
       FingerprintScanner.authenticate({
-        description: 'description',
+        description: 'Dùng vân tay để đăng ký xác thực isofhcare',
+        cancelButton: this.props.handlePopupDismissed(),
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
@@ -111,7 +116,7 @@ class FingerprintPopup extends Component {
           snackbar.show("Đăng ký xác thực thành công", 'success');
         })
         .catch(error => {
-          console.log(error);
+
           this.props.handlePopupDismissed();
           this.setState({
             errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ",
@@ -122,7 +127,6 @@ class FingerprintPopup extends Component {
           //
         });
     }
-
   }
   componentWillUnmount() {
     FingerprintScanner.release();
