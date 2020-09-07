@@ -87,7 +87,6 @@ class ChatBot extends React.PureComponent {
             <View
               style={{
                 flexDirection: 'row',
-                justifyContent: 'flex-end',
               }}>
               <Image
                 source={require('@images/new/ic_robot.gif')}
