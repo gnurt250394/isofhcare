@@ -64,7 +64,6 @@ class ItemHospital extends Component {
     render() {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
-        console.log('item: ', item);
         const avatar = item && item.imagePath ? { uri: item.imagePath } : icSupport
         return (
             <View>
@@ -99,14 +98,14 @@ class ItemHospital extends Component {
                             <Text style={styles.txtNameDoctor}>{objectUtils.renderAcademic(item.academicDegree)}{item.name}</Text>
                             <Text numberOfLines={1} style={styles.txtHospitalName} >{item.contact.address}</Text>
                             <View style={styles.containerButton}>
-                                <View style={{
+                                {/* <View style={{
                                     flexDirection: 'row',
                                     alignItems: 'center'
                                 }}>
                                     <ScaleImage source={require('@images/ic_location.png')} height={18} style={styles.icLocation} />
                                     <Text style={styles.txtLocation}>km</Text>
-                                </View>
-                                <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám\ntại CSYT`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
+                                </View> */}
+                                <Button textStyle={{ textAlign: 'center' }} label={`Đặt khám`} style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>
                     </View>
@@ -171,6 +170,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         flex: 0,
         paddingHorizontal: 20,
+        paddingVertical:10
     },
     txtAdvisory: {
         backgroundColor: '#FF8A00',
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         marginTop: 10,
-        marginBottom: 10
+        marginBottom: 10,
     },
     txtPosition: {
         // backgroundColor: '#ffe6e9',
