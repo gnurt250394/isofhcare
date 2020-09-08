@@ -129,7 +129,46 @@ class BiometricPopup extends Component {
             }
           })
         }).catch(e => {
-
+          if (error.name) {
+            switch (error.name) {
+              case 'DeviceLockedPermanent':
+                snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
+                break
+              case 'AuthenticationTimeout':
+                snackbar.show("Xác thực không thành công vì hoạt động đã hết thời gian", 'danger');
+                break
+              case 'DeviceLockedPermanent':
+                snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
+                break
+              case 'AuthenticationProcessFailed':
+                snackbar.show("Cảm biến không thể xử lý .Vui lòng thử lại", 'danger');
+                break
+              case 'SystemCancel':
+                snackbar.show("Xác thực đã bị hệ thống hủy bỏ", 'danger');
+                break
+              case 'PasscodeNotSet':
+                snackbar.show("Xác thực không thể bắt đầu vì mật mã không được đặt trên thiết bị", 'danger');
+                break
+              case 'DeviceLocked':
+                snackbar.show("Xác thực không thành công, thiết bị hiện đang ở trạng thái khóa 30 giây", 'danger');
+                break
+              case 'DeviceOutOfMemory':
+                snackbar.show("Không thể tiến hành xác thực vì không có đủ bộ nhớ trống trên thiết bị", 'danger');
+                break
+              case 'HardwareError':
+                snackbar.show("Đã xảy ra lỗi phần cứng", 'danger');
+                break
+              case 'FingerprintScannerUnknownError':
+                snackbar.show("Không thể xác thực vì một lý do không xác định", 'danger');
+                break
+              case 'FingerprintScannerNotEnrolled':
+                snackbar.show("Không thể bắt đầu xác thực vì Máy quét vân tay không có ngón tay nào được đăng ký", 'danger');
+                break
+              case 'FingerprintScannerNotAvailable':
+                snackbar.show("Không thể bắt đầu xác thực vì Máy quét vân tay không khả dụng trên thiết bị", 'danger');
+                break
+            }
+          }
           this.props.handlePopupDismissed();
         })
     } else {
@@ -148,7 +187,46 @@ class BiometricPopup extends Component {
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
         }).catch(err => {
-
+          if (error.name) {
+            switch (error.name) {
+              case 'DeviceLockedPermanent':
+                snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
+                break
+              case 'AuthenticationTimeout':
+                snackbar.show("Xác thực không thành công vì hoạt động đã hết thời gian", 'danger');
+                break
+              case 'DeviceLockedPermanent':
+                snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
+                break
+              case 'AuthenticationProcessFailed':
+                snackbar.show("Cảm biến không thể xử lý .Vui lòng thử lại", 'danger');
+                break
+              case 'SystemCancel':
+                snackbar.show("Xác thực đã bị hệ thống hủy bỏ", 'danger');
+                break
+              case 'PasscodeNotSet':
+                snackbar.show("Xác thực không thể bắt đầu vì mật mã không được đặt trên thiết bị", 'danger');
+                break
+              case 'DeviceLocked':
+                snackbar.show("Xác thực không thành công, thiết bị hiện đang ở trạng thái khóa 30 giây", 'danger');
+                break
+              case 'DeviceOutOfMemory':
+                snackbar.show("Không thể tiến hành xác thực vì không có đủ bộ nhớ trống trên thiết bị", 'danger');
+                break
+              case 'HardwareError':
+                snackbar.show("Đã xảy ra lỗi phần cứng", 'danger');
+                break
+              case 'FingerprintScannerUnknownError':
+                snackbar.show("Không thể xác thực vì một lý do không xác định", 'danger');
+                break
+              case 'FingerprintScannerNotEnrolled':
+                snackbar.show("Không thể bắt đầu xác thực vì Máy quét vân tay không có ngón tay nào được đăng ký", 'danger');
+                break
+              case 'FingerprintScannerNotAvailable':
+                snackbar.show("Không thể bắt đầu xác thực vì Máy quét vân tay không khả dụng trên thiết bị", 'danger');
+                break
+            }
+          }
 
           this.props.handlePopupDismissed();
         });
