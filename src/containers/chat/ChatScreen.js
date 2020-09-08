@@ -459,7 +459,7 @@ const ChatScreen = ({
                     paddingBottom: 5,
                     color: '#00BA99',
                   }}>
-                  {objectUtils.renderAcademic(item.doctorInfo.academicDegree)}
+                  {objectUtils.renderAcademic(item?.doctorInfo?.academicDegreeValue)}
                   {item.doctorInfo.name}
                 </Text>
               ) : null}

@@ -124,7 +124,7 @@ class TheirMessage extends React.Component {
             ]}>
             {!isShowProfile && info?.id == message.userId ? (
               <Text style={styles.txtNameProfile}>
-                {objectUtils.renderAcademic(info?.academicDegree)}
+                {objectUtils.renderAcademic(info?.academicDegreeValue)}
                 {info?.name}
               </Text>
             ) : null}
