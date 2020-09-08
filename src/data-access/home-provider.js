@@ -94,7 +94,7 @@ module.exports = {
     },
     listNewsCovid(page = 0, size = 9999) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", constants.api.home.news_covid + `/search?keywords=covid&type=MEDICAL&isHighlight=true&page=${page}&size=${size}`, {}, (s, e) => {
+            client.requestApi("get", constants.api.home.news_covid + `/search?type=MEDICAL&isHighlight=true&page=${page}&size=${size}`, {}, (s, e) => {
                 if (s) {
                     // imagesUtils.cachingImage(url, 500, 500, 'PNG', 100,0,'rotation, outputPath').then(s => {
                     //     
