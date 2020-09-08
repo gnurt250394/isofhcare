@@ -247,8 +247,22 @@ class NotificationScreen extends Component {
           }
           default:
             this.setState({isLoading: false});
-            if (data?.type) {
+            if (data?.id && data?.type) {
               NavigationService.navigate(data?.type, {item: data});
+            } else if (data?.type && !data?.id) {
+              switch (data?.type) {
+                case 'listOfServices':
+                  NavigationService.navigate('listServices');
+
+                  break;
+                case 'profileHospital':
+                  NavigationService.navigate('listHospital');
+
+                  break;
+
+                default:
+                  break;
+              }
             }
         }
       });
