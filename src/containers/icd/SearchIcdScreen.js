@@ -68,6 +68,7 @@ class SearchIcdScreen extends Component {
     }
     getData = () => {
         const { page, size } = this.state
+        console.log('page, size: ', page, size);
 
         diseaseProvider.search("", page, size).then(res => {
             this.setState({ isLoading: false, refreshing: false })
@@ -97,11 +98,6 @@ class SearchIcdScreen extends Component {
             }
         }
     }
-    onRefresh = () => {
-        this.setState({ type: '', keyword: '' })
-    }
-
-
 
     getListLocation = () => {
         locationUtils.getLocation().then(region => {
@@ -136,7 +132,9 @@ class SearchIcdScreen extends Component {
             keyword: '',
             item: {},
             type: ''
-        }, this.getData())
+        }, () => {
+            this.getData()
+        })
     }
     loadMore = () => {
 
