@@ -261,6 +261,7 @@ class NotificationScreen extends Component {
                   break;
 
                 default:
+                  NavigationService.navigate(data?.type);
                   break;
               }
             }
