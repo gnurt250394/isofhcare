@@ -49,6 +49,11 @@ class FingerprintPopup extends Component {
                         constants.msg.user.login_success,
                         "success"
                       );
+                      dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
+                        userId: user.id,
+                        username: user.phone || user.username,
+                        refreshToken: user.loginToken,
+                      })
                       user.hospital = this.props.userApp.hospital
                       this.props.dispatch(redux.userLogin(user));
                       if (this.props.nextScreen) {
