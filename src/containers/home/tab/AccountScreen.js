@@ -478,9 +478,9 @@ class AccountScreen extends Component {
                 />
                 <Text style={styles.itemText}>Đăng nhập vân tay</Text>
                 <Switch
-                  trackColor={{ false: "#5b5b5b", true: "#00BA9920" }}
-                  thumbColor={this.state.loginWithFinger ? "#00BA99" : "#00000050"}
-                  ios_backgroundColor="#00BA9920"
+                  trackColor={{ false: "#00000010", true: "#00BA9920" }}
+                  thumbColor={this.state.loginWithFinger ? "#00BA99" : "#00000080"}
+                  ios_backgroundColor={this.state.loginWithFinger ? '#00BA9920' : "#00000050"}
                   onValueChange={this.onFingerClick}
                   value={this.state.loginWithFinger}
                 />
