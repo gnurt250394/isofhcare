@@ -34,6 +34,7 @@ import FingerprintScanner from 'react-native-fingerprint-scanner';
 import FingerprintPopup from "@components/account/FingerprintPopup";
 import Modal from "@components/modal";
 import dataCacheProvider from "../../data-access/datacache-provider";
+import RNFingerprintChange from 'react-native-fingerprint-change';
 
 class LoginScreen extends Component {
 	constructor(props) {
@@ -192,10 +193,31 @@ class LoginScreen extends Component {
 		this.props.navigation.navigate('home')
 	}
 	onFinger = () => {
-		console.log('press');
-		this.setState({
-			isShowFinger: true
-		})
+
+		try {
+			RNFingerprintChange.hasFingerPrintChanged((error) => {
+				console.log('error: ', error);
+
+			}, (fingerprintHasChanged) => {
+				console.log('fingerprintHasChanged: ', fingerprintHasChanged);
+
+				if (fingerprintHasChanged) {
+					dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
+						userId: '',
+						username: '',
+						refreshToken: '',
+					})
+					snackbar.show('Bạn đã thay đổi vân tay mới, vui lòng đăng nhập để kích hoạt lại chức năng đăng nhập vân tay', 'danger')
+				} else {
+					this.setState({
+						isShowFinger: true
+					})
+				}
+			})
+		} catch (e) {
+			snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+		}
+
 	}
 	handleFingerprintDismissed = () => {
 		this.setState({

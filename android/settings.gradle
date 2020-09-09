@@ -1,3 +1,5 @@
 rootProject.name = 'APP'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+include ':react-native-fingerprint-change'
+project(':react-native-fingerprint-change').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-fingerprint-change/android')
