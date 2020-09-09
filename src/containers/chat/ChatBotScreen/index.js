@@ -82,7 +82,7 @@ const ChatBotScreen = ({onHide}) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={onHide} style={styles.buttonIcon}>
         <Image
-          source={require('@images/new/ic_robot.png')}
+          source={require('@images/new/ic_robot1.png')}
           style={styles.icon}
         />
       </TouchableOpacity>
