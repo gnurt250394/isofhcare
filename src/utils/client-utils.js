@@ -2,7 +2,7 @@ import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import {Platform} from 'react-native';
 import constants from '@resources/strings';
-const server_url = 'http://123.24.206.9:9451'; //dev
+const server_url = 'http://10.0.0.98:9451'; //dev
 
 // const server_url = "http://10.0.50.191:8080";//test local
 // const server_url = "http://123.24.206.9:8000"; //test
@@ -71,8 +71,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
-  serviceSchedule: "http://123.24.206.9:8080/",
-  serviceBooking: "http://123.24.206.9:8082/",
+  serviceSchedule: "http://10.0.0.98:8080/",
+  serviceBooking: "http://10.0.0.98:8082/",
   serviceImage: "https://api.produce.isofhcare.com/isofhcare/",
   serviceChats: "http://10.0.0.98:8085/",
   serviceCovid: "http://10.0.0.88:49396/",
