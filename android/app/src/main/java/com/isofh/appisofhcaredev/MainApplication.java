@@ -15,6 +15,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.toyberman.fingerprintChange.RNFingerprintChangePackage;
+import com.isofh.appisofhcaretest.LaunchApplicationPackage;
 import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
 // public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication {
@@ -42,6 +44,7 @@ import com.microsoft.codepush.react.CodePush;
       // Packages that cannot be autolinked yet can be added manually here, for
       // example:
       // packages.add(new RNCViewPagerPackage());
+      packages.add(new RNFingerprintChangePackage());
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new RNFirebaseMessagingPackage());
       packages.add(new LaunchApplicationPackage());
