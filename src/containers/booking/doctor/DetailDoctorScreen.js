@@ -322,7 +322,7 @@ class DetailsDoctorScreen extends Component {
                 <View style={{ paddingLeft: 10, flex: 1 }}>
                   <Text style={styles.nameDoctor}>{objectUtils.renderAcademic(profileDoctor?.academicDegree)}{profileDoctor.name}</Text>
 
-                  <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
+                  <Text style={{ paddingBottom: 10 }}>{profileDoctor?.position?.fullName}</Text>
                   <View style={styles.containerButton}>
                     <Button textStyle={{ textAlign: 'center' }} label={`Tư vấn\ntrực tuyến`} style={styles.txtAdvisory} onPress={this.onCallVideo} source={require("@images/new/videoCall/ic_call.png")} />
                     {!this.state.disableBooking ?
