@@ -29,7 +29,7 @@ class FingerprintPopup extends Component {
   authCurrent = () => {
     if (!this.state.isLogin) {
       FingerprintScanner.authenticate({
-        description: 'Dùng vân tay để đăng nhập isofhcare',
+        description: 'Dùng vân tay để đăng nhập iSofHcare',
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
@@ -145,7 +145,7 @@ class FingerprintPopup extends Component {
         });
     } else {
       FingerprintScanner.authenticate({
-        description: 'Dùng vân tay để đăng ký xác thực isofhcare',
+        description: 'Dùng vân tay để đăng ký xác thực iSofHcare',
         onAttempt: this.handleAuthenticationAttempted
       })
         .then(() => {
@@ -201,7 +201,7 @@ class FingerprintPopup extends Component {
           }
           this.props.handlePopupDismissed();
           this.setState({
-            errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ",
+            errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá iSofHcare ",
             error: true
           });
           // this.description.shake();
