@@ -7,10 +7,10 @@ function getSdp(sdp) {
   };
   let isScreenSharing = false;
   // sdp = setBAS(sdp, bandwidth, isScreenSharing);
-  // sdp = setVideoBitrates(sdp, {
-  //   min: 128,
-  //   max: 1280,
-  // });
+  sdp = setVideoBitrates(sdp, {
+    min: 50,
+    max: 1280,
+  });
   // sdp = setOpusAttributes(sdp);
   return sdp;
 }
