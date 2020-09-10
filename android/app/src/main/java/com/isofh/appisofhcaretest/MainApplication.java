@@ -43,7 +43,6 @@ import com.microsoft.codepush.react.CodePush;
       // Packages that cannot be autolinked yet can be added manually here, for
       // example:
       // packages.add(new RNCViewPagerPackage());
-      packages.add(new RNFingerprintChangePackage());
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new RNFirebaseMessagingPackage());
       packages.add(new LaunchApplicationPackage());
