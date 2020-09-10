@@ -34,6 +34,7 @@ class BiometricPopup extends Component {
     this.description = null;
   }
   componentWillReceiveProps(nextProps) {
+
     if (nextProps.isFinger) {
       this.authCurrent();
     }
@@ -56,7 +57,7 @@ class BiometricPopup extends Component {
           title: 'Dùng vân tay để đăng nhập',
           cancelButton: this.props.handlePopupDismissed()
         })
-        .then(() => {
+        .then(s => {
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
             this.props.handlePopupDismissed();
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
@@ -66,6 +67,7 @@ class BiometricPopup extends Component {
               userProvider
                 .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
+
 
                   switch (s.code) {
                     case 0:
@@ -123,14 +125,18 @@ class BiometricPopup extends Component {
                 .catch(e => {
 
 
+
+
                   this.props.handlePopupDismissed();
 
                 });
             }
           })
         }).catch(e => {
-          if (error.name) {
-            switch (error.name) {
+
+          debugger
+          if (e.name) {
+            switch (e.name) {
               case 'DeviceLockedPermanent':
                 snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
                 break
