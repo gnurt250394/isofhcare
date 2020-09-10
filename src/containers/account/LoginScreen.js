@@ -64,19 +64,20 @@ class LoginScreen extends Component {
 		FingerprintScanner
 			.isSensorAvailable()
 			.then(biometryType => {
-				var phone = ''
 
+				this.setState({
+					isSupportSensor: true
+				})
 
 				dataCacheProvider.read('', constants.key.storage.KEY_FINGER, s => {
-					if (s) {
-						this.setState({ isSupportSensor: true, phone: s.username })
-					}
-				}).catch(e => {
-					this.setState({ isSupportSensor: true })
 
+					if (s) {
+						this.setState({ phone: s.username })
+					}
 				});
 
 			}).catch(error => {
+
 				this.setState({ isSupportSensor: false })
 
 			});
@@ -196,10 +197,10 @@ class LoginScreen extends Component {
 
 		try {
 			RNFingerprintChange.hasFingerPrintChanged((error) => {
-				console.log('error: ', error);
+
 
 			}, (fingerprintHasChanged) => {
-				console.log('fingerprintHasChanged: ', fingerprintHasChanged);
+
 
 				if (fingerprintHasChanged) {
 					dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
