@@ -50,16 +50,14 @@ class BiometricPopup extends Component {
   // }
 
   authCurrent = () => {
-
     if (!this.props.isLogin) {
       FingerprintScanner
         .authenticate({
           title: 'Dùng vân tay để đăng nhập',
-          cancelButton: this.props.handlePopupDismissed()
         })
         .then(s => {
+
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
-            this.props.handlePopupDismissed();
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
             }
@@ -67,7 +65,6 @@ class BiometricPopup extends Component {
               userProvider
                 .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
-
 
                   switch (s.code) {
                     case 0:
@@ -125,8 +122,6 @@ class BiometricPopup extends Component {
                 .catch(e => {
 
 
-
-
                   this.props.handlePopupDismissed();
 
                 });
@@ -134,7 +129,6 @@ class BiometricPopup extends Component {
           })
         }).catch(e => {
 
-          debugger
           if (e.name) {
             switch (e.name) {
               case 'DeviceLockedPermanent':
@@ -193,8 +187,8 @@ class BiometricPopup extends Component {
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
         }).catch(err => {
-          if (error.name) {
-            switch (error.name) {
+          if (err.name) {
+            switch (err.name) {
               case 'DeviceLockedPermanent':
                 snackbar.show("Xác thực không thành công, thiết bị phải được mở khóa bằng mật khẩu", 'danger');
                 break
