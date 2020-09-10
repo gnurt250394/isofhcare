@@ -9,7 +9,8 @@ import {
   Linking,
   StyleSheet,
   Dimensions,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Switch
 } from "react-native";
 import { connect } from "react-redux";
 const DEVICE_WIDTH = Dimensions.get("window").width;
@@ -32,12 +33,16 @@ import constants from '@resources/strings';
 import socketProvider from "@data-access/socket-provider";
 import firebase from 'react-native-firebase'
 import NavigationService from "@navigators/NavigationService";
+import Modal from "@components/modal";
+import FingerprintPopup from "@components/account/FingerprintPopup";
+import FingerprintScanner from 'react-native-fingerprint-scanner';
+import dataCacheProvider from "@data-access/datacache-provider";
 
 class AccountScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isShowFigner: false
+      isFinger: false
     };
   }
   showLoading = (loading, callback) => {
@@ -66,6 +71,24 @@ class AccountScreen extends Component {
   }
   componentDidMount() {
     if (this.props.userApp.isLogin) {
+      dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
+        if (s && s.userId && s.userId == this.props.userApp.currentUser.id) {
+          this.setState({
+            loginWithFinger: true
+          })
+        }
+      })
+      FingerprintScanner
+        .isSensorAvailable()
+        .then(biometryType => {
+          this.setState({ isSupportSensor: true })
+          console.log('biometryType: ', biometryType);
+        }).catch(error => {
+          console.log('error: ', error);
+          this.setState({ isSupportSensor: false })
+
+
+        });
       this.onFocus = this.props.navigation.addListener('didFocus', () => {
         this.getDetailUser()
       });
@@ -189,7 +212,7 @@ class AccountScreen extends Component {
 
   navigate_to = (router, params) => () => {
     if (router) {
-     NavigationService.reset(router, params);
+      NavigationService.reset(router, params);
     } else {
       snackbar.show(constants.msg.app.in_development);
     }
@@ -246,7 +269,38 @@ class AccountScreen extends Component {
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }
+  handleFingerprintDismissed = () => {
+    this.setState({
+      isFinger: false
+    });
+  };
+  onFingerClick = () => {
+    // this.props.navigation.navigate('FingerSettingScreen')
+    if (this.state.loginWithFinger) {
+      dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
+        userId: null,
+        refreshToken: null
+      });
+      this.setState({
+        loginWithFinger: false
+      });
+    } else {
+      this.setState({
+        isFinger: true
+      })
+    }
+
+  };
+  handlePopupDismissedDone = () => {
+    console.log('done');
+    this.setState({
+      loginWithFinger: true,
+      isFinger: false
+
+    })
+  }
   render() {
+    console.log(this.state.isFinger, 'this.state.isFinger')
     return (
       <ActivityPanel
         style={{ flex: 1, }}
@@ -407,6 +461,24 @@ class AccountScreen extends Component {
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
+              {this.state.isSupportSensor && <View
+                style={[styles.itemMenu, styles.bottomLine]}
+
+              >
+                <ScaledImage
+                  source={require("@images/new/finger/ic_finger_setting.png")}
+                  width={22}
+                  height={22}
+                />
+                <Text style={styles.itemText}>Đăng nhập vân tay</Text>
+                <Switch
+                  trackColor={{ false: "#00000010", true: "#00BA9920" }}
+                  thumbColor={this.state.loginWithFinger ? "#00BA99" : "#00000080"}
+                  ios_backgroundColor={this.state.loginWithFinger ? '#00BA9920' : "#00000050"}
+                  onValueChange={this.onFingerClick}
+                  value={this.state.loginWithFinger}
+                />
+              </View>}
             </View>
           ) : null}
           {this.state.showSetting && (
@@ -534,21 +606,20 @@ class AccountScreen extends Component {
             <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
           </View> */}
         </ScrollView>
+
+        <FingerprintPopup
+          isLogin={true}
+          handlePopupDismissed={this.handleFingerprintDismissed}
+          handlePopupDismissedDone={this.handlePopupDismissedDone}
+          isFinger={this.state.isFinger}
+          style={styles.popup}
+        />
+
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
-      </ActivityPanel>
+      </ActivityPanel >
     );
   }
-  handleFingerprintDismissed = () => {
-    this.setState({
-      isFinger: false
-    });
-  };
-  onFingerClick = () => {
-    this.props.navigation.navigate('FingerSettingScreen')
-    // this.setState({
-    //   isFinger: true
-    // });
-  };
+
 }
 const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({

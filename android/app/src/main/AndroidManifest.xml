@@ -21,12 +21,11 @@ xmlns:tools="http://schemas.android.com/tools"
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <permission
-        android:name="com.isofh.appisofhcarestable.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-
-
+            android:name="com.isofh.appisofhcarestable.permission.C2D_MESSAGE"
+            android:protectionLevel="signature" />
     <uses-permission android:name="com.isofh.appisofhcarestable.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
         android:name=".MainApplication"
         android:allowBackup="true"

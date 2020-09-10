@@ -63,6 +63,8 @@
 		C3180D9704294F0B869BACB5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4FCC0C339A142B4ADFB71A7 /* Octicons.ttf */; };
 		C6B0BED4176B45E4B78CD890 /* Roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 934E4A6A72C34425A5638465 /* Roboto.ttf */; };
 		CA98403168704E97BFCEEC1A /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B3D2031E0C4EB6B725487B /* FontAwesome5_Solid.ttf */; };
+		D552BD5A25086CC400B697CE /* RNFingerprintChange.xcworkspace in Resources */ = {isa = PBXBuildFile; fileRef = D552BD5925086CC400B697CE /* RNFingerprintChange.xcworkspace */; };
+		D552BD5C25086CD400B697CE /* libRNFingerprintChange.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D552BD5B25086CD400B697CE /* libRNFingerprintChange.a */; };
 		DDB82CEF646146B4B70C4C9B /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F47CBB19F8B94A89892F82D5 /* Muli-Bold.ttf */; };
 		DEBB88B662EC410E814E3DBF /* Muli-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4745B0063A147B49D4A5940 /* Muli-Light.ttf */; };
 		F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE74A3067B053986DA0AD248 /* libPods-APP.a */; };
@@ -274,6 +276,8 @@
 		CDBA337048414D6DB7524D80 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/native-base/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		CE301AA568254ABCBEB9915B /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		D0FC1EEBB4D74915AA6BD669 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		D552BD5925086CC400B697CE /* RNFingerprintChange.xcworkspace */ = {isa = PBXFileReference; lastKnownFileType = wrapper.workspace; name = RNFingerprintChange.xcworkspace; path = "../node_modules/react-native-fingerprint-change/ios/RNFingerprintChange.xcworkspace"; sourceTree = "<group>"; };
+		D552BD5B25086CD400B697CE /* libRNFingerprintChange.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNFingerprintChange.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB2AE1DF79CC4D99A7ACB65D /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		DE74A3067B053986DA0AD248 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEFD514650574A02B82756E5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/native-base/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -300,6 +304,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D552BD5C25086CD400B697CE /* libRNFingerprintChange.a in Frameworks */,
 				0C32A876232A305C001D5ECC /* libQBImagePickerController.a in Frameworks */,
 				F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */,
 				3B2D67992AFD48C49F98B2DA /* libc++.tbd in Frameworks */,
@@ -396,6 +401,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D552BD5B25086CD400B697CE /* libRNFingerprintChange.a */,
 				0C32A875232A305C001D5ECC /* libQBImagePickerController.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
@@ -409,6 +415,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				D552BD5925086CC400B697CE /* RNFingerprintChange.xcworkspace */,
 				0C53A4DB23151F0800D68E52 /* React.xcodeproj */,
 			);
 			name = Libraries;
@@ -802,6 +809,7 @@
 				2E38F15F2599404F81E6D528 /* Ionicons.ttf in Resources */,
 				632A57443F6C46389F4C19F2 /* MaterialCommunityIcons.ttf in Resources */,
 				30C14F4F2453698A00E83530 /* call_phone.mp3 in Resources */,
+				D552BD5A25086CC400B697CE /* RNFingerprintChange.xcworkspace in Resources */,
 				39E2296704384C49A11C4421 /* MaterialIcons.ttf in Resources */,
 				631D3E2A3B5E4835AE46A76C /* Octicons.ttf in Resources */,
 				6160FE611C354787AEA56DBF /* Roboto_medium.ttf in Resources */,
