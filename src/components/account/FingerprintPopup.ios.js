@@ -37,6 +37,7 @@ class FingerprintPopup extends Component {
 
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
+              this.props.handlePopupDismissed();
             }
             else {
               userProvider
@@ -100,6 +101,8 @@ class FingerprintPopup extends Component {
           this.props.handlePopupDismissed();
         })
         .catch(error => {
+          this.props.handlePopupDismissed();
+
           if (error.name) {
             switch (error.name) {
               case 'DeviceLockedPermanent':
@@ -140,7 +143,6 @@ class FingerprintPopup extends Component {
                 break
             }
           }
-          this.props.handlePopupDismissed();
           // this.description.shake();
         });
     } else {
@@ -159,6 +161,7 @@ class FingerprintPopup extends Component {
           snackbar.show("Đăng ký xác thực thành công", 'success');
         })
         .catch(error => {
+          this.props.handlePopupDismissed();
           if (error.name) {
             switch (error.name) {
               case 'DeviceLockedPermanent':
@@ -199,7 +202,6 @@ class FingerprintPopup extends Component {
                 break
             }
           }
-          this.props.handlePopupDismissed();
           this.setState({
             errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá iSofHcare ",
             error: true

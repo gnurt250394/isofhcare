@@ -270,6 +270,7 @@ class AccountScreen extends Component {
     if (this.props.onLogout) this.props.onLogout();
   }
   handleFingerprintDismissed = () => {
+    console.log('handler')
     this.setState({
       isFinger: false
     });

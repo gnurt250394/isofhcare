@@ -54,17 +54,22 @@ class BiometricPopup extends Component {
       FingerprintScanner
         .authenticate({
           title: 'Dùng vân tay để đăng nhập',
+          cancelButton: this.props.handlePopupDismissed(),
+          onAttempt: this.handleAuthenticationAttemptedLegacy
         })
-        .then(s => {
+        .then(() => {
 
           dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
             if ((!s || !s.userId) || (s?.username !== this.props.username)) {
               snackbar.show("Bạn chưa đăng ký vân tay trên tài khoản này", 'danger');
+              this.props.handlePopupDismissed();
+
             }
             else {
               userProvider
                 .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
+                  this.props.handlePopupDismissed();
 
                   switch (s.code) {
                     case 0:
@@ -82,7 +87,6 @@ class BiometricPopup extends Component {
                       this.props.dispatch(redux.userLogin(user));
                       if (this.props.nextScreen) {
                         this.props.onNavigate();
-                        return;
                       } else {
                         this.props.navigation.navigate("home", {
                           showDraw: false
@@ -120,15 +124,13 @@ class BiometricPopup extends Component {
                   }
                 })
                 .catch(e => {
-
-
+                  console.log('e: ', e);
                   this.props.handlePopupDismissed();
-
                 });
             }
           })
         }).catch(e => {
-
+          this.props.handlePopupDismissed();
           if (e.name) {
             switch (e.name) {
               case 'DeviceLockedPermanent':
@@ -169,14 +171,13 @@ class BiometricPopup extends Component {
                 break
             }
           }
-          this.props.handlePopupDismissed();
         })
     } else {
-
       FingerprintScanner
         .authenticate({
           title: 'Dùng vân tay để đăng nhập',
-          cancelButton: this.props.handlePopupDismissed()
+          cancelButton: this.props.handlePopupDismissed(),
+          onAttempt: this.handleAuthenticationAttemptedLegacy
         })
         .then(() => {
           dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
@@ -187,6 +188,8 @@ class BiometricPopup extends Component {
           this.props.handlePopupDismissedDone();
           snackbar.show("Đăng ký xác thực thành công", 'success');
         }).catch(err => {
+          console.log('err: ', err);
+          this.props.handlePopupDismissed();
           if (err.name) {
             switch (err.name) {
               case 'DeviceLockedPermanent':
@@ -228,7 +231,9 @@ class BiometricPopup extends Component {
             }
           }
 
-          this.props.handlePopupDismissed();
+        }).catch(err => {
+          console.log('err: ', err);
+
         });
     }
 
@@ -248,6 +253,7 @@ class BiometricPopup extends Component {
   // }
 
   handleAuthenticationAttemptedLegacy = (error) => {
+    console.log('error: ', error);
     this.setState({ errorMessageLegacy: error.message });
     this.description.shake();
   };
@@ -290,7 +296,7 @@ class BiometricPopup extends Component {
 
 
   render() {
-    return false;
+    return null;
   }
 }
 
