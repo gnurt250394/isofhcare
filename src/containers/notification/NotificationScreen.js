@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import {
   View,
@@ -10,7 +10,7 @@ import {
   DeviceEventEmitter,
   Linking,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import notificationProvider from '@data-access/notification-provider';
 import dateUtils from 'mainam-react-native-date-utils';
@@ -43,7 +43,7 @@ class NotificationScreen extends Component {
   onRefresh() {
     if (!this.state.loading)
       this.setState(
-        {refreshing: true, page: 1, finish: false, loading: true},
+        { refreshing: true, page: 1, finish: false, loading: true },
         () => {
           this.onLoad();
         },
@@ -78,7 +78,7 @@ class NotificationScreen extends Component {
     }
   }
   onLoad() {
-    const {page, size} = this.state;
+    const { page, size } = this.state;
     // this.props.refreshNotification = false
     this.setState({
       loading: true,
@@ -158,7 +158,7 @@ class NotificationScreen extends Component {
   };
   viewNotification(item) {
     try {
-      this.setState({isLoading: true}, () => {
+      this.setState({ isLoading: true }, () => {
         var data = JSON.parse(item.notification.value);
         console.log('data: ', data);
         notificationProvider
@@ -172,10 +172,10 @@ class NotificationScreen extends Component {
                   : 0,
               );
             this.props.dispatch(redux.getUnreadNotificationCount());
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
           })
           .catch(e => {
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
           });
         let question = null;
         if (data.data) {
@@ -183,7 +183,7 @@ class NotificationScreen extends Component {
           question = obj;
         }
         item.notification.watched = 1;
-        this.setState({data: [...this.state.data]});
+        this.setState({ data: [...this.state.data] });
         switch (data?.type) {
           // case 1:
           //   this.openQuestion(data.id);
@@ -215,27 +215,26 @@ class NotificationScreen extends Component {
             break;
 
           case 'NEWS': {
-            NavigationService.navigate('detailNewsHighlight', {item: data});
+            NavigationService.navigate('detailNewsHighlight', { item: data });
             break;
           }
           case 'MEDICAL_SERVICE': {
-            NavigationService.navigate('listOfServices', {item: data});
+            NavigationService.navigate('listOfServices', { item: data });
             break;
           }
           case 'HOSPITAL': {
-            NavigationService.navigate('profileHospital', {item: data});
+            NavigationService.navigate('profileHospital', { item: data });
             break;
           }
           case 'DOCTOR': {
-            NavigationService.navigate('detailsDoctor', {item: data});
+            NavigationService.navigate('detailsDoctor', { item: data });
             break;
           }
           case 'fanpage': {
-            Linking.canOpenURL('fb://page/1986302411660628')
+            Linking.canOpenURL('fb://profile/1986302411660628')
               .then(supported => {
-                console.log('supported: ', supported);
                 if (supported) {
-                  return Linking.openURL('fb://page/1986302411660628');
+                  return Linking.openURL('fb://profile/1986302411660628');
                 } else {
                   return Linking.openURL('https://www.facebook.com/');
                 }
@@ -246,9 +245,9 @@ class NotificationScreen extends Component {
             break;
           }
           default:
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
             if (data?.id && data?.type) {
-              NavigationService.navigate(data?.type, {item: data});
+              NavigationService.navigate(data?.type, { item: data });
             } else if (data?.type && !data?.id) {
               switch (data?.type) {
                 case 'listOfServices':
@@ -268,11 +267,11 @@ class NotificationScreen extends Component {
         }
       });
     } catch (error) {
-      this.setState({isLoading: false});
+      this.setState({ isLoading: false });
     }
   }
   detailsEhealth = (data, user) => {
-    this.setState({isLoading: true}, () => {
+    this.setState({ isLoading: true }, () => {
       bookingProvider
         .detailPatientHistory(
           data.patientHistoryId,
@@ -291,8 +290,8 @@ class NotificationScreen extends Component {
                   data.shareId,
                 )
                 .then(s => {
-                  this.setState({isLoading: false}, () => {
-                    let {hasResult, result, resultDetail, hospital, data} = s;
+                  this.setState({ isLoading: false }, () => {
+                    let { hasResult, result, resultDetail, hospital, data } = s;
                     if (hasResult && data) {
                       if (hospital && result) {
                         this.props.dispatch({
@@ -371,11 +370,11 @@ class NotificationScreen extends Component {
     });
   };
   openTicket(id) {
-    this.setState({isLoading: true}, () => {
+    this.setState({ isLoading: true }, () => {
       ticketProvider
         .detail(id)
         .then(s => {
-          this.setState({isLoading: false}, () => {
+          this.setState({ isLoading: false }, () => {
             switch (s.code) {
               case 0:
                 if (s.data && s.data.numberHospital) {
@@ -385,16 +384,16 @@ class NotificationScreen extends Component {
           });
         })
         .catch(e => {
-          this.setState({isLoading: false}, () => {});
+          this.setState({ isLoading: false }, () => { });
         });
     });
   }
   openQuestion = item => {
     if (!item) return;
-    NavigationService.navigate('detailMessage', {item});
+    NavigationService.navigate('detailMessage', { item });
   };
   openBooking(id) {
-    this.setState({isLoading: false}, () => {
+    this.setState({ isLoading: false }, () => {
       NavigationService.navigate('detailsHistory', {
         id,
       });
@@ -410,17 +409,17 @@ class NotificationScreen extends Component {
           color: 'red',
         },
         callback: () => {
-          this.setState({isLoading: true});
+          this.setState({ isLoading: true });
           notificationProvider
             .deleteAll()
             .then(s => {
               firebase.notifications().setBadge(0);
               this.props.dispatch(redux.getUnreadNotificationCount());
-              this.setState({isLoading: false});
+              this.setState({ isLoading: false });
               this.onRefresh();
             })
             .catch(e => {
-              this.setState({isLoading: false});
+              this.setState({ isLoading: false });
               this.onRefresh();
             });
         },
@@ -430,18 +429,18 @@ class NotificationScreen extends Component {
         style: {
           color: 'blue',
         },
-        callback: () => {},
+        callback: () => { },
       },
     });
   };
   menuCreate() {
     return (
       <View>
-        <TouchableOpacity style={{padding: 10}} onPress={this.removeNoti}>
+        <TouchableOpacity style={{ padding: 10 }} onPress={this.removeNoti}>
           <ScaleImage
             source={require('@images/new/ic_remove.png')}
             width={20}
-            style={{tintColor: '#FFF'}}
+            style={{ tintColor: '#FFF' }}
           />
         </TouchableOpacity>
       </View>
@@ -474,7 +473,7 @@ class NotificationScreen extends Component {
       } else if (item.notification.body && item.notification.title) {
         return item.notification.title;
       }
-    } catch (error) {}
+    } catch (error) { }
     return 'Thông báo';
   }
   getDate = (item, index) => {
@@ -510,18 +509,18 @@ class NotificationScreen extends Component {
       style={styles.avatar}
     />
   );
-  renderItem = ({item, index}) => {
+  renderItem = ({ item, index }) => {
     const source =
       item.user && item.user.avatar
-        ? {uri: item.user.avatar.absoluteUrl()}
+        ? { uri: item.user.avatar.absoluteUrl() }
         : require('@images/new/user.png');
 
     return (
       <View
         style={[
           item.notification.watched == 1
-            ? {backgroundColor: '#FFF'}
-            : {backgroundColor: '#00CBA710'},
+            ? { backgroundColor: '#FFF' }
+            : { backgroundColor: '#00CBA710' },
         ]}>
         {this.getDate(item, index)}
 
@@ -540,7 +539,7 @@ class NotificationScreen extends Component {
               placeholderSource={require('@images/new/user.png')}
               style={styles.avatar}
               resizeMode="cover"
-              loadingStyle={{size: 'small', color: 'gray'}}
+              loadingStyle={{ size: 'small', color: 'gray' }}
               source={source}
               defaultImage={this.defaultImage}
             />
@@ -581,18 +580,18 @@ class NotificationScreen extends Component {
   listHeader = () => {
     return !this.state.refreshing &&
       (!this.state.data || this.state.data.length == 0) ? (
-      <View style={{alignItems: 'center', marginTop: 50}}>
-        <Text style={{fontStyle: 'italic'}}>{constants.none_info}</Text>
-      </View>
-    ) : null;
+        <View style={{ alignItems: 'center', marginTop: 50 }}>
+          <Text style={{ fontStyle: 'italic' }}>{constants.none_info}</Text>
+        </View>
+      ) : null;
   };
-  listFooter = () => <View style={{height: 10}} />;
+  listFooter = () => <View style={{ height: 10 }} />;
   render() {
     if (!this.props.userApp.isLogin) return null;
     return (
       <ActivityPanel
-        style={{flex: 1}}
-        titleStyle={{marginRight: 0}}
+        style={{ flex: 1 }}
+        titleStyle={{ marginRight: 0 }}
         title={constants.msg.notification.notifi}
         showFullScreen={true}
         menuButton={this.menuCreate()}
@@ -603,7 +602,7 @@ class NotificationScreen extends Component {
           refreshing={this.state.refreshing}
           onEndReached={this.onLoadMore.bind(this)}
           onEndReachedThreshold={1}
-          style={{flex: 1}}
+          style={{ flex: 1 }}
           keyExtractor={this.keyExtractor}
           extraData={this.state}
           data={this.state.data}
@@ -622,7 +621,7 @@ class NotificationScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
-  placeHoderImage: {width: 50, height: 50},
+  placeHoderImage: { width: 50, height: 50 },
   txtDate: {
     marginLeft: 20,
     marginRight: 20,
@@ -638,7 +637,7 @@ const styles = StyleSheet.create({
     color: '#00000060',
     marginTop: 8,
   },
-  txtTitle: {fontSize: 14, fontWeight: 'bold'},
+  txtTitle: { fontSize: 14, fontWeight: 'bold' },
   containerTitle: {
     paddingTop: 4,
     marginLeft: 19,
@@ -659,8 +658,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  title: {fontSize: 14, color: '#000000'},
-  title_watch: {fontSize: 14, color: '#00000070'},
+  title: { fontSize: 14, color: '#000000' },
+  title_watch: { fontSize: 14, color: '#00000070' },
   avatar: {
     alignSelf: 'center',
     borderRadius: 25,
