@@ -4,6 +4,7 @@ import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
 import { useSelector } from 'react-redux'
+import FastImage from 'react-native-fast-image'
 const HospitalHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
     const userApp = useSelector((state) => state.auth.userApp)
@@ -34,13 +35,13 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
         navigation.navigate('profileHospital', { item })
     }
     const renderItem = ({ item, index }) => {
+        let icon = item.imageHome ? item.imageHome.absoluteUrl() : ''
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
-                    <ScaledImage
-                        uri={item.imageHome}
-                        height={134}
-                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+                    <FastImage
+                        source={{ uri: icon }}
+                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.name.toUpperCase() : ""}</Text>

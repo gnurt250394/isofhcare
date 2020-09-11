@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react
 import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
+import FastImage from 'react-native-fast-image'
 import { useSelector } from 'react-redux'
 const NewsHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
@@ -39,10 +40,9 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
-                    <ScaledImage
-                        uri={item?.image || ''}
-                        height={134}
-                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+                    <FastImage
+                        source={{ uri: item?.image?.absoluteUrl() || '' }}
+                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.title : ""}</Text>
