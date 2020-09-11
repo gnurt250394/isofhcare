@@ -2,6 +2,7 @@ import React, { useEffect, useState, memo } from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
+import FastImage from 'react-native-fast-image'
 const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
     const getServiceHighLight = async () => {
@@ -82,10 +83,9 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
                 <View style={styles.cardView}>
-                    <ScaledImage
-                        uri={item?.image || ''}
-                        height={134}
-                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+                    <FastImage
+                        uri={item?.image?.absoluteUrl() || ''}
+                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
                 <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensHospital}>{item && item.name ? item.name : ""}</Text>
