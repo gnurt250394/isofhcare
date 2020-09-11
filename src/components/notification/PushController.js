@@ -221,11 +221,11 @@ class PushController extends Component {
             break;
           }
           case 'fanpage': {
-            Linking.canOpenURL('fb://page/1986302411660628')
+            Linking.canOpenURL('fb://profile/1986302411660628')
               .then(supported => {
                 console.log('supported: ', supported);
                 if (supported) {
-                  return Linking.openURL('fb://page/1986302411660628');
+                  return Linking.openURL('fb://profile/1986302411660628');
                 } else {
                   return Linking.openURL('https://www.facebook.com/');
                 }
