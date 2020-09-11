@@ -4,6 +4,7 @@ import ScaledImage from 'mainam-react-native-scaleimage'
 import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
 import { useSelector } from 'react-redux'
+import FastImage from 'react-native-fast-image'
 import objectUtils from '@utils/object-utils'
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
@@ -62,7 +63,7 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             <TouchableOpacity onPress={goToDetailService(item)} style={styles.cardViewDoctor}>
                 {/* <Card style={{ borderRadius: 5, }}> */}
                 <View style={styles.containerImageDoctor}>
-                    <Image
+                    <FastImage
                         // uri={item.advertise.images.absoluteUrl()}
                         style={{ borderRadius: 5, width: '100%', height: '100%' }}
                         source={source}
