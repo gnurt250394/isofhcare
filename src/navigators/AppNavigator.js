@@ -425,7 +425,7 @@ const RootNavigator = (route = 'splash') =>
       inputPhone: {screen: InputPhoneScreen},
       //
       listQuestion: ListQuestionScreen,
-      createQuestionStep1: {screen: CreateQuestionStep1Screen},
+      createQuestionStep: {screen: CreateQuestionStep1Screen},
       createQuestionStep2: {screen: CreateQuestionStep2Screen},
       detailQuestion: {screen: DetailQuestionScreen},
       detailsProfile: {screen: ProfileInfo},
