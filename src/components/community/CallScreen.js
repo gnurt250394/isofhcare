@@ -256,6 +256,7 @@ function CallScreen({ }, ref) {
     };
   }, [userApp.isLogin]);
   const handleGetUserMediaError = e => {
+    console.log('e: ', e);
     let message = '';
     switch (e.name) {
       case 'NotFoundError':
@@ -313,17 +314,20 @@ function CallScreen({ }, ref) {
         const configuration = {
           iceServers: [
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'gnurt250394@gmail.com',
-              credential: 'trung123',
+              urls: ['stun:stun.l.google.com:19302'],
             },
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'trung.hv@isofhcare.com',
-              credential: 'trung123',
+              urls: 'turn:35.197.145.195:3478',
+              username: 'mainam',
+              credential: '123456',
             },
+            // {
+            //   urls: 'turn:numb.viagenie.ca',
+            //   username: 'trung.hv@isofhcare.com',
+            //   credential: 'trung123',
+            // },
           ],
-          iceTransportPolicy: 'public',
+          // iceTransportPolicy: 'public',
         };
         localPC.current = new RTCPeerConnection(configuration);
         // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
@@ -338,6 +342,7 @@ function CallScreen({ }, ref) {
           } catch (err) { }
         };
         localPC.current.onnegotiationneeded = e => {
+          console.log('e: 1111111', e);
           context.listen(constants.socket_type.CANDIDATE, async data => {
             try {
               if (data.candidate) {
