@@ -5,7 +5,7 @@ import constants from '@resources/strings'
 // const server_url = "http://123.24.206.9:8000"; //dev
 // const server_url = "http://123.24.206.9:8000"; //test
 // const server_url = "https://api.produce.isofhcare.com"; //release
-const server_url = "http://183.91.15.7:12034"; //stable
+const server_url = "http://10.0.0.88:9769"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
@@ -69,8 +69,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
-  serviceSchedule: "http://183.91.15.7:12032/",
-  serviceBooking: "http://183.91.15.7:12033/",
+  serviceSchedule: "http://10.0.0.88:8088/",
+  serviceBooking: "http://10.0.0.88:8082/",
   serviceChats: "http://10.0.0.88:8085/",
   serviceCovid: "http://10.0.0.88:49396/",
   serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
