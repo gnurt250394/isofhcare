@@ -30,8 +30,8 @@ import {
 } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 import constants from '@resources/strings';
-import {WebSocketContext} from '@data-access/socket-provider';
-import {useSelector} from 'react-redux';
+import { WebSocketContext } from '@data-access/socket-provider';
+import { useSelector } from 'react-redux';
 import BandWidth from './BandWidth';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import firebase from 'react-native-firebase';
@@ -41,7 +41,7 @@ import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info';
 import soundUtils from '@utils/sound-utils';
 import BandwidthHandler from './BandwidthHandler';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 var qvgaConstraints = {
   maxWidth: 320,
@@ -60,7 +60,7 @@ var hdConstraints = {
   minHeight: 720,
   minFrameRate: 30,
 };
-function CallScreen({}, ref) {
+function CallScreen({ }, ref) {
   const [state, _setState] = useState({
     statusCall: true,
     booking: {},
@@ -92,10 +92,10 @@ function CallScreen({}, ref) {
     3 * ONE_SECOND_IN_MS,
   ];
   const hideModal = () => {
-    setState({isVisible: false});
+    setState({ isVisible: false });
   };
   const showModal = () => {
-    setState({isVisible: true});
+    setState({ isVisible: true });
   };
   useImperativeHandle(
     ref,
@@ -104,9 +104,9 @@ function CallScreen({}, ref) {
     }),
     [],
   );
-  const setState = (data = {id: '', isAnswer: false}) => {
+  const setState = (data = { id: '', isAnswer: false }) => {
     _setState(state => {
-      return {...state, ...data};
+      return { ...state, ...data };
     });
   };
 
@@ -136,7 +136,7 @@ function CallScreen({}, ref) {
           platform: 'android',
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onRNCallKitDidActivateAudioSession = data => {
@@ -144,9 +144,9 @@ function CallScreen({}, ref) {
     createAnswer();
   };
   const answerCallEvent = () => {
-    setState({isAnswerSuccess: true});
+    setState({ isAnswerSuccess: true });
   };
-  const endCallEvent = ({callUUid}) => {
+  const endCallEvent = ({ callUUid }) => {
     if (!state.isAnswerSuccess) rejectCall();
   };
   const addEventCallKeep = () => {
@@ -180,7 +180,7 @@ function CallScreen({}, ref) {
       startSound();
       callId.current = data.UUID;
       socketId2.current = data.from;
-      setState({data2: data, isAnswer: true, booking: data.booking});
+      setState({ data2: data, isAnswer: true, booking: data.booking });
       if (!localPC.current) {
         await initCall(localStream);
       }
@@ -190,7 +190,7 @@ function CallScreen({}, ref) {
       await localPC.current.setRemoteDescription(
         new RTCSessionDescription(data.sdp),
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onTimeOut = () => {
@@ -207,10 +207,10 @@ function CallScreen({}, ref) {
         context.listen('connect', onConnected);
         context.listen(constants.socket_type.OFFER, onOffer);
         context.listen(constants.socket_type.CHECKING, (data, callback) => {
-          callback({status: state.isAnswerSuccess, id: context.context.id});
+          callback({ status: state.isAnswerSuccess, id: context.context.id });
         });
         context.listen(constants.socket_type.ANSWER, async data => {
-          setState({isAnswerSuccess: true});
+          setState({ isAnswerSuccess: true });
           onTimeOut();
           soundUtils.stop();
           data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
@@ -219,37 +219,27 @@ function CallScreen({}, ref) {
             new RTCSessionDescription(data.sdp),
           );
         });
-        context.listen(constants.socket_type.CANDIDATE, async data => {
-          if (data.candidate) {
-            if (!localPC.current) {
-              await initCall(localStream);
-            }
 
-            localPC.current.addIceCandidate(
-              new RTCIceCandidate(data.candidate),
-            );
-          }
-        });
         context.listen(constants.socket_type.LEAVE, data => {
           if (data.status && data.code == 1 && !state.isAnswerSuccess) {
-            setState({callStatus: 'Máy bận'});
+            setState({ callStatus: 'Máy bận' });
             setTimeout(closeStreams, 1500);
           } else {
-            setState({callStatus: 'Kết thúc cuộc gọi'});
+            setState({ callStatus: 'Kết thúc cuộc gọi' });
             closeStreams();
           }
-          setState({statusCall: true});
+          setState({ statusCall: true });
         });
 
         addEventCallKeep();
-      } catch (error) {}
+      } catch (error) { }
     };
     if (userApp.isLogin) {
       didmount();
     } else {
       context.onSend(
         constants.socket_type.DISCONNECT,
-        {token: tokenFirebase.current, platform: Platform.OS},
+        { token: tokenFirebase.current, platform: Platform.OS },
         data => {
           context.socket.disconnect();
         },
@@ -266,6 +256,7 @@ function CallScreen({}, ref) {
     };
   }, [userApp.isLogin]);
   const handleGetUserMediaError = e => {
+    console.log('e: ', e);
     let message = '';
     switch (e.name) {
       case 'NotFoundError':
@@ -302,7 +293,7 @@ function CallScreen({}, ref) {
           video: {
             mandatory: qvgaConstraints,
             facingMode,
-            optional: videoSourceId ? [{sourceId: videoSourceId}] : [],
+            optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
           },
         };
         const newStream = await mediaDevices.getUserMedia(constraints);
@@ -323,17 +314,20 @@ function CallScreen({}, ref) {
         const configuration = {
           iceServers: [
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'gnurt250394@gmail.com',
-              credential: 'trung123',
+              urls: ['stun:stun.l.google.com:19302'],
             },
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'trung.hv@isofhcare.com',
-              credential: 'trung123',
+              urls: 'turn:35.197.145.195:3478',
+              username: 'mainam',
+              credential: '123456',
             },
+            // {
+            //   urls: 'turn:numb.viagenie.ca',
+            //   username: 'trung.hv@isofhcare.com',
+            //   credential: 'trung123',
+            // },
           ],
-          iceTransportPolicy: 'public',
+          // iceTransportPolicy: 'public',
         };
         localPC.current = new RTCPeerConnection(configuration);
         // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
@@ -345,7 +339,21 @@ function CallScreen({}, ref) {
                 candidate: e.candidate,
               });
             }
-          } catch (err) {}
+          } catch (err) { }
+        };
+        localPC.current.onnegotiationneeded = e => {
+          console.log('e: 1111111', e);
+          context.listen(constants.socket_type.CANDIDATE, async data => {
+            try {
+              if (data.candidate) {
+                console.log('data.candidate: ', data.candidate);
+                await localPC.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+              }
+            } catch (error) {
+              console.log('error: ', error);
+            }
+
+          });
         };
         localPC.current.onaddstream = e => {
           if (e.stream && remoteStream !== e.stream) {
@@ -367,7 +375,7 @@ function CallScreen({}, ref) {
           );
           switch (event.target.iceConnectionState) {
             case 'completed':
-              setState({statusCall: true});
+              setState({ statusCall: true });
               break;
             case 'failed':
               if (localPC.current.restartIce) {
@@ -383,10 +391,10 @@ function CallScreen({}, ref) {
               // }
               break;
             case 'connected':
-              setState({statusCall: true});
+              setState({ statusCall: true });
               break;
             case 'disconnected':
-              setState({statusCall: false});
+              setState({ statusCall: false });
               break;
             case 'closed':
               closeStreams();
@@ -440,8 +448,8 @@ function CallScreen({}, ref) {
 
         socketId2.current = booking?.doctor?.id;
         if (isOffer) {
-          InCallManager.start({media: 'video'});
-          setState({makeCall: true, booking});
+          InCallManager.start({ media: 'video' });
+          setState({ makeCall: true, booking });
           const offer = await localPC.current.createOffer();
           onCreateOfferSuccess(offer, booking);
         }
@@ -453,10 +461,10 @@ function CallScreen({}, ref) {
   const createAnswer = async () => {
     try {
       InCallManager.stopRingtone();
-      InCallManager.start({media: 'video'});
+      InCallManager.start({ media: 'video' });
       Vibration.cancel();
       const answer = await localPC.current.createAnswer();
-      setState({isAnswerSuccess: true});
+      setState({ isAnswerSuccess: true });
       onTimeOut();
       context.onSend(
         constants.socket_type.ANSWER,
@@ -546,7 +554,7 @@ function CallScreen({}, ref) {
         <View
           style={[
             styles.rtcview,
-            {height, ...StyleSheet.absoluteFillObject, zIndex: 0},
+            { height, ...StyleSheet.absoluteFillObject, zIndex: 0 },
           ]}>
           {remoteStream ? (
             <RTCView
@@ -598,37 +606,37 @@ function CallScreen({}, ref) {
           }}>
           {localStream && (state.isAnswerSuccess || state.makeCall) && (
             <View style={styles.toggleButtons}>
-              <TouchableOpacity onPress={toggleMute} style={{padding: 10}}>
+              <TouchableOpacity onPress={toggleMute} style={{ padding: 10 }}>
                 {isMuted ? (
                   <Image
                     source={require('@images/new/videoCall/mute_selected.png')}
                     style={styles.icon}
                   />
                 ) : (
-                  <Image
-                    source={require('@images/new/videoCall/mute.png')}
-                    style={styles.icon}
-                  />
-                )}
+                    <Image
+                      source={require('@images/new/videoCall/mute.png')}
+                      style={styles.icon}
+                    />
+                  )}
               </TouchableOpacity>
-              <TouchableOpacity onPress={toggleSpeaker} style={{padding: 10}}>
+              <TouchableOpacity onPress={toggleSpeaker} style={{ padding: 10 }}>
                 {isSpeak ? (
                   <Image
                     source={require('@images/new/videoCall/speaker_selected.png')}
                     style={styles.icon}
                   />
                 ) : (
-                  <Image
-                    source={require('@images/new/videoCall/speaker.png')}
-                    style={styles.icon}
-                  />
-                )}
+                    <Image
+                      source={require('@images/new/videoCall/speaker.png')}
+                      style={styles.icon}
+                    />
+                  )}
               </TouchableOpacity>
             </View>
           )}
           <View style={styles.toggleButtons}>
             {!state.isAnswerSuccess && !state.makeCall ? (
-              <TouchableOpacity onPress={createAnswer} style={{padding: 10}}>
+              <TouchableOpacity onPress={createAnswer} style={{ padding: 10 }}>
                 <Image
                   source={require('@images/new/videoCall/accept_call.png')}
                   style={styles.icon}
@@ -637,7 +645,7 @@ function CallScreen({}, ref) {
             ) : null}
             <TouchableOpacity
               onPress={() => rejectCall(constants.socket_type.LEAVE)}
-              style={{padding: 10}}>
+              style={{ padding: 10 }}>
               <Image
                 source={require('@images/new/videoCall/end_call.png')}
                 style={styles.icon}
