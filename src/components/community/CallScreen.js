@@ -30,8 +30,8 @@ import {
 } from 'react-native-webrtc';
 import InCallManager from 'react-native-incall-manager';
 import constants from '@resources/strings';
-import {WebSocketContext} from '@data-access/socket-provider';
-import {useSelector} from 'react-redux';
+import { WebSocketContext } from '@data-access/socket-provider';
+import { useSelector } from 'react-redux';
 import BandWidth from './BandWidth';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import firebase from 'react-native-firebase';
@@ -41,7 +41,7 @@ import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info';
 import soundUtils from '@utils/sound-utils';
 import BandwidthHandler from './BandwidthHandler';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 var qvgaConstraints = {
   maxWidth: 320,
@@ -60,7 +60,7 @@ var hdConstraints = {
   minHeight: 720,
   minFrameRate: 30,
 };
-function CallScreen({}, ref) {
+function CallScreen({ }, ref) {
   const [state, _setState] = useState({
     statusCall: true,
     booking: {},
@@ -78,8 +78,8 @@ function CallScreen({}, ref) {
   const context = useContext(WebSocketContext);
   const callId = useRef();
   const timeout = useRef();
+  const isCall = useRef(false);
   // const localStream = useRef();
-  const socketId = useRef('');
   const socketId2 = useRef('');
   const tokenFirebase = useRef('');
   const localPC = useRef();
@@ -92,10 +92,10 @@ function CallScreen({}, ref) {
     3 * ONE_SECOND_IN_MS,
   ];
   const hideModal = () => {
-    setState({isVisible: false});
+    setState({ isVisible: false });
   };
   const showModal = () => {
-    setState({isVisible: true});
+    setState({ isVisible: true });
   };
   useImperativeHandle(
     ref,
@@ -104,9 +104,9 @@ function CallScreen({}, ref) {
     }),
     [],
   );
-  const setState = (data = {id: '', isAnswer: false}) => {
+  const setState = (data = { id: '', isAnswer: false }) => {
     _setState(state => {
-      return {...state, ...data};
+      return { ...state, ...data };
     });
   };
 
@@ -126,41 +126,27 @@ function CallScreen({}, ref) {
             packageName: DeviceInfo.getBundleId(),
           });
         });
-        VoipPushNotification.addEventListener(
-          'notification',
-          notification => {},
-        );
       } else {
         let token = await firebase.messaging().getToken();
         tokenFirebase.current = token;
-        console.log('token: ', token);
+
         context.onSend(constants.socket_type.CONNECT, {
           token,
           id: userApp.currentUser.id,
           platform: 'android',
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
-  const onDidDisplayIncomingCall = ({
-    error,
-    callUUID,
-    handle,
-    localizedCallerName,
-    hasVideo,
-    fromPushKit,
-    payload,
-  }) => {};
+
   const onRNCallKitDidActivateAudioSession = data => {
     // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
-    console.log('DID ACTIVE AUDIO');
     createAnswer();
   };
   const answerCallEvent = () => {
-    setState({isAnswerSuccess: true});
-    // showModal();
+    setState({ isAnswerSuccess: true });
   };
-  const endCallEvent = ({callUUid}) => {
+  const endCallEvent = ({ callUUid }) => {
     if (!state.isAnswerSuccess) rejectCall();
   };
   const addEventCallKeep = () => {
@@ -170,10 +156,6 @@ function CallScreen({}, ref) {
       'didActivateAudioSession',
       onRNCallKitDidActivateAudioSession,
     );
-    RNCallKeep.addEventListener(
-      'didDisplayIncomingCall',
-      onDidDisplayIncomingCall,
-    );
   };
   const removeEvent = () => {
     RNCallKeep.removeEventListener('answerCall', answerCallEvent);
@@ -181,10 +163,6 @@ function CallScreen({}, ref) {
     RNCallKeep.removeEventListener(
       'didActivateAudioSession',
       onRNCallKitDidActivateAudioSession,
-    );
-    RNCallKeep.removeEventListener(
-      'didDisplayIncomingCall',
-      onDidDisplayIncomingCall,
     );
   };
   const startSound = () => {
@@ -197,17 +175,12 @@ function CallScreen({}, ref) {
     Vibration.cancel();
   };
   const onOffer = async (data, callback) => {
-    console.log('data: ', data);
     try {
-      debugger;
-      // if (Platform.OS == 'android') {
-      // RNCallKeepManager.displayIncommingCall(data.UUID, data.name)
       showModal();
       startSound();
-      // }
       callId.current = data.UUID;
       socketId2.current = data.from;
-      setState({data2: data, isAnswer: true, booking: data.booking});
+      setState({ data2: data, isAnswer: true, booking: data.booking });
       if (!localPC.current) {
         await initCall(localStream);
       }
@@ -217,7 +190,7 @@ function CallScreen({}, ref) {
       await localPC.current.setRemoteDescription(
         new RTCSessionDescription(data.sdp),
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const onTimeOut = () => {
@@ -234,13 +207,10 @@ function CallScreen({}, ref) {
         context.listen('connect', onConnected);
         context.listen(constants.socket_type.OFFER, onOffer);
         context.listen(constants.socket_type.CHECKING, (data, callback) => {
-          console.log('data: 112211', data);
-          callback({status: state.isAnswerSuccess, id: context.context.id});
+          callback({ status: state.isAnswerSuccess, id: context.context.id });
         });
         context.listen(constants.socket_type.ANSWER, async data => {
-          debugger;
-          console.log('localPC, setRemoteDescription');
-          setState({isAnswerSuccess: true});
+          setState({ isAnswerSuccess: true });
           onTimeOut();
           soundUtils.stop();
           data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
@@ -249,43 +219,28 @@ function CallScreen({}, ref) {
             new RTCSessionDescription(data.sdp),
           );
         });
-        context.listen(constants.socket_type.CANDIDATE, async data => {
-          console.log('data: CANDIDATE', data);
-          debugger;
-          if (data.candidate) {
-            if (!localPC.current) {
-              await initCall(localStream);
-            }
 
-            localPC.current.addIceCandidate(
-              new RTCIceCandidate(data.candidate),
-            );
-          }
-        });
         context.listen(constants.socket_type.LEAVE, data => {
           if (data.status && data.code == 1 && !state.isAnswerSuccess) {
-            setState({callStatus: 'Máy bận'});
+            setState({ callStatus: 'Máy bận' });
             setTimeout(closeStreams, 1500);
           } else {
-            setState({callStatus: 'Kết thúc cuộc gọi'});
+            setState({ callStatus: 'Kết thúc cuộc gọi' });
             closeStreams();
           }
-          setState({statusCall: true});
+          setState({ statusCall: true });
         });
 
         addEventCallKeep();
-      } catch (error) {
-        console.log('error: ', error);
-      }
+      } catch (error) { }
     };
     if (userApp.isLogin) {
       didmount();
     } else {
       context.onSend(
         constants.socket_type.DISCONNECT,
-        {token: tokenFirebase.current, platform: Platform.OS},
+        { token: tokenFirebase.current, platform: Platform.OS },
         data => {
-          console.log('data: ', data);
           context.socket.disconnect();
         },
       );
@@ -298,27 +253,28 @@ function CallScreen({}, ref) {
       if (timeout.current) {
         clearTimeout(timeout.current);
       }
-      
     };
   }, [userApp.isLogin]);
   const handleGetUserMediaError = e => {
+    let message = '';
     switch (e.name) {
       case 'NotFoundError':
-        alert(
-          'Unable to open your call because no camera and/or microphone' +
-            'were found.',
-        );
+        message = 'NotFoundError';
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
+        message = 'PermissionDeniedError';
         // Do nothing; this is the same as the user canceling the call.
         break;
       default:
-        alert('Error opening your camera and/or microphone: ' + e.message);
+        message = e.message;
         break;
     }
-
-    closeStreams();
+    context.onSend(constants.socket_type.ERROR, {
+      callId: callId.current,
+      userId: userApp?.currentUser?.id,
+      error: message,
+    });
   };
   const startLocalStream = async init => {
     return new Promise(async (resolve, reject) => {
@@ -333,147 +289,125 @@ function CallScreen({}, ref) {
         const facingMode = isFront ? 'user' : 'environment';
         const constraints = {
           audio: true,
-          // audio: {
-          //     echoCancellation: true,
-          //     noiseSuppression: true,
-          //     autoGainControl: true,
-          //     googEchoCancellation: true,
-          //     // googAutoGainControl: true,
-          //     googNoiseSuppression: true,
-          //     // googHighpassFilter: true,
-          //     // googTypingNoiseDetection: true,
-          //     googNoiseReduction: true,
-          //     volume: 0.9,
-          // },
           video: {
             mandatory: qvgaConstraints,
             facingMode,
-            optional: videoSourceId ? [{sourceId: videoSourceId}] : [],
+            optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
           },
         };
         const newStream = await mediaDevices.getUserMedia(constraints);
-        localPC.current.addStream(newStream);
-
+        localPC.current && localPC.current.addStream(newStream);
         resolve();
         setLocalStream(newStream);
       } catch (error) {
         reject();
         handleGetUserMediaError(error);
-        console.log('error: ', error);
-        debugger;
       }
     });
   };
 
   const initCall = async newStream => {
     return new Promise(async (resolve, reject) => {
-      // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
-      const configuration = {
-        iceServers: [
-          {
-            url: 'turn:numb.viagenie.ca',
-            username: 'gnurt250394@gmail.com',
-            credential: 'trung123',
-          },
-          {
-            url: 'turn:numb.viagenie.ca',
-            username: 'trung.hv@isofhcare.com',
-            credential: 'trung123',
-          },
-        ],
-        iceTransportPolicy: 'public',
-      };
-      localPC.current = new RTCPeerConnection(configuration);
-      // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
-      localPC.current.onicecandidate = e => {
-        try {
-          debugger;
-          console.log('localPC icecandidate:', e.candidate);
-          if (e.candidate) {
-            context.onSend(constants.socket_type.CANDIDATE, {
-              to: socketId2.current,
-              candidate: e.candidate,
-              type: 'local',
-            });
+      try {
+        // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
+        const configuration = {
+          iceServers: [
+            {
+              url: 'turn:numb.viagenie.ca',
+              username: 'gnurt250394@gmail.com',
+              credential: 'trung123',
+            },
+            {
+              url: 'turn:numb.viagenie.ca',
+              username: 'trung.hv@isofhcare.com',
+              credential: 'trung123',
+            },
+          ],
+          iceTransportPolicy: 'public',
+        };
+        localPC.current = new RTCPeerConnection(configuration);
+        // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
+        localPC.current.onicecandidate = e => {
+          try {
+            if (e.candidate) {
+              context.onSend(constants.socket_type.CANDIDATE, {
+                to: socketId2.current,
+                candidate: e.candidate,
+              });
+            }
+          } catch (err) { }
+        };
+        localPC.current.onnegotiationneeded = e => {
+          context.listen(constants.socket_type.CANDIDATE, async data => {
+            try {
+              if (data.candidate) {
+                console.log('data.candidate: ', data.candidate);
+                await localPC.current.addIceCandidate(new RTCIceCandidate(data.candidate));
+              }
+            } catch (error) {
+              console.log('error: ', error);
+            }
+
+          });
+        };
+        localPC.current.onaddstream = e => {
+          if (e.stream && remoteStream !== e.stream) {
+            setRemoteStream(e.stream);
           }
-        } catch (err) {
-          debugger;
-          console.error(`Error adding remotePC iceCandidate: ${err}`);
-        }
-      };
-      localPC.current.onaddstream = e => {
-        console.log('remotePC tracking with ', e);
-        debugger;
-        if (e.stream && remoteStream !== e.stream) {
-          console.log('RemotePC received the stream', e.stream);
-          setRemoteStream(e.stream);
-        }
-      };
+        };
 
-      if (!localStream) {
-        console.log('localStream:1111 ', localStream);
-        await startLocalStream();
+        if (!localStream) {
+          await startLocalStream();
+        }
+        /**
+         * On Ice Connection State Change
+         */
+
+        localPC.current.oniceconnectionstatechange = async event => {
+          console.log(
+            'event: iceConnectionState',
+            event.target.iceConnectionState,
+          );
+          switch (event.target.iceConnectionState) {
+            case 'completed':
+              setState({ statusCall: true });
+              break;
+            case 'failed':
+              if (localPC.current.restartIce) {
+                localPC.current.restartIce();
+              }
+              // else {
+              //   try {
+              //     let offer = await localPC.current.createOffer({
+              //       iceRestart: true,
+              //     });
+              //     onCreateOfferSuccess(offer);
+              //   } catch (error) {}
+              // }
+              break;
+            case 'connected':
+              setState({ statusCall: true });
+              break;
+            case 'disconnected':
+              setState({ statusCall: false });
+              break;
+            case 'closed':
+              closeStreams();
+              break;
+            default:
+              break;
+          }
+        };
+
+        resolve();
+      } catch (error) {
+        reject(error);
       }
-      /**
-       * On Ice Connection State Change
-       */
-
-      localPC.current.oniceconnectionstatechange = async event => {
-        console.log('event: oniceconnectionstatechange', event);
-        console.log(
-          'event: iceConnectionState',
-          event.target.iceConnectionState,
-        );
-        switch (event.target.iceConnectionState) {
-          case 'completed':
-            setState({statusCall: true});
-            break;
-          case 'failed':
-            // if (localPC.current.restartIce) {
-            //   localPC.current.restartIce();
-            // } else {
-            //   try {
-            //     let offer = await localPC.current.createOffer({
-            //       iceRestart: true,
-            //     });
-            //     onCreateOfferSuccess(offer);
-            //   } catch (error) {}
-            // }
-            break;
-          case 'connected':
-            setState({statusCall: true});
-            break;
-          case 'disconnected':
-            setState({statusCall: false});
-            break;
-          case 'closed':
-            closeStreams();
-            break;
-          default:
-            break;
-        }
-      };
-
-      /**
-       * On Signaling State Change
-       */
-      localPC.current.onsignalingstatechange = event => {
-        console.log('on signaling state change', event.target.signalingState);
-      };
-      /**
-       * On Remove Stream
-       */
-      localPC.current.onremovestream = event => {
-        debugger;
-        //console.log('on remove stream', event.stream);
-      };
-      resolve();
     });
   };
 
   const onCreateOfferSuccess = async (offer, booking) => {
     try {
-      console.log('Offer from localPC, setLocalDescription');
       soundUtils.play('call_phone.mp3');
       context.onSend(
         constants.socket_type.OFFER,
@@ -484,10 +418,8 @@ function CallScreen({}, ref) {
           sdp: offer,
         },
         async res => {
-          console.log('res: ', res);
-          console.log('callId: ', callId);
           callId.current = res.callId;
-          console.log('localPC.current: ', localPC.current);
+
           if (localPC.current) {
             await localPC.current.setLocalDescription(
               new RTCSessionDescription(offer),
@@ -495,40 +427,40 @@ function CallScreen({}, ref) {
           }
         },
       );
-    } catch (error) {}
+    } catch (error) {
+      handleGetUserMediaError(error);
+    }
   };
   const startCall = async (booking, isOffer) => {
     try {
-      showModal();
-      console.log('localPC: ', localPC);
-      if (!localPC.current) {
-        await initCall(localStream);
-      }
+      if (!isCall.current) {
+        isCall.current = true;
+        showModal();
 
-      socketId2.current = booking?.doctor?.id;
-      if (isOffer) {
-        InCallManager.start({media: 'video'});
-        setState({makeCall: true, booking});
-        const offer = await localPC.current.createOffer();
-        onCreateOfferSuccess(offer, booking);
-        console.log('offer: ', offer);
+        if (!localPC.current) {
+          await initCall(localStream);
+        }
+
+        socketId2.current = booking?.doctor?.id;
+        if (isOffer) {
+          InCallManager.start({ media: 'video' });
+          setState({ makeCall: true, booking });
+          const offer = await localPC.current.createOffer();
+          onCreateOfferSuccess(offer, booking);
+        }
       }
-    } catch (err) {
-      debugger;
-      console.log(err);
+    } catch (error) {
+      handleGetUserMediaError(error);
     }
   };
   const createAnswer = async () => {
     try {
       InCallManager.stopRingtone();
-      InCallManager.start({media: 'video'});
+      InCallManager.start({ media: 'video' });
       Vibration.cancel();
       const answer = await localPC.current.createAnswer();
-      console.log(`Answer from remotePC: ${answer.sdp}`);
-
-      setState({isAnswerSuccess: true});
+      setState({ isAnswerSuccess: true });
       onTimeOut();
-
       context.onSend(
         constants.socket_type.ANSWER,
         {
@@ -545,12 +477,10 @@ function CallScreen({}, ref) {
         },
       );
     } catch (error) {
-      debugger;
-      console.log('error: ', error);
+      handleGetUserMediaError(error);
     }
   };
   const switchCamera = async () => {
-    console.log('localStream: ', localStream);
     if (!localStream || localStream?.getVideoTracks?.().length == 0) {
       await startLocalStream();
     }
@@ -563,7 +493,6 @@ function CallScreen({}, ref) {
   const toggleMute = () => {
     if (!localStream) return;
     localStream.getAudioTracks().forEach(track => {
-      console.log(track.enabled ? 'muting' : 'unmuting', ' local track', track);
       track.enabled = !track.enabled;
       setIsMuted(!track.enabled);
     });
@@ -571,15 +500,14 @@ function CallScreen({}, ref) {
 
   const closeStreams = () => {
     if (localPC.current) {
-      console.log('localPC.current: ', localPC.current);
-      debugger;
       localPC.current.removeStream(remoteStream);
-      // localPC.current.removeStream(localStream);
+      localPC.current.removeStream(localStream);
       localPC.current.close();
       localPC.current = null;
     }
     soundUtils.stop();
     stopSound();
+    isCall.current = false;
     setState({
       isAnswerSuccess: false,
       makeCall: false,
@@ -598,7 +526,6 @@ function CallScreen({}, ref) {
     InCallManager.setForceSpeakerphoneOn(!isSpeak);
   };
   const rejectCall = () => {
-    console.log('callId.current: ', callId.current);
     // RNCallKeepManager.endCall()
     let type =
       state.isAnswerSuccess || state.makeCall
@@ -622,7 +549,7 @@ function CallScreen({}, ref) {
         <View
           style={[
             styles.rtcview,
-            {height, ...StyleSheet.absoluteFillObject, zIndex: 0},
+            { height, ...StyleSheet.absoluteFillObject, zIndex: 0 },
           ]}>
           {remoteStream ? (
             <RTCView
@@ -674,37 +601,37 @@ function CallScreen({}, ref) {
           }}>
           {localStream && (state.isAnswerSuccess || state.makeCall) && (
             <View style={styles.toggleButtons}>
-              <TouchableOpacity onPress={toggleMute} style={{padding: 10}}>
+              <TouchableOpacity onPress={toggleMute} style={{ padding: 10 }}>
                 {isMuted ? (
                   <Image
                     source={require('@images/new/videoCall/mute_selected.png')}
                     style={styles.icon}
                   />
                 ) : (
-                  <Image
-                    source={require('@images/new/videoCall/mute.png')}
-                    style={styles.icon}
-                  />
-                )}
+                    <Image
+                      source={require('@images/new/videoCall/mute.png')}
+                      style={styles.icon}
+                    />
+                  )}
               </TouchableOpacity>
-              <TouchableOpacity onPress={toggleSpeaker} style={{padding: 10}}>
+              <TouchableOpacity onPress={toggleSpeaker} style={{ padding: 10 }}>
                 {isSpeak ? (
                   <Image
                     source={require('@images/new/videoCall/speaker_selected.png')}
                     style={styles.icon}
                   />
                 ) : (
-                  <Image
-                    source={require('@images/new/videoCall/speaker.png')}
-                    style={styles.icon}
-                  />
-                )}
+                    <Image
+                      source={require('@images/new/videoCall/speaker.png')}
+                      style={styles.icon}
+                    />
+                  )}
               </TouchableOpacity>
             </View>
           )}
           <View style={styles.toggleButtons}>
             {!state.isAnswerSuccess && !state.makeCall ? (
-              <TouchableOpacity onPress={createAnswer} style={{padding: 10}}>
+              <TouchableOpacity onPress={createAnswer} style={{ padding: 10 }}>
                 <Image
                   source={require('@images/new/videoCall/accept_call.png')}
                   style={styles.icon}
@@ -713,7 +640,7 @@ function CallScreen({}, ref) {
             ) : null}
             <TouchableOpacity
               onPress={() => rejectCall(constants.socket_type.LEAVE)}
-              style={{padding: 10}}>
+              style={{ padding: 10 }}>
               <Image
                 source={require('@images/new/videoCall/end_call.png')}
                 style={styles.icon}

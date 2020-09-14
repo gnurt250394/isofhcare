@@ -109,6 +109,7 @@ module.exports = {
     MESSAGE: 'MESSAGE',
     TYPING: 'TYPING',
     QUESTION: 'QUESTION_',
+    ERROR: 'ERROR',
   },
   MIME: {
     // list: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
