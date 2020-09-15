@@ -65,17 +65,17 @@ function CallScreen({ }, ref) {
     statusCall: true,
     booking: {},
     id: '',
-    isAnswer: false,
     isAnswerSuccess: false,
     makeCall: false,
     isVisible: false,
   });
   const [remoteStream, setRemoteStream] = useState();
-  const [localStream, setLocalStream] = useState();
+  // const [localStream, setLocalStream] = useState();
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeak, setIsSpeak] = useState(true);
   const [isCamFront, setIsCamFront] = useState(true);
   const context = useContext(WebSocketContext);
+  const localStream = useRef();
   const callId = useRef();
   const timeout = useRef();
   const isCall = useRef(false);
@@ -104,7 +104,7 @@ function CallScreen({ }, ref) {
     }),
     [],
   );
-  const setState = (data = { id: '', isAnswer: false }) => {
+  const setState = (data = { id: '' }) => {
     _setState(state => {
       return { ...state, ...data };
     });
@@ -180,9 +180,9 @@ function CallScreen({ }, ref) {
       startSound();
       callId.current = data.UUID;
       socketId2.current = data.from;
-      setState({ data2: data, isAnswer: true, booking: data.booking });
+      setState({ data2: data, booking: data.booking });
       if (!localPC.current) {
-        await initCall(localStream);
+        await initCall(localStream.current);
       }
 
       data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
@@ -202,13 +202,10 @@ function CallScreen({ }, ref) {
   useEffect(() => {
     const didmount = async () => {
       try {
-        // await initCall(true);
+        await startLocalStream(true);
         await context.connectSocket(userApp.loginToken);
         context.listen('connect', onConnected);
         context.listen(constants.socket_type.OFFER, onOffer);
-        context.listen(constants.socket_type.CHECKING, (data, callback) => {
-          callback({ status: state.isAnswerSuccess, id: context.context.id });
-        });
         context.listen(constants.socket_type.ANSWER, async data => {
           setState({ isAnswerSuccess: true });
           onTimeOut();
@@ -219,7 +216,6 @@ function CallScreen({ }, ref) {
             new RTCSessionDescription(data.sdp),
           );
         });
-
         context.listen(constants.socket_type.LEAVE, data => {
           if (data.status && data.code == 1 && !state.isAnswerSuccess) {
             setState({ callStatus: 'Máy bận' });
@@ -296,9 +292,11 @@ function CallScreen({ }, ref) {
           },
         };
         const newStream = await mediaDevices.getUserMedia(constraints);
-        localPC.current && localPC.current.addStream(newStream);
+        // localPC.current && localPC.current.addStream(newStream);
         resolve();
-        setLocalStream(newStream);
+        localStream.current = newStream
+        // setLocalStream(newStream);
+        await initCall(newStream)
       } catch (error) {
         reject();
         handleGetUserMediaError(error);
@@ -311,19 +309,17 @@ function CallScreen({ }, ref) {
       try {
         // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
         const configuration = {
-          iceServers: [
+          "iceServers": [
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'gnurt250394@gmail.com',
-              credential: 'trung123',
+              urls: ['stun:stun.l.google.com:19302'],
             },
             {
-              url: 'turn:numb.viagenie.ca',
-              username: 'trung.hv@isofhcare.com',
-              credential: 'trung123',
+              urls: 'turn:35.197.145.195:3478',
+              username: 'mainam',
+              credential: '123456',
             },
-          ],
-          iceTransportPolicy: 'public',
+          ]
+          // iceTransportPolicy: 'public',
         };
         localPC.current = new RTCPeerConnection(configuration);
         // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
@@ -338,6 +334,7 @@ function CallScreen({ }, ref) {
           } catch (err) { }
         };
         localPC.current.onnegotiationneeded = e => {
+          resolve();
           context.listen(constants.socket_type.CANDIDATE, async data => {
             try {
               if (data.candidate) {
@@ -356,18 +353,17 @@ function CallScreen({ }, ref) {
           }
         };
 
-        if (!localStream) {
-          await startLocalStream();
-        }
+        // if (!localStream) {
+        //   await startLocalStream();
+        // } else {
+        localPC.current.addStream(newStream);
+
+        // }
         /**
          * On Ice Connection State Change
          */
 
         localPC.current.oniceconnectionstatechange = async event => {
-          console.log(
-            'event: iceConnectionState',
-            event.target.iceConnectionState,
-          );
           switch (event.target.iceConnectionState) {
             case 'completed':
               setState({ statusCall: true });
@@ -399,7 +395,6 @@ function CallScreen({ }, ref) {
           }
         };
 
-        resolve();
       } catch (error) {
         reject(error);
       }
@@ -434,22 +429,24 @@ function CallScreen({ }, ref) {
   const startCall = async (booking, isOffer) => {
     try {
       if (!isCall.current) {
+        console.log(111111);
         isCall.current = true;
         showModal();
 
         if (!localPC.current) {
-          await initCall(localStream);
+          await initCall(localStream.current);
         }
 
         socketId2.current = booking?.doctor?.id;
-        if (isOffer) {
-          InCallManager.start({ media: 'video' });
-          setState({ makeCall: true, booking });
-          const offer = await localPC.current.createOffer();
-          onCreateOfferSuccess(offer, booking);
-        }
+        // if (isOffer) {
+        InCallManager.start({ media: 'video' });
+        setState({ makeCall: true, booking });
+        const offer = await localPC.current.createOffer();
+        onCreateOfferSuccess(offer, booking);
+        // }
       }
     } catch (error) {
+      console.log('error: ', error);
       handleGetUserMediaError(error);
     }
   };
@@ -481,18 +478,18 @@ function CallScreen({ }, ref) {
     }
   };
   const switchCamera = async () => {
-    if (!localStream || localStream?.getVideoTracks?.().length == 0) {
+    if (!localStream.current || localStream.current?.getVideoTracks?.().length == 0) {
       await startLocalStream();
     }
 
-    localStream.getVideoTracks().forEach(track => track._switchCamera());
+    localStream.current.getVideoTracks().forEach(track => track._switchCamera());
     setIsCamFront(isCam => !isCam);
   };
 
   // Mutes the local's outgoing audio
   const toggleMute = () => {
-    if (!localStream) return;
-    localStream.getAudioTracks().forEach(track => {
+    if (!localStream.current) return;
+    localStream.current.getAudioTracks().forEach(track => {
       track.enabled = !track.enabled;
       setIsMuted(!track.enabled);
     });
@@ -500,8 +497,8 @@ function CallScreen({ }, ref) {
 
   const closeStreams = () => {
     if (localPC.current) {
-      localPC.current.removeStream(remoteStream);
-      localPC.current.removeStream(localStream);
+      // localPC.current.removeStream(remoteStream);
+      // localPC.current.removeStream(localStream);
       localPC.current.close();
       localPC.current = null;
     }
@@ -526,7 +523,6 @@ function CallScreen({ }, ref) {
     InCallManager.setForceSpeakerphoneOn(!isSpeak);
   };
   const rejectCall = () => {
-    // RNCallKeepManager.endCall()
     let type =
       state.isAnswerSuccess || state.makeCall
         ? constants.socket_type.LEAVE
@@ -564,12 +560,12 @@ function CallScreen({ }, ref) {
 
         {localPC.current ? <BandWidth localPc={localPC.current} /> : null}
         <View style={[styles.groupLocalSteam]}>
-          {localStream && (
+          {localStream.current && (
             <RTCView
               style={[styles.rtc]}
               zOrder={1}
               mirror={isCamFront}
-              streamURL={localStream.toURL()}
+              streamURL={localStream.current.toURL()}
             />
           )}
           <TouchableOpacity onPress={switchCamera} style={styles.buttonSwitch}>
@@ -599,7 +595,7 @@ function CallScreen({ }, ref) {
             flex: 1,
             justifyContent: 'flex-end',
           }}>
-          {localStream && (state.isAnswerSuccess || state.makeCall) && (
+          {localStream.current && (state.isAnswerSuccess || state.makeCall) && (
             <View style={styles.toggleButtons}>
               <TouchableOpacity onPress={toggleMute} style={{ padding: 10 }}>
                 {isMuted ? (
