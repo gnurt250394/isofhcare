@@ -1,12 +1,13 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  memo,
-  useContext,
-} from 'react';
+import React from 'react';
+import {
+  RTCPeerConnection,
+  RTCView,
+  mediaDevices,
+  RTCIceCandidate,
+  RTCSessionDescription,
+} from 'react-native-webrtc'
+import io from 'socket.io-client';
+
 import {
   View,
   SafeAreaView,
@@ -21,13 +22,7 @@ import {
   Modal,
   Vibration,
 } from 'react-native';
-import {
-  RTCPeerConnection,
-  RTCView,
-  mediaDevices,
-  RTCIceCandidate,
-  RTCSessionDescription,
-} from 'react-native-webrtc';
+import { connect } from 'react-redux';
 import InCallManager from 'react-native-incall-manager';
 import constants from '@resources/strings';
 import { WebSocketContext } from '@data-access/socket-provider';
@@ -41,76 +36,465 @@ import Timer from '@containers/community/Timer';
 import DeviceInfo from 'react-native-device-info';
 import soundUtils from '@utils/sound-utils';
 import BandwidthHandler from './BandwidthHandler';
+import stringUtils from 'mainam-react-native-string-utils'
 const { width, height } = Dimensions.get('screen');
 
-var qvgaConstraints = {
-  maxWidth: 320,
-  maxHeight: 180,
-  minFrameRate: 30,
-};
+const ONE_SECOND_IN_MS = 1000;
 
-var vgaConstraints = {
-  maxWidth: 640,
-  maxHeight: 360,
-  minFrameRate: 30,
-};
+const PATTERN = [
+  1 * ONE_SECOND_IN_MS,
+  2 * ONE_SECOND_IN_MS,
+  3 * ONE_SECOND_IN_MS,
+];
+const HOST = process.env.HOST || 'http://10.0.50.112:4443'
+const isFront = true // Use Front camera?
+const DEFAULT_ICE = {
+  iceServers: [
+    {
+      urls: ['stun:stun.l.google.com:19302'],
+    },
+    {
+      urls: 'turn:35.197.145.195:3478',
+      username: 'mainam',
+      credential: '123456',
+    },
+  ]
+}
 
-var hdConstraints = {
-  minWidth: 1280,
-  minHeight: 720,
-  minFrameRate: 30,
-};
-function CallScreen({ }, ref) {
-  const [state, _setState] = useState({
-    statusCall: true,
-    booking: {},
-    id: '',
-    isAnswerSuccess: false,
-    makeCall: false,
-    isVisible: false,
-  });
-  const [remoteStream, setRemoteStream] = useState();
-  // const [localStream, setLocalStream] = useState();
-  const [isMuted, setIsMuted] = useState(false);
-  const [isSpeak, setIsSpeak] = useState(true);
-  const [isCamFront, setIsCamFront] = useState(true);
-  const context = useContext(WebSocketContext);
-  const localStream = useRef();
-  const callId = useRef();
-  const timeout = useRef();
-  const isCall = useRef(false);
-  // const localStream = useRef();
-  const socketId2 = useRef('');
-  const tokenFirebase = useRef('');
-  const localPC = useRef();
-  const userApp = useSelector(state => state.auth.userApp);
-  const ONE_SECOND_IN_MS = 1000;
+class CallScreen extends React.Component {
 
-  const PATTERN = [
-    1 * ONE_SECOND_IN_MS,
-    2 * ONE_SECOND_IN_MS,
-    3 * ONE_SECOND_IN_MS,
-  ];
-  const hideModal = () => {
-    setState({ isVisible: false });
+  constructor(props) {
+    super(props)
+
+    this.on_ICE_Connection_State_Change = this.on_ICE_Connection_State_Change.bind(this)
+    this.on_Add_Stream = this.on_Add_Stream.bind(this)
+    this.on_ICE_Candiate = this.on_ICE_Candiate.bind(this)
+    this.sendMessage = this.sendMessage.bind(this)
+    this.on_Offer_Received = this.on_Offer_Received.bind(this)
+    this.on_Answer_Received = this.on_Answer_Received.bind(this)
+    this.setupWebRTC = this.setupWebRTC.bind(this)
+    this.handleAnswer = this.handleAnswer.bind(this)
+
+    this.state = {
+      connected: false,
+      ice_connection_state: '',
+      pendingCandidates: [],
+      isCamFront: true,
+      isVisible: false,
+      callId: '',
+      isAnswerSuccess: false,
+      makeCall: false,
+      isSpeak: true
+    }
+  }
+
+  render() {
+    const { remoteStreamURL, callStatus, isAnswerSuccess, isVisible, makeCall, isCamFront, localStreamURL, isSpeak, offer_received, offer_answered, isMuted } = this.state
+    return (
+      <Modal
+        animated={true}
+        animationType="slide"
+        transparent={false}
+        visible={isVisible}>
+        <View style={styles.container}>
+          <StatusBar translucent={true} backgroundColor={'transparent'} />
+          <View
+            style={[
+              styles.rtcview,
+              { height, ...StyleSheet.absoluteFillObject, zIndex: 0 },
+            ]}>
+            {remoteStreamURL ? (
+              <RTCView
+                style={styles.rtc}
+                zOrder={-1}
+                mirror={false}
+                objectFit="cover"
+                streamURL={remoteStreamURL}
+              />
+            ) : null}
+          </View>
+
+          {/* {localPC.current ? <BandWidth localPc={localPC.current} /> : null} */}
+          <View style={[styles.groupLocalSteam]}>
+            {localStreamURL && (
+              <RTCView
+                style={[styles.rtc]}
+                zOrder={1}
+                mirror={isCamFront}
+                streamURL={localStreamURL}
+              />
+            )}
+            <TouchableOpacity onPress={this.switchCamera} style={styles.buttonSwitch}>
+              <Image
+                source={require('@images/new/videoCall/camera_switch.png')}
+                style={styles.iconSwitch}
+              />
+            </TouchableOpacity>
+          </View>
+          <Timer
+            data={{
+              booking: this.state.data,
+              mediaConnected: isAnswerSuccess,
+            }}
+          />
+          {callStatus && !isAnswerSuccess ? (
+            <Text style={styles.statusCall}>{callStatus}</Text>
+          ) : null}
+          {/* {!statusCall && remoteStream && state.isAnswerSuccess ? (
+            <Text style={styles.textWarning}>
+              Kết nối bị gián đoạn vui lòng di chuyển đến khu vực có tín hiệu tốt
+              để có cuộc gọi ổn định
+            </Text>
+          ) : null} */}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
+            {localStreamURL && (makeCall || isAnswerSuccess) && (
+              <View style={styles.toggleButtons}>
+                <TouchableOpacity onPress={this.toggleMute} style={{ padding: 10 }}>
+                  {isMuted ? (
+                    <Image
+                      source={require('@images/new/videoCall/mute_selected.png')}
+                      style={styles.icon}
+                    />
+                  ) : (
+                      <Image
+                        source={require('@images/new/videoCall/mute.png')}
+                        style={styles.icon}
+                      />
+                    )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.toggleSpeaker} style={{ padding: 10 }}>
+                  {isSpeak ? (
+                    <Image
+                      source={require('@images/new/videoCall/speaker_selected.png')}
+                      style={styles.icon}
+                    />
+                  ) : (
+                      <Image
+                        source={require('@images/new/videoCall/speaker.png')}
+                        style={styles.icon}
+                      />
+                    )}
+                </TouchableOpacity>
+              </View>
+            )}
+            <View style={styles.toggleButtons}>
+              {offer_received && !isAnswerSuccess ? (
+                <TouchableOpacity onPress={this.handleAnswer} style={{ padding: 10 }}>
+                  <Image
+                    source={require('@images/new/videoCall/accept_call.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity
+                onPress={this.rejectCall}
+                style={{ padding: 10 }}>
+                <Image
+                  source={require('@images/new/videoCall/end_call.png')}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+  startSound = () => {
+    InCallManager.startRingtone('_BUNDLE_');
+    Vibration.vibrate(PATTERN, true);
   };
-  const showModal = () => {
-    setState({ isVisible: true });
+  stopSound = () => {
+    InCallManager.stopRingtone();
+    InCallManager.stop();
+    Vibration.cancel();
   };
-  useImperativeHandle(
-    ref,
-    () => ({
-      startCall: (booking, isOffer) => startCall(booking, isOffer),
-    }),
-    [],
-  );
-  const setState = (data = { id: '' }) => {
-    _setState(state => {
-      return { ...state, ...data };
+  async setupWebRTC() {
+    await this.getMediaDevices()
+    const peer = new RTCPeerConnection(DEFAULT_ICE)
+    peer.oniceconnectionstatechange = this.on_ICE_Connection_State_Change
+    peer.onaddstream = this.on_Add_Stream
+    peer.onicecandidate = this.on_ICE_Candiate
+    peer.addStream(this.localStream)
+    this.peer = peer
+  }
+
+  startCall = async (e) => {
+    try {
+      this.setState({ callId: stringUtils.guid() })
+      await this.setupWebRTC()
+      InCallManager.start({ media: 'video' });
+      soundUtils.play('call_phone.mp3');
+      const { peer } = this
+      // Create Offer
+      const offer = await peer.createOffer()
+      this.offer = offer
+      await peer.setLocalDescription(offer)
+      this.setState({ isVisible: true, userId: e.doctor.id, data: e, makeCall: true })
+    } catch (e) {
+      console.log('e: ', e);
+    }
+  }
+  switchCamera = async () => {
+    this.localStream.getVideoTracks().forEach(track => track._switchCamera());
+    this.setState({ isCamFront: !this.state.isCamFront });
+  };
+  onTimeOut = () => {
+    this.timeout = setTimeout(() => {
+      this.rejectCall();
+    }, 30 * 60 * 1000);
+  };
+
+  // Mutes the local's outgoing audio
+  toggleMute = () => {
+    if (!this.localStream) return;
+    this.localStream.getAudioTracks().forEach(track => {
+      track.enabled = !track.enabled;
+      this.setState({ isMuted: !track.enabled });
     });
   };
+  toggleSpeaker = () => {
+    this.setState({ isSpeak: !this.state.isSpeak });
+    InCallManager.setForceSpeakerphoneOn(!this.state.isSpeak);
+  };
+  on_ICE_Connection_State_Change(e) {
+    this.setState({
+      ice_connection_state: e.target.iceConnectionState
+    })
+    switch (e.target.iceConnectionState) {
+      case 'completed':
+        break;
+      case 'connected':
+        this.onTimeOut()
+        this.setState({ isAnswerSuccess: true })
+        break;
+      case 'closed':
+      case 'disconnected':
+        break;
+      case 'failed':
+        // this.rejectCall()
+        break
+    }
+  }
 
-  const onConnected = async data2 => {
+  on_ICE_Candiate(e) {
+    const { candidate } = e
+    console.log('candidate: ', candidate);
+    if (candidate) {
+      let pendingRemoteIceCandidates = this.state.pendingCandidates
+      console.log('pendingRemoteIceCandidates: ', pendingRemoteIceCandidates);
+      if (Array.isArray(pendingRemoteIceCandidates)) {
+        this.setState({
+          pendingCandidates: [...pendingRemoteIceCandidates, candidate]
+        })
+      } else {
+        this.setState({
+          pendingCandidates: [candidate]
+        })
+      }
+    } else { // Candidate gathering complete
+      if (this.state.pendingCandidates.length > 1) {
+
+        this.sendMessage(this.state.offer_received ? constants.socket_type.ANSWER : constants.socket_type.OFFER, {
+          to: this.state.userId,
+          description: this.peer.localDescription,
+          candidates: this.state.pendingCandidates,
+          booking: this.state.data,
+          callId: this.state.callId,
+          sdp: this.offer,
+          from: this.props.userApp.currentUser.id
+        })
+      } else {
+      }
+    }
+  }
+
+
+
+  on_Add_Stream(e) {
+
+    this.setState({
+      remoteStreamURL: e.stream.toURL()
+    })
+    this.remoteStream = e.stream
+  }
+
+  resetState = () => {
+    this.localStream = null
+    this.setState({
+      offer_received: false,
+      offer_answered: false,
+      offer: null,
+      isVisible: false,
+      callId: null,
+      userId: null,
+      remoteStreamURL: null,
+      pendingCandidates: [],
+      data: null,
+      localStreamURL: null,
+      isSpeak: true,
+      isMuted: false,
+      isCamFront: true,
+      callStatus: null,
+      isAnswerSuccess: false,
+      makeCall: false
+    })
+  }
+
+  onRNCallKitDidActivateAudioSession = data => {
+    // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
+    this.handleAnswer();
+  };
+  answerCallEvent = () => {
+  };
+  endCallEvent = ({ callUUid }) => {
+    if (!this.state.isAnswerSuccess) this.rejectCall();
+  };
+  addEventCallKeep = () => {
+    RNCallKeep.addEventListener('answerCall', this.answerCallEvent);
+    RNCallKeep.addEventListener('endCall', this.endCallEvent);
+    RNCallKeep.addEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession);
+  };
+  removeEvent = () => {
+    RNCallKeep.removeEventListener('answerCall', this.answerCallEvent);
+    RNCallKeep.removeEventListener('endCall', this.endCallEvent);
+    RNCallKeep.removeEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession);
+  };
+  async on_Offer_Received(data) {
+    console.log('data: 111', data);
+    await this.setupWebRTC()
+
+    this.startSound();
+    debugger
+    this.offer = data.description
+    this.setState({
+      offer_received: true,
+      offer_answered: false,
+      offer: data,
+      isVisible: true,
+      callId: data.callId,
+      userId: data.from,
+      data: data.booking
+    })
+  }
+
+  async on_Answer_Received(data) {
+    soundUtils.stop();
+    const { description, candidates } = data
+    await this.peer.setRemoteDescription(new RTCSessionDescription(description))
+    candidates.forEach(c => this.peer.addIceCandidate(new RTCIceCandidate(c)))
+    this.setState({
+      answer_recevied: true
+    })
+  }
+
+  handleReject = async () => {
+    if (this.peer)
+      this.peer.close()
+    this.resetState()
+    soundUtils.stop();
+    this.stopSound()
+    if (this.timeout) clearTimeout(this.timeout)
+    if (this.state.callId) {
+      console.log('this.state.callId: ', this.state.callId);
+      RNCallKeep.reportEndCallWithUUID(this.state.callId, 2);
+    }
+  }
+  async handleAnswer() {
+    try {
+      const { description, candidates } = this.state.offer
+      console.log('candidates: ', candidates);
+      debugger
+      const { peer } = this
+      await peer.setRemoteDescription(new RTCSessionDescription(description))
+      InCallManager.stopRingtone();
+      InCallManager.start({ media: 'video' });
+      Vibration.cancel();
+      if (Array.isArray(candidates)) {
+        candidates.forEach((c) => peer.addIceCandidate(new RTCIceCandidate(c)))
+      }
+      const answer = await peer.createAnswer()
+      await peer.setLocalDescription(answer)
+      this.setState({
+        offer_answered: true
+      })
+    } catch (error) {
+      console.log('error: ', error);
+
+    }
+
+  }
+
+  sendMessage(type, msgObj) {
+    if (this.socket) {
+      this.socket.emit(type, msgObj, (data) => {
+        console.log('data: ', data);
+        debugger
+
+      })
+    } else {
+      const e = {
+        code: 'websocket_error',
+        message: 'WebSocket state:' + ws.readyState
+      }
+      throw e
+    }
+  }
+
+  getMediaDevices = async () => {
+    // Setup Camera & Audio
+    try {
+      const devices = await mediaDevices.enumerateDevices();
+      const facing = isFront ? 'front' : 'environment';
+      const videoSourceId = devices.find(
+        device => device.kind === 'videoinput' && device.facing === facing,
+      );
+      const facingMode = isFront ? 'user' : 'environment';
+      const constraints = {
+        audio: true,
+        video: {
+          mandatory: {
+            minWidth: 500, // Provide your own width, height and frame rate here
+            minHeight: 300,
+            minFrameRate: 30
+          },
+          facingMode: (isFront ? "user" : "environment"),
+          optional: (videoSourceId ? [{ sourceId: videoSourceId }] : [])
+        }
+      };
+      const newStream = await mediaDevices.getUserMedia(constraints);
+
+      this.setState({
+        localStreamURL: newStream.toURL()
+      })
+      this.localStream = newStream
+    } catch (error) {
+
+
+    }
+
+
+  }
+  rejectCall = () => {
+    let type =
+      this.state.isAnswerSuccess || this.state.makeCall
+        ? constants.socket_type.LEAVE
+        : constants.socket_type.REJECT;
+    this.socket.emit(constants.socket_type.LEAVE, {
+      to: this.state.userId,
+      callId: this.state.callId,
+      type,
+    });
+    this.handleReject();
+  };
+  componentWillUnmount() {
+    this.removeEvent()
+  }
+  onConnected = async data2 => {
     try {
       if (Platform.OS == 'ios') {
         RNCallKeepManager.setupCallKeep();
@@ -118,539 +502,71 @@ function CallScreen({ }, ref) {
         VoipPushNotification.registerVoipToken();
         VoipPushNotification.addEventListener('register', token => {
           // send token to your apn provider server
-          tokenFirebase.current = token;
-          context.onSend(constants.socket_type.CONNECT, {
+          this.setState({ token })
+          this.socket.emit(constants.socket_type.CONNECT, {
             token,
-            id: userApp.currentUser.id,
+            id: this.props.userApp.currentUser.id,
             platform: 'ios',
             packageName: DeviceInfo.getBundleId(),
           });
         });
       } else {
         let token = await firebase.messaging().getToken();
-        tokenFirebase.current = token;
+        this.setState({ token })
 
-        context.onSend(constants.socket_type.CONNECT, {
+        this.socket.emit(constants.socket_type.CONNECT, {
           token,
-          id: userApp.currentUser.id,
+          id: this.props.userApp.currentUser.id,
           platform: 'android',
         });
       }
     } catch (error) { }
   };
-
-  const onRNCallKitDidActivateAudioSession = data => {
-    // AudioSession đã được active, có thể phát nhạc chờ nếu là outgoing call, answer call nếu là incoming call.
-    createAnswer();
-  };
-  const answerCallEvent = () => {
-    setState({ isAnswerSuccess: true });
-  };
-  const endCallEvent = ({ callUUid }) => {
-    if (!state.isAnswerSuccess) rejectCall();
-  };
-  const addEventCallKeep = () => {
-    RNCallKeep.addEventListener('answerCall', answerCallEvent);
-    RNCallKeep.addEventListener('endCall', endCallEvent);
-    RNCallKeep.addEventListener(
-      'didActivateAudioSession',
-      onRNCallKitDidActivateAudioSession,
-    );
-  };
-  const removeEvent = () => {
-    RNCallKeep.removeEventListener('answerCall', answerCallEvent);
-    RNCallKeep.removeEventListener('endCall', endCallEvent);
-    RNCallKeep.removeEventListener(
-      'didActivateAudioSession',
-      onRNCallKitDidActivateAudioSession,
-    );
-  };
-  const startSound = () => {
-    InCallManager.startRingtone('_BUNDLE_');
-    Vibration.vibrate(PATTERN, true);
-  };
-  const stopSound = () => {
-    InCallManager.stopRingtone();
-    InCallManager.stop();
-    Vibration.cancel();
-  };
-  const onOffer = async (data, callback) => {
-    try {
-      showModal();
-      startSound();
-      callId.current = data.UUID;
-      socketId2.current = data.from;
-      setState({ data2: data, booking: data.booking });
-      if (!localPC.current) {
-        await initCall(localStream.current);
-      }
-
-      data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
-
-      await localPC.current.setRemoteDescription(
-        new RTCSessionDescription(data.sdp),
-      );
-    } catch (error) { }
-  };
-
-  const onTimeOut = () => {
-    timeout.current = setTimeout(() => {
-      rejectCall();
-    }, 30 * 60 * 1000);
-  };
-
-  useEffect(() => {
-    const didmount = async () => {
-      try {
-        await startLocalStream(true);
-        await context.connectSocket(userApp.loginToken);
-        context.listen('connect', onConnected);
-        context.listen(constants.socket_type.OFFER, onOffer);
-        context.listen(constants.socket_type.ANSWER, async data => {
-          setState({ isAnswerSuccess: true });
-          onTimeOut();
-          soundUtils.stop();
-          data.sdp.sdp = BandwidthHandler.getSdp(data.sdp.sdp);
-
-          await localPC.current.setRemoteDescription(
-            new RTCSessionDescription(data.sdp),
-          );
-        });
-        context.listen(constants.socket_type.LEAVE, data => {
-          if (data.status && data.code == 1 && !state.isAnswerSuccess) {
-            setState({ callStatus: 'Máy bận' });
-            setTimeout(closeStreams, 1500);
-          } else {
-            setState({ callStatus: 'Kết thúc cuộc gọi' });
-            closeStreams();
-          }
-          setState({ statusCall: true });
-        });
-
-        addEventCallKeep();
-      } catch (error) { }
-    };
-    if (userApp.isLogin) {
-      didmount();
-    } else {
-      context.onSend(
+  componentDidUpdate = (preProps) => {
+    if (!preProps.userApp.isLogin) {
+      this.socket.emit(
         constants.socket_type.DISCONNECT,
-        { token: tokenFirebase.current, platform: Platform.OS },
+        { token: this.state.token, platform: Platform.OS },
         data => {
-          context.socket.disconnect();
+          this.socket.disconnect();
         },
       );
-      removeEvent();
     }
-    return () => {
-      if (state.isAnswerSuccess || state.makeCall) {
-        rejectCall();
+  }
+  componentDidMount() {
+    this.addEventCallKeep()
+    this.socket = io.connect(HOST, {
+      transports: ['websocket'],
+      query: {
+        token: this.props.userApp.loginToken,
+      },
+      upgrade: true,
+      reconnection: true,
+      autoConnect: true,
+      timeout: 30000,
+      rememberUpgrade: true,
+    });
+
+    this.socket.connect();
+    this.socket.on('connect', this.onConnected);
+
+    this.socket.on(constants.socket_type.OFFER, (msg) => {
+      this.on_Offer_Received(msg)
+    })
+    this.socket.on(constants.socket_type.ANSWER, (msg) => {
+      this.on_Answer_Received(msg)
+    })
+    this.socket.on(constants.socket_type.LEAVE, data => {
+      if (data.status && data.code == 1 && !this.state.isAnswerSuccess) {
+        this.setState({ callStatus: 'Máy bận' });
+        setTimeout(this.handleReject, 1500);
+      } else {
+        this.setState({ callStatus: 'Kết thúc cuộc gọi' });
+        this.handleReject();
       }
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-      }
-    };
-  }, [userApp.isLogin]);
-  const handleGetUserMediaError = e => {
-    let message = '';
-    switch (e.name) {
-      case 'NotFoundError':
-        message = 'NotFoundError';
-        break;
-      case 'SecurityError':
-      case 'PermissionDeniedError':
-        message = 'PermissionDeniedError';
-        // Do nothing; this is the same as the user canceling the call.
-        break;
-      default:
-        message = e.message;
-        break;
-    }
-    context.onSend(constants.socket_type.ERROR, {
-      callId: callId.current,
-      userId: userApp?.currentUser?.id,
-      error: message,
+      this.setState({ statusCall: true });
     });
-  };
-  const startLocalStream = async init => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // isFront will determine if the initial camera should face user or environment
-        const isFront = true;
-        const devices = await mediaDevices.enumerateDevices();
-        const facing = isFront ? 'front' : 'environment';
-        const videoSourceId = devices.find(
-          device => device.kind === 'videoinput' && device.facing === facing,
-        );
-        const facingMode = isFront ? 'user' : 'environment';
-        const constraints = {
-          audio: true,
-          video: {
-            mandatory: qvgaConstraints,
-            facingMode,
-            optional: videoSourceId ? [{ sourceId: videoSourceId }] : [],
-          },
-        };
-        const newStream = await mediaDevices.getUserMedia(constraints);
-        // localPC.current && localPC.current.addStream(newStream);
-        resolve();
-        localStream.current = newStream
-        // setLocalStream(newStream);
-        await initCall(newStream)
-      } catch (error) {
-        reject();
-        handleGetUserMediaError(error);
-      }
-    });
-  };
-
-  const initCall = async newStream => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // You'll most likely need to use a STUN server at least. Look into TURN and decide if that's necessary for your project
-        const configuration = {
-          "iceServers": [
-            {
-              urls: ['stun:stun.l.google.com:19302'],
-            },
-            {
-              urls: 'turn:35.197.145.195:3478',
-              username: 'mainam',
-              credential: '123456',
-            },
-          ]
-          // iceTransportPolicy: 'public',
-        };
-        localPC.current = new RTCPeerConnection(configuration);
-        // could also use "addEventListener" for these callbacks, but you'd need to handle removing them as well
-        localPC.current.onicecandidate = e => {
-          try {
-            if (e.candidate) {
-              context.onSend(constants.socket_type.CANDIDATE, {
-                to: socketId2.current,
-                candidate: e.candidate,
-              });
-            }
-          } catch (err) { }
-        };
-        localPC.current.onnegotiationneeded = e => {
-          resolve();
-          context.listen(constants.socket_type.CANDIDATE, async data => {
-            try {
-              if (data.candidate) {
-                console.log('data.candidate: ', data.candidate);
-                await localPC.current.addIceCandidate(new RTCIceCandidate(data.candidate));
-              }
-            } catch (error) {
-              console.log('error: ', error);
-            }
-
-          });
-        };
-        localPC.current.onaddstream = e => {
-          if (e.stream && remoteStream !== e.stream) {
-            setRemoteStream(e.stream);
-          }
-        };
-
-        // if (!localStream) {
-        //   await startLocalStream();
-        // } else {
-        localPC.current.addStream(newStream);
-
-        // }
-        /**
-         * On Ice Connection State Change
-         */
-
-        localPC.current.oniceconnectionstatechange = async event => {
-          switch (event.target.iceConnectionState) {
-            case 'completed':
-              setState({ statusCall: true });
-              break;
-            case 'failed':
-              if (localPC.current.restartIce) {
-                localPC.current.restartIce();
-              }
-              // else {
-              //   try {
-              //     let offer = await localPC.current.createOffer({
-              //       iceRestart: true,
-              //     });
-              //     onCreateOfferSuccess(offer);
-              //   } catch (error) {}
-              // }
-              break;
-            case 'connected':
-              setState({ statusCall: true });
-              break;
-            case 'disconnected':
-              setState({ statusCall: false });
-              break;
-            case 'closed':
-              closeStreams();
-              break;
-            default:
-              break;
-          }
-        };
-
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
-  const onCreateOfferSuccess = async (offer, booking) => {
-    try {
-      soundUtils.play('call_phone.mp3');
-      context.onSend(
-        constants.socket_type.OFFER,
-        {
-          booking,
-          to: socketId2.current,
-          from: userApp.currentUser.id,
-          sdp: offer,
-        },
-        async res => {
-          callId.current = res.callId;
-
-          if (localPC.current) {
-            await localPC.current.setLocalDescription(
-              new RTCSessionDescription(offer),
-            );
-          }
-        },
-      );
-    } catch (error) {
-      handleGetUserMediaError(error);
-    }
-  };
-  const startCall = async (booking, isOffer) => {
-    try {
-      if (!isCall.current) {
-        console.log(111111);
-        isCall.current = true;
-        showModal();
-
-        if (!localPC.current) {
-          await initCall(localStream.current);
-        }
-
-        socketId2.current = booking?.doctor?.id;
-        // if (isOffer) {
-        InCallManager.start({ media: 'video' });
-        setState({ makeCall: true, booking });
-        const offer = await localPC.current.createOffer();
-        onCreateOfferSuccess(offer, booking);
-        // }
-      }
-    } catch (error) {
-      console.log('error: ', error);
-      handleGetUserMediaError(error);
-    }
-  };
-  const createAnswer = async () => {
-    try {
-      InCallManager.stopRingtone();
-      InCallManager.start({ media: 'video' });
-      Vibration.cancel();
-      const answer = await localPC.current.createAnswer();
-      setState({ isAnswerSuccess: true });
-      onTimeOut();
-      context.onSend(
-        constants.socket_type.ANSWER,
-        {
-          callId: callId.current,
-          to: socketId2.current,
-          from: userApp.currentUser.id,
-          sdp: answer,
-        },
-        () => {
-          localPC.current &&
-            localPC.current.setLocalDescription(
-              new RTCSessionDescription(answer),
-            );
-        },
-      );
-    } catch (error) {
-      handleGetUserMediaError(error);
-    }
-  };
-  const switchCamera = async () => {
-    if (!localStream.current || localStream.current?.getVideoTracks?.().length == 0) {
-      await startLocalStream();
-    }
-
-    localStream.current.getVideoTracks().forEach(track => track._switchCamera());
-    setIsCamFront(isCam => !isCam);
-  };
-
-  // Mutes the local's outgoing audio
-  const toggleMute = () => {
-    if (!localStream.current) return;
-    localStream.current.getAudioTracks().forEach(track => {
-      track.enabled = !track.enabled;
-      setIsMuted(!track.enabled);
-    });
-  };
-
-  const closeStreams = () => {
-    if (localPC.current) {
-      // localPC.current.removeStream(remoteStream);
-      // localPC.current.removeStream(localStream);
-      localPC.current.close();
-      localPC.current = null;
-    }
-    soundUtils.stop();
-    stopSound();
-    isCall.current = false;
-    setState({
-      isAnswerSuccess: false,
-      makeCall: false,
-      isVisible: false,
-      callStatus: '',
-    });
-    if (timeout.current) clearTimeout(timeout.current);
-    setIsSpeak(true);
-    setIsMuted(false);
-    if (callId.current) {
-      RNCallKeep.reportEndCallWithUUID(callId.current, 2);
-    }
-  };
-  const toggleSpeaker = () => {
-    setIsSpeak(state => !state);
-    InCallManager.setForceSpeakerphoneOn(!isSpeak);
-  };
-  const rejectCall = () => {
-    let type =
-      state.isAnswerSuccess || state.makeCall
-        ? constants.socket_type.LEAVE
-        : constants.socket_type.REJECT;
-    context.onSend(constants.socket_type.LEAVE, {
-      to: socketId2.current,
-      callId: callId.current,
-      type,
-    });
-    closeStreams();
-  };
-  return (
-    <Modal
-      animated={true}
-      animationType="slide"
-      transparent={false}
-      visible={state.isVisible}>
-      <View style={styles.container}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View
-          style={[
-            styles.rtcview,
-            { height, ...StyleSheet.absoluteFillObject, zIndex: 0 },
-          ]}>
-          {remoteStream ? (
-            <RTCView
-              style={styles.rtc}
-              zOrder={-1}
-              mirror={false}
-              objectFit="cover"
-              streamURL={remoteStream.toURL()}
-            />
-          ) : null}
-        </View>
-
-        {localPC.current ? <BandWidth localPc={localPC.current} /> : null}
-        <View style={[styles.groupLocalSteam]}>
-          {localStream.current && (
-            <RTCView
-              style={[styles.rtc]}
-              zOrder={1}
-              mirror={isCamFront}
-              streamURL={localStream.current.toURL()}
-            />
-          )}
-          <TouchableOpacity onPress={switchCamera} style={styles.buttonSwitch}>
-            <Image
-              source={require('@images/new/videoCall/camera_switch.png')}
-              style={styles.iconSwitch}
-            />
-          </TouchableOpacity>
-        </View>
-        <Timer
-          data={{
-            booking: state.booking ? state.booking : state.data2,
-            mediaConnected: state.isAnswerSuccess,
-          }}
-        />
-        {state.callStatus && !state.isAnswerSuccess ? (
-          <Text style={styles.statusCall}>{state.callStatus}</Text>
-        ) : null}
-        {!state.statusCall && remoteStream && state.isAnswerSuccess ? (
-          <Text style={styles.textWarning}>
-            Kết nối bị gián đoạn vui lòng di chuyển đến khu vực có tín hiệu tốt
-            để có cuộc gọi ổn định
-          </Text>
-        ) : null}
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-end',
-          }}>
-          {localStream.current && (state.isAnswerSuccess || state.makeCall) && (
-            <View style={styles.toggleButtons}>
-              <TouchableOpacity onPress={toggleMute} style={{ padding: 10 }}>
-                {isMuted ? (
-                  <Image
-                    source={require('@images/new/videoCall/mute_selected.png')}
-                    style={styles.icon}
-                  />
-                ) : (
-                    <Image
-                      source={require('@images/new/videoCall/mute.png')}
-                      style={styles.icon}
-                    />
-                  )}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={toggleSpeaker} style={{ padding: 10 }}>
-                {isSpeak ? (
-                  <Image
-                    source={require('@images/new/videoCall/speaker_selected.png')}
-                    style={styles.icon}
-                  />
-                ) : (
-                    <Image
-                      source={require('@images/new/videoCall/speaker.png')}
-                      style={styles.icon}
-                    />
-                  )}
-              </TouchableOpacity>
-            </View>
-          )}
-          <View style={styles.toggleButtons}>
-            {!state.isAnswerSuccess && !state.makeCall ? (
-              <TouchableOpacity onPress={createAnswer} style={{ padding: 10 }}>
-                <Image
-                  source={require('@images/new/videoCall/accept_call.png')}
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
-            ) : null}
-            <TouchableOpacity
-              onPress={() => rejectCall(constants.socket_type.LEAVE)}
-              style={{ padding: 10 }}>
-              <Image
-                source={require('@images/new/videoCall/end_call.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* {localPC.current ?
-                    <BandWidth localPc={localPC.current} track />
-                    : null
-                } */}
-      </View>
-    </Modal>
-  );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -714,5 +630,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
 });
+const mapStateToProps = (state) => {
+  return {
+    userApp: state.auth.userApp
+  }
+}
 
-export default memo(forwardRef(CallScreen));
+export default connect(mapStateToProps, null, null, { forwardRef: true })(CallScreen)
