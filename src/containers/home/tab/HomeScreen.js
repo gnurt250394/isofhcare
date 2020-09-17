@@ -61,7 +61,7 @@ class HomeScreen extends Component {
       featuresBooking: [
         {
           icon: require('@images/new/homev2/ic_symptom.png'),
-          text: 'Dịch vụ',
+          text: 'Dịch vụ y tế',
           onPress: () => {
             this.props.navigation.navigate('listServices');
             return;
