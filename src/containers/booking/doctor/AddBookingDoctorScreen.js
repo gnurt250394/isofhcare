@@ -288,7 +288,7 @@ class AddBookingDoctorScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
-                                logEventFB("Đặt khám bác sĩ")
+                                logEventFB("booking")
                                 this.isChecking = true
                                 s.payment = this.state.paymentMethod
                                 // snackbar.show('Đặt khám thành công', 'success')
