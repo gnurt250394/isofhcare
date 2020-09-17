@@ -35,7 +35,7 @@ class EhealthScreen extends Component {
     };
   }
   componentDidMount() {
-    logEventFB("Xem y bạ")
+    logEventFB("ehealth")
     this.onRefresh();
   }
   onGetHospital = () => {
