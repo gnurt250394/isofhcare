@@ -29,6 +29,7 @@ import serviceProvider from '@data-access/service-provider';
 import profileProvider from '@data-access/profile-provider'
 
 import scheduleProvider from '@data-access/schedule-provider';
+import { logEventFB } from '@utils/facebook-utils';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
@@ -349,6 +350,7 @@ class AddBookingScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.id) {
+                                logEventFB('Đặt khám CSYT')
                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
                                 this.props.navigation.navigate("confirmBooking", {
                                     booking: s

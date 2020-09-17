@@ -33,6 +33,7 @@ import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { logEventFB } from "@utils/facebook-utils";
 
 class RegisterScreen extends Component {
   constructor(props) {
@@ -129,6 +130,7 @@ class RegisterScreen extends Component {
               isLoading: false,
               disabled: false
             })
+            logEventFB("Đăng ký")
             this.props.navigation.replace("verifyPhone", {
               id: res.data.user.id,
               phone: phone,

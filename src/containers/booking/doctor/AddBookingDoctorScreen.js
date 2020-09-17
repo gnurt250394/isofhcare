@@ -26,6 +26,7 @@ import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ViewHeader from '@components/booking/doctor/ViewHeader';
 import profileProvider from '@data-access/profile-provider'
 import objectUtils from '@utils/object-utils';
+import { logEventFB } from '@utils/facebook-utils';
 
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
@@ -287,6 +288,7 @@ class AddBookingDoctorScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
+                                logEventFB("Đặt khám bác sĩ")
                                 this.isChecking = true
                                 s.payment = this.state.paymentMethod
                                 // snackbar.show('Đặt khám thành công', 'success')

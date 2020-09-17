@@ -35,7 +35,7 @@ import FingerprintPopup from "@components/account/FingerprintPopup";
 import Modal from "@components/modal";
 import dataCacheProvider from "../../data-access/datacache-provider";
 import RNFingerprintChange from 'react-native-fingerprint-change';
-
+import { logEventFB } from "@utils/facebook-utils";
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -141,7 +141,8 @@ class LoginScreen extends Component {
 									this.nextScreen.param
 								);
 							} else {
-								NavigationService.reset("home", { showDraw: false });
+								logEventFB('Đăng nhập')
+								this.props.navigation.navigate("home", { showDraw: false });
 							}
 							break;
 						case 4:
