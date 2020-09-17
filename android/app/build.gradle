@@ -132,8 +132,8 @@ android {
         applicationId "com.isofh.appisofhcare"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 96
-        versionName "6.9"
+        versionCode 97
+        versionName "7.0"
         ndk {
             // abiFilters "armeabi-v7a", "x86", "arm64-v8a"
             abiFilters  "armeabi-v7a", "arm64-v8a"

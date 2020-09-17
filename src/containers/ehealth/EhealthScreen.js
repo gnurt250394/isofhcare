@@ -22,6 +22,7 @@ import {Card} from 'native-base';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
+import { logEventFB } from '@utils/facebook-utils';
 
 class EhealthScreen extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class EhealthScreen extends Component {
     };
   }
   componentDidMount() {
+    logEventFB("Xem y bạ")
     this.onRefresh();
   }
   onGetHospital = () => {
