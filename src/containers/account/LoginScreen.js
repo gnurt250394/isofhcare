@@ -141,7 +141,7 @@ class LoginScreen extends Component {
 									this.nextScreen.param
 								);
 							} else {
-								logEventFB('Đăng nhập')
+								logEventFB('login')
 								this.props.navigation.navigate("home", { showDraw: false });
 							}
 							break;

@@ -130,7 +130,7 @@ class RegisterScreen extends Component {
               isLoading: false,
               disabled: false
             })
-            logEventFB("Đăng ký")
+            logEventFB("register")
             this.props.navigation.replace("verifyPhone", {
               id: res.data.user.id,
               phone: phone,

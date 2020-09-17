@@ -350,7 +350,7 @@ class AddBookingScreen extends Component {
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.id) {
-                                logEventFB('Đặt khám CSYT')
+                                logEventFB('booking')
                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
                                 this.props.navigation.navigate("confirmBooking", {
                                     booking: s
