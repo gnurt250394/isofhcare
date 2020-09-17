@@ -27,6 +27,7 @@ import imageProvider from '@data-access/image-provider';
 import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import ModalConfirm from '@components/question/ModalConfirm';
+import { logEventFB } from '@utils/facebook-utils';
 
 const {width, height} = Dimensions.get('screen');
 const padding = Platform.select({
@@ -60,6 +61,7 @@ class CreateQuestionStep1Screen extends Component {
     };
   }
   componentDidMount() {
+    logEventFB("Hỏi bác sĩ")
     dataCacheProvider.read(
       this.props.userApp.currentUser.id,
       constants.key.storage.LASTEST_POSTS,
