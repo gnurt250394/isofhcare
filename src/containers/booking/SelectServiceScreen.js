@@ -164,12 +164,16 @@ class SelectServiceScreen extends Component {
         })
     }
     ok = () => {
-        // let listChecked = this.state.listServiceSearch.filter(item => item.checked);
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(this.listServicesSelected);
-            this.props.navigation.pop();
-        }
+        this.props.navigation.navigate('addBooking1', {
+            listServicesSelected: this.listServicesSelected,
+            hospital: this.state.hospital,
+        })
+        // // let listChecked = this.state.listServiceSearch.filter(item => item.checked);
+        // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        // if (callback) {
+        //     callback(this.listServicesSelected);
+        //     this.props.navigation.pop();
+        // }
     }
     goBack = () => this.props.navigation.pop()
     keyExtractor = (item, index) => index.toString()
