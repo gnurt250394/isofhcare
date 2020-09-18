@@ -61,7 +61,7 @@ class CreateQuestionStep1Screen extends Component {
     };
   }
   componentDidMount() {
-    logEventFB("Hỏi bác sĩ")
+    logEventFB("question")
     dataCacheProvider.read(
       this.props.userApp.currentUser.id,
       constants.key.storage.LASTEST_POSTS,
