@@ -1207,19 +1207,21 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         // borderBottomWidth: 0.6,
         // borderBottomColor:'#BBB',
-        elevation: 1,
-        shadowColor: '#BBB',
+        // elevation: 1,
+        // shadowColor: '#BBB',
         height: 124,
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
+        // shadowOffset: {
+        //     width: 1,
+        //     height: 1
+        // },
         marginBottom: 50,
-        shadowOpacity: 0.7
+        // shadowOpacity: 0.7,
+        zIndex:0
     },
     container: {
         flex: 1,
         paddingBottom: 40,
+        zIndex:0
     },
     containerAddress: {
         marginTop: 15,
@@ -1268,7 +1270,8 @@ const styles = StyleSheet.create({
         width: 80,
         alignSelf: 'center',
         position: 'absolute',
-        top: 84
+        top: 84,
+        zIndex:1000
     },
     buttonSave: {
         paddingHorizontal: 15,
