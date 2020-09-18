@@ -192,7 +192,7 @@ class LoginScreen extends Component {
 		);
 	}
 	goHome = () => {
-		this.props.navigation.navigate('home')
+		this.props.navigation.goBack()
 	}
 	onFinger = () => {
 
@@ -234,86 +234,88 @@ class LoginScreen extends Component {
 		console.log(this.state.isShowFinger, 'this.state.isShowFinger');
 		return (
 
-			<ActivityPanel
-				// showBackgroundHeader={false}
-				hideActionbar={true}
-				showFullScreen={true}
-				transparent={true}
-				backgroundHeader={require('@images/new/account/img_bg_login.png')}
-				backgroundStyle={styles.imgBg}
+			// <ActivityPanel
+			// 	// showBackgroundHeader={false}
+			// 	// hideActionbar={true}
+			// 	showFullScreen={true}
+			// 	transparent={true}
+			// 	backgroundHeader={require('@images/new/account/img_bg_login.png')}
+			// 	backgroundStyle={styles.imgBg}
+			// >
+			<ImageBackground
+				style={styles.imgBg}
+				source={require('@images/new/account/img_bg_login.png')}
+				resizeMode={'cover'}
+			// resizeMethod="resize"
+			// image={require("@images/new/isofhcare.png")}
+			// imageStyle={{ marginRight: 50 }}
+			// showFullScreen={true}
+			// isLoading={this.state.isLoading}
 			>
-				<ImageBackground
-					style={styles.imgBg}
-					source={require('@images/new/account/img_bg_login.png')}
-					resizeMode={'cover'}
-				// resizeMethod="resize"
-				// image={require("@images/new/isofhcare.png")}
-				// imageStyle={{ marginRight: 50 }}
-				// showFullScreen={true}
-				// isLoading={this.state.isLoading}
-				>
-					<KeyboardAwareScrollView style={{ flex: 1 }}>
+				<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flexShrink: 1, paddingTop: 30 }}>
+					<TouchableOpacity onPress={this.goHome} hitSlop={styles.hislop} style={[styles.buttonBack]}>
+						<ScaleImage source={require('@images/new/ic_back.png')} height={18}></ScaleImage>
+					</TouchableOpacity>
+					{/* <KeyboardAvoidingView behavior=""> */}
+					<Text style={styles.txLogin}>ĐĂNG NHẬP</Text>
+					<View style={styles.viewCard}>
+						<View style={styles.viewLogin}>
+							<Card style={styles.cardLogin}>
+								<ScaleImage style={styles.imgIsc} source={require("@images/new/account/ic_login_isc.png")} height={60}></ScaleImage>
+								<Form ref={ref => (this.form = ref)}>
+									<Field clearWhenFocus={true}>
+										<TextField
 
-						{/* <KeyboardAvoidingView behavior=""> */}
-						<Text style={styles.txLogin}>ĐĂNG NHẬP</Text>
-						<View style={styles.viewCard}>
-							<View style={styles.viewLogin}>
-								<Card style={styles.cardLogin}>
-									<ScaleImage style={styles.imgIsc} source={require("@images/new/account/ic_login_isc.png")} height={60}></ScaleImage>
-									<Form ref={ref => (this.form = ref)}>
-										<Field clearWhenFocus={true}>
+											getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+												// keyboardType='numeric'
+												// maxLength={10}
+												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
+												inputStyle={styles.textInputStyle}
+												placeholderTextColor='#000'
+												autoCapitalize={"none"}
+												placeholderStyle={{ fontWeight: '300', fontSize: 16 }}
+												labelStyle={styles.labelStyle} placeholder={"SĐT/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+											onChangeText={s => this.setState({ phone: s })}
+											errorStyle={styles.errorStyle}
+											value={this.state.phone}
+											validate={{
+												rules: {
+													required: true,
+													// phone: true
+												},
+												messages: {
+													required: "Số điện thoại không được bỏ trống",
+													// phone: "SĐT không hợp lệ"
+												}
+											}}
+										/>
+										<Field style={styles.inputPass}>
 											<TextField
-
 												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-													// keyboardType='numeric'
-													// maxLength={10}
-													placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
-													inputStyle={styles.textInputStyle}
+													placeholderStyle={styles.placeholder}
 													placeholderTextColor='#000'
-													autoCapitalize={"none"}
-													placeholderStyle={{ fontWeight: '300', fontSize: 16 }}
-													labelStyle={styles.labelStyle} placeholder={"SĐT/ Tên đăng nhập"} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-												onChangeText={s => this.setState({ phone: s })}
+													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
+												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
-												value={this.state.phone}
 												validate={{
 													rules: {
-														required: true,
-														// phone: true
+														required: this.state.requirePass,
 													},
 													messages: {
-														required: "Số điện thoại không được bỏ trống",
-														// phone: "SĐT không hợp lệ"
+														required: "Mật khẩu không được bỏ trống"
 													}
 												}}
-											/>
-											<Field style={styles.inputPass}>
-												<TextField
-													getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-														placeholderStyle={styles.placeholder}
-														placeholderTextColor='#000'
-														value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
-													onChangeText={s => this.setState({ password: s })}
-													errorStyle={styles.errorStyle}
-													validate={{
-														rules: {
-															required: this.state.requirePass,
-														},
-														messages: {
-															required: "Mật khẩu không được bỏ trống"
-														}
-													}}
-												// inputStyle={styles.input}
-												>
+											// inputStyle={styles.input}
+											>
 
-												</TextField>
-												{
-													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-												}
-											</Field>
+											</TextField>
+											{
+												this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+											}
 										</Field>
-										<View style={styles.viewFogot}>
-											{/* <TouchableOpacity
+									</Field>
+									<View style={styles.viewFogot}>
+										{/* <TouchableOpacity
 												onPress={this.register.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
 											>
@@ -328,57 +330,57 @@ class LoginScreen extends Component {
 													Tạo tài khoản
 													</Text>
 											</TouchableOpacity> */}
-											<TouchableOpacity
-												onPress={this.forgotPassword.bind(this)}
-												style={styles.btnFogot}
-											>
-												<Text
-													numberOfLines={1}
-													ellipsizeMode="tail"
-													style={styles.txFogot}>
-													Quên mật khẩu?
+										<TouchableOpacity
+											onPress={this.forgotPassword.bind(this)}
+											style={styles.btnFogot}
+										>
+											<Text
+												numberOfLines={1}
+												ellipsizeMode="tail"
+												style={styles.txFogot}>
+												Quên mật khẩu?
 													</Text>
-											</TouchableOpacity>
-										</View>
-									</Form>
-									<View style={styles.viewBtn}>
-										<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
-											{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
 										</TouchableOpacity>
-										{this.state.isSupportSensor && <TouchableOpacity onPress={this.onFinger} style={styles.btnImgFinger}><ScaleImage style={styles.imgFinger} source={require('@images/new/finger/ic_finger_login.png')} height={40}></ScaleImage></TouchableOpacity>}
 									</View>
-								</Card>
-								<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
-							</View>
+								</Form>
+								<View style={styles.viewBtn}>
+									<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
+										{this.state.disabled ? <ActivityIndicator size={'small'} color='#fff'></ActivityIndicator> : <Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>}
+									</TouchableOpacity>
+									{this.state.isSupportSensor && <TouchableOpacity onPress={this.onFinger} style={styles.btnImgFinger}><ScaleImage style={styles.imgFinger} source={require('@images/new/finger/ic_finger_login.png')} height={40}></ScaleImage></TouchableOpacity>}
+								</View>
+							</Card>
+							<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
 						</View>
-						{/* </KeyboardAvoidingView> */}
-						<TouchableOpacity onPress={this.register.bind(this)} style={styles.btnSignUp} >
-							<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.goHome} style={{
+					</View>
+					{/* </KeyboardAvoidingView> */}
+					<TouchableOpacity onPress={this.register.bind(this)} style={styles.btnSignUp} >
+						<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
+					</TouchableOpacity>
+					{/* <TouchableOpacity onPress={this.goHome} style={{
 							alignSelf: 'center',
 							padding: 30
 						}} >
 							<Text style={[styles.txSignUp, { textDecorationLine: 'underline' }]}>{"Về trang chủ"}</Text>
-						</TouchableOpacity>
-						<FingerprintPopup
-							isLogin={false}
-							handlePopupDismissed={this.handleFingerprintDismissed}
-							handleCheckFingerFalse={() => { }}
-							handlePopupDismissedDone={this.handleFingerprintDismissed}
-							style={styles.popup}
-							isFinger={this.state.isShowFinger}
-							handlePopupDismissedLegacy={this.handleFingerprintDismissed}
-							onNavigate={this.onNavigate}
-							username={this.state.phone}
-							nextScreen={this.props.navigation.getParam("nextScreen", null)}
+						</TouchableOpacity> */}
+					<FingerprintPopup
+						isLogin={false}
+						handlePopupDismissed={this.handleFingerprintDismissed}
+						handleCheckFingerFalse={() => { }}
+						handlePopupDismissedDone={this.handleFingerprintDismissed}
+						style={styles.popup}
+						isFinger={this.state.isShowFinger}
+						handlePopupDismissedLegacy={this.handleFingerprintDismissed}
+						onNavigate={this.onNavigate}
+						username={this.state.phone}
+						nextScreen={this.props.navigation.getParam("nextScreen", null)}
 
-						/>
-						<View style={styles.viewBottom}></View>
-					</KeyboardAwareScrollView>
-					<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>
-				</ImageBackground>
-			</ActivityPanel>
+					/>
+					<View style={styles.viewBottom}></View>
+				</KeyboardAwareScrollView>
+				<InputPhone onBackdropPress={this.onBackdropPress} isVisible={this.state.isVisible}></InputPhone>
+			</ImageBackground>
+			// </ActivityPanel>
 
 		);
 	}
@@ -387,6 +389,18 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	hislop: {
+		top: 15,
+		left: 15,
+		right: 15,
+		bottom: 15
+	},
+	buttonBack: {
+		width: 50,
+		paddingTop: 20,
+		// paddingBottom: 12,
+		paddingLeft: 20
+	},
 	btnImgFinger: {
 		alignItems: 'center',
 	},
