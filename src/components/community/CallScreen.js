@@ -236,7 +236,7 @@ class CallScreen extends React.Component {
       await peer.setLocalDescription(offer)
       this.setState({ isVisible: true, userId: e.doctor.id, data: e, makeCall: true })
     } catch (e) {
-      console.log('e: ', e);
+
     }
   }
   switchCamera = async () => {
@@ -283,10 +283,8 @@ class CallScreen extends React.Component {
 
   on_ICE_Candiate(e) {
     const { candidate } = e
-    console.log('candidate: ', candidate);
     if (candidate) {
       let pendingRemoteIceCandidates = this.state.pendingCandidates
-      console.log('pendingRemoteIceCandidates: ', pendingRemoteIceCandidates);
       if (Array.isArray(pendingRemoteIceCandidates)) {
         this.setState({
           pendingCandidates: [...pendingRemoteIceCandidates, candidate]
@@ -297,8 +295,7 @@ class CallScreen extends React.Component {
         })
       }
     } else { // Candidate gathering complete
-      if (this.state.pendingCandidates.length > 1) {
-
+      if (this.state.pendingCandidates.length > 0) {
         this.sendMessage(this.state.offer_received ? constants.socket_type.ANSWER : constants.socket_type.OFFER, {
           to: this.state.userId,
           description: this.peer.localDescription,
@@ -365,11 +362,9 @@ class CallScreen extends React.Component {
     RNCallKeep.removeEventListener('didActivateAudioSession', this.onRNCallKitDidActivateAudioSession);
   };
   async on_Offer_Received(data) {
-    console.log('data: 111', data);
     await this.setupWebRTC()
 
     this.startSound();
-    debugger
     this.offer = data.description
     this.setState({
       offer_received: true,
@@ -385,6 +380,7 @@ class CallScreen extends React.Component {
   async on_Answer_Received(data) {
     soundUtils.stop();
     const { description, candidates } = data
+
     await this.peer.setRemoteDescription(new RTCSessionDescription(description))
     candidates.forEach(c => this.peer.addIceCandidate(new RTCIceCandidate(c)))
     this.setState({
@@ -395,20 +391,18 @@ class CallScreen extends React.Component {
   handleReject = async () => {
     if (this.peer)
       this.peer.close()
-    this.resetState()
     soundUtils.stop();
     this.stopSound()
     if (this.timeout) clearTimeout(this.timeout)
     if (this.state.callId) {
-      console.log('this.state.callId: ', this.state.callId);
       RNCallKeep.reportEndCallWithUUID(this.state.callId, 2);
     }
+    this.resetState()
   }
   async handleAnswer() {
     try {
       const { description, candidates } = this.state.offer
-      console.log('candidates: ', candidates);
-      debugger
+
       const { peer } = this
       await peer.setRemoteDescription(new RTCSessionDescription(description))
       InCallManager.stopRingtone();
@@ -423,7 +417,7 @@ class CallScreen extends React.Component {
         offer_answered: true
       })
     } catch (error) {
-      console.log('error: ', error);
+
 
     }
 
@@ -432,8 +426,7 @@ class CallScreen extends React.Component {
   sendMessage(type, msgObj) {
     if (this.socket) {
       this.socket.emit(type, msgObj, (data) => {
-        console.log('data: ', data);
-        debugger
+
 
       })
     } else {
@@ -508,6 +501,7 @@ class CallScreen extends React.Component {
             id: this.props.userApp.currentUser.id,
             platform: 'ios',
             packageName: DeviceInfo.getBundleId(),
+            deviceId: DeviceInfo.getSystemVersion(),
           });
         });
       } else {
@@ -518,12 +512,14 @@ class CallScreen extends React.Component {
           token,
           id: this.props.userApp.currentUser.id,
           platform: 'android',
+          deviceId: DeviceInfo.getSystemVersion(),
+          packageName: DeviceInfo.getBundleId(),
         });
       }
     } catch (error) { }
   };
-  componentDidUpdate = (preProps) => {
-    if (!preProps.userApp.isLogin) {
+  componentDidUpdate = (preProps, nextProps) => {
+    if (!this.props.userApp.isLogin && preProps.userApp.isLogin != this.props.userApp.isLogin) {
       this.socket.emit(
         constants.socket_type.DISCONNECT,
         { token: this.state.token, platform: Platform.OS },
