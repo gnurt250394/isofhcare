@@ -106,7 +106,7 @@ class AccountScreen extends Component {
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   }
   handleHardwareBack = () => {
-    this.props.navigation.goBack();
+    // this.props.navigation.goBack();
     return true;
   };
   selectImage() {
@@ -212,7 +212,7 @@ class AccountScreen extends Component {
 
   navigate_to = (router, params) => () => {
     if (router) {
-      NavigationService.reset(router, params);
+      NavigationService.navigate(router, params);
     } else {
       snackbar.show(constants.msg.app.in_development);
     }
