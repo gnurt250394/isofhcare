@@ -380,7 +380,7 @@ class CallScreen extends React.Component {
   async on_Answer_Received(data) {
     soundUtils.stop();
     const { description, candidates } = data
-
+    description.sdp = BandwidthHandler.getSdp(description.sdp)
     await this.peer.setRemoteDescription(new RTCSessionDescription(description))
     candidates.forEach(c => this.peer.addIceCandidate(new RTCIceCandidate(c)))
     this.setState({
