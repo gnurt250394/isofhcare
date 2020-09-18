@@ -378,7 +378,7 @@ class AddBookingScreen extends Component {
         }
     }
     onSelectDateTime = (date, schedule) => {
-        this.setState({ schedule, bookingDate: date, scheduleError: "" });
+        this.setState({ schedule, bookingDate: date, scheduleError: "",allowBooking:true });
     }
     renderBookingTime() {
         if (this.state.bookingDate && this.state.schedule)
