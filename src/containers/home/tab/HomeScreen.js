@@ -271,7 +271,7 @@ class HomeScreen extends Component {
                     />
                   </View>
                   <Text style={[styles.label, { fontSize: 15, color: '#3161AD' }]}>
-                    {item.text}
+                    {item.text.toUpperCase()}
                   </Text>
                 </View>
               </TouchableOpacity>
