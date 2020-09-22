@@ -95,16 +95,12 @@ const ButtonPayment = ({
         switch (paymentMethod) {
             case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
                 break
-            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
-                createBooking()
-                break
             case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
                 requestPaymentMomo()
                 break
-            // case constants.PAYMENT_METHOD.VNPAY: //'PAYOO - cửa hàng tiện ích'
-            //     break
-            // case constants.PAYMENT_METHOD.VNPAY: // 'PAYOO - trả góp 0%'
-            //     break
+            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
+            case constants.PAYMENT_METHOD.ATM: //' ATM'
+            case constants.PAYMENT_METHOD.VISA: // 'VISA'
             case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
                 createBooking()
                 break
