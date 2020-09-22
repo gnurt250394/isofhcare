@@ -25,6 +25,9 @@ class ConfirmBookingDoctorScreen extends Component {
         let paymentMethod = this.props.navigation.getParam('paymentMethod');
         let disabled = this.props.navigation.getParam('disabled');
         let voucher = this.props.navigation.getParam('voucher');
+        if (voucher) {
+            voucher.price = voucher.discount
+        }
         this.state = {
             isVisible: false,
             isOnline,
@@ -32,7 +35,7 @@ class ConfirmBookingDoctorScreen extends Component {
             booking,
             bookingDate,
             detailSchedule,
-            voucher:voucher||{},
+            voucher: voucher || {},
             disabled
         }
         this.isChecking = true
@@ -78,20 +81,21 @@ class ConfirmBookingDoctorScreen extends Component {
     }
     getPaymentMethod() {
         let { paymentMethod } = this.state
-        switch (paymentMethod) {
-            case constants.PAYMENT_METHOD.VNPAY:
-                return "VNPAY";
-            case constants.PAYMENT_METHOD.CASH:
-                return "CASH";
-            case constants.PAYMENT_METHOD.MOMO:
-                return "MOMO"
-            // case constants.PAYMENT_METHOD.VNPAY:
-            // // return "PAYOO";
-            // case constants.PAYMENT_METHOD.VNPAY:
-            //     return "PAYOO";
-            case constants.PAYMENT_METHOD.BANK_TRANSFER:
-                return "BANK_TRANSFER";
-        }
+        return paymentMethod
+        // switch (paymentMethod) {
+        //     case constants.PAYMENT_METHOD.VNPAY:
+        //         return "VNPAY";
+        //     case constants.PAYMENT_METHOD.CASH:
+        //         return "CASH";
+        //     case constants.PAYMENT_METHOD.MOMO:
+        //         return "MOMO"
+        //     // case constants.PAYMENT_METHOD.VNPAY:
+        //     // // return "PAYOO";
+        //     // case constants.PAYMENT_METHOD.VNPAY:
+        //     //     return "PAYOO";
+        //     case constants.PAYMENT_METHOD.BANK_TRANSFER:
+        //         return "BANK_TRANSFER";
+        // }
     }
     confirmVoucher = async (voucher, booking) => {
         console.log('voucher: ', voucher);
@@ -106,10 +110,23 @@ class ConfirmBookingDoctorScreen extends Component {
             return false;
         }
     }
+    onSuccess = (url) => {
+        console.log('url: ', url);
+        snackbar.show('Đặt khám thành công', 'success')
+        this.props.navigation.navigate("homeTab", {
+            navigate: {
+                screen: "createBookingDoctorSuccess",
+                params: {
+                    booking: this.state.booking,
+                    voucher: this.state.voucher
+                }
+            }
+        });
+    }
     createBooking = (phonenumber, momoToken) => {
-        const { bookingDate, booking, detailSchedule } = this.state
+        const { bookingDate, booking, detailSchedule, disabled } = this.state
         this.setState({ isLoading: true }, async () => {
-            if (this.state.voucher && this.state.voucher.code) {
+            if (this.state.voucher && this.state.voucher.code && !disabled) {
                 let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                 console.log('this.state.voucher: ', this.state.voucher);
                 console.log('dataVoucher: ', dataVoucher);
@@ -123,16 +140,31 @@ class ConfirmBookingDoctorScreen extends Component {
             bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
                 this.setState({ isLoading: false })
                 if (res) {
-                    snackbar.show('Đặt khám thành công', 'success')
-                    this.props.navigation.navigate("homeTab", {
-                        navigate: {
-                            screen: "createBookingDoctorSuccess",
-                            params: {
-                                voucher: this.state.voucher,
-                                booking: res,
-                            }
-                        }
-                    });
+                    this.setState({ booking: res })
+                    switch (this.state.paymentMethod) {
+                        case constants.PAYMENT_METHOD.ATM:
+                        case constants.PAYMENT_METHOD.VISA:
+                            this.props.navigation.navigate("paymenntAlePay", {
+                                urlPayment: res.checkoutUrl,
+                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                onSuccess: this.onSuccess
+                            });
+                            break;
+
+                        default:
+                            snackbar.show('Đặt khám thành công', 'success')
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingDoctorSuccess",
+                                    params: {
+                                        voucher: this.state.voucher,
+                                        booking: res,
+                                    }
+                                }
+                            });
+                            break;
+                    }
+
                 }
 
             }).catch(err => {
@@ -238,6 +270,7 @@ class ConfirmBookingDoctorScreen extends Component {
                 title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 transparent={true}
+                isLoading={this.state.isLoading}
             >
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
@@ -315,28 +348,28 @@ class ConfirmBookingDoctorScreen extends Component {
 
 
                         </View>
-                            <TouchableOpacity
+                        <TouchableOpacity
                             disabled={disabled}
-                                onPress={this.goVoucher}
-                                style={styles.btnVoucher}
-                            >
-                                <View style={styles.flex}>
-                                    <Text style={styles.txtLabelVoucher}>Mã ưu đãi</Text>
-                                    {this.state.voucher && this.state.voucher.price ?
-                                        <Text style={[{
-                                            color: '#00CBA7',
-                                            fontWeight: 'bold'
-                                        }, styles.flex]}>{`GIẢM ${this.state.voucher.price.formatPrice()}đ KHI ĐẶT KHÁM`}</Text>
-                                        : null
-                                    }
+                            onPress={this.goVoucher}
+                            style={styles.btnVoucher}
+                        >
+                            <View style={styles.flex}>
+                                <Text style={styles.txtLabelVoucher}>Mã ưu đãi</Text>
+                                {this.state.voucher && this.state.voucher.price ?
+                                    <Text style={[{
+                                        color: '#00CBA7',
+                                        fontWeight: 'bold'
+                                    }, styles.flex]}>{`GIẢM ${this.state.voucher.price.formatPrice()}đ KHI ĐẶT KHÁM`}</Text>
+                                    : null
+                                }
 
-                                </View>
-                                <View style={styles.flexRowCenter}>
-                                    <Text style={styles.txtChange}>Chọn hoặc nhập mã</Text>
-                                    <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                            </View>
+                            <View style={styles.flexRowCenter}>
+                                <Text style={styles.txtChange}>Chọn hoặc nhập mã</Text>
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
 
-                                </View>
-                            </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
                         {/** sum Price */}
                         <View style={styles.containerPriveVoucher}>
                             {
@@ -374,20 +407,31 @@ class ConfirmBookingDoctorScreen extends Component {
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
-
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_visa.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.VISA)}
+                                    title={constants.payment.VISA}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.VISA}
+                                />
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_atm.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.ATM)}
+                                    title={constants.payment.ATM}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.ATM}
+                                />
                                 <ButtonSelectPaymentMethod
                                     icon={require('@images/new/booking/ic_momo.png')}
                                     onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.MOMO)}
                                     title={constants.payment.MOMO}
                                     isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO}
                                 />
-                                    <ButtonSelectPaymentMethod
-                                        icon={require('@images/new/booking/ic_banktransfer.png')}
-                                        onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.BANK_TRANSFER)}
-                                        title={constants.payment.direct_transfer}
-                                        isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.BANK_TRANSFER}
-                                    />
-                                {isOnline ?null
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_banktransfer.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.BANK_TRANSFER)}
+                                    title={constants.payment.direct_transfer}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.BANK_TRANSFER}
+                                />
+                                {isOnline ? null
                                     : <ButtonSelectPaymentMethod
                                         icon={require('@images/new/booking/ic_cash.png')}
                                         onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.CASH)}

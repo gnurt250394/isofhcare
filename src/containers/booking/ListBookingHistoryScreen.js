@@ -189,7 +189,11 @@ class ListBookingHistoryScreen extends Component {
         );
     };
     renderStatus = item => {
-        if (item.invoice.payment == constants.PAYMENT_METHOD.NONE || (item.invoice.payment == constants.PAYMENT_METHOD.MOMO && item.invoice.status == "NEW")) {
+        if (item.invoice.payment == constants.PAYMENT_METHOD.NONE
+            || ((item.invoice.payment == constants.PAYMENT_METHOD.MOMO
+                || item.invoice.payment == constants.PAYMENT_METHOD.ATM
+                || item.invoice.payment == constants.PAYMENT_METHOD.VISA)
+                && item.invoice.status == "NEW")) {
             return <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Chưa thanh toán</Text>
         } else {
             switch (item.status) {

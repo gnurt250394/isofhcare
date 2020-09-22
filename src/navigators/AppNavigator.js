@@ -171,6 +171,7 @@ import TestResultScreen from '@containers/covid/TestResultScreen';
 import HealthMonitoringScreen from '@containers/ehealth/healthMonitoring/HealthMonitoringScreen';
 import FileViewerScreen from '@containers/image/FileViewerScreen';
 import ChatBotScreen from '@containers/chat/ChatBotScreen';
+import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -520,6 +521,7 @@ const RootNavigator = (route = 'splash') =>
       healthMonitoring: { screen: HealthMonitoringScreen },
       fileViewer: { screen: FileViewerScreen },
       chatBot: { screen: ChatBotScreen },
+      paymenntAlePay: { screen: PaymentWithAlePay },
 
 
     },
