@@ -46,7 +46,7 @@ const PATTERN = [
   2 * ONE_SECOND_IN_MS,
   3 * ONE_SECOND_IN_MS,
 ];
-const HOST = process.env.HOST || 'https://isofhcare-test.herokuapp.com'
+const HOST = process.env.HOST || 'http://10.0.50.118:4443'
 const isFront = true // Use Front camera?
 const DEFAULT_ICE = {
   iceServers: [
@@ -219,10 +219,36 @@ class CallScreen extends React.Component {
     peer.oniceconnectionstatechange = this.on_ICE_Connection_State_Change
     peer.onaddstream = this.on_Add_Stream
     peer.onicecandidate = this.on_ICE_Candiate
+    peer.onicegatheringstatechange = this.on_ICE_Grather_State_Change
     peer.addStream(this.localStream)
     this.peer = peer
   }
+  on_ICE_Grather_State_Change = (ev) => {
+    console.log('ev: ', this.peer.iceGatheringState);
+    switch (this.peer.iceGatheringState) {
+      case "gathering":
+        if (!this.state.makeCall)
+          this.setState({ callStatus: "Đang kết nối" })
+        break;
+      case "complete":
+        if (this.state.pendingCandidates.length > 0) {
+          this.sendMessage(this.state.offer_received ? constants.socket_type.ANSWER : constants.socket_type.OFFER, {
+            to: this.state.userId,
+            description: this.peer.localDescription,
+            candidates: this.state.pendingCandidates,
+            booking: this.state.data,
+            callId: this.state.callId,
+            sdp: this.offer,
+            from: this.props.userApp.currentUser.id
+          })
+        } else {
+        }
+        break;
 
+      default:
+        break;
+    }
+  }
   startCall = async (e) => {
     try {
       this.setState({ callId: stringUtils.guid() })
@@ -293,19 +319,6 @@ class CallScreen extends React.Component {
         this.setState({
           pendingCandidates: [candidate]
         })
-      }
-    } else { // Candidate gathering complete
-      if (this.state.pendingCandidates.length > 0) {
-        this.sendMessage(this.state.offer_received ? constants.socket_type.ANSWER : constants.socket_type.OFFER, {
-          to: this.state.userId,
-          description: this.peer.localDescription,
-          candidates: this.state.pendingCandidates,
-          booking: this.state.data,
-          callId: this.state.callId,
-          sdp: this.offer,
-          from: this.props.userApp.currentUser.id
-        })
-      } else {
       }
     }
   }
