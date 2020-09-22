@@ -25,6 +25,10 @@ class ConfirmBookingScreen extends Component {
         let booking = this.props.navigation.state.params.booking;
         let paymentMethod = this.props.navigation.state.params.paymentMethod;
         let disabled = this.props.navigation.state.params.disabled;
+        let voucher = this.props.navigation.state.params.voucher;
+        if (voucher) {
+            voucher.price = voucher.discount
+        }
         if (!booking) {
             snackbar.show(constants.booking.booking_not_found, "danger");
             this.props.navigation.pop();
@@ -32,7 +36,7 @@ class ConfirmBookingScreen extends Component {
         this.state = {
             paymentMethod: (paymentMethod != constants.PAYMENT_METHOD.NONE && typeof paymentMethod != 'undefined') ? paymentMethod : constants.PAYMENT_METHOD.CASH,
             booking,
-            voucher: {},
+            voucher: voucher || {},
             disabled
         }
     }
@@ -146,20 +150,21 @@ class ConfirmBookingScreen extends Component {
 
     getPaymentMethod() {
         let { paymentMethod } = this.state
-        switch (paymentMethod) {
-            case constants.PAYMENT_METHOD.VNPAY:
-                return "VNPAY";
-            case constants.PAYMENT_METHOD.CASH:
-                return "CASH";
-            case constants.PAYMENT_METHOD.MOMO:
-                return "MOMO"
-            // case constants.PAYMENT_METHOD.VNPAY:
-            // // return "PAYOO";
-            // case constants.PAYMENT_METHOD.VNPAY:
-            //     return "PAYOO";
-            case constants.PAYMENT_METHOD.BANK_TRANSFER:
-                return "BANK_TRANSFER";
-        }
+        // switch (paymentMethod) {
+        //     case constants.PAYMENT_METHOD.VNPAY:
+        //         return "VNPAY";
+        //     case constants.PAYMENT_METHOD.CASH:
+        //         return "CASH";
+        //     case constants.PAYMENT_METHOD.MOMO:
+        //         return "MOMO"
+        //     // case constants.PAYMENT_METHOD.VNPAY:
+        //     // // return "PAYOO";
+        //     // case constants.PAYMENT_METHOD.VNPAY:
+        //     //     return "PAYOO";
+        //     case constants.PAYMENT_METHOD.BANK_TRANSFER:
+        //         return "BANK_TRANSFER";
+        // }
+        return constants.PAYMENT_METHOD[paymentMethod]
     }
     getPaymentReturnUrl() {
         switch (this.state.paymentMethod) {
@@ -402,13 +407,27 @@ class ConfirmBookingScreen extends Component {
             });
         }
     }
-
+    onSuccess = (url) => {
+        console.log('url: ', url);
+        snackbar.show('Đặt khám thành công', 'success')
+        this.props.navigation.navigate("homeTab", {
+            navigate: {
+                screen: "createBookingSuccess",
+                params: {
+                    booking: this.state.booking,
+                    voucher: this.state.voucher
+                }
+            }
+        });
+    }
     createBooking = (phonenumber, momoToken) => {
-        const { booking } = this.state
+        const { booking, disabled } = this.state
+        console.log('booking: ', booking);
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
-                if (this.state.voucher && this.state.voucher.code) {
+                console.log('this.state.voucher: ', this.state.voucher);
+                if (this.state.voucher && this.state.voucher.code && !disabled) {
                     let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                     if (!dataVoucher) {
                         this.setState({ isLoading: false }, () => {
@@ -418,20 +437,34 @@ class ConfirmBookingScreen extends Component {
                     }
                 }
                 bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
-                    
+
 
                     this.setState({ isLoading: false })
                     if (res) {
-                        snackbar.show('Đặt khám thành công', 'success')
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingSuccess",
-                                    params: {
-                                        booking: res,
-                                        voucher: this.state.voucher
+                        this.setState({ booking: res })
+                        switch (this.state.paymentMethod) {
+                            case constants.PAYMENT_METHOD.ATM:
+                            case constants.PAYMENT_METHOD.VISA:
+                                this.props.navigation.navigate("paymenntAlePay", {
+                                    urlPayment: res.checkoutUrl,
+                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                    onSuccess: this.onSuccess
+                                });
+                                break;
+                            default:
+                                snackbar.show('Đặt khám thành công', 'success')
+                                this.props.navigation.navigate("homeTab", {
+                                    navigate: {
+                                        screen: "createBookingSuccess",
+                                        params: {
+                                            booking: res,
+                                            voucher: this.state.voucher
+                                        }
                                     }
-                                }
-                            });
+                                });
+                                break;
+                        }
+
                     } else {
                         snackbar.show(constants.msg.booking.booking_err2, "danger");
 
@@ -625,6 +658,24 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
 
+                            {this.getPriceSecive() == 0 ?
+                                null :
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_visa.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.VISA)}
+                                    title={constants.payment.VISA}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.VISA}
+                                />
+                            }
+                            {this.getPriceSecive() == 0 ?
+                                null :
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_atm.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.ATM)}
+                                    title={constants.payment.ATM}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.ATM}
+                                />
+                            }
                             <ButtonSelectPaymentMethod
                                 icon={require('@images/new/booking/ic_momo.png')}
                                 onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.MOMO)}
