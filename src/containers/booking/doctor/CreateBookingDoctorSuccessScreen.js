@@ -32,6 +32,10 @@ class CreateBookingDoctorSuccessScreen extends Component {
                 return constants.payment.pay_later;
             case constants.PAYMENT_METHOD.MOMO:
                 return constants.payment.MOMO;
+            case constants.PAYMENT_METHOD.ATM:
+                return constants.payment.ATM;
+            case constants.PAYMENT_METHOD.VISA:
+                return constants.payment.VISA;
             // case constants.PAYMENT_METHOD.VNPAY:
             //     return constants.payment.PAYOO_convenient_shop;
             case constants.PAYMENT_METHOD.BANK_TRANSFER:
