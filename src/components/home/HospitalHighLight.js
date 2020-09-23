@@ -35,11 +35,12 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
         navigation.navigate('profileHospital', { item })
     }
     const renderItem = ({ item, index }) => {
+        let icon = item.imageHome ? item.imageHome.absoluteUrl() : ''
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <FastImage
-                        source={{ uri: item.imageHome.absoluteUrl() }}
+                        source={{ uri: icon }}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
