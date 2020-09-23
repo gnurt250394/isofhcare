@@ -635,6 +635,8 @@ module.exports = {
     //PAYOO: "PAYOO";
     BANK_TRANSFER: 'BANK_TRANSFER',
     NONE: 'NONE',
+    VISA: 'VISA',
+    ATM: 'ATM',
   },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
@@ -643,6 +645,8 @@ module.exports = {
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT',
+    VISA: 'Thanh toán bằng thẻ VISA/ Master',
+    ATM: 'Thanh toán bằng thẻ ATM nội địa',
   },
   booking: {
     hotline: 'Số hotline',
