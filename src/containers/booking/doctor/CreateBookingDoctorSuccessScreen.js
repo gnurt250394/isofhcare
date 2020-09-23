@@ -125,6 +125,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
         let service = booking.invoice.services[0] || [];
         let voucher = this.props.navigation.getParam('voucher');
         let paymentMethod = booking.invoice.payment
+        console.log('paymentMethod: ', paymentMethod);
         // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
         //     this.props.navigation.pop();
         //     return null;
