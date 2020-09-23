@@ -112,7 +112,7 @@ class ConfirmBookingDoctorScreen extends Component {
         snackbar.show('Đặt khám thành công', 'success')
         this.props.navigation.navigate("homeTab", {
             navigate: {
-                screen: "createBookingSuccess",
+                screen: "createBookingDoctorSuccess",
                 params: {
                     booking: this.state.booking,
                     voucher: this.state.voucher
@@ -137,6 +137,7 @@ class ConfirmBookingDoctorScreen extends Component {
             bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
                 this.setState({ isLoading: false })
                 if (res) {
+                    this.setState({ booking: res })
                     switch (this.state.paymentMethod) {
                         case constants.PAYMENT_METHOD.ATM:
                         case constants.PAYMENT_METHOD.VISA:
