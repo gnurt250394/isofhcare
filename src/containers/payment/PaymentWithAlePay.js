@@ -66,11 +66,12 @@ class PaymentWithAlePay extends Component {
     navigationStateChangedHandler = ({ url }) => {
         console.log('url: ', url);
         const { navigation } = this.props
-        if (url.indexOf("http://183.91.15.7:8083/isofhcare/payment/alepay") != -1) {
+        if (url.indexOf("isofhcare/payment/v1/alepay") != -1) {
             if (!this.isBack) {
                 this.isBack = true
                 console.log('this.isBack: ', this.isBack);
                 this.props.navigation.pop();
+                console.log('url.indexOf("checkout"): ', url.indexOf("checkout"));
                 if (url.indexOf("checkout") != -1) {
                     if ((this.props.navigation.state.params || {}).onSuccess)
                         (this.props.navigation.state.params || {}).onSuccess(url);

@@ -442,7 +442,7 @@ class ConfirmBookingScreen extends Component {
                             case constants.PAYMENT_METHOD.VISA:
                                 this.props.navigation.navigate("paymenntAlePay", {
                                     urlPayment: res.checkoutUrl,
-                                    title: constants.PAYMENT_METHOD.ATM ? constants.payment.ATM : constants.payment.VISA,
+                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
                                     onSuccess: this.onSuccess
                                 });
                                 break;

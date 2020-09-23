@@ -107,6 +107,19 @@ class ConfirmBookingDoctorScreen extends Component {
             return false;
         }
     }
+    onSuccess = (url) => {
+        console.log('url: ', url);
+        snackbar.show('Đặt khám thành công', 'success')
+        this.props.navigation.navigate("homeTab", {
+            navigate: {
+                screen: "createBookingSuccess",
+                params: {
+                    booking: this.state.booking,
+                    voucher: this.state.voucher
+                }
+            }
+        });
+    }
     createBooking = (phonenumber, momoToken) => {
         const { bookingDate, booking, detailSchedule } = this.state
         this.setState({ isLoading: true }, async () => {
@@ -129,14 +142,8 @@ class ConfirmBookingDoctorScreen extends Component {
                         case constants.PAYMENT_METHOD.VISA:
                             this.props.navigation.navigate("paymenntAlePay", {
                                 urlPayment: res.checkoutUrl,
-                                title: constants.PAYMENT_METHOD.ATM ? constants.payment.ATM : constants.payment.VISA,
-                                navigate: {
-                                    screen: "createBookingDoctorSuccess",
-                                    params: {
-                                        booking: res,
-                                        voucher: this.state.voucher
-                                    }
-                                }
+                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                onSuccess: this.onSuccess
                             });
                             break;
 
