@@ -79,12 +79,11 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         return text.formatPrice()
     }
     const renderItem = ({ item, index }) => {
-
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
                 <View style={styles.cardView}>
                     <FastImage
-                        uri={item?.image?.absoluteUrl() || ''}
+                        source={{ uri: item?.image?.absoluteUrl() || '' }}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
