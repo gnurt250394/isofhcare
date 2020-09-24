@@ -417,12 +417,12 @@ class ConfirmBookingScreen extends Component {
         });
     }
     createBooking = (phonenumber, momoToken) => {
-        const { booking } = this.state
+        const { booking, disabled } = this.state
         console.log('booking: ', booking);
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
-                if (this.state.voucher && this.state.voucher.code) {
+                if (this.state.voucher && this.state.voucher.code && !disabled) {
                     let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                     if (!dataVoucher) {
                         this.setState({ isLoading: false }, () => {

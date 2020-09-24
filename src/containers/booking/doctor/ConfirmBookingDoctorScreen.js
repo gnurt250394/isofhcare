@@ -121,9 +121,9 @@ class ConfirmBookingDoctorScreen extends Component {
         });
     }
     createBooking = (phonenumber, momoToken) => {
-        const { bookingDate, booking, detailSchedule } = this.state
+        const { bookingDate, booking, detailSchedule ,disabled} = this.state
         this.setState({ isLoading: true }, async () => {
-            if (this.state.voucher && this.state.voucher.code) {
+            if (this.state.voucher && this.state.voucher.code && !disabled) {
                 let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                 console.log('this.state.voucher: ', this.state.voucher);
                 console.log('dataVoucher: ', dataVoucher);
