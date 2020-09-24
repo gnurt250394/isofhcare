@@ -25,6 +25,9 @@ class ConfirmBookingDoctorScreen extends Component {
         let paymentMethod = this.props.navigation.getParam('paymentMethod');
         let disabled = this.props.navigation.getParam('disabled');
         let voucher = this.props.navigation.getParam('voucher');
+        if (voucher) {
+            voucher.price = voucher.discount
+        }
         this.state = {
             isVisible: false,
             isOnline,
@@ -121,7 +124,7 @@ class ConfirmBookingDoctorScreen extends Component {
         });
     }
     createBooking = (phonenumber, momoToken) => {
-        const { bookingDate, booking, detailSchedule ,disabled} = this.state
+        const { bookingDate, booking, detailSchedule, disabled } = this.state
         this.setState({ isLoading: true }, async () => {
             if (this.state.voucher && this.state.voucher.code && !disabled) {
                 let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);

@@ -25,6 +25,10 @@ class ConfirmBookingScreen extends Component {
         let booking = this.props.navigation.state.params.booking;
         let paymentMethod = this.props.navigation.state.params.paymentMethod;
         let disabled = this.props.navigation.state.params.disabled;
+        let voucher = this.props.navigation.state.params.voucher;
+        if (voucher) {
+            voucher.price = voucher.discount
+        }
         if (!booking) {
             snackbar.show(constants.booking.booking_not_found, "danger");
             this.props.navigation.pop();
@@ -32,7 +36,7 @@ class ConfirmBookingScreen extends Component {
         this.state = {
             paymentMethod: (paymentMethod != constants.PAYMENT_METHOD.NONE && typeof paymentMethod != 'undefined') ? paymentMethod : constants.PAYMENT_METHOD.CASH,
             booking,
-            voucher: {},
+            voucher: voucher || {},
             disabled
         }
     }
@@ -422,6 +426,7 @@ class ConfirmBookingScreen extends Component {
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, async () => {
+                console.log('this.state.voucher: ', this.state.voucher);
                 if (this.state.voucher && this.state.voucher.code && !disabled) {
                     let dataVoucher = await this.confirmVoucher(this.state.voucher, booking);
                     if (!dataVoucher) {
