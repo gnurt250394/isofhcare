@@ -672,18 +672,6 @@ class ConfirmBookingScreen extends Component {
                                 />
                             }
                             <ButtonSelectPaymentMethod
-                                icon={require('@images/new/booking/ic_visa.png')}
-                                onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.VISA)}
-                                title={constants.payment.VISA}
-                                isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.VISA}
-                            />
-                            <ButtonSelectPaymentMethod
-                                icon={require('@images/new/booking/ic_atm.png')}
-                                onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.ATM)}
-                                title={constants.payment.ATM}
-                                isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.ATM}
-                            />
-                            <ButtonSelectPaymentMethod
                                 icon={require('@images/new/booking/ic_momo.png')}
                                 onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.MOMO)}
                                 title={constants.payment.MOMO}
