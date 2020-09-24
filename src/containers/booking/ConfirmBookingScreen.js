@@ -653,6 +653,24 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
 
+                            {this.getPriceSecive() == 0 ?
+                                null :
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_visa.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.VISA)}
+                                    title={constants.payment.VISA}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.VISA}
+                                />
+                            }
+                            {this.getPriceSecive() == 0 ?
+                                null :
+                                <ButtonSelectPaymentMethod
+                                    icon={require('@images/new/booking/ic_atm.png')}
+                                    onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.ATM)}
+                                    title={constants.payment.ATM}
+                                    isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.ATM}
+                                />
+                            }
                             <ButtonSelectPaymentMethod
                                 icon={require('@images/new/booking/ic_visa.png')}
                                 onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.VISA)}
