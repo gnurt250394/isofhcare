@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View } from 'react-native';
+import { View, DeviceEventEmitter } from 'react-native';
 import { connect } from 'react-redux';
 import { WebView } from "react-native-webview";
 import dateUtils from 'mainam-react-native-date-utils';
@@ -62,7 +62,17 @@ class PaymentWithAlePay extends Component {
     //     }
     //     return sorted;
     // }
+    handleBackButton() {
+        this.backButtonClick()
+        return true;
+    }
+    componentDidMount() {
+        DeviceEventEmitter.addListener('hardwareBackPress', this.handleBackButton)
 
+    }
+    componentWillUnmount() {
+        DeviceEventEmitter.removeAllListeners('hardwareBackPress')
+    }
     navigationStateChangedHandler = ({ url }) => {
         console.log('url: ', url);
         const { navigation } = this.props
@@ -75,6 +85,8 @@ class PaymentWithAlePay extends Component {
                 if (url.indexOf("checkout") != -1) {
                     if ((this.props.navigation.state.params || {}).onSuccess)
                         (this.props.navigation.state.params || {}).onSuccess(url);
+                } else if (url.indexOf("cancel") != -1) {
+                    this.backButtonClick()
                 }
             }
 
@@ -82,9 +94,17 @@ class PaymentWithAlePay extends Component {
         }
 
     };
+    backButtonClick = () => {
+        this.props.navigation.navigate("homeTab", {
+            navigate: {
+                screen: 'listBookingHistory'
+            }
+        })
+    }
     render() {
         return (
             <ActivityPanel title={this.state.title}
+                backButtonClick={this.backButtonClick}
                 isLoading={this.state.isLoading}>
                 <WebView
                     style={{ flex: 1 }}

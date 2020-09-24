@@ -886,8 +886,10 @@ class DetailHistoryBookingScreen extends Component {
           null}
         {this.state.booking?.invoice?.payment ==
           constants.PAYMENT_METHOD.NONE ||
-          (this.state.booking?.invoice?.payment ==
-            constants.PAYMENT_METHOD.MOMO &&
+          ((this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.MOMO || this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.VISA || this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.ATM) &&
             this.state.booking?.invoice?.status == 'NEW') ? (
             <TouchableOpacity
               onPress={this.onPayment}
