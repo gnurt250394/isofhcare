@@ -104,6 +104,7 @@ class PaymentWithAlePay extends Component {
     render() {
         return (
             <ActivityPanel title={this.state.title}
+                hideBackButton={true}
                 backButtonClick={this.backButtonClick}
                 isLoading={this.state.isLoading}>
                 <WebView
