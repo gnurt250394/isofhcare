@@ -105,18 +105,18 @@ class HomeScreen extends Component {
               });
           },
         },
-        // {
-        //   icon: require('@images/new/homev2/ic_ehealth.png'),
-        //   text: 'Hồ sơ sức khoẻ',
-        //   onPress: () => {
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate('ehealth');
-        //     else
-        //       this.props.navigation.navigate('login', {
-        //         nextScreen: {screen: 'ehealth'},
-        //       });
-        //   },
-        // },
+        {
+          icon: require('@images/new/homev2/ic_ehealth.png'),
+          text: 'Hồ sơ sức khoẻ',
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('ehealth');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: { screen: 'ehealth' },
+              });
+          },
+        },
         {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
@@ -166,6 +166,21 @@ class HomeScreen extends Component {
             //   isVideoCall: true,
             //   profile: {doctor:{name:'trung'},patient:{name:"hihi"}}
             // });
+          },
+        },
+        {
+          icon: require('@images/new/homev2/ic_monitoring.png'),
+          text: 'Nhật ký SK',
+          new: true,
+          onPress: () => {
+            // snackbar.show('Tính năng đang phát triển')
+            // return
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('healthMonitoring');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: { screen: 'healthMonitoring' },
+              });
           },
         },
       ],
@@ -319,25 +334,32 @@ class HomeScreen extends Component {
           {item.empty ? (
             <View style={[styles.viewEmpty]} />
           ) : (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {marginTop: 10},
-                {width: this.getItemWidth()},
-              ]}
-              onPress={item.onPress}>
-              <View style={styles.groupImageButton}>
-                <ScaledImage
-                  style={[styles.icon]}
-                  source={item.icon}
-                  height={54}
-                />
-              </View>
-              <Text style={[styles.label, {paddingHorizontal: 10}]}>
-                {item.text}
-              </Text>
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  { marginTop: 10 },
+                  { width: this.getItemWidth() },
+                ]}
+                onPress={item.onPress}>
+                <View style={styles.groupImageButton}>
+                  <ScaledImage
+                    style={[styles.icon]}
+                    source={item.icon}
+                    height={54}
+                  />
+                </View>
+                <Text style={[styles.label, { paddingHorizontal: 10 }]}>
+                  {item.text}
+                </Text>
+                {
+                  item.new ?
+                    <View style={[styles.containerNew]}>
+                      <Text >Mới</Text>
+                    </View>
+                    : null
+                }
+              </TouchableOpacity>
+            )}
         </Animatable.View>
       );
     });
@@ -455,6 +477,15 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  containerNew: {
+    backgroundColor: '#FFE600',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 5
+  },
   containerImageDoctor: {
     borderRadius: 6,
     elevation: 4,

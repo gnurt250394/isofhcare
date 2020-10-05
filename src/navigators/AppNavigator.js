@@ -371,7 +371,9 @@ const TabNavigatorComponent = createBottomTabNavigator(
 
 const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
+  console.log('prevScene: ', prevScene);
   const nextScene = scenes[scenes.length - 1];
+  console.log('nextScene: ', nextScene);
   if (
     prevScene &&
     prevScene.route.routeName === 'home' &&
@@ -385,6 +387,11 @@ const handleCustomTransition = ({ scenes }) => {
     nextScene.route.routeName === 'detailQuestion'
   ) {
     return fromBottom();
+  }
+  if (prevScene &&
+    prevScene.route.routeName === 'listNews' &&
+    nextScene.route.routeName === 'category') {
+    return fromBottom()
   }
   return fromRight();
 };

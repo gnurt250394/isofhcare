@@ -41,6 +41,9 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
             // idCategories
         })
     }
+    const goToList=()=>{
+        navigation.navigate('listNews')
+    }
     const renderItem = ({ item, index }) => {
         let urlImage = item?.images[0].downloadUri
 
