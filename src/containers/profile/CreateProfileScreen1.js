@@ -1011,14 +1011,14 @@ class EditProfileScreen extends Component {
                                             errorStyle={[styles.err,]}
 
                                             autoCapitalize={"none"}
-                                            validate={{
-                                                rules: {
-                                                    required: true,
-                                                },
-                                                messages: {
-                                                    required: "CMTND/HC người bảo lãnh không được để trống",
-                                                }
-                                            }}
+                                            // validate={{
+                                            //     rules: {
+                                            //         required: true,
+                                            //     },
+                                            //     messages: {
+                                            //         required: "CMTND/HC người bảo lãnh không được để trống",
+                                            //     }
+                                            // }}
                                             numberOfLines={1}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
@@ -1216,12 +1216,12 @@ const styles = StyleSheet.create({
         // },
         marginBottom: 50,
         // shadowOpacity: 0.7,
-        zIndex:0
+        zIndex: 0
     },
     container: {
         flex: 1,
         paddingBottom: 40,
-        zIndex:0
+        zIndex: 0
     },
     containerAddress: {
         marginTop: 15,
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         position: 'absolute',
         top: 84,
-        zIndex:1000
+        zIndex: 1000
     },
     buttonSave: {
         paddingHorizontal: 15,
