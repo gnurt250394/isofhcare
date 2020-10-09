@@ -54,7 +54,7 @@ const DEFAULT_ICE = {
       urls: ['stun:stun.l.google.com:19302'],
     },
     {
-      urls: 'turn:35.197.145.195:3478',
+      urls: 'turn:52.74.210.243:3478',
       username: 'mainam',
       credential: '123456',
     },
