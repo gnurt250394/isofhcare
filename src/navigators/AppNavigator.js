@@ -172,6 +172,9 @@ import HealthMonitoringScreen from '@containers/ehealth/healthMonitoring/HealthM
 import FileViewerScreen from '@containers/image/FileViewerScreen';
 import ChatBotScreen from '@containers/chat/ChatBotScreen';
 import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
+//news
+import ListNewsScreen from '@containers/news/ListNewsScreen';
+import CategoriesNewsScreen from '@containers/news/CategoriesNewsScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -432,11 +435,11 @@ const RootNavigator = (route = 'splash') =>
       inputPhone: { screen: InputPhoneScreen },
       //
       listQuestion: ListQuestionScreen,
-      createQuestionStep: {screen: CreateQuestionStep1Screen},
-      createQuestionStep2: {screen: CreateQuestionStep2Screen},
-      detailQuestion: {screen: DetailQuestionScreen},
-      detailsProfile: {screen: ProfileInfo},
-      detailsDoctor: {screen: DetailsDoctorScreen},
+      createQuestionStep: { screen: CreateQuestionStep1Screen },
+      createQuestionStep2: { screen: CreateQuestionStep2Screen },
+      detailQuestion: { screen: DetailQuestionScreen },
+      detailsProfile: { screen: ProfileInfo },
+      detailsDoctor: { screen: DetailsDoctorScreen },
       // videoCall: { screen: VideoCallScreen },
       // booking navigation
       addBooking: AddBookingScreen,
@@ -522,7 +525,8 @@ const RootNavigator = (route = 'splash') =>
       fileViewer: { screen: FileViewerScreen },
       chatBot: { screen: ChatBotScreen },
       paymenntAlePay: { screen: PaymentWithAlePay },
-
+      listNews: { screen: ListNewsScreen },
+      categoriesNews: { screen: CategoriesNewsScreen }
 
     },
     {

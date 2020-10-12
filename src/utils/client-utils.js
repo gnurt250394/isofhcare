@@ -1,6 +1,6 @@
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import constants from '@resources/strings';
 const server_url = 'http://10.0.0.98:9451'; //dev
 
@@ -21,7 +21,7 @@ let appVersion = DeviceInfo.getReadableVersion();
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     var _this = this.toString();
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -57,7 +57,7 @@ String.prototype.absoluteUrl =
 
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     let _this = this ? this.toString() : '';
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -76,7 +76,7 @@ module.exports = {
   serviceImage: "https://api.produce.isofhcare.com/isofhcare/",
   serviceChats: "http://10.0.0.98:8085/",
   serviceCovid: "http://10.0.0.88:49396/",
-  
+  serviceNews: 'http://10.0.0.98:36545',
   response: {
     ok(data, message) {
       if (!message) message = '';
