@@ -49,11 +49,18 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
             </TouchableOpacity>
         )
     }
+    const onShowAll = () => {
+
+        navigation.navigate('listNews')
+    }
     if (data?.length) {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>TIN TỨC Y TẾ</Text>
+                    <TouchableOpacity onPress={onShowAll} style={styles.btnViewAll}>
+                        <Text style={styles.txViewAll}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -72,6 +79,11 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
 
 })
 const styles = StyleSheet.create({
+    btnViewAll: { padding: 5 },
+    txViewAll: {
+        padding: 12, paddingLeft: 20, paddingBottom: 5, flex: 1,
+        color: '#009BF2',
+    },
     viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },

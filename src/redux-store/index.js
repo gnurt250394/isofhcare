@@ -49,6 +49,12 @@ function _getDrug(data) {
         return Promise.resolve();
     }
 }
+function _getCategories(data) {
+    return (dispatch) => {
+        dispatch({ type: constants.action.action_add_categories, value: data })
+        return Promise.resolve();
+    }
+}
 module.exports = {
     userLogin(user) {
         return function (dispatch, getState) {
@@ -87,6 +93,11 @@ module.exports = {
     addDrug(data) {
         return function (dispatch, getState) {
             dispatch(_getDrug(data))
+        }
+    },
+    categoriesSelected(listSelected) {
+        return (dispatch) => {
+            dispatch(_getCategories(listSelected))
         }
     }
 

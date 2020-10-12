@@ -222,6 +222,7 @@ module.exports = {
     action_select_patient_group_ehealth: 'ACTION_SELECT_PATIENT_GROUP_EHEALTH',
     action_otp_phone: 'ACTION_OTP_PHONE',
     action_add_drug: 'ACTION_ADD_DRUG',
+    action_add_categories: 'ACTION_ADD_CATEGORIES',
     save_user_id: 'SAVE_USER_ID',
   },
   colors: {
@@ -1207,5 +1208,13 @@ module.exports = {
       body_temperature: isofhcare_service + 'monitoring/body-temperature',
       blood_pressure: isofhcare_service + 'monitoring/blood-pressure',
     },
+    news: {
+      list_news: '/v1/news',
+      details: '/v1/news/newsId',
+      list_news_by_topics: '/v1/topics',
+      list_top_news: '/v1/topics/topicId/popular-news',
+      list_keyword_news: '/v1/topics',
+      list_topics: '/v1/topics'
+    }
   },
 };
