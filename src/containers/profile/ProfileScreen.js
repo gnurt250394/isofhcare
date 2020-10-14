@@ -40,7 +40,7 @@ class ProfileScreen extends Component {
                 profileProvider.getDetailsMedical(id).then(res => {
 
                     if (res && res.code == 0) {
-                        console.log('res: ', res);
+
                         if (res.data?.medicalRecords?.hospitalName && res.data?.medicalRecords?.value) {
                             this.setState({
                                 fromHis: true,
@@ -444,11 +444,7 @@ class ProfileScreen extends Component {
         let alreadyHaveAccount = this.state.dataProfile?.medicalRecords?.alreadyHaveAccount
 
         let phone = this.props.userApp.currentUser.phone
-        let accountSource = this.props.userApp.currentUser.accountSource == "VENDOR"
-        if (accountSource && phoneProfile) {
-            return null
-        }
-        else if (this.state.dataProfile?.medicalRecords?.hospitalName && this.state.dataProfile?.medicalRecords?.value) {
+        if (this.state.dataProfile?.medicalRecords?.hospitalName && this.state.dataProfile?.medicalRecords?.value) {
             return null
         }
         else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
