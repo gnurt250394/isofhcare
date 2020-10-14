@@ -1207,15 +1207,15 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         // borderBottomWidth: 0.6,
         // borderBottomColor:'#BBB',
-        elevation: 1,
-        shadowColor: '#BBB',
+        // elevation: 1,
+        // shadowColor: '#BBB',
         height: 124,
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
+        // shadowOffset: {
+        //     width: 1,
+        //     height: 1
+        // },
         marginBottom: 50,
-        shadowOpacity: 0.7
+        // shadowOpacity: 0.7
     },
     container: {
         flex: 1,
