@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">iSofHcare</string>
-    <string name="facebook_app_id">187875142367413</string>
-<string name="fb_login_protocol_scheme">fb1457683741386685</string>
+    <string name="facebook_app_id">666449667627403</string> 
+    <string name="fb_login_protocol_scheme">fb666449667627403</string>
+
     <string name="default_notification_channel_id">isofh-care-channel</string>
     <string name="fb_app_id">187875142367413</string>
 <string name="ak_client_token">a9ae7d8852eab508b86896d5cd375999</string>

@@ -18,6 +18,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 // public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication {
   public class MainApplication extends Application implements ReactApplication, ShareApplication {
 

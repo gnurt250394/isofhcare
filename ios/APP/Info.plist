@@ -35,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb457683741386685</string>
+				<string>fb666449667627403</string>
 			</array>
 		</dict>
 		<dict>
@@ -82,7 +82,7 @@
 	<key>CodePushDeploymentKey</key>
 	<string>d_e1VVGMtjxvsGkWkKShQsZLyChcSJOdItZ-r</string>
 	<key>FacebookAppID</key>
-	<string>187875142367413</string>
+	<string>666449667627403</string>
 	<key>FacebookCodelessDebugLogEnabled</key>
 	<true/>
 	<key>FacebookDisplayName</key>
