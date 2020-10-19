@@ -54,6 +54,10 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             default: return ''
         }
     }
+    const onShowAll = () => {
+
+        navigation.navigate('listDoctor')
+    }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
         return (
@@ -79,6 +83,9 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
+                    <TouchableOpacity onPress={onShowAll} style={styles.btnViewAll}>
+                        <Text style={styles.txViewAll}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -98,6 +105,11 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
 
 })
 const styles = StyleSheet.create({
+    btnViewAll: { padding: 5 },
+    txViewAll: {
+        padding: 12, paddingLeft: 20, paddingBottom: 5, flex: 1,
+        color: '#009BF2',
+    },
     containerImageDoctor: {
         borderRadius: 6,
         elevation: 4,
