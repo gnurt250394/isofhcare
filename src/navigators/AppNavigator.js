@@ -175,6 +175,7 @@ import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
 //news
 import ListNewsScreen from '@containers/news/ListNewsScreen';
 import CategoriesNewsScreen from '@containers/news/CategoriesNewsScreen';
+import ListPaymentCardScreen from '@containers/booking/ListPaymentCardScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -526,7 +527,8 @@ const RootNavigator = (route = 'splash') =>
       chatBot: { screen: ChatBotScreen },
       paymenntAlePay: { screen: PaymentWithAlePay },
       listNews: { screen: ListNewsScreen },
-      categoriesNews: { screen: CategoriesNewsScreen }
+      categoriesNews: { screen: CategoriesNewsScreen },
+      listCardPayment: { screen: ListPaymentCardScreen },
 
     },
     {
