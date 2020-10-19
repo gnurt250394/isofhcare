@@ -420,8 +420,8 @@ class ConfirmBookingScreen extends Component {
             }
         });
     }
-    createBooking = (phonenumber, momoToken) => {
-        const { booking, disabled } = this.state
+    createBooking = ({ phonenumber, momoToken, cardNumber }) => {
+        const { booking, disabled, paymentMethod } = this.state
         console.log('booking: ', booking);
 
         connectionUtils.isConnected().then(s => {
@@ -436,18 +436,19 @@ class ConfirmBookingScreen extends Component {
                         return
                     }
                 }
-                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
+                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken, cardNumber).then(res => {
 
 
                     this.setState({ isLoading: false })
                     if (res) {
                         this.setState({ booking: res })
-                        switch (this.state.paymentMethod) {
+                        switch (paymentMethod) {
                             case constants.PAYMENT_METHOD.ATM:
                             case constants.PAYMENT_METHOD.VISA:
+                            case constants.PAYMENT_METHOD.QR:
                                 this.props.navigation.navigate("paymenntAlePay", {
                                     urlPayment: res.checkoutUrl,
-                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.PAYMENT_METHOD.QR == this.state.paymentMethod ? constants.payment.QR : constants.payment.VISA,
                                     onSuccess: this.onSuccess
                                 });
                                 break;
@@ -687,6 +688,12 @@ class ConfirmBookingScreen extends Component {
                                 onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.BANK_TRANSFER)}
                                 title={constants.payment.direct_transfer}
                                 isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.BANK_TRANSFER}
+                            />
+                            <ButtonSelectPaymentMethod
+                                icon={require('@images/new/booking/ic_qr_payment.png')}
+                                onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.QR)}
+                                title={constants.payment.QR}
+                                isSelected={this.state.paymentMethod == constants.PAYMENT_METHOD.QR}
                             />
                         </React.Fragment>
                     }
