@@ -102,6 +102,7 @@ const ButtonPayment = ({
             case constants.PAYMENT_METHOD.ATM: //' ATM'
             case constants.PAYMENT_METHOD.VISA: // 'VISA'
             case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
+            case constants.PAYMENT_METHOD.QR: //'Chuyển khoản trực tiếp'
                 createBooking()
                 break
             default:

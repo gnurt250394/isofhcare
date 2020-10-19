@@ -638,6 +638,7 @@ module.exports = {
     NONE: 'NONE',
     VISA: 'VISA',
     ATM: 'ATM',
+    QR: "QR"
   },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
@@ -648,6 +649,7 @@ module.exports = {
     pay_later: 'Thanh toán sau tại CSYT',
     VISA: 'Thanh toán bằng thẻ VISA/ Master',
     ATM: 'Thanh toán bằng thẻ ATM nội địa',
+    QR: 'Thanh toán bằng QR Code',
   },
   booking: {
     hotline: 'Số hotline',
