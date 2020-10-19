@@ -34,6 +34,10 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
 
         navigation.navigate('profileHospital', { item })
     }
+    const onShowAll = () => {
+
+        navigation.navigate('selectHospital')
+    }
     const renderItem = ({ item, index }) => {
         let icon = item.imageHome ? item.imageHome.absoluteUrl() : ''
         return (
@@ -53,6 +57,9 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
+                    <TouchableOpacity onPress={onShowAll} style={styles.btnViewAll}>
+                        <Text style={styles.txViewAll}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -71,6 +78,11 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
 
 })
 const styles = StyleSheet.create({
+    btnViewAll: { padding: 5 },
+    txViewAll: {
+        padding: 12, paddingLeft: 20, paddingBottom: 5, flex: 1,
+        color: '#009BF2',
+    },
     viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },

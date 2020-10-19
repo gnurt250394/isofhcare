@@ -78,6 +78,10 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         }
         return text.formatPrice()
     }
+    const onShowAll = () => {
+
+        navigation.navigate('listNews')
+    }
     const renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1, paddingBottom: 10 }}>
@@ -119,6 +123,9 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>DỊCH VỤ NỔI BẬT</Text>
+                    <TouchableOpacity onPress={onShowAll} style={styles.btnViewAll}>
+                        <Text style={styles.txViewAll}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -137,6 +144,11 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
 
 })
 const styles = StyleSheet.create({
+    btnViewAll: { padding: 5 },
+    txViewAll: {
+        padding: 12, paddingLeft: 20, paddingBottom: 5, flex: 1,
+        color: '#009BF2',
+    },
     groupPrice: {
         flexDirection: 'row',
         alignItems: 'center'
