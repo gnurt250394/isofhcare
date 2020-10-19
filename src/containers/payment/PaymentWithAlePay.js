@@ -82,7 +82,7 @@ class PaymentWithAlePay extends Component {
                 console.log('this.isBack: ', this.isBack);
                 this.props.navigation.pop();
                 console.log('url.indexOf("checkout"): ', url.indexOf("checkout"));
-                if (url.indexOf("checkout") != -1) {
+                if (url.indexOf("checkout") != -1 || url.indexOf("callback-profile") != -1) {
                     if ((this.props.navigation.state.params || {}).onSuccess)
                         (this.props.navigation.state.params || {}).onSuccess(url);
                 } else if (url.indexOf("cancel") != -1) {

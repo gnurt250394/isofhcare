@@ -407,7 +407,8 @@ class AccountScreen extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
                 onPress={() => {
-                  snackbar.show("Chức năng đang phát triển");
+                  this.props.navigation.navigate("listCardPayment");
+                  // snackbar.show("Chức năng đang phát triển");
                 }}
               >
                 <ScaledImage
@@ -415,7 +416,7 @@ class AccountScreen extends Component {
                   width={26}
                   height={26}
                 />
-                <Text style={styles.itemText}>Lịch sử giao dịch</Text>
+                <Text style={styles.itemText}>Danh sách thẻ liên kết</Text>
                 <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
               </TouchableOpacity>
               {/* <TouchableOpacity
