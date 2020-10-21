@@ -105,18 +105,18 @@ class HomeScreen extends Component {
               });
           },
         },
-        // {
-        //   icon: require('@images/new/homev2/ic_ehealth.png'),
-        //   text: 'Hồ sơ sức khoẻ',
-        //   onPress: () => {
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate('ehealth');
-        //     else
-        //       this.props.navigation.navigate('login', {
-        //         nextScreen: {screen: 'ehealth'},
-        //       });
-        //   },
-        // },
+        {
+          icon: require('@images/new/homev2/ic_ehealth.png'),
+          text: 'Hồ sơ sức khoẻ',
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('ehealth');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: {screen: 'ehealth'},
+              });
+          },
+        },
         {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
@@ -155,15 +155,21 @@ class HomeScreen extends Component {
             // });
           },
         },
-        // {
-        //   icon: require('@images/new/covid/ic_covid.png'),
-        //   text: 'Test Chat Bot',
-        //   onPress: () => {
-        //     // snackbar.show('Tính năng đang phát triển')
-        //     // return
-        //     this.props.navigation.navigate('chatBot');
-        //   },
-        // },
+        {
+          icon: require('@images/new/homev2/ic_monitoring.png'),
+          text: 'Nhật ký SK',
+            new: true,
+          onPress: () => {
+            // snackbar.show('Tính năng đang phát triển')
+            // return
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('healthMonitoring');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: { screen: 'healthMonitoring' },
+              });
+          },
+        },
       ],
       height: 0,
     };
@@ -332,6 +338,13 @@ class HomeScreen extends Component {
                 <Text style={[styles.label, { paddingHorizontal: 10 }]}>
                   {item.text}
                 </Text>
+                  {
+                    item.new ?
+                      <View style={[styles.containerNew]}>
+                        <Text >Mới</Text>
+                      </View>
+                      : null
+                  }
               </TouchableOpacity>
             )}
         </Animatable.View>
@@ -451,6 +464,15 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    containerNew: {
+      backgroundColor: '#FFE600',
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      paddingHorizontal: 5,
+      paddingVertical: 3,
+      borderRadius: 5
+    },
   containerImageDoctor: {
     borderRadius: 6,
     elevation: 4,
