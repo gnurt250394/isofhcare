@@ -146,24 +146,11 @@ class ConfirmBookingDoctorScreen extends Component {
                         case constants.PAYMENT_METHOD.ATM:
                         case constants.PAYMENT_METHOD.VISA:
                         case constants.PAYMENT_METHOD.QR:
-                            if (!cardNumber) {
-                                this.props.navigation.navigate("paymenntAlePay", {
-                                    urlPayment: res.checkoutUrl,
-                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
-                                    onSuccess: this.onSuccess
-                                });
-                            } else {
-                                snackbar.show('Đặt khám thành công', 'success')
-                                this.props.navigation.navigate("homeTab", {
-                                    navigate: {
-                                        screen: "createBookingDoctorSuccess",
-                                        params: {
-                                            voucher: this.state.voucher,
-                                            booking: res,
-                                        }
-                                    }
-                                });
-                            }
+                            this.props.navigation.navigate("paymenntAlePay", {
+                                urlPayment: res.checkoutUrl,
+                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                onSuccess: this.onSuccess
+                            });
                             break;
 
                         default:
