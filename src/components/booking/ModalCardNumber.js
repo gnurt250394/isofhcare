@@ -5,6 +5,7 @@ import paymentProvider from '@data-access/payment-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ItemPayment from '@components/payment/ItemPayment';
 import { withNavigation } from 'react-navigation';
+import snackbar from '@utils/snackbar-utils';
 const { width, height } = Dimensions.get('window')
 const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => {
     const [data, setData] = useState([])
@@ -24,22 +25,13 @@ const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => 
         getData()
     }
     const onCreateNewCard = async () => {
-        try {
-            let res = await paymentProvider.createNewCard()
-
-            if (res?.url) {
-                onBackdropPress()
-                navigation.navigate("paymenntAlePay", {
-                    urlPayment: res.url,
-                    title: "Liên kết thẻ",
-                    onSuccess: onCreateSuccess
-                });
-            }
-        } catch (error) {
-
-        }
+       onSend()
     }
     const onSuccess = () => {
+        if (!cardNumber) {
+            snackbar.show('Vui lòng chọn thẻ để thanh toán', 'danger')
+            return
+        }
         onSend(cardNumber?.id)
     }
     useEffect(() => {
@@ -68,31 +60,31 @@ const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => 
             backdropTransitionInTiming={1000}
             backdropTransitionOutTiming={1000}>
             {/* <View style={styles.containerModal}> */}
-                <View style={styles.dotsHeader} />
-                <View style={styles.container}>
-                    <Text style={styles.txtLabel}>Chọn thẻ liên kết</Text>
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={keyExtractor}
-                    />
+            <View style={styles.dotsHeader} />
+            <View style={styles.container}>
+                <Text style={styles.txtLabel}>Chọn thẻ liên kết</Text>
+                <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={keyExtractor}
+                />
+                <TouchableOpacity
+                    onPress={onCreateNewCard}
+                    style={styles.buttonAdd}>
+                    <ScaledImage source={require("@images/new/covid/ic_add_green.png")} width={15} />
+                    <Text style={styles.txtAdd}>Thẻ mới</Text>
+                </TouchableOpacity>
+                <View style={styles.groupButton}>
                     <TouchableOpacity
-                        onPress={onCreateNewCard}
-                        style={styles.buttonAdd}>
-                        <ScaledImage source={require("@images/new/covid/ic_add_green.png")} width={15} />
-                        <Text style={styles.txtAdd}>Thẻ mới</Text>
+                        onPress={onSuccess}
+                        style={[
+                            styles.buttonOk,
+                        ]}>
+                        <Text style={styles.txtOk}>Thanh toán</Text>
                     </TouchableOpacity>
-                    <View style={styles.groupButton}>
-                        <TouchableOpacity
-                            onPress={onSuccess}
-                            style={[
-                                styles.buttonOk,
-                            ]}>
-                            <Text style={styles.txtOk}>Thanh toán</Text>
-                        </TouchableOpacity>
 
-                    </View>
                 </View>
+            </View>
             {/* </View> */}
         </ModalComponent>
     );
