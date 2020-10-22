@@ -123,7 +123,7 @@ class ConfirmBookingDoctorScreen extends Component {
             }
         });
     }
-    createBooking = (phonenumber, momoToken) => {
+    createBooking = ({ phonenumber, momoToken, cardNumber }) => {
         const { bookingDate, booking, detailSchedule, disabled } = this.state
         this.setState({ isLoading: true }, async () => {
             if (this.state.voucher && this.state.voucher.code && !disabled) {
@@ -137,19 +137,32 @@ class ConfirmBookingDoctorScreen extends Component {
                     return
                 }
             }
-            bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken).then(res => {
+            bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher, phonenumber, momoToken, cardNumber).then(res => {
                 this.setState({ isLoading: false })
                 if (res) {
                     this.setState({ booking: res })
                     switch (this.state.paymentMethod) {
                         case constants.PAYMENT_METHOD.ATM:
                         case constants.PAYMENT_METHOD.VISA:
-                            case constants.PAYMENT_METHOD.QR:
-                            this.props.navigation.navigate("paymenntAlePay", {
-                                urlPayment: res.checkoutUrl,
-                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
-                                onSuccess: this.onSuccess
-                            });
+                        case constants.PAYMENT_METHOD.QR:
+                            if (!cardNumber) {
+                                this.props.navigation.navigate("paymenntAlePay", {
+                                    urlPayment: res.checkoutUrl,
+                                    title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                    onSuccess: this.onSuccess
+                                });
+                            } else {
+                                snackbar.show('Đặt khám thành công', 'success')
+                                this.props.navigation.navigate("homeTab", {
+                                    navigate: {
+                                        screen: "createBookingDoctorSuccess",
+                                        params: {
+                                            voucher: this.state.voucher,
+                                            booking: res,
+                                        }
+                                    }
+                                });
+                            }
                             break;
 
                         default:

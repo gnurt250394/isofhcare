@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, Platform, DeviceEventEmitter, NativeModules, NativeEventEmitter, StyleSheet, TouchableOpacity } from 'react-native'
 import RNMomosdk from 'react-native-momosdk';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
@@ -9,6 +9,7 @@ const RNMomosdkModule = NativeModules.RNMomosdk;
 const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
 
 import constants from '@resources/strings'
+import ModalCardNumber from './ModalCardNumber';
 const ButtonPayment = ({
     allowBooking,
     booking,
@@ -19,6 +20,7 @@ const ButtonPayment = ({
     createBooking,
 }) => {
     const isChecking = useRef(true)
+    const [isVisible, setIsVisible] = useState(false)
     useEffect(() => {
         EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
             try {
@@ -30,7 +32,7 @@ const ButtonPayment = ({
                     let phonenumber = response.phonenumber;
                     let message = response.message;
                     let orderId = response.refOrderId;
-                    createBooking(phonenumber, momoToken)
+                    createBooking({ phonenumber, momoToken })
                 } else {
                     //let message = response.message;
                     //Has Error: show message here
@@ -80,7 +82,7 @@ const ButtonPayment = ({
                 let momoToken = response.data;
                 let phonenumber = response.phonenumber;
                 let message = response.message;
-                createBooking(phonenumber, momoToken)
+                createBooking({ phonenumber, momoToken })
             } else {
                 isChecking.current = true
                 //let message = response.message;
@@ -98,12 +100,14 @@ const ButtonPayment = ({
             case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
                 requestPaymentMomo()
                 break
-            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
             case constants.PAYMENT_METHOD.ATM: //' ATM'
             case constants.PAYMENT_METHOD.VISA: // 'VISA'
+            case constants.PAYMENT_METHOD.QR: //'Thanh toán QR code'
+                setIsVisible(true)
+                break;
+            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
             case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
-            case constants.PAYMENT_METHOD.QR: //'Chuyển khoản trực tiếp'
-                createBooking()
+                createBooking({})
                 break
             default:
                 break;
@@ -111,10 +115,18 @@ const ButtonPayment = ({
         // }
 
     }
+    const onBackdropPress = () => setIsVisible(false)
+    const onSend = (cardNumber) => {
+        createBooking({ cardNumber })
+        onBackdropPress()
+    }
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-            <Text style={styles.datkham}>{title}</Text>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity onPress={onPress} style={[styles.button, allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
+                <Text style={styles.datkham}>{title}</Text>
+            </TouchableOpacity>
+            <ModalCardNumber isVisible={isVisible} onBackdropPress={onBackdropPress} onSend={onSend} />
+        </View>
     )
 }
 
