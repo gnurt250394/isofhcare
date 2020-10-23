@@ -23,4 +23,14 @@ export default {
             })
         })
     },
+    deleteCard(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('delete', client.requestPayment + constants.api.payment.get_list_card + '/' + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                if (e)
+                    reject(e)
+            })
+        })
+    },
 }

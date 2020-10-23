@@ -9,7 +9,6 @@ const ListPaymentCardScreen = () => {
     const getData = async () => {
         try {
             let res = await paymentProvider.getListCard()
-            
             setData(res)
         } catch (error) {
 
@@ -18,9 +17,15 @@ const ListPaymentCardScreen = () => {
     useEffect(() => {
         getData()
     }, [])
-    const onDeleteCard = (item) => () => {
-        let list = data.filter(e => e.id != item.id)
-        setData(list)
+    const onDeleteCard = (item) => async () => {
+        try {
+            let res = await paymentProvider.deleteCard(item.id)
+            let list = data.filter(e => e.id != item.id)
+            setData(list)
+
+        } catch (error) {
+
+        }
     }
     const renderItem = ({ item, index }) => {
         return (
