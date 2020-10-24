@@ -7,6 +7,7 @@ import snackbar from '@utils/snackbar-utils';
 import NavigationService from '@navigators/NavigationService'
 const RNMomosdkModule = NativeModules.RNMomosdk;
 const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
+import paymentProvider from '@data-access/payment-provider';
 
 import constants from '@resources/strings'
 import ModalCardNumber from './ModalCardNumber';
@@ -21,7 +22,17 @@ const ButtonPayment = ({
 }) => {
     const isChecking = useRef(true)
     const [isVisible, setIsVisible] = useState(false)
+    const [data, setData] = useState([])
+    const getData = async () => {
+        try {
+            let res = await paymentProvider.getListCard()
+            setData(res)
+        } catch (error) {
+
+        }
+    }
     useEffect(() => {
+        getData()
         EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
             try {
                 console.log("<MoMoPay>Listen.Event::", response);
@@ -103,7 +114,11 @@ const ButtonPayment = ({
             case constants.PAYMENT_METHOD.ATM: //' ATM'
             case constants.PAYMENT_METHOD.VISA: // 'VISA'
             case constants.PAYMENT_METHOD.QR: //'Thanh toán QR code'
-                setIsVisible(true)
+                if (data.length) {
+                    setIsVisible(true)
+                } else {
+                    createBooking({})
+                }
                 break;
             case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
             case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
@@ -125,7 +140,7 @@ const ButtonPayment = ({
             <TouchableOpacity onPress={onPress} style={[styles.button, allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
                 <Text style={styles.datkham}>{title}</Text>
             </TouchableOpacity>
-            <ModalCardNumber isVisible={isVisible} onBackdropPress={onBackdropPress} onSend={onSend} />
+            <ModalCardNumber isVisible={isVisible} onBackdropPress={onBackdropPress} data={data} onSend={onSend} />
         </View>
     )
 }

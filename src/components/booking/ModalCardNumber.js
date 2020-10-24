@@ -7,25 +7,13 @@ import ItemPayment from '@components/payment/ItemPayment';
 import { withNavigation } from 'react-navigation';
 import snackbar from '@utils/snackbar-utils';
 const { width, height } = Dimensions.get('window')
-const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => {
-    const [data, setData] = useState([])
+const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation, data }) => {
     const [cardNumber, setCardNumber] = useState(null)
 
-    const getData = async () => {
-        try {
-            let res = await paymentProvider.getListCard()
-
-
-            setData(res)
-        } catch (error) {
-
-        }
-    }
-    const onCreateSuccess = () => {
-        getData()
-    }
+   
+    
     const onCreateNewCard = async () => {
-       onSend()
+        onSend()
     }
     const onSuccess = () => {
         if (!cardNumber) {
@@ -34,9 +22,7 @@ const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => 
         }
         onSend(cardNumber?.cardNumber)
     }
-    useEffect(() => {
-        getData()
-    }, [])
+  
     const onSelectCard = (item) => () => {
         if (!cardNumber)
             setCardNumber(item)
