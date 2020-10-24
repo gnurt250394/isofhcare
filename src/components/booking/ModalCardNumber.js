@@ -32,7 +32,7 @@ const ModalCardNumber = ({ isVisible, onBackdropPress, onSend, navigation }) => 
             snackbar.show('Vui lòng chọn thẻ để thanh toán', 'danger')
             return
         }
-        onSend(cardNumber?.id)
+        onSend(cardNumber?.cardNumber)
     }
     useEffect(() => {
         getData()
