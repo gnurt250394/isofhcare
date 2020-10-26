@@ -19,7 +19,6 @@ const defaultState = {
     },
     otpPhone: null,
     dataDrug: {},
-    listCategories: []
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
@@ -79,9 +78,6 @@ const reducer = (state = defaultState, action) => {
             return newState;
         case constants.action.action_add_drug:
             newState.dataDrug = action.value
-            return newState
-        case constants.action.action_add_categories:
-            newState.listCategories = action.value
             return newState
         case 'persist/REHYDRATE':
             if (action.payload && action.payload.auth && action.payload.auth.userApp && Object.keys(action.payload.auth.userApp).length) {

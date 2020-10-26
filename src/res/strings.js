@@ -1217,7 +1217,8 @@ module.exports = {
       list_news_by_topics: '/v1/topics',
       list_top_news: '/v1/topics/topicId/popular-news',
       list_keyword_news: '/v1/topics',
-      list_topics: '/v1/topics'
+      list_topics: '/v1/topics',
+      search_news_by_topic: '/v1/topics/'
     },
     payment: {
       get_list_card: isofhcare_service + 'payment/v1/alepay/profiles',

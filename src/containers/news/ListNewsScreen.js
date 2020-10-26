@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-    View, StyleSheet, FlatList, Text, TouchableOpacity
+    View, StyleSheet, FlatList, Text, TouchableOpacity, ActivityIndicator
 } from 'react-native'
 import ActivityPanel from '@components/ActivityPanel';
 import newsProvider from '@data-access/news-provider'
@@ -8,9 +8,10 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import dateUtils from 'mainam-react-native-date-utils';
 import Modal from "@components/modal";
 import CategoriesNews from '@components/news/CategoriesNews'
+import ListCategories from '@components/news/ListCategories'
 import redux from '@redux-store';
 import { connect } from 'react-redux';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 const ListNews = ({ navigation, props, }) => {
 
@@ -19,54 +20,76 @@ const ListNews = ({ navigation, props, }) => {
     const [size, setSize] = useState(20)
     const [loading, setLoading] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
-    const listCategories = useSelector((state) => state.auth.listCategories)
-
+    const [isNew, setIsNew] = useState(true)
+    const [idCategories, setIdCategories] = useState(null)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        onRefresh()
-    }, [])
-    const onRefresh = async () => {
-        await setPage(0)
-        getList(page, size)
+
+        getList()
+    }, [page, idCategories])
+
+    const onRefresh = () => {
+        setPage(0)
+        // getList(page, size)
     }
-    const getList = (page, size) => {
-        newsProvider.listNews(page, size).then(res => {
+    const getList = () => {
+        setLoading(true)
+        if (!idCategories) {
 
-            if (res && res.content?.length) {
-                setListNews(res.content)
-            }
-            setLoading(false)
-
-        }).catch(err => {
-            setLoading(false)
-
-        })
-    }
+            newsProvider.listNews(page, size).then(res => {
 
 
-    const loadMore = async () => {
-        if (listNews.length >= (page + 1) * size) {
-            await setPage(prevState + 1)
-            getList(page, size)
+                if (res) {
+                    setListNews(res.content)
+                }
+                setLoading(false)
+
+            }).catch(err => {
+                setLoading(false)
+
+            })
+        } else {
+
+            newsProvider.searchNewsByTopic(idCategories, page, size).then(res => {
+                if (res) {
+                    setListNews(res.content)
+                }
+                setLoading(false)
+
+            }).catch(err => {
+                setLoading(false)
+
+            })
         }
+
+    }
+
+
+    const loadMore = () => {
+
+        // if (listNews.length >= (page + 1) * size) {
+        //     setPage(page + 1)
+        //     // getList(page, size)
+        // }
     }
     const onBackdropPress = () => {
         setIsVisible(false)
     }
-    const renderItem = ({ item, index }) => {
+    const onShowDetails = (item, index) => {
+        navigation.navigate('detailNews', {
+            item,
+            idCategories
+        })
 
-        return (
-            <TouchableOpacity style={styles.viewItem}>
-                <ScaledImage height={70} width={143} source={require('@images/new/news/ic_demo.png')}></ScaledImage>
-                <View style={styles.viewTitle}>
-                    <Text style={styles.txTitle}>{item?.title?.rawText}</Text>
-                    <View style={styles.viewTime}>
-                        <ScaledImage source={require('@images/new/news/ic_time.png')} height={15}  ></ScaledImage>
-                        <Text style={styles.txTime} >{item?.createdAt?.toDateObject('-')?.format('dd/MM/yyyy') || '12/10/2020'}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity >
-        )
+    }
+    const onSelectTopics = () => {
+        setIsVisible(true)
+    }
+    const onSelectNew = async () => {
+        setIsNew(true)
+        setPage(0)
+        setIdCategories(null)
     }
     const footerComponent = () => {
         if (listNews.length >= (page + 1) * size) {
@@ -77,20 +100,52 @@ const ListNews = ({ navigation, props, }) => {
             return null
         }
     }
-    const onSelectTopics = () => {
-        setIsVisible(true)
+    const onSelectCategories = (item) => {
+        setIsNew(false)
+        setIsVisible(false)
+        setPage(0)
+        setIdCategories(item?.topicId)
+
+    }
+    const renderItem = ({ item, index }) => {
+        let date = item?.createdAt ? new Date(item?.createdAt) : ''
+        let urlImage = item?.images[0].downloadUri
+
+        return (
+            <TouchableOpacity onPress={() => onShowDetails(item, index)} style={styles.viewItem}>
+                <ScaledImage width={133} style={{ resizeMode: 'contain', height: 70 }} source={{ uri: `${urlImage}` }}></ScaledImage>
+                <View style={styles.viewTitle}>
+                    <Text style={styles.txTitle}>{item?.title?.rawText}</Text>
+                    <View style={styles.readingTime}>
+                        <View style={styles.viewTime}>
+                            <ScaledImage source={require('@images/new/news/ic_time.png')} height={15}  ></ScaledImage>
+                            <Text style={styles.txTime} >{date?.format('dd/MM/yyyy') || ''}</Text>
+                        </View>
+                        <View style={styles.viewTime}>
+                            <ScaledImage source={require('@images/new/news/ic_time_reading.png')} height={15}  ></ScaledImage>
+                            <Text style={styles.txTime} >{item?.estimatedReadingTime || 1} phút đọc</Text>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity >
+        )
     }
     return (
         <ActivityPanel
             title='Cẩm nang y tế'
-            container={styles.container}
+            isLoading={loading}
+            style={styles.container}
         >
-            <TouchableOpacity onPress={onSelectTopics} style={styles.btnTopics}>
-                <Text>
-                    Tất cả chuyên mục
-                </Text>
-                <ScaledImage style={styles.imagesDown} height={8} source={require('@images/new/news/ic_down.png')} />
-            </TouchableOpacity>
+            <View style={styles.viewHeader}>
+                <TouchableOpacity disabled={isNew} onPress={onSelectNew} style={[styles.btnItem, isNew ? styles.btnSelect : styles.btnUnselect]}>
+                    <Text style={[styles.txItem, isNew ? styles.txSelect : styles.txUnSelect]}>Mới nhất</Text>
+                </TouchableOpacity>
+                <ListCategories idCategories={idCategories} isNew={isNew} onSelectCategories={(item) => onSelectCategories(item)}></ListCategories>
+                <TouchableOpacity onPress={onSelectTopics} style={styles.btnTopics}>
+                    <ScaledImage style={styles.imagesDown} height={20} source={require('@images/new/news/ic_dots.png')} />
+                </TouchableOpacity>
+            </View>
+
             <FlatList
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
@@ -99,6 +154,7 @@ const ListNews = ({ navigation, props, }) => {
                 refreshing={loading}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.7}
+                showsVerticalScrollIndicator={false}
                 ListFooterComponent={footerComponent}
                 extraData={listNews}
             >
@@ -115,6 +171,9 @@ const ListNews = ({ navigation, props, }) => {
                 backdropTransitionOutTiming={1000}
             >
                 <CategoriesNews
+                    isNew={isNew}
+                    idCategories={idCategories}
+                    onSelectCategories={(item) => onSelectCategories(item)}
                     onCancel={onBackdropPress}
 
                 ></CategoriesNews>
@@ -124,22 +183,39 @@ const ListNews = ({ navigation, props, }) => {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+    },
+    txSelect: {
+        color: '#fff'
+    },
+    txUnSelect: {
+        color: '#3161AD'
+
+    },
+    txItem: {
+        fontSize: 14
+    },
+    viewHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
     },
     viewItem: {
         flexDirection: 'row',
         marginTop: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         flex: 1
     },
     txTitle: {
-        flexWrap: 'wrap',
-        fontSize: 16,
-        fontWeight: 'bold'
+        fontSize: 15,
+        fontWeight: 'bold',
+        width: '95%',
+        textAlign: 'left'
     },
     viewTitle: {
         paddingHorizontal: 10,
         width: '70%',
+        justifyContent: 'space-between',
     },
     viewTime: {
         marginTop: 10,
@@ -151,22 +227,50 @@ const styles = StyleSheet.create({
         color: '#2F3035'
     },
     btnTopics: {
-        flexDirection: 'row',
         alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: 10,
-        padding: 5
+        justifyContent: 'center',
+        alignSelf: 'flex-end',
+        margin: 10,
+        height: 42,
+        width: 42,
+        borderRadius: 16,
+        backgroundColor: '#fff',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     imagesDown: {
-        marginLeft: 5
     },
     modal: {
         flex: 1,
     },
+    readingTime: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingRight: 20,
+    },
+    viewHeight: { height: 50 },
+    btnItem: {
+        padding: 10,
+        marginRight: 10,
+        marginLeft: 10,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    btnSelect: {
+        backgroundColor: '#3161AD',
+
+
+    },
+    btnUnselect: {
+        backgroundColor: '#DEE6F2',
+    },
 })
-function mapStateToProps(state) {
-    return {
-        listCategories: state.auth.listCategories
-    };
-}
-export default connect(mapStateToProps)(ListNews);
+
+export default ListNews;
