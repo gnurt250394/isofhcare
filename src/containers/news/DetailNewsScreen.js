@@ -12,7 +12,6 @@ import newsProvider from '@data-access/news-provider'
 
 const { width, height } = Dimensions.get('window')
 const DetailNewsScreen = ({ navigation }) => {
-    const item = navigation.getParam('item', {})
     const [data, setData] = useState([])
     const [isLoading, setLoading] = useState(false)
     const [detail, setDetail] = useState(navigation.getParam('item', {}))
@@ -27,7 +26,7 @@ const DetailNewsScreen = ({ navigation }) => {
                     var dataNews = res.content
                     let indexOld = res.content?.findIndex(obj => obj.newsId == detail.newsId)
                     dataNews.splice(indexOld, 1)
-                    console.log('dataNews: ', dataNews);
+
 
                     setData(dataNews)
                 }
@@ -59,7 +58,7 @@ const DetailNewsScreen = ({ navigation }) => {
     useEffect(() => {
         // getServiceHighLight()
         getList()
-    }, [item.newsId])
+    }, [detail.newsId])
     const getTime = () => {
         if (detail?.createdDate) {
             let time = detail?.createdDate?.substring(0, 10)
@@ -108,7 +107,7 @@ const DetailNewsScreen = ({ navigation }) => {
                                     allowFontScaling={false}
                                     renderers={{
                                         img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-                                            return <FastImage source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height), resizeMode: 'contain' }} />
+                                            return <FastImage source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height) || 150, resizeMode: 'contain' }} />
                                         }
                                     }}
                                 />
