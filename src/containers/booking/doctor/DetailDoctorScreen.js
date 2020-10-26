@@ -345,7 +345,7 @@ class DetailsDoctorScreen extends Component {
                 </View>
                 <View style={styles.groupQuantityBooking}>
                   <Text>{constants.booking.quantity_advisory}</Text>
-                  <Text style={styles.rating}>{profileDoctor.advices}</Text>
+                  <Text style={styles.rating}>{profileDoctor.onlineAppointments}</Text>
                 </View>
                 <TouchableOpacity onPress={this.ratingDoctor} style={styles.groupRating}>
                   <Text>{constants.booking.rating}</Text>
