@@ -8,82 +8,46 @@ import { useSelector } from 'react-redux'
 import { connect } from 'react-redux';
 const CategoriesNews = (props, listCategories) => {
     const [listTopics, setListTopics] = useState([])
-    const [listSelected, setListSelected] = useState(useSelector((state) => state.auth.listCategories))
-
+    const [listSelected, setListSelected] = useState(useSelector((state) => state.auth.categoriesSelected))
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(0)
     const [size, setSize] = useState(20)
-
-
-
     const onFinish = () => {
-        props.dispatch(redux.categoriesSelected(listSelected));
-        props.onCancel()
+        props.onCancel(itemSelected)
     }
-
     useEffect(() => {
-        onRefresh()
-    }, [])
-    const onRefresh = async () => {
-        await setPage(0)
-        await setLoading(true)
-        onGetList(page, size)
-    }
-    const onGetList = (page, size) => {
+        onGetList()
+    }, [page])
+    const onGetList = () => {
         newsProvider.listTopics(page, size).then(res => {
-
-            if (res?.content?.length) {
-                let listTopics = res.content
-                setListTopics(res.content)
-            } else {
-                var list = [{ id: 1, name: 'Răng hàm mặt' }, { id: 2, name: 'Răng hàm mặt' }, { id: 3, name: 'Răng hàm mặt' }, { id: 4, name: 'Răng hàm mặt' }, { id: 5, name: 'Răng hàm mặt' }, { id: 5, name: 'Răng hàm mặt' }, { id: 6, name: 'Răng hàm mặt' }, { id: 7, name: 'Răng hàm mặt' }, { id: 8, name: 'Răng hàm mặt' }, { id: 9, name: 'Răng hàm mặt' }, { id: 10, name: 'Răng hàm mặt' }, { id: 11, name: 'Răng hàm mặt' }, { id: 12, name: 'Răng hàm mặt' }, { id: 13, name: 'Răng hàm mặt' }, { id: 14, name: 'Răng hàm mặt' }, { id: 15, name: 'Răng hàm mặt' }, { id: 16, name: 'Răng hàm mặt' }, { id: 17, name: 'Răng hàm mặt' }, { id: 18, name: 'Răng hàm mặt' },]
-                listSelected.map(obj => {
-                    if (obj.selected) {
-                        let index = list.findIndex(obj1 => obj1.id == obj.id)
-
-                        list[index].selected = true
+            if (res?.content) {
+                var listTopics = res.content
+                if (props.idCategories) {
+                    let indexOld = listTopics.findIndex(obj => obj.topicId == props.idCategories)
+                    if (indexOld !== -1) {
+                        listTopics[indexOld].selected = true
                     }
-                })
-
-                setListTopics([...list])
-
+                }
+                setListTopics([...listTopics])
             }
             setLoading(false)
         }).catch(err => {
-            var list = [{ id: 1, name: 'Răng hàm mặt' }, { id: 2, name: 'Răng hàm mặt' }, { id: 3, name: 'Răng hàm mặt' }, { id: 4, name: 'Răng hàm mặt' }, { id: 5, name: 'Răng hàm mặt' }, { id: 5, name: 'Răng hàm mặt' }, { id: 6, name: 'Răng hàm mặt' }, { id: 7, name: 'Răng hàm mặt' }, { id: 8, name: 'Răng hàm mặt' }, { id: 9, name: 'Răng hàm mặt' }, { id: 10, name: 'Răng hàm mặt' }, { id: 11, name: 'Răng hàm mặt' }, { id: 12, name: 'Răng hàm mặt' }, { id: 13, name: 'Răng hàm mặt' }, { id: 14, name: 'Răng hàm mặt' }, { id: 15, name: 'Răng hàm mặt' }, { id: 16, name: 'Răng hàm mặt' }, { id: 17, name: 'Răng hàm mặt' }, { id: 18, name: 'Răng hàm mặt' },]
-            listSelected.map(obj => {
-                if (obj.selected) {
-                    let index = list.findIndex(obj1 => obj1.id == obj.id)
-                    list[index].selected = true
-                }
-            })
-            setListTopics([...list])
             setLoading(false)
-
         })
     }
-    const onSelectItem = (item, index) => {
-        var listSelectedOld = listSelected
-        var listTopicsOld = listTopics
-        if (item?.selected) {
-            item.selected = false
-            let indexOld = listSelectedOld.findIndex(obj => obj.id = item.id)
-            listSelectedOld.splice(indexOld, 1)
-        } else {
-            item.selected = true
-            listSelectedOld.push(item)
-        }
-        listTopicsOld[index] = item
-        setListSelected([...listSelectedOld])
-        setListTopics([...listTopicsOld])
+    const onSelectItem = (item) => {
+        props.onSelectCategories(item)
+
     }
     const renderItem = ({ item, index }) => {
+
+
         return (
             <TouchableOpacity
                 style={[styles.btnItem, item?.selected ? styles.backgroundBlue : styles.backgroundWrite]}
-                onPress={() => onSelectItem(item, index)}>
+                onPress={() => onSelectItem(item)}>
                 <Text style={[item?.selected ? styles.txWrite : styles.txBlue]}>
-                    {item?.name}
+                    {item?.name?.rawText}
                 </Text>
             </TouchableOpacity>
         )
@@ -103,15 +67,9 @@ const CategoriesNews = (props, listCategories) => {
                 />
             </TouchableOpacity>
             <View style={styles.viewHeader}>
-                <View></View>
                 <Text style={styles.txHeader}>
                     Chuyên mục
                 </Text>
-                <TouchableOpacity style={styles.btnFinish} onPress={onFinish}>
-                    <Text style={styles.txFinish}>
-                        Xong
-                    </Text>
-                </TouchableOpacity>
             </View>
             <View style={styles.viewFlatList}>
                 <FlatList
@@ -160,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundWrite: { backgroundColor: '#3161AD20' },
     flatList: {},
     viewFlatList: { alignItems: 'center', flex: 1 },
-    viewHeader: { marginBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', },
+    viewHeader: { marginBottom: 20, alignItems: 'center', justifyContent: 'center', },
     txHeader: { fontSize: 20, fontWeight: 'bold', },
     btnFinish: { padding: 5, alignSelf: 'flex-end' },
     txFinish: {

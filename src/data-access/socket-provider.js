@@ -1,6 +1,6 @@
-import React, {createContext, useEffect, useRef} from 'react';
+import React, { createContext, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import VoipPushNotification from 'react-native-voip-push-notification';
 import firebase from 'react-native-firebase';
@@ -9,14 +9,13 @@ import constants from '@resources/strings';
 
 const WebSocketContext = createContext(null);
 
-export {WebSocketContext};
+export { WebSocketContext };
 
-export default ({children}) => {
+export default ({ children }) => {
   let socket = useRef();
   const tokenFirebase = useRef('');
   let ws;
   const userApp = useSelector(state => state.auth.userApp);
-  console.log('userApp: 111', userApp);
 
   const clearSocket = () => {
     if (socket.current) socket.current.disconnect();
@@ -28,7 +27,7 @@ export default ({children}) => {
   const listen = (event, data, callback) => {
     if (socket.current) socket.current.on(event, data, callback);
   };
-  
+
   const connectSocket = token => {
     return new Promise((resolve, reject) => {
       if (token) {
@@ -61,7 +60,7 @@ export default ({children}) => {
       }
     });
   };
-  
+
 
   return (
     <WebSocketContext.Provider
