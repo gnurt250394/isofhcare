@@ -662,16 +662,21 @@ class ListProfileScreen extends Component {
 
     }
     renderBtn = () => {
-        let accountSource = this.props.userApp.currentUser.accountSource
-        if (accountSource !== "VENDOR") {
-            return (
-                <TouchableOpacity style={styles.btnAdd} onPress={this.createProfile}>
-                    <ScaledImage style={styles.iconEdit} height={25} source={require('@images/new/profile/ic_add_profile.png')}></ScaledImage>
-                </TouchableOpacity>
-            )
-        } else {
-            return
-        }
+        // let accountSource = this.props.userApp.currentUser.accountSource
+        // if (accountSource !== "VENDOR") {
+        //     return (
+        //         <TouchableOpacity style={styles.btnAdd} onPress={this.createProfile}>
+        //             <ScaledImage style={styles.iconEdit} height={25} source={require('@images/new/profile/ic_add_profile.png')}></ScaledImage>
+        //         </TouchableOpacity>
+        //     )
+        // } else {
+        //     return
+        // }
+        return (
+            <TouchableOpacity style={styles.btnAdd} onPress={this.createProfile}>
+                <ScaledImage style={styles.iconEdit} height={25} source={require('@images/new/profile/ic_add_profile.png')}></ScaledImage>
+            </TouchableOpacity>
+        )
     }
     render() {
         return (
