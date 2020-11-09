@@ -10,7 +10,7 @@ const server_url = "https://api.produce.isofhcare.com/isofhcare/"; //release
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
-const resource_url = "https://storage.googleapis.com/isofhcare-storage/"; //release
+const resource_url = "https://isofhcare-backup.s3-ap-southeast-1.amazonaws.com/"; //release
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 50000;
