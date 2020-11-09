@@ -1,6 +1,6 @@
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import constants from '@resources/strings';
 const server_url = 'http://10.0.0.98:9451'; //dev
 
@@ -10,7 +10,8 @@ const server_url = 'http://10.0.0.98:9451'; //dev
 // const server_url = "http://34.95.91.81"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
-const resource_url = 'http://10.0.50.86:8288/v1/'; //test
+const resource_url =
+  'https://isofhcare-backup.s3-ap-southeast-1.amazonaws.com/'; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
 
@@ -21,7 +22,7 @@ let appVersion = DeviceInfo.getReadableVersion();
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
-  function (defaultValue) {
+  function(defaultValue) {
     var _this = this.toString();
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -52,12 +53,12 @@ String.prototype.absoluteUrl =
     // if(this.startsWith("user"))
 
     //     return
-    return 'http://123.24.206.9:38288/v1/' + _this + '';
+    return resource_url + _this + '';
   };
 
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
-  function (defaultValue) {
+  function(defaultValue) {
     let _this = this ? this.toString() : '';
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -69,13 +70,13 @@ String.prototype.getServiceUrl =
   };
 
 module.exports = {
-  auth: "",
-  serverApi: server_url + "/",
-  serviceSchedule: "http://10.0.0.98:8080/",
-  serviceBooking: "http://10.0.0.98:8082/",
-  serviceImage: "https://api.produce.isofhcare.com/isofhcare/",
-  serviceChats: "http://10.0.0.98:8085/",
-  serviceCovid: "http://10.0.0.88:49396/",
+  auth: '',
+  serverApi: server_url + '/',
+  serviceSchedule: 'http://10.0.0.98:8080/',
+  serviceBooking: 'http://10.0.0.98:8082/',
+  serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
+  serviceChats: 'http://10.0.0.98:8085/',
+  serviceCovid: 'http://10.0.0.88:49396/',
   serviceNews: 'http://10.0.0.98:36545',
   requestPayment: 'http://10.0.0.98:8083/',
   response: {
