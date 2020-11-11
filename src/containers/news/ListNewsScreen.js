@@ -12,7 +12,6 @@ import ListCategories from '@components/news/ListCategories'
 import redux from '@redux-store';
 import { connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux'
-
 const ListNews = ({ navigation, props, }) => {
 
     const [listNews, setListNews] = useState([])
@@ -106,7 +105,9 @@ const ListNews = ({ navigation, props, }) => {
 
     }
     const renderItem = ({ item, index }) => {
-        let date = item?.createdAt ? new Date(item?.createdAt) : ''
+
+        let date = item?.createdAt ? new Date(item?.createdAt.replace('+0000', '')) : ''
+
         let urlImage = item?.images[0].downloadUri
 
         return (
@@ -128,7 +129,7 @@ const ListNews = ({ navigation, props, }) => {
             </TouchableOpacity >
         )
     }
-    console.log(loading, 'loading');
+
     return (
         <ActivityPanel
             title='Cẩm nang y tế'
