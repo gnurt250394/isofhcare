@@ -1211,7 +1211,7 @@ module.exports = {
       blood_pressure: isofhcare_service + 'monitoring/blood-pressure',
     },
     news: {
-      list_news: '/v1/news',
+      list_news: '/v1/medical-news',
       details: '/v1/news/newsId',
       list_news_by_topics: '/v1/topics',
       list_top_news: '/v1/topics/topicId/popular-news',

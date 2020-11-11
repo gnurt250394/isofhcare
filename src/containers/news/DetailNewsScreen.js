@@ -15,7 +15,7 @@ const DetailNewsScreen = ({ navigation }) => {
     const [data, setData] = useState([])
     const [isLoading, setLoading] = useState(false)
     const [detail, setDetail] = useState(navigation.getParam('item', {}))
-    const [idCategories, setIdCategories] = useState(navigation.getParam('idCategories', null))
+    const [idCategories, setIdCategories] = useState(detail?.topic?.topicId)
 
     const getList = () => {
         setLoading(true)
@@ -107,21 +107,21 @@ const DetailNewsScreen = ({ navigation }) => {
                                     allowFontScaling={false}
                                     renderers={{
                                         img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-                                            return <FastImage source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height) || 150, resizeMode: 'contain' }} />
+                                            return <FastImage resizeMode={'contain'} source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height) || 150, resizeMode: 'contain' }} />
                                         }
                                     }}
                                 />
                                 : null
                         }
                     </View>
-                    <View style={styles.containerButton}>
+                    {/* <View style={styles.containerButton}>
                         <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
                         <TouchableOpacity
                             onPress={onGoToTest}
                             style={styles.buttonTest}>
                             <Text style={styles.btxtTest}>KIỂM TRA COVID NGAY</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     {data.length ?
                         <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                             <View style={styles.viewAds}>

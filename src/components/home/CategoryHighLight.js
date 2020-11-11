@@ -79,8 +79,8 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
         return text.formatPrice()
     }
     const onShowAll = () => {
+        navigation.navigate('listServices')
 
-        navigation.navigate('listNews')
     }
     const renderItem = ({ item, index }) => {
         return (
