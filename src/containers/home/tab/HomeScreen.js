@@ -435,10 +435,6 @@ class HomeScreen extends Component {
                 {/* </View> */}
               </View>
               <View style={styles.containerButton}>{this.renderButton()}</View>
-              <NewsHighLight
-                {...this.props}
-                refreshing={this.state.refreshing}
-              />
               <HospitalHighLight
                 {...this.props}
                 refreshing={this.state.refreshing}
@@ -451,7 +447,10 @@ class HomeScreen extends Component {
                 {...this.props}
                 refreshing={this.state.refreshing}
               />
-
+              <NewsHighLight
+                {...this.props}
+                refreshing={this.state.refreshing}
+              />
               <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
           </ScrollView>
