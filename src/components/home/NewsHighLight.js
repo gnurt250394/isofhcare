@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
-    cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, width: 259 },
+    cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', width: 259 },
     txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
 
 });
