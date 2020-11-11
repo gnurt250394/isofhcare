@@ -5,15 +5,18 @@ import serviceProvider from '@data-access/service-provider'
 import homeProvider from '@data-access/home-provider'
 import FastImage from 'react-native-fast-image'
 import { useSelector } from 'react-redux'
+import newsProvider from '@data-access/news-provider'
+
 const NewsHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
     const userApp = useSelector((state) => state.auth.userApp)
     const getServiceHighLight = async () => {
         try {
-            let res = await homeProvider.listNewsCovid()
+            let res = await newsProvider.listNews(0, 25)
 
-            if (res?.code == 200) {
-                setData(res.data.news)
+
+            if (res?.content?.length) {
+                setData(res.content)
             } else {
                 setData([])
 
@@ -33,19 +36,23 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
             getServiceHighLight()
     }, [refreshing])
     const goToDetailService = (item) => () => {
-
-        navigation.navigate('detailNewsHighlight', { item, data })
+        navigation.navigate('detailNews', {
+            item,
+            // idCategories
+        })
     }
     const renderItem = ({ item, index }) => {
+        let urlImage = item?.images[0].downloadUri
+
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
                     <FastImage
-                        source={{ uri: item?.image?.absoluteUrl() || '' }}
+                        source={{ uri: urlImage || '' }}
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item ? item.title : ""}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.title?.rawText || ""}</Text>
             </TouchableOpacity>
         )
     }
@@ -57,7 +64,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
-                    <Text style={styles.txAds}>TIN TỨC Y TẾ</Text>
+                    <Text style={styles.txAds}>CẨM NANG Y TẾ</Text>
                     <TouchableOpacity onPress={onShowAll} style={styles.btnViewAll}>
                         <Text style={styles.txViewAll}>Xem tất cả</Text>
                     </TouchableOpacity>

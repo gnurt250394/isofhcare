@@ -17,7 +17,7 @@ const ListNews = ({ navigation, props, }) => {
 
     const [listNews, setListNews] = useState([])
     const [page, setPage] = useState(0)
-    const [size, setSize] = useState(20)
+    const [size, setSize] = useState(100)
     const [loading, setLoading] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
     const [isNew, setIsNew] = useState(true)
@@ -38,7 +38,6 @@ const ListNews = ({ navigation, props, }) => {
         if (!idCategories) {
 
             newsProvider.listNews(page, size).then(res => {
-
 
                 if (res) {
                     setListNews(res.content)
@@ -68,10 +67,10 @@ const ListNews = ({ navigation, props, }) => {
 
     const loadMore = () => {
 
-        // if (listNews.length >= (page + 1) * size) {
-        //     setPage(page + 1)
-        //     // getList(page, size)
-        // }
+        if (listNews.length >= (page + 1) * size) {
+            // setPage(page + 1)
+            // getList(page, size)
+        }
     }
     const onBackdropPress = () => {
         setIsVisible(false)
@@ -79,7 +78,6 @@ const ListNews = ({ navigation, props, }) => {
     const onShowDetails = (item, index) => {
         navigation.navigate('detailNews', {
             item,
-            idCategories
         })
 
     }
@@ -130,6 +128,7 @@ const ListNews = ({ navigation, props, }) => {
             </TouchableOpacity >
         )
     }
+    console.log(loading, 'loading');
     return (
         <ActivityPanel
             title='Cẩm nang y tế'
@@ -151,7 +150,7 @@ const ListNews = ({ navigation, props, }) => {
                 keyExtractor={(item, index) => index.toString()}
                 data={listNews}
                 onRefresh={onRefresh}
-                refreshing={loading}
+                refreshing={false}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.7}
                 showsVerticalScrollIndicator={false}

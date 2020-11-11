@@ -113,7 +113,7 @@ class HomeScreen extends Component {
               this.props.navigation.navigate('ehealth');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'ehealth'},
+                nextScreen: { screen: 'ehealth' },
               });
           },
         },
@@ -158,7 +158,7 @@ class HomeScreen extends Component {
         {
           icon: require('@images/new/homev2/ic_monitoring.png'),
           text: 'Nhật ký SK',
-            new: true,
+          new: true,
           onPress: () => {
             // snackbar.show('Tính năng đang phát triển')
             // return
@@ -338,13 +338,13 @@ class HomeScreen extends Component {
                 <Text style={[styles.label, { paddingHorizontal: 10 }]}>
                   {item.text}
                 </Text>
-                  {
-                    item.new ?
-                      <View style={[styles.containerNew]}>
-                        <Text >Mới</Text>
-                      </View>
-                      : null
-                  }
+                {
+                  item.new ?
+                    <View style={[styles.containerNew]}>
+                      <Text >Mới</Text>
+                    </View>
+                    : null
+                }
               </TouchableOpacity>
             )}
         </Animatable.View>
@@ -435,6 +435,10 @@ class HomeScreen extends Component {
                 {/* </View> */}
               </View>
               <View style={styles.containerButton}>{this.renderButton()}</View>
+              <NewsHighLight
+                {...this.props}
+                refreshing={this.state.refreshing}
+              />
               <HospitalHighLight
                 {...this.props}
                 refreshing={this.state.refreshing}
@@ -447,10 +451,7 @@ class HomeScreen extends Component {
                 {...this.props}
                 refreshing={this.state.refreshing}
               />
-              <NewsHighLight
-                {...this.props}
-                refreshing={this.state.refreshing}
-              />
+
               <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
           </ScrollView>
@@ -464,15 +465,15 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    containerNew: {
-      backgroundColor: '#FFE600',
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      paddingHorizontal: 5,
-      paddingVertical: 3,
-      borderRadius: 5
-    },
+  containerNew: {
+    backgroundColor: '#FFE600',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 5
+  },
   containerImageDoctor: {
     borderRadius: 6,
     elevation: 4,

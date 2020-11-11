@@ -44,9 +44,10 @@ const CategoriesNews = (props, listCategories) => {
 
         return (
             <TouchableOpacity
+                key={index}
                 style={[styles.btnItem, item?.selected ? styles.backgroundBlue : styles.backgroundWrite]}
                 onPress={() => onSelectItem(item)}>
-                <Text style={[item?.selected ? styles.txWrite : styles.txBlue]}>
+                <Text r style={[item?.selected ? styles.txWrite : styles.txBlue]}>
                     {item?.name?.rawText}
                 </Text>
             </TouchableOpacity>
@@ -91,7 +92,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         borderRadius: 10,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        marginVertical: 20
     },
     btnCancel: {
         padding: 5,
@@ -103,21 +105,24 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     btnItem: {
-        paddingHorizontal: 25,
+        paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 100,
-        margin: 5
-
+        marginLeft: 5,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        flex: 1 / 2
     },
     txBlue: {
         color: '#3161ad',
         fontSize: 14,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     backgroundBlue: { backgroundColor: '#3161AD' },
     backgroundWrite: { backgroundColor: '#3161AD20' },
     flatList: {},
-    viewFlatList: { alignItems: 'center', flex: 1 },
+    viewFlatList: { flex: 1, padding: 10, },
     viewHeader: { marginBottom: 20, alignItems: 'center', justifyContent: 'center', },
     txHeader: { fontSize: 20, fontWeight: 'bold', },
     btnFinish: { padding: 5, alignSelf: 'flex-end' },
