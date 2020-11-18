@@ -148,7 +148,7 @@ class ConfirmBookingDoctorScreen extends Component {
                         case constants.PAYMENT_METHOD.QR:
                             this.props.navigation.navigate("paymenntAlePay", {
                                 urlPayment: res.checkoutUrl,
-                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.payment.VISA,
+                                title: constants.PAYMENT_METHOD.ATM == this.state.paymentMethod ? constants.payment.ATM : constants.PAYMENT_METHOD.QR == this.state.paymentMethod ? constants.payment.QR : constants.payment.VISA,
                                 onSuccess: this.onSuccess
                             });
                             break;
