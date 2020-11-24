@@ -353,7 +353,8 @@ class AddBookingScreen extends Component {
                                 logEventFB('booking')
                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
                                 this.props.navigation.navigate("confirmBooking", {
-                                    booking: s
+                                    booking: s, 
+                                    profile:this.state.profile
                                 });
                             } else {
                                 snackbar.show(constants.msg.booking.booking_err, "danger");
