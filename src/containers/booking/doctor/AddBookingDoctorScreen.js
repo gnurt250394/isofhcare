@@ -300,7 +300,8 @@ class AddBookingDoctorScreen extends Component {
                                     voucher: this.state.voucher,
                                     booking: s,
                                     bookingDate: this.state.bookingDate,
-                                    isOnline: this.state.isOnline
+                                    isOnline: this.state.isOnline,
+                                    profile: this.state.profile
                                     // }
                                     // }
                                 });
