@@ -21,13 +21,13 @@ class TopNews extends Component {
         this.getData()
     }
     getData = () => {
-        homeProvider.getNews().then(res => {
+        newsProvider.listNews(0, 25).then(res => {
             this.setState({
-                dataNews: res
+                dataNews: res.content
             })
 
         }).catch(err => {
-            console.log(err);
+
         })
     }
     componentWillReceiveProps(nextProps) {

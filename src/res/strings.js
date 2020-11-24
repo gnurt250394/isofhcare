@@ -1204,5 +1204,18 @@ module.exports = {
       body_temperature: isofhcare_service + 'monitoring/body-temperature',
       blood_pressure: isofhcare_service + 'monitoring/blood-pressure',
     },
+    news: {
+      list_news: '/v1/news',
+      details: '/v1/news/newsId',
+      list_news_by_topics: '/v1/topics',
+      list_top_news: '/v1/topics/topicId/popular-news',
+      list_keyword_news: '/v1/topics',
+      list_topics: '/v1/topics',
+      search_news_by_topic: '/v1/topics/'
+    },
+    payment: {
+      get_list_card: isofhcare_service + 'payment/v1/alepay/profiles',
+      create_new_card: isofhcare_service + 'payment/v1/alepay/request-profile'
+    }
   },
 };

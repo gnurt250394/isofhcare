@@ -88,6 +88,7 @@ module.exports = {
         return function (dispatch, getState) {
             dispatch(_getDrug(data))
         }
-    }
+    },
+
 
 }

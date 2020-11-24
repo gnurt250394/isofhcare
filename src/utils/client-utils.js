@@ -19,7 +19,7 @@ let appVersion = DeviceInfo.getReadableVersion();
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     var _this = this.toString();
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -55,7 +55,7 @@ String.prototype.absoluteUrl =
 
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     let _this = this ? this.toString() : '';
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -74,6 +74,7 @@ module.exports = {
   serviceChats: "http://10.0.0.88:8085/",
   serviceCovid: "http://10.0.0.88:49396/",
   serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
+  serviceNews: 'http://10.0.0.88:36545',
   response: {
     ok(data, message) {
       if (!message) message = '';

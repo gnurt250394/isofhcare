@@ -18,7 +18,7 @@ const defaultState = {
 
     },
     otpPhone: null,
-    dataDrug: {}
+    dataDrug: {},
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
