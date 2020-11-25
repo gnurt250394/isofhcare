@@ -412,7 +412,7 @@ class EditProfileScreen extends Component {
             let data = {
               name: this.state.name,
               dob: this.state.dob ? this.state.dob.format('yyyy-MM-dd') : null,
-              gender: this.state.gender ? this.state.gender : null,
+              gender: this.state.gender ? this.state.gender?.toString() : '0',
               passport: this.state.userPassport
                 ? this.state.userPassport
                 : null,
@@ -442,6 +442,7 @@ class EditProfileScreen extends Component {
             profileProvider
               .updateProfile(id, data)
               .then(res => {
+                this.setState({isLoading: false});
                 switch (res.code) {
                   case 0:
                     this.props.navigation.pop();
@@ -459,9 +460,15 @@ class EditProfileScreen extends Component {
                       'danger',
                     );
                     break;
+                  default:
+                    snackbar.show('Cập nhật hồ sơ thất bại', 'danger');
+                    break;
                 }
               })
-              .catch(err => {});
+              .catch(err => {
+                snackbar.show('Cập nhật hồ sơ thất bại', 'danger');
+                this.setState({isLoading: false});
+              });
           },
         );
       })
