@@ -535,12 +535,17 @@ class ConfirmBookingScreen extends Component {
                     break;
                 }
               } else {
+                this.setState({isLoading: false});
                 snackbar.show(constants.msg.booking.booking_err2, 'danger');
               }
             })
             .catch(err => {
-              snackbar.show(constants.msg.booking.booking_err2, 'danger');
               this.setState({isLoading: false});
+              if (err?.response?.status == 406) {
+                this.setState({isVisibleModal: true});
+                return;
+              }
+              snackbar.show(constants.msg.booking.booking_err2, 'danger');
             });
         });
       })
