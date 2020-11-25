@@ -61,7 +61,7 @@ class HomeScreen extends Component {
       featuresBooking: [
         {
           icon: require('@images/new/homev2/ic_symptom.png'),
-          text: 'Dịch vụ',
+          text: 'Dịch vụ y tế',
           onPress: () => {
             this.props.navigation.navigate('listServices');
             return;
@@ -79,7 +79,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_hospital.png'),
           text: 'Cơ sở Y tế',
           onPress: () => {
-            this.props.navigation.navigate('addBooking1');
+            this.props.navigation.navigate('selectHospital');
           },
         },
         // {
@@ -113,7 +113,7 @@ class HomeScreen extends Component {
               this.props.navigation.navigate('ehealth');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'ehealth'},
+                nextScreen: { screen: 'ehealth' },
               });
           },
         },
@@ -166,6 +166,21 @@ class HomeScreen extends Component {
             //   isVideoCall: true,
             //   profile: {doctor:{name:'trung'},patient:{name:"hihi"}}
             // });
+          },
+        },
+        {
+          icon: require('@images/new/homev2/ic_monitoring.png'),
+          text: 'Nhật ký SK',
+          new: true,
+          onPress: () => {
+            // snackbar.show('Tính năng đang phát triển')
+            // return
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate('healthMonitoring');
+            else
+              this.props.navigation.navigate('login', {
+                nextScreen: { screen: 'healthMonitoring' },
+              });
           },
         },
       ],
@@ -275,7 +290,7 @@ class HomeScreen extends Component {
                   />
                 </View>
                 <Text style={[styles.label, {fontSize: 15, color: '#3161AD'}]}>
-                  {item.text}
+                  {item.text.toUpperCase()}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -319,25 +334,32 @@ class HomeScreen extends Component {
           {item.empty ? (
             <View style={[styles.viewEmpty]} />
           ) : (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {marginTop: 10},
-                {width: this.getItemWidth()},
-              ]}
-              onPress={item.onPress}>
-              <View style={styles.groupImageButton}>
-                <ScaledImage
-                  style={[styles.icon]}
-                  source={item.icon}
-                  height={54}
-                />
-              </View>
-              <Text style={[styles.label, {paddingHorizontal: 10}]}>
-                {item.text}
-              </Text>
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  { marginTop: 10 },
+                  { width: this.getItemWidth() },
+                ]}
+                onPress={item.onPress}>
+                <View style={styles.groupImageButton}>
+                  <ScaledImage
+                    style={[styles.icon]}
+                    source={item.icon}
+                    height={54}
+                  />
+                </View>
+                <Text style={[styles.label, { paddingHorizontal: 10 }]}>
+                  {item.text}
+                </Text>
+                {
+                  item.new ?
+                    <View style={[styles.containerNew]}>
+                      <Text >Mới</Text>
+                    </View>
+                    : null
+                }
+              </TouchableOpacity>
+            )}
         </Animatable.View>
       );
     });
@@ -455,6 +477,15 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  containerNew: {
+    backgroundColor: '#FFE600',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 5
+  },
   containerImageDoctor: {
     borderRadius: 6,
     elevation: 4,

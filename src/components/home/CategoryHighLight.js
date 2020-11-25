@@ -115,11 +115,22 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
             </TouchableOpacity >
         )
     }
+    const goTolist=()=>{
+        navigation.navigate('listServices')
+    }
     if (data?.length) {
         return (
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>DỊCH VỤ NỔI BẬT</Text>
+                    <TouchableOpacity
+                        onPress={goTolist}
+                        hislop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                        style={{
+                            paddingRight: 10
+                        }}>
+                        <Text style={{ color: '#009BF2' }}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}

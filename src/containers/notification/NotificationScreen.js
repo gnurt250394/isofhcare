@@ -69,7 +69,7 @@ class NotificationScreen extends Component {
   };
 
   handleHardwareBack = () => {
-    this.props.navigation.goBack();
+    // this.props.navigation.goBack();
     return true;
   };
   componentWillReceiveProps(nextProps) {
