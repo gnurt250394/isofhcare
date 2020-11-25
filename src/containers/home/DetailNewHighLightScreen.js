@@ -6,6 +6,9 @@ import snackbar from "@utils/snackbar-utils";
 import ReadMoreText from '@components/ReadMoreText';
 import homeProvider from '@data-access/home-provider'
 import ScaledImage from 'mainam-react-native-scaleimage';
+import FastImage from 'react-native-fast-image'
+import Webview from 'react-native-webview'
+const { width, height } = Dimensions.get('window')
 const DetailNewHighLightScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
     const [data, setData] = useState([])
@@ -52,10 +55,9 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
-                    <ScaledImage
-                        uri={item?.image?.absoluteUrl() || ''}
-                        height={134}
-                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+                    <FastImage
+                        source={{ uri: item?.image?.absoluteUrl() || '' }}
+                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
                 <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item.title}</Text>
@@ -76,13 +78,16 @@ const DetailNewHighLightScreen = ({ navigation }) => {
                             color: '#00000070',
                             paddingBottom: 10
                         }}>{getTime()}</Text>
-                        <Image source={{ uri: detail?.image?.absoluteUrl() || '' }} style={styles.imageNews} />
+                        <FastImage source={{ uri: detail?.image?.absoluteUrl() || '' }} style={styles.imageNews} />
                         {
                             detail?.content ?
                                 <HTML html={'<div style="color: black">' + detail?.content + '</div>'}
                                     allowFontScaling={false}
-                                    imagesMaxWidth={Dimensions.get('window').width - 30}
-                                    imagesInitialDimensions={{ width: Dimensions.get('window').width - 30, height: (Dimensions.get('window').width - 30) * 1.5, }}
+                                    renderers={{
+                                        img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+                                            return <FastImage source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height), resizeMode: 'contain' }} />
+                                        }
+                                    }}
                                 />
                                 : null
                         }
