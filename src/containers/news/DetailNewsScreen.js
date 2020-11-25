@@ -6,35 +6,59 @@ import snackbar from "@utils/snackbar-utils";
 import ReadMoreText from '@components/ReadMoreText';
 import homeProvider from '@data-access/home-provider'
 import ScaledImage from 'mainam-react-native-scaleimage';
-const DetailNewHighLightScreen = ({ navigation }) => {
-    const item = navigation.getParam('item', {})
+import FastImage from 'react-native-fast-image'
+import Webview from 'react-native-webview'
+import newsProvider from '@data-access/news-provider'
+
+const { width, height } = Dimensions.get('window')
+const DetailNewsScreen = ({ navigation }) => {
     const [data, setData] = useState([])
-    const [isLoading, setLoading] = useState(true)
-    const [detail, setDetail] = useState({})
-    const getServiceHighLight = async () => {
-        try {
-            let res = await homeProvider.listNewsCovid()
-            let resDetail = await homeProvider.getDetailNewsCovid(item.id)
-            setLoading(false)
-            if (res?.code == 200) {
-                const list = [...res.data.news].filter(e => e.id != item.id).slice(0, 5)
-                setData(list)
-            }
-            if (resDetail.code == 200) {
-                setDetail(resDetail?.data || {})
-            }
+    const [isLoading, setLoading] = useState(false)
+    const [detail, setDetail] = useState(navigation.getParam('item', {}))
+    const [idCategories, setIdCategories] = useState(detail?.topic?.topicId)
 
-        } catch (error) {
+    const getList = () => {
+        setLoading(true)
+        if (!idCategories) {
 
-            setLoading(false)
-            setData([])
+            newsProvider.listNews(0, 6).then(res => {
+                if (res?.content?.length) {
+                    var dataNews = res.content
+                    let indexOld = res.content?.findIndex(obj => obj.newsId == detail.newsId)
+                    dataNews.splice(indexOld, 1)
 
+
+                    setData(dataNews)
+                }
+                setLoading(false)
+
+            }).catch(err => {
+                setLoading(false)
+
+            })
+        } else {
+
+            newsProvider.searchNewsByTopic(idCategories, 0, 6).then(res => {
+                if (res?.content?.length) {
+                    var dataNews = res.content
+                    let indexOld = res.content?.findIndex(obj => obj.newsId == detail.newsId)
+                    dataNews.splice(indexOld, 1)
+                    setData(dataNews)
+                }
+                setLoading(false)
+
+            }).catch(err => {
+                setLoading(false)
+
+            })
         }
-    }
-    useEffect(() => {
-        getServiceHighLight()
 
-    }, [item.id])
+    }
+
+    useEffect(() => {
+        // getServiceHighLight()
+        getList()
+    }, [detail.newsId])
     const getTime = () => {
         if (detail?.createdDate) {
             let time = detail?.createdDate?.substring(0, 10)
@@ -45,20 +69,19 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         }
     }
     const goToDetailService = (item) => () => {
-        navigation.replace('detailNewsHighlight', { item })
+        navigation.replace('detailNews', { item, idCategories })
     }
     const renderItem = ({ item, index }) => {
 
         return (
             <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
                 <View style={styles.cardView}>
-                    <ScaledImage
-                        uri={item?.image?.absoluteUrl() || ''}
-                        height={134}
-                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto' }}
+                    <FastImage
+                        source={{ uri: item?.images[0]?.downloadUri?.absoluteUrl() || '' }}
+                        style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item.title}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.title?.rawText}</Text>
             </TouchableOpacity>
         )
     }
@@ -66,45 +89,49 @@ const DetailNewHighLightScreen = ({ navigation }) => {
         // snackbar.show('Tính năng đang phát triển')
         navigation.navigate('introCovid')
     }
+
     return (
         <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">
             <ScrollView style={styles.container}>
                 <View style={styles.flex}>
                     <View style={styles.containerTitle}>
-                        <Text style={styles.txtTitle}>{detail?.title}</Text>
+                        <Text style={styles.txtTitle}>{detail?.title?.rawText}</Text>
                         <Text style={{
                             color: '#00000070',
                             paddingBottom: 10
                         }}>{getTime()}</Text>
-                        <Image source={{ uri: detail?.image?.absoluteUrl() || '' }} style={styles.imageNews} />
+                        <FastImage source={{ uri: detail?.images[0]?.downloadUri?.absoluteUrl() || '' }} style={styles.imageNews} />
                         {
-                            detail?.content ?
-                                <HTML html={'<div style="color: black">' + detail?.content + '</div>'}
+                            detail?.content?.rawText ?
+                                <HTML html={'<div style="color: black">' + detail?.content?.rawText + '</div>'}
                                     allowFontScaling={false}
-                                    imagesMaxWidth={Dimensions.get('window').width - 30}
-                                    imagesInitialDimensions={{ width: Dimensions.get('window').width - 30, height: (Dimensions.get('window').width - 30) * 1.5, }}
+                                    renderers={{
+                                        img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+                                            return <FastImage resizeMode={'contain'} source={{ uri: htmlAttribs.src }} style={{ width: width - 30, height: parseInt(htmlAttribs.height) || 150, resizeMode: 'contain' }} />
+                                        }
+                                    }}
                                 />
                                 : null
                         }
                     </View>
-                    <View style={styles.containerButton}>
+                    {/* <View style={styles.containerButton}>
                         <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
                         <TouchableOpacity
                             onPress={onGoToTest}
                             style={styles.buttonTest}>
                             <Text style={styles.btxtTest}>KIỂM TRA COVID NGAY</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
                     {data.length ?
                         <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                             <View style={styles.viewAds}>
-                                <Text style={styles.txAds}>XEM THÊM</Text>
+                                <Text style={styles.txAds}>Bài viết liên quan</Text>
                             </View>
                             <FlatList
                                 contentContainerStyle={styles.listAds}
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item, index) => `${item.id || index}`}
+                                keyExtractor={(item, index) => `${item.newsId || index}`}
                                 data={data}
                                 ListFooterComponent={<View style={styles.viewFooter}></View>}
                                 renderItem={renderItem}
@@ -174,4 +201,4 @@ const styles = StyleSheet.create({
     txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
 
 });
-export default DetailNewHighLightScreen
+export default DetailNewsScreen

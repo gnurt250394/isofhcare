@@ -59,6 +59,9 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             default: return ''
         }
     }
+    const goTolist=()=>{
+        navigation.navigate('listDoctor')
+    }
     const renderItem = ({ item, index }) => {
         const source = item.imagePath ? { uri: item.imagePath.absoluteUrl() } : require('@images/new/user.png')
         return (
@@ -84,6 +87,14 @@ const DoctorHighLight = memo(({ navigation, refreshing }) => {
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
+                    <TouchableOpacity
+                        onPress={goTolist}
+                        hislop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                        style={{
+                            paddingRight: 10
+                        }}>
+                        <Text style={{ color: '#009BF2' }}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -118,7 +129,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.4
     },
-    viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
+    viewAds: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },

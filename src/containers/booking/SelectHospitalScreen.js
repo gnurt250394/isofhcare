@@ -22,7 +22,6 @@ import GetLocation from 'react-native-get-location'
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
-        let serviceType = this.props.navigation.state.params.serviceType;
 
         this.state = {
             data: [],
@@ -33,7 +32,6 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
-            serviceType
         }
     }
     onRefresh() {
@@ -256,11 +254,18 @@ class SelectHospitalScreen extends Component {
         });
     }
     selectHospital(item) {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            this.props.navigation.pop();
-            callback(item.hospital);
-        }
+        console.log('item: ', item.hospital);
+       
+        this.props.navigation.navigate("selectService", {
+            hospital: item.hospital,
+            // serviceType: this.state.serviceType,
+            // onSelected: this.selectService.bind(this)
+        })
+        // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        // if (callback) {
+        //     this.props.navigation.pop();
+        //     callback(item.hospital);
+        // }
     }
     search() {
         this.setState({ page: 1 }, () => {

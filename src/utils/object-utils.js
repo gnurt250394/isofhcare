@@ -7,7 +7,6 @@ export default {
     }
   },
   renderAcademic(academicDegree) {
-    console.log('academicDegree:1111 ', academicDegree);
     // switch (academicDegree) {
     //   case 'BS':
     //     return 'BS. ';

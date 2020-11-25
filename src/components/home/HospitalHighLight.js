@@ -33,6 +33,9 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
 
             navigation.navigate('profileHospital', { item })
     }
+    const goToList=()=>{
+        navigation.navigate('selectHospital')
+    }
     const renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity onPress={goToDetailService(item)}  style={{ flex: 1 }}>
@@ -52,6 +55,14 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
             <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
                 <View style={styles.viewAds}>
                     <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
+                    <TouchableOpacity
+                    onPress={goToList}
+                        hislop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                        style={{
+                            paddingRight: 10
+                        }}>
+                        <Text style={{ color: '#009BF2' }}>Xem tất cả</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     contentContainerStyle={styles.listAds}
@@ -70,7 +81,7 @@ const HospitalHighLight = memo(({ navigation, refreshing }) => {
 
 })
 const styles = StyleSheet.create({
-    viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
+    viewAds: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', },
     txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
     listAds: { paddingHorizontal: 20, },
     viewFooter: { width: 35 },
