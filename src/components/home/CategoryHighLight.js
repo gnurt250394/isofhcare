@@ -32,7 +32,7 @@ const CategoryHighLight = memo(({ navigation, refreshing }) => {
     const goToDetailService = (item) => () => {
         navigation.navigate('listOfServices', { item })
     }
-    disablePromotion = (promotion) => {
+  const disablePromotion = (promotion) => {
         let dayOfWeek = {
             0: 6,
             1: 0,
