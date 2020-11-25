@@ -73,7 +73,7 @@ module.exports = {
   serviceBooking: "https://api.produce.isofhcare.com/",
   serviceChats: "https://api.produce.isofhcare.com/",
   serviceCovid: "https://api.produce.isofhcare.com/survey/",
-  serviceNews: 'https://api.produce.isofhcare.com/',
+  serviceNews: 'https://api.produce.isofhcare.com/news',
   response: {
     ok(data, message) {
       if (!message) message = '';
