@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import bookingProvider from '@data-access/booking-provider';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import QRCode from 'react-native-qrcode-svg';
@@ -79,13 +79,13 @@ class DetailHistoryBookingScreen extends Component {
   getData = () => {
     BookingDoctorProvider.getDetailBooking(this.state.id)
       .then(res => {
-        this.setState({ isLoading: false, refreshing: false });
+        this.setState({isLoading: false, refreshing: false});
         if (res && res.id) {
-          this.setState({ booking: res });
+          this.setState({booking: res});
         }
       })
       .catch(err => {
-        this.setState({ isLoading: false, refreshing: false });
+        this.setState({isLoading: false, refreshing: false});
       });
   };
   renderStatusPayment = () => {
@@ -100,6 +100,10 @@ class DetailHistoryBookingScreen extends Component {
         return 'Đã hoàn tiền';
       case 'PENDING':
         return '';
+      case 'REFUNDING':
+        return 'Đang hoàn tiền';
+      case 'REFUND_FAILED':
+        return 'Huỷ hoàn tiền';
       default:
         return '';
     }
@@ -204,7 +208,7 @@ class DetailHistoryBookingScreen extends Component {
     this.props.navigation.navigate('photoViewer', {
       index: index,
       urls: image.map(item => {
-        return { uri: item };
+        return {uri: item};
       }),
     });
   };
@@ -329,7 +333,7 @@ class DetailHistoryBookingScreen extends Component {
     //     profile: this.state.booking
     // });
   };
-  onBackdropPress = () => this.setState({ isVisible: false });
+  onBackdropPress = () => this.setState({isVisible: false});
   getTime = time => {
     return parseInt(time.replace(':', ''), 10);
   };
@@ -374,7 +378,7 @@ class DetailHistoryBookingScreen extends Component {
     }
   };
   onRefresh = () => {
-    this.setState({ refreshing: true }, this.getData);
+    this.setState({refreshing: true}, this.getData);
   };
   onPayment = () => {
     if (this.state.booking.discriminatorType == 'DOCTOR_APPOINTMENT') {
@@ -388,12 +392,12 @@ class DetailHistoryBookingScreen extends Component {
         paymentMethod: this.state.booking.invoice.payment,
         voucher:
           this.state.booking.invoice.voucher &&
-            this.state.booking.invoice.voucher.discount
+          this.state.booking.invoice.voucher.discount
             ? this.state.booking.invoice.voucher
             : {},
         disabled:
           this.state.booking.invoice.voucher &&
-            this.state.booking.invoice.voucher.discount
+          this.state.booking.invoice.voucher.discount
             ? true
             : false,
       });
@@ -403,12 +407,12 @@ class DetailHistoryBookingScreen extends Component {
         paymentMethod: this.state.booking.invoice.payment,
         voucher:
           this.state.booking.invoice.voucher &&
-            this.state.booking.invoice.voucher.discount
+          this.state.booking.invoice.voucher.discount
             ? this.state.booking.invoice.voucher
             : {},
         disabled:
           this.state.booking.invoice.voucher &&
-            this.state.booking.invoice.voucher.discount
+          this.state.booking.invoice.voucher.discount
             ? true
             : false,
       });
@@ -436,7 +440,7 @@ class DetailHistoryBookingScreen extends Component {
       : null;
     const avatar =
       this.props.userApp.currentUser && this.props.userApp.currentUser.avatar
-        ? { uri: this.props.userApp.currentUser.avatar }
+        ? {uri: this.props.userApp.currentUser.avatar}
         : require('@images/new/user.png');
     return (
       <ActivityPanel
@@ -457,11 +461,11 @@ class DetailHistoryBookingScreen extends Component {
                     borderRadius={20}
                     customImagePlaceholderDefaultStyle={[
                       styles.avatar,
-                      { width: 40, height: 40 },
+                      {width: 40, height: 40},
                     ]}
                     placeholderSource={require('@images/new/user.png')}
                     resizeMode="cover"
-                    loadingStyle={{ size: 'small', color: 'gray' }}
+                    loadingStyle={{size: 'small', color: 'gray'}}
                     source={avatar}
                     style={styles.image}
                     defaultImage={this.defaultImage}
@@ -472,61 +476,61 @@ class DetailHistoryBookingScreen extends Component {
                 </View>
                 {isOnline ? (
                   this.getTimeOnline() &&
-                    (this.state.booking.status == 'ACCEPTED' ||
-                      this.state.booking.status == 'CHECKIN') ? (
-                      <View
+                  (this.state.booking.status == 'ACCEPTED' ||
+                    this.state.booking.status == 'CHECKIN') ? (
+                    <View
+                      style={[
+                        styles.flex,
+                        {
+                          borderLeftColor: '#00000050',
+                          borderLeftWidth: 1,
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        onPress={this.onCallVideo}
+                        style={styles.buttonBookingCall}>
+                        <ScaledImage
+                          width={20}
+                          height={20}
+                          source={require('@images/new/videoCall/ic_call.png')}
+                        />
+                        <Text
+                          style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View
+                      style={[
+                        styles.flex,
+                        {
+                          borderLeftColor: '#00000050',
+                          borderLeftWidth: 1,
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        disabled={true}
+                        onPress={this.onCallVideo}
                         style={[
-                          styles.flex,
-                          {
-                            borderLeftColor: '#00000050',
-                            borderLeftWidth: 1,
-                          },
+                          styles.buttonBookingCall,
+                          {backgroundColor: '#ffcf99'},
                         ]}>
-                        <TouchableOpacity
-                          onPress={this.onCallVideo}
-                          style={styles.buttonBookingCall}>
-                          <ScaledImage
-                            width={20}
-                            height={20}
-                            source={require('@images/new/videoCall/ic_call.png')}
-                          />
-                          <Text
-                            style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View
-                        style={[
-                          styles.flex,
-                          {
-                            borderLeftColor: '#00000050',
-                            borderLeftWidth: 1,
-                          },
-                        ]}>
-                        <TouchableOpacity
-                          disabled={true}
-                          onPress={this.onCallVideo}
-                          style={[
-                            styles.buttonBookingCall,
-                            { backgroundColor: '#ffcf99' },
-                          ]}>
-                          <ScaledImage
-                            width={20}
-                            height={20}
-                            source={require('@images/new/videoCall/ic_call.png')}
-                          />
-                          <Text
-                            style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    )
+                        <ScaledImage
+                          width={20}
+                          height={20}
+                          source={require('@images/new/videoCall/ic_call.png')}
+                        />
+                        <Text
+                          style={styles.txtBookingCall}>{`Gọi tư vấn`}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )
                 ) : null}
               </View>
               {/** bác sĩ */}
               {this.state.booking.doctor && this.state.booking.doctor.name ? (
                 <View>
                   <View
-                    style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                    style={[styles.viewLocation, {alignItems: 'flex-start'}]}>
                     <ScaledImage
                       height={20}
                       width={20}
@@ -550,77 +554,77 @@ class DetailHistoryBookingScreen extends Component {
 
               {/** dịch vụ */}
               {this.state.booking.invoice.services &&
-                this.state.booking.invoice.services.length > 0 ? (
-                  <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
-                    <ScaledImage
-                      height={20}
-                      width={20}
-                      source={require('@images/ic_service.png')}
-                    />
-                    <Text style={styles.txService}>
-                      {constants.booking.services}
-                    </Text>
-                    <View>
-                      {this.state.booking.invoice.services.map((item, index) => {
-                        return (
-                          <View>
-                            <View key={index}>
-                              <Text
-                                numberOfLines={1}
-                                style={[styles.txInfoService, styles.txtBold]}>
-                                {item.serviceName}
-                              </Text>
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  alignSelf: 'flex-end',
-                                }}>
-                                {item.promotionValue ? (
-                                  <Text
-                                    style={[
-                                      styles.txInfoService,
-                                      styles.price,
-                                      { textDecorationLine: 'line-through' },
-                                    ]}>
-                                    {item.price.formatPrice()}đ
-                                  </Text>
-                                ) : null}
+              this.state.booking.invoice.services.length > 0 ? (
+                <View style={[styles.viewService, {alignItems: 'flex-start'}]}>
+                  <ScaledImage
+                    height={20}
+                    width={20}
+                    source={require('@images/ic_service.png')}
+                  />
+                  <Text style={styles.txService}>
+                    {constants.booking.services}
+                  </Text>
+                  <View>
+                    {this.state.booking.invoice.services.map((item, index) => {
+                      return (
+                        <View>
+                          <View key={index}>
+                            <Text
+                              numberOfLines={1}
+                              style={[styles.txInfoService, styles.txtBold]}>
+                              {item.serviceName}
+                            </Text>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                alignSelf: 'flex-end',
+                              }}>
+                              {item.promotionValue ? (
                                 <Text
                                   style={[
                                     styles.txInfoService,
                                     styles.price,
-                                    { color: '#000' },
+                                    {textDecorationLine: 'line-through'},
                                   ]}>
-                                  {this.pricePromotion(item).formatPrice()}đ
+                                  {item.price.formatPrice()}đ
+                                </Text>
+                              ) : null}
+                              <Text
+                                style={[
+                                  styles.txInfoService,
+                                  styles.price,
+                                  {color: '#000'},
+                                ]}>
+                                {this.pricePromotion(item).formatPrice()}đ
                               </Text>
-                              </View>
                             </View>
                           </View>
-                        );
-                      })}
-                      {this.state.booking.invoice.voucher &&
-                        this.state.booking.invoice.voucher.discount ? (
-                          <View>
-                            <Text
-                              numberOfLines={1}
-                              style={[styles.txInfoService, styles.txtBold]}>
-                              Ưu đãi
+                        </View>
+                      );
+                    })}
+                    {this.state.booking.invoice.voucher &&
+                    this.state.booking.invoice.voucher.discount ? (
+                      <View>
+                        <Text
+                          numberOfLines={1}
+                          style={[styles.txInfoService, styles.txtBold]}>
+                          Ưu đãi
                         </Text>
-                            <Text style={[styles.txInfoService, styles.price]}>
-                              (-
+                        <Text style={[styles.txInfoService, styles.price]}>
+                          (-
                           {this.state.booking.invoice.voucher.discount.formatPrice()}
                           đ)
                         </Text>
-                          </View>
-                        ) : null}
-                    </View>
+                      </View>
+                    ) : null}
                   </View>
-                ) : null}
+                </View>
+              ) : null}
               <View style={styles.between} />
 
               {/** Địa chỉ khám */}
               <View>
-                <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                <View style={[styles.viewLocation, {alignItems: 'flex-start'}]}>
                   <ScaledImage
                     height={20}
                     width={20}
@@ -642,7 +646,7 @@ class DetailHistoryBookingScreen extends Component {
                   </View>
                 </View>
                 <View style={styles.between} />
-                <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
+                <View style={[styles.viewLocation, {alignItems: 'flex-start'}]}>
                   <Text style={[styles.txLocationCheckin]}>
                     {constants.booking.address_signup}
                   </Text>
@@ -680,7 +684,7 @@ class DetailHistoryBookingScreen extends Component {
               {/** triệu chứng */}
               <View style={styles.viewSymptom}>
                 <Text>
-                  <Text style={{ fontWeight: 'bold' }}>{'Triệu chứng'}: </Text>{' '}
+                  <Text style={{fontWeight: 'bold'}}>{'Triệu chứng'}: </Text>{' '}
                   {this.state.booking.description}
                 </Text>
                 <View>
@@ -700,10 +704,10 @@ class DetailHistoryBookingScreen extends Component {
                   source={require('@images/new/account/ic_support.png')}
                   width={20}
                   height={20}
-                  style={{ tintColor: '#00b392' }}
+                  style={{tintColor: '#00b392'}}
                 />
                 <Text style={styles.itemText}>Hỗ trợ</Text>
-                <View style={{ alignItems: 'flex-end' }}>
+                <View style={{alignItems: 'flex-end'}}>
                   {/* <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text> */}
                   {this.state.booking.hospital.hotLine ? (
                     <Text>{this.state.booking.hospital.hotLine}</Text>
@@ -712,20 +716,20 @@ class DetailHistoryBookingScreen extends Component {
               </TouchableOpacity>
 
               {this.state.booking.invoice.services &&
-                this.state.booking.invoice.services.length ? (
-                  <React.Fragment>
-                    <View style={styles.viewPrice}>
-                      <ScaledImage
-                        source={require('@images/ic_price.png')}
-                        width={20}
-                        height={20}
-                      />
-                      <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
-                      <Text style={styles.txPrice}>{this.getPrice() + 'đ'}</Text>
-                    </View>
-                    <View style={styles.between} />
-                  </React.Fragment>
-                ) : null}
+              this.state.booking.invoice.services.length ? (
+                <React.Fragment>
+                  <View style={styles.viewPrice}>
+                    <ScaledImage
+                      source={require('@images/ic_price.png')}
+                      width={20}
+                      height={20}
+                    />
+                    <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
+                    <Text style={styles.txPrice}>{this.getPrice() + 'đ'}</Text>
+                  </View>
+                  <View style={styles.between} />
+                </React.Fragment>
+              ) : null}
               <View style={styles.viewPayment}>
                 <ScaledImage
                   height={19}
@@ -736,7 +740,7 @@ class DetailHistoryBookingScreen extends Component {
                 <Text>{this.renderStatusPayment()}</Text>
               </View>
               <View style={styles.viewPayment}>
-                <View style={{ height: 19, width: 19 }} />
+                <View style={{height: 19, width: 19}} />
                 <Text style={styles.txPayment}>
                   {constants.booking.payment_methods}
                 </Text>
@@ -766,7 +770,7 @@ class DetailHistoryBookingScreen extends Component {
                 </Text>
                 <TouchableOpacity
                   onPress={this.onQrClick}
-                  style={{ marginRight: 10, alignItems: 'center' }}>
+                  style={{marginRight: 10, alignItems: 'center'}}>
                   <QRCode
                     value={this.state.booking.reference || 0}
                     logo={require('@images/new/logo.png')}
@@ -778,105 +782,105 @@ class DetailHistoryBookingScreen extends Component {
                 </TouchableOpacity>
               </View>
               {this.state.booking.invoice &&
-                this.state.booking.invoice.payment == 'BANK_TRANSFER' ? (
-                  <React.Fragment>
-                    <View
-                      style={[
-                        styles.viewPrice,
-                        { borderTopWidth: 0, paddingHorizontal: 7 },
-                      ]}>
-                      <Text style={styles.txLabelPrice}>
-                        {constants.booking.guide.bank}:
+              this.state.booking.invoice.payment == 'BANK_TRANSFER' ? (
+                <React.Fragment>
+                  <View
+                    style={[
+                      styles.viewPrice,
+                      {borderTopWidth: 0, paddingHorizontal: 7},
+                    ]}>
+                    <Text style={styles.txLabelPrice}>
+                      {constants.booking.guide.bank}:
                     </Text>
-                      <Text
-                        style={[
-                          styles.txPrice,
-                          { color: 'red', textAlign: 'right' },
-                        ]}>
-                        {this.state.booking.hospital.bank}
-                      </Text>
-                    </View>
+                    <Text
+                      style={[
+                        styles.txPrice,
+                        {color: 'red', textAlign: 'right'},
+                      ]}>
+                      {this.state.booking.hospital.bank}
+                    </Text>
+                  </View>
 
+                  <View
+                    style={[
+                      styles.viewPrice,
+                      {borderTopWidth: 0, paddingHorizontal: 7},
+                    ]}>
+                    <Text style={styles.txLabelPrice}>
+                      {constants.booking.number_bank}
+                    </Text>
+                    <TouchableOpacity
+                      style={{flexDirection: 'row'}}
+                      onPress={() =>
+                        this.onCopyNumber(this.state.booking.hospital.accountNo)
+                      }>
+                      <Text style={[styles.txPrice, {color: 'red'}]}>
+                        {this.state.booking.hospital.accountNo}
+                      </Text>
+                      <ScaledImage
+                        height={20}
+                        style={{tintColor: 'red'}}
+                        source={require('@images/new/booking/ic_coppy.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={[
+                      styles.viewPrice,
+                      {borderTopWidth: 0, paddingHorizontal: 7},
+                    ]}>
+                    <Text style={styles.txLabelPrice}>
+                      {constants.booking.guide.branch}
+                    </Text>
+                    <Text style={[styles.txPrice, {color: 'red'}]}>
+                      {this.state.booking.hospital.branch}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.viewPrice,
+                      {borderTopWidth: 0, paddingHorizontal: 7},
+                    ]}>
+                    <Text style={styles.txLabelPrice}>
+                      {constants.booking.guide.owner_name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.txPrice,
+                        {color: 'red', textAlign: 'right'},
+                      ]}>
+                      {this.state.booking.hospital.owner}
+                    </Text>
+                  </View>
+                  {(this.state.booking.hospital.accountNo && (
                     <View
                       style={[
                         styles.viewPrice,
-                        { borderTopWidth: 0, paddingHorizontal: 7 },
+                        {borderTopWidth: 0, paddingHorizontal: 7},
                       ]}>
                       <Text style={styles.txLabelPrice}>
-                        {constants.booking.number_bank}
+                        {constants.booking.syntax_tranfer}
                       </Text>
                       <TouchableOpacity
-                        style={{ flexDirection: 'row' }}
+                        style={{flexDirection: 'row'}}
                         onPress={() =>
-                          this.onCopyNumber(this.state.booking.hospital.accountNo)
+                          this.onCopyContents(this.state.booking.reference)
                         }>
-                        <Text style={[styles.txPrice, { color: 'red' }]}>
-                          {this.state.booking.hospital.accountNo}
+                        <Text style={[styles.txPrice, {color: 'red'}]}>
+                          DK {this.state.booking.reference}
                         </Text>
                         <ScaledImage
                           height={20}
-                          style={{ tintColor: 'red' }}
+                          style={{tintColor: 'red'}}
                           source={require('@images/new/booking/ic_coppy.png')}
                         />
                       </TouchableOpacity>
                     </View>
-                    <View
-                      style={[
-                        styles.viewPrice,
-                        { borderTopWidth: 0, paddingHorizontal: 7 },
-                      ]}>
-                      <Text style={styles.txLabelPrice}>
-                        {constants.booking.guide.branch}
-                      </Text>
-                      <Text style={[styles.txPrice, { color: 'red' }]}>
-                        {this.state.booking.hospital.branch}
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.viewPrice,
-                        { borderTopWidth: 0, paddingHorizontal: 7 },
-                      ]}>
-                      <Text style={styles.txLabelPrice}>
-                        {constants.booking.guide.owner_name}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.txPrice,
-                          { color: 'red', textAlign: 'right' },
-                        ]}>
-                        {this.state.booking.hospital.owner}
-                      </Text>
-                    </View>
-                    {(this.state.booking.hospital.accountNo && (
-                      <View
-                        style={[
-                          styles.viewPrice,
-                          { borderTopWidth: 0, paddingHorizontal: 7 },
-                        ]}>
-                        <Text style={styles.txLabelPrice}>
-                          {constants.booking.syntax_tranfer}
-                        </Text>
-                        <TouchableOpacity
-                          style={{ flexDirection: 'row' }}
-                          onPress={() =>
-                            this.onCopyContents(this.state.booking.reference)
-                          }>
-                          <Text style={[styles.txPrice, { color: 'red' }]}>
-                            DK {this.state.booking.reference}
-                          </Text>
-                          <ScaledImage
-                            height={20}
-                            style={{ tintColor: 'red' }}
-                            source={require('@images/new/booking/ic_coppy.png')}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )) ||
-                      null}
-                    <View style={styles.between} />
-                  </React.Fragment>
-                ) : null}
+                  )) ||
+                    null}
+                  <View style={styles.between} />
+                </React.Fragment>
+              ) : null}
 
               <View style={styles.between} />
             </View>
@@ -886,17 +890,19 @@ class DetailHistoryBookingScreen extends Component {
           null}
         {this.state.booking?.invoice?.payment ==
           constants.PAYMENT_METHOD.NONE ||
-          ((this.state.booking?.invoice?.payment ==
-            constants.PAYMENT_METHOD.MOMO || this.state.booking?.invoice?.payment ==
-            constants.PAYMENT_METHOD.VISA || this.state.booking?.invoice?.payment ==
+        ((this.state.booking?.invoice?.payment ==
+          constants.PAYMENT_METHOD.MOMO ||
+          this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.VISA ||
+          this.state.booking?.invoice?.payment ==
             constants.PAYMENT_METHOD.ATM) &&
-            this.state.booking?.invoice?.status == 'NEW') ? (
-            <TouchableOpacity
-              onPress={this.onPayment}
-              style={styles.buttonPayment}>
-              <Text style={styles.txtPayment}>Thanh toán</Text>
-            </TouchableOpacity>
-          ) : null}
+          this.state.booking?.invoice?.status == 'NEW') ? (
+          <TouchableOpacity
+            onPress={this.onPayment}
+            style={styles.buttonPayment}>
+            <Text style={styles.txtPayment}>Thanh toán</Text>
+          </TouchableOpacity>
+        ) : null}
         <Modal
           isVisible={this.state.isVisible}
           onBackdropPress={this.onBackdropPress}
