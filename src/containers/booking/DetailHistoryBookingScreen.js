@@ -101,7 +101,9 @@ class DetailHistoryBookingScreen extends Component {
       case 'PENDING':
         return '';
       case 'REFUNDING':
-        return 'Hoàn tiền';
+        return 'Đang hoàn tiền';
+      case 'REFUND_FAILED':
+        return 'Huỷ hoàn tiền';
       default:
         return '';
     }
