@@ -996,6 +996,7 @@ module.exports = {
       resetPw: isofhcare_service + 'user/replace-password',
       get_token: isofhcare_service + 'user/call/access-token',
       get_accumulations: isofhcare_service + 'user/accumulations',
+      get_setting: isofhcare_service + 'general-setting',
     },
     keyvalue: {
       get: isofhcare_service + 'key-value/get-value',
