@@ -13,6 +13,7 @@ import serviceProvider from '@data-access/service-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import firebaseUtils from '@utils/firebase-utils';
 
 class SelectServiceScreen extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class SelectServiceScreen extends Component {
     };
   }
   componentDidMount() {
+    firebaseUtils.sendEvent('Hospital_service')
     this.onRefresh();
   }
 
@@ -108,6 +110,7 @@ class SelectServiceScreen extends Component {
     this.setState({searchValue: s});
   };
   onSearch = () => {
+    firebaseUtils.sendEvent('Hospital_service_search')
     var s = this.state.searchValue;
     var listSearch = this.state.listService.filter(item => {
       return (

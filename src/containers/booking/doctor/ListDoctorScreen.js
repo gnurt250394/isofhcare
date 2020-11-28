@@ -12,6 +12,7 @@ import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import { withNavigation } from 'react-navigation';
+import firebaseUtils from '@utils/firebase-utils';
 
 const { width, height } = Dimensions.get('window')
 const TYPE = {
@@ -38,6 +39,7 @@ class ListDoctorScreen extends Component {
         this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
     }
     componentDidMount = () => {
+        firebaseUtils.sendEvent('doctor_screen')
         this.getData()
         // setTimeout(()=>{
         //     this.setState({ data, isLoading: false, refreshing: false })
@@ -102,11 +104,13 @@ class ListDoctorScreen extends Component {
         }
     }
     goDetailDoctor = (item) => () => {
+        firebaseUtils.sendEvent('doctor_detail')
         this.props.navigation.navigate('detailsDoctor', {
             item
         })
     }
     addBookingDoctor = (item) => () => {
+        firebaseUtils.sendEvent('doctor_offline')
         this.props.navigation.navigate('selectTimeDoctor', {
             item,
             isNotHaveSchedule: true
@@ -150,6 +154,7 @@ class ListDoctorScreen extends Component {
 
     }
     onSearch = () => {
+        firebaseUtils.sendEvent('Doctor_search')
         if(this.state.keyword.trim()){
             this.setState({
                 page: 0,
