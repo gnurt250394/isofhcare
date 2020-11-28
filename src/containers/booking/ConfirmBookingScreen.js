@@ -509,17 +509,31 @@ class ConfirmBookingScreen extends Component {
                   case constants.PAYMENT_METHOD.ATM:
                   case constants.PAYMENT_METHOD.VISA:
                   case constants.PAYMENT_METHOD.QR:
-                    this.props.navigation.navigate('paymenntAlePay', {
-                      urlPayment: res.checkoutUrl,
-                      title:
-                        constants.PAYMENT_METHOD.ATM == this.state.paymentMethod
-                          ? constants.payment.ATM
-                          : constants.PAYMENT_METHOD.QR ==
-                            this.state.paymentMethod
-                          ? constants.payment.QR
-                          : constants.payment.VISA,
-                      onSuccess: this.onSuccess,
-                    });
+                    if (res?.checkoutUrl) {
+                      this.props.navigation.navigate('paymenntAlePay', {
+                        urlPayment: res.checkoutUrl,
+                        title:
+                          constants.PAYMENT_METHOD.ATM ==
+                          this.state.paymentMethod
+                            ? constants.payment.ATM
+                            : constants.PAYMENT_METHOD.QR ==
+                              this.state.paymentMethod
+                            ? constants.payment.QR
+                            : constants.payment.VISA,
+                        onSuccess: this.onSuccess,
+                      });
+                    } else {
+                      snackbar.show('Đặt khám thành công', 'success');
+                      this.props.navigation.navigate('homeTab', {
+                        navigate: {
+                          screen: 'createBookingSuccess',
+                          params: {
+                            booking: res,
+                            voucher: this.state.voucher,
+                          },
+                        },
+                      });
+                    }
                     break;
                   default:
                     snackbar.show('Đặt khám thành công', 'success');
