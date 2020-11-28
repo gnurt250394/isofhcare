@@ -26,6 +26,7 @@ import snackbar from '@utils/snackbar-utils';
 import DoctorOfHospital from "@components/hospital/DoctorOfHospital";
 import ImageUtils from 'mainam-react-native-image-utils';
 import { withNavigation } from 'react-navigation'
+import firebaseUtils from "@utils/firebase-utils";
 
 const dataRate = [
     { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
@@ -91,6 +92,7 @@ class ProfileHospitalScreen extends Component {
         };
     }
     componentDidMount() {
+        firebaseUtils.sendEvent('Hospital_detail')
         this.getDetails()
     }
     getDetails = () => {
@@ -138,6 +140,7 @@ class ProfileHospitalScreen extends Component {
         }
     }
     addBooking = () => {
+        firebaseUtils.sendEvent('Hospital_booking')
         const item = this.props.navigation.getParam('item', {})
         if (item.availableBooking == 0) {
             snackbar.show('Cơ sở y tế đang cập nhật đặt khám, mời bạn quay lại sau.')
@@ -161,6 +164,7 @@ class ProfileHospitalScreen extends Component {
         }
     }
     goToMap = () => {
+        firebaseUtils.sendEvent('Hospital_map')
         this.props.navigation.navigate("mapHospital", {
             item: this.state.profileHospital
         });
@@ -173,6 +177,7 @@ class ProfileHospitalScreen extends Component {
         })
     }
     detailDoctor = (item) => () => {
+        firebaseUtils.sendEvent('Hospital_doctor_detail')
         this.props.navigation.navigate('detailsDoctor', {
             item,
             disableBooking: this.state.disableBooking

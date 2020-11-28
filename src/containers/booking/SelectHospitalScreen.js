@@ -18,6 +18,7 @@ import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import constants from '@resources/strings';
 import GetLocation from 'react-native-get-location'
+import firebaseUtils from '@utils/firebase-utils';
 
 class SelectHospitalScreen extends Component {
     constructor(props) {
@@ -72,6 +73,7 @@ class SelectHospitalScreen extends Component {
     }
 
     getLocation() {
+        firebaseUtils.sendEvent('Hospital_nearme')
         let getLocation = () => {
             RNLocation.requestPermission({
                 ios: 'whenInUse', // or 'always'
@@ -169,6 +171,7 @@ class SelectHospitalScreen extends Component {
 
     }
     componentDidMount() {
+        firebaseUtils.sendEvent('Hospital_screen')
         // locationProvider.getCurrentLocationHasSave().then(s => {
         //     if (s && s.latitude && s.longitude) {
         //         s.latitudeDelta = 0.1;
@@ -268,6 +271,7 @@ class SelectHospitalScreen extends Component {
         // }
     }
     search() {
+        firebaseUtils.sendEvent('Hospital_search')
         this.setState({ page: 1 }, () => {
             this.onLoad();
         })
