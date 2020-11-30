@@ -24,6 +24,7 @@ import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 import snackbar from '@utils/snackbar-utils';
 import objectUtils from "@utils/object-utils";
+import firebaseUtils from "@utils/firebase-utils";
 
 const dataRate = [
   { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
@@ -76,6 +77,7 @@ class DetailsDoctorScreen extends Component {
   }
 
   addBooking = () => {
+    firebaseUtils.sendEvent('Doctor_detail_offline')
     if (this.props.userApp.isLogin) {
       this.props.navigation.navigate('selectTimeDoctor', {
         item: this.state.profileDoctor,
@@ -104,6 +106,7 @@ class DetailsDoctorScreen extends Component {
   }
 
   onCallVideo = () => {
+    firebaseUtils.sendEvent('Doctor_detail_online')
     // this.setState({ isVisible: false }, () => {
     if (!this.state.profileDoctor.userId) {
       snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')

@@ -30,6 +30,7 @@ import profileProvider from '@data-access/profile-provider'
 
 import scheduleProvider from '@data-access/schedule-provider';
 import { logEventFB } from '@utils/facebook-utils';
+import firebaseUtils from '@utils/firebase-utils';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
@@ -171,6 +172,7 @@ class AddBookingScreen extends Component {
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectHospital", {
                 hospital: this.state.hospital,
+                isBooking:true,
                 onSelected: (hospital) => {
                     console.log('hospital: ', hospital);
                     let hospitalError = hospital ? "" : this.state.hospitalError;
@@ -236,7 +238,7 @@ class AddBookingScreen extends Component {
         return value
     }
     addBooking = () => {
-
+        firebaseUtils.sendEvent('Doctor_offline_booking')
         Keyboard.dismiss();
         if (!this.state.allowBooking)
             return;

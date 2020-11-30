@@ -13,6 +13,7 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
 import constants from '@resources/strings';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import firebaseUtils from '@utils/firebase-utils';
 
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
@@ -328,6 +329,7 @@ class SelectTimeScreen extends Component {
     }
 
     confirm = () => {
+        firebaseUtils.sendEvent('Doctor_ofline_confirm')
         if (!this.state.allowBooking)
             return;
         let error = false;

@@ -37,6 +37,7 @@ import Modal from "@components/modal";
 import FingerprintPopup from "@components/account/FingerprintPopup";
 import FingerprintScanner from 'react-native-fingerprint-scanner';
 import dataCacheProvider from "@data-access/datacache-provider";
+import firebaseUtils from "@utils/firebase-utils";
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -92,7 +93,8 @@ class AccountScreen extends Component {
 
         });
       this.onFocus = this.props.navigation.addListener('didFocus', () => {
-        this.getDetailUser()
+      firebaseUtils.sendEvent('Personal_screen')
+      this.getDetailUser()
       });
     }
     DeviceEventEmitter.addListener(
@@ -375,6 +377,7 @@ class AccountScreen extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
+                  firebaseUtils.sendEvent('healthrecord_screen_personal')
                   this.props.navigation.navigate("ehealth");
                 }}
               >
@@ -390,6 +393,7 @@ class AccountScreen extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
+                  firebaseUtils.sendEvent('Appointment_screen_personal')
                   this.props.navigation.navigate("listBookingHistory", {
                     title: "Lịch khám"
                   });

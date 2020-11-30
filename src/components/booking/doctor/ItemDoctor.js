@@ -12,6 +12,7 @@ import { withNavigation } from 'react-navigation'
 import { connect } from 'react-redux';
 import NavigationService from '@navigators/NavigationService'
 import objectUtils from '@utils/object-utils';
+import firebaseUtils from '@utils/firebase-utils';
 class ItemDoctor extends Component {
     constructor(props) {
         super(props);
@@ -53,6 +54,7 @@ class ItemDoctor extends Component {
 
     }
     onCallVideo = (item) => () => {
+        firebaseUtils.sendEvent('Doctor_online')
         if (!item.userId) {
             snackbar.show('Bác sĩ hiện tại không online vui lòng đặt lịch gọi khám vào thời gian khác')
             return
