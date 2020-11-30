@@ -79,7 +79,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_hospital.png'),
           text: 'Cơ sở Y tế',
           onPress: () => {
-            this.props.navigation.navigate('selectHospital');
+            this.props.navigation.navigate('selectHospital', {isBooking: true});
           },
         },
         // {
