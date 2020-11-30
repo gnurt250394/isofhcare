@@ -24,6 +24,7 @@ import {IndicatorViewPager} from 'mainam-react-native-viewpager';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import ItemQuestion from '@components/question/ItemQuestion';
 import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
+import firebaseUtils from '@utils/firebase-utils';
 const {width, height} = Dimensions.get('screen');
 class ListMyQuestionScreen extends Component {
   constructor(props) {
@@ -89,6 +90,7 @@ class ListMyQuestionScreen extends Component {
     this.setState({page: 0, refreshing: true}, this.getListQuestions);
   };
   onClickCreateMenu = () => {
+    firebaseUtils.sendEvent('Askdoctor_screen_Personal')
     this.props.navigation.navigate('createQuestionStep', {
       replace: true,
     });

@@ -24,6 +24,7 @@ import ButtonPayment from '@components/booking/ButtonPayment';
 import ButtonSelectPaymentMethod from '@components/booking/ButtonSelectPaymentMethod';
 import objectUtils from '@utils/object-utils';
 import ModalUpdateProfile from '../ModalUpdateProfile';
+import firebaseUtils from '@utils/firebase-utils';
 
 class ConfirmBookingDoctorScreen extends Component {
   constructor(props) {
