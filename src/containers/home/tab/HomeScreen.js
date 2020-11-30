@@ -81,7 +81,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_hospital.png'),
           text: 'Cơ sở Y tế',
           onPress: () => {
-            this.props.navigation.navigate('selectHospital');
+            this.props.navigation.navigate('selectHospital', {isBooking: true});
           },
         },
         // {
@@ -99,7 +99,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/ic_calendar.png'),
           text: 'Lịch hẹn',
           onPress: () => {
-            firebaseUtils.sendEvent('Appointment_screen_home')
+            firebaseUtils.sendEvent('Appointment_screen_home');
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('listBookingHistory');
             else
@@ -112,7 +112,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_ehealth.png'),
           text: 'Hồ sơ sức khoẻ',
           onPress: () => {
-            firebaseUtils.sendEvent('Healthrecord_screen_home')
+            firebaseUtils.sendEvent('Healthrecord_screen_home');
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('ehealth');
             else
@@ -125,7 +125,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
           onPress: () => {
-            firebaseUtils.sendEvent('Askdoctor_screen_home')
+            firebaseUtils.sendEvent('Askdoctor_screen_home');
             // snackbar.show('Tính năng đang phát triển')
             // return
             // if (this.props.userApp.isLogin)
@@ -140,7 +140,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/covid/ic_covid.png'),
           text: 'Kiểm tra COVID-19',
           onPress: () => {
-            firebaseUtils.sendEvent('Covidtest_screen')
+            firebaseUtils.sendEvent('Covidtest_screen');
             // snackbar.show('Tính năng đang phát triển')
             // return
             this.props.navigation.navigate('introCovid');
@@ -150,7 +150,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_icd.png'),
           text: 'Tra cứu mã bệnh',
           onPress: () => {
-            firebaseUtils.sendEvent('diseasecode_search_screen')
+            firebaseUtils.sendEvent('diseasecode_search_screen');
             this.props.navigation.navigate('searchIcd');
 
             // this.props.navigation.navigate("videoCall", {
@@ -167,7 +167,7 @@ class HomeScreen extends Component {
           text: 'Nhật ký SK',
           new: true,
           onPress: () => {
-            firebaseUtils.sendEvent('Healthdairy_Screen')
+            firebaseUtils.sendEvent('Healthdairy_Screen');
             // snackbar.show('Tính năng đang phát triển')
             // return
             if (this.props.userApp.isLogin)

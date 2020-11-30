@@ -172,6 +172,7 @@ class AddBookingScreen extends Component {
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectHospital", {
                 hospital: this.state.hospital,
+                isBooking:true,
                 onSelected: (hospital) => {
                     console.log('hospital: ', hospital);
                     let hospitalError = hospital ? "" : this.state.hospitalError;
