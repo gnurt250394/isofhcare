@@ -180,8 +180,9 @@ export default {
     time,
     idUser,
     images,
+    byHospital
   ) {
-    console.log('items: ', items);
+    
     return new Promise((resolve, reject) => {
       let hospital = {
         id: (hospitals && hospitals.id) || '',
@@ -211,7 +212,7 @@ export default {
           (hospitals && (hospitals.note || hospitals?.transferInfo?.note)) ||
           '',
       };
-      console.log('hospital: ', hospitals);
+      
       let patient = {
         id: idUser,
         name: patientUser.name,
@@ -236,6 +237,7 @@ export default {
           //owner : true: đặt khám chính chủ, false: đặt khám hộ
           owner: patientUser.status == 1 ? true : false,
           images,
+          byHospital
         },
         (s, e) => {
           if (s) resolve(s);
