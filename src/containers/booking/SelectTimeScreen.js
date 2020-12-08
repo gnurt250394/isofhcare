@@ -19,7 +19,7 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import DateTimePicker from 'mainam-react-native-date-picker';
 import constants from '@resources/strings';
-import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import firebaseUtils from '@utils/firebase-utils';
 
 LocaleConfig.locales['en'] = {
