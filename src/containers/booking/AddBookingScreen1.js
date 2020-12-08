@@ -375,6 +375,9 @@ class AddBookingScreen extends Component {
           this.setState({isLoading: true}, () => {
             const {userApp} = this.props;
 
+            let byHospital = this.state.listServicesSelected?.length
+              ? this.state.listServicesSelected[0].byHospital
+              : false;
             let services = this.state.listServicesSelected.map(e => {
               return {
                 price: e.monetaryAmount.value,
@@ -406,6 +409,7 @@ class AddBookingScreen extends Component {
                 this.state.schedule.time,
                 idUser,
                 img,
+                byHospital
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {
