@@ -120,6 +120,7 @@ class SelectTimeScreen extends Component {
             key: date.getTime(),
             schedule: {},
             type: 3,
+            date: date.format('yyyy-MM-dd'),
             time: date.format('HH:mm'),
             timeString: date.format('HH:mm:ss'),
           });
@@ -378,10 +379,6 @@ class SelectTimeScreen extends Component {
           'danger',
         );
         return;
-      case 'AVAILABLE':
-        break;
-      default:
-        return;
     }
     // if (item.type == 0) {
     //     snackbar.show("Đã kín lịch trong khung giờ này", "danger");
@@ -401,6 +398,7 @@ class SelectTimeScreen extends Component {
       snackbar.show(constants.msg.booking.full_slot_on_this_time, 'danger');
       return;
     }
+    console.log('item: ', item);
     this.setState({schedule: item, allowBooking: true});
   };
 
