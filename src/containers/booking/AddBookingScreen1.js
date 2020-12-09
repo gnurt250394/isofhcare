@@ -409,7 +409,7 @@ class AddBookingScreen extends Component {
                 this.state.schedule.time,
                 idUser,
                 img,
-                byHospital
+                byHospital,
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {
@@ -430,7 +430,10 @@ class AddBookingScreen extends Component {
                 });
               })
               .catch(e => {
-                snackbar.show(constants.msg.booking.booking_err, 'danger');
+                snackbar.show(
+                  e?.response?.data || constants.msg.booking.booking_err,
+                  'danger',
+                );
                 this.setState({isLoading: false});
               });
           });
