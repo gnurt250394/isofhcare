@@ -197,6 +197,16 @@ export default {
       })
     })
   },
+  getDetailsProfile(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('get', `${constants.api.profile.get_detail_profile}${id}/main`, {}, (s, e) => {
+        if (s)
+          resolve(s)
+        else
+          reject(e)
+      })
+    })
+  },
   // loginV2(phone, password) {
   //   return new Promise((resolve, reject) => {
   //     client.requestApi('post', `${constants.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {

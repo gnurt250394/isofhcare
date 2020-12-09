@@ -28,6 +28,7 @@ import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import ModalConfirm from '@components/question/ModalConfirm';
 import { logEventFB } from '@utils/facebook-utils';
+import firebaseUtils from '@utils/firebase-utils';
 
 const {width, height} = Dimensions.get('screen');
 const padding = Platform.select({
@@ -270,6 +271,7 @@ class CreateQuestionStep1Screen extends Component {
                   constants.key.storage.LASTEST_INFO,
                   '',
                 );
+                firebaseUtils.sendEvent('Question_Publish')
               } else {
                 snackbar.show(
                   constants.msg.question.create_question_failed,

@@ -27,6 +27,7 @@ import Barcode from 'mainam-react-native-barcode';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 import CallManager from '@components/community/CallManager';
 import objectUtils from '@utils/object-utils';
+import firebaseUtils from '@utils/firebase-utils';
 class DetailHistoryBookingScreen extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +43,7 @@ class DetailHistoryBookingScreen extends Component {
   }
 
   componentDidMount() {
+    firebaseUtils.sendEvent('Appointment_detail')
     this.getData();
     // this.setState({ isLoading: true }, () => {
     //     bookingProvider.detail(this.state.id).then(s => {
@@ -100,6 +102,10 @@ class DetailHistoryBookingScreen extends Component {
         return 'Đã hoàn tiền';
       case 'PENDING':
         return '';
+      case 'REFUNDING':
+        return 'Đang hoàn tiền';
+      case 'REFUND_FAILED':
+        return 'Huỷ hoàn tiền';
       default:
         return '';
     }
@@ -878,8 +884,12 @@ class DetailHistoryBookingScreen extends Component {
           null}
         {this.state.booking?.invoice?.payment ==
           constants.PAYMENT_METHOD.NONE ||
-        (this.state.booking?.invoice?.payment ==
-          constants.PAYMENT_METHOD.MOMO &&
+        ((this.state.booking?.invoice?.payment ==
+          constants.PAYMENT_METHOD.MOMO ||
+          this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.VISA ||
+          this.state.booking?.invoice?.payment ==
+            constants.PAYMENT_METHOD.ATM) &&
           this.state.booking?.invoice?.status == 'NEW') ? (
           <TouchableOpacity
             onPress={this.onPayment}
