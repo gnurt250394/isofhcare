@@ -11,6 +11,7 @@ import InputOtp from '@components/account/InputOtp'
 import redux from "@redux-store";
 import ActivityPanel from '@components/ActivityPanel';
 import OtpInputs from "react-native-otp-inputs";
+import firebaseUtils from '@utils/firebase-utils';
 
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
@@ -292,6 +293,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                         if (this.state.verify == 1) {
                             userProvider.checkOtpPhone(this.state.id, text).then(res => {
                                 if (res.code == 0) {
+                                    firebaseUtils.sendEvent('Signup_done')
                                     snackbar.show('Đăng ký thành công', 'success')
                                     let user = res.data.user
                                     this.setState({

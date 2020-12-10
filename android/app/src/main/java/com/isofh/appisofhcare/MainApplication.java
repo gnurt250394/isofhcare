@@ -11,6 +11,7 @@ import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 // import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.BuildConfig;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
@@ -46,6 +47,7 @@ import com.microsoft.codepush.react.CodePush;
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new RNFirebaseMessagingPackage());
       packages.add(new LaunchApplicationPackage());
+      packages.add(new RNFirebaseAnalyticsPackage());
       // packages.add(new RNFirebaseAuthPackage());
       return packages;
     }

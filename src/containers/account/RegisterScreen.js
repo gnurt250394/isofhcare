@@ -11,7 +11,7 @@ import {
   Image,
   Platform,
   Keyboard,
-  ImageBackground,
+  CheckBox,
   Dimensions
 } from "react-native";
 import { connect } from "react-redux";
@@ -41,7 +41,7 @@ class RegisterScreen extends Component {
     let user
     //  = this.props.navigation.getParam("user", null);
     this.nextScreen = this.props.navigation.getParam("nextScreen", null);
-    console.log('this.nextScreen: ', this.nextScreen);
+
     // var phone = this.props.navigation.getParam("phone", null);
     // var token = this.props.navigation.getParam("token", null);
     let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : ''
@@ -60,6 +60,7 @@ class RegisterScreen extends Component {
     user.phone = phone
     user.disabled = false
     user.isofhcareCode = ""
+    user.checked = false
     this.state = user
     this.showPass = this.showPass.bind(this);
     this.showPassConfirm = this.showPassConfirm.bind(this);
@@ -105,7 +106,7 @@ class RegisterScreen extends Component {
           this.setState({ isofhcareCode: data }, () => {
             resolve()
           })
-          console.log('data: ', data);
+
         });
       }
     })
@@ -202,7 +203,11 @@ class RegisterScreen extends Component {
       ? this.setState({ showPassConfirm: false, pressConfirm: true })
       : this.setState({ showPassConfirm: true, pressConfirm: false });
   }
-
+  onCheck = (value) => () => {
+    this.setState({
+      checked: value
+    })
+  }
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -347,11 +352,18 @@ class RegisterScreen extends Component {
                   {
                     this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                   }
+
                 </Field>
-                <View style={[{
+                <TouchableOpacity onPress={this.onCheck(!this.state.checked)} style={styles.viewCheckbox}>
+                  {this.state.checked ? <ScaleImage style={styles.imgCheck} height={20} source={require('@images/new/account/ic_checked.png')} ></ScaleImage> : <ScaleImage height={20} style={styles.imgCheck} source={require('@images/new/account/ic_unchecked.png')} ></ScaleImage>}
+                  <Text style={styles.txCheckbox}>Tôi có mã giới thiệu</Text>
+                </TouchableOpacity>
+                {this.state.checked && <View style={[{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  marginTop: -10
                 },]}>
+
                   <Field style={[styles.inputPass, { flex: 1 }]}>
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
@@ -372,23 +384,10 @@ class RegisterScreen extends Component {
                   </Field>
                   <TouchableOpacity
                     onPress={this.onScanQrCode}
-                    style={{
-                      backgroundColor: 'rgb(2,195,154)',
-                      height: 42,
-                      alignSelf: 'flex-end',
-                      paddingHorizontal: 10,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginLeft: 10,
-                      borderRadius: 5
-
-                    }}>
-                    <Text style={{
-                      color: '#fff',
-                      fontWeight: 'bold'
-                    }}>Quét mã</Text>
+                    style={styles.btnScan}>
+                    <Text style={styles.txScan}>Quét mã</Text>
                   </TouchableOpacity>
-                </View>
+                </View> || <View></View>}
               </Form>
               <View style={{ backgroundColor: '#fff' }}>
                 <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
@@ -407,6 +406,21 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  btnScan: {
+    backgroundColor: '#3161AD',
+    height: 42,
+    alignSelf: 'flex-end',
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
+    borderRadius: 5
+
+  },
+  txScan: {
+    color: '#fff',
+    fontWeight: 'bold'
+  },
   btnSignup: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
   txSignUp: { color: '#FFF', fontSize: 17 },
   btnEye: {
@@ -477,7 +491,22 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
-  scroll: { flex: 1, marginTop: 20 }
+  scroll: { flex: 1, marginTop: 20 },
+  checkbox: {
+    height: 15, width: 15, borderRadius: 2, borderColor: '#3161AD', borderWidth: 1
+  },
+  viewCheckbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginLeft: 2
+  },
+  txCheckbox: {
+    marginLeft: 10
+  },
+  imgCheck: {
+    tintColor: '#3161AD'
+  }
 });
 function mapStateToProps(state) {
   return {

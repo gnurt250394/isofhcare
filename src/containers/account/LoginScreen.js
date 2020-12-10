@@ -36,6 +36,7 @@ import Modal from "@components/modal";
 import dataCacheProvider from "../../data-access/datacache-provider";
 import RNFingerprintChange from 'react-native-fingerprint-change';
 import { logEventFB } from "@utils/facebook-utils";
+import firebaseUtils from "@utils/firebase-utils";
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -91,8 +92,8 @@ class LoginScreen extends Component {
 	}
 
 	register() {
-
-		this.props.navigation.navigate("register", {
+		firebaseUtils.sendEvent('Signup_start')
+		this.props.navigation.replace("register", {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
 		})
@@ -142,6 +143,7 @@ class LoginScreen extends Component {
 								);
 							} else {
 								logEventFB('login')
+								firebaseUtils.sendEvent('Login')
 								this.props.navigation.navigate("home", { showDraw: false });
 							}
 							break;

@@ -634,6 +634,9 @@ module.exports = {
     //PAYOO: "PAYOO";
     BANK_TRANSFER: 'BANK_TRANSFER',
     NONE: 'NONE',
+    VISA: 'VISA',
+    ATM: 'ATM',
+    QR: 'QR',
   },
   payment: {
     direct_transfer: 'Chuyển khoản trực tiếp',
@@ -642,6 +645,9 @@ module.exports = {
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT',
+    VISA: 'Thanh toán bằng thẻ VISA/ Master',
+    ATM: 'Thanh toán bằng thẻ ATM nội địa',
+    QR: 'Thanh toán bằng QR Code',
   },
   booking: {
     hotline: 'Số hotline',
@@ -989,6 +995,7 @@ module.exports = {
       resetPw: isofhcare_service + 'user/replace-password',
       get_token: isofhcare_service + 'user/call/access-token',
       get_accumulations: isofhcare_service + 'user/accumulations',
+      get_setting: isofhcare_service + 'general-setting',
     },
     keyvalue: {
       get: isofhcare_service + 'key-value/get-value',
@@ -1126,6 +1133,7 @@ module.exports = {
         isofhcare_service + 'medical-records/get-detail-medical-record',
       verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
       fill_phone: isofhcare_service + 'user/fill-phone',
+      get_detail_profile: isofhcare_service + 'medical-records/by-user/',
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',
@@ -1209,11 +1217,11 @@ module.exports = {
       list_top_news: '/v1/topics/topicId/popular-news',
       list_keyword_news: '/v1/topics',
       list_topics: '/v1/topics',
-      search_news_by_topic: '/v1/topics/'
+      search_news_by_topic: '/v1/topics/',
     },
     payment: {
       get_list_card: isofhcare_service + 'payment/v1/alepay/profiles',
-      create_new_card: isofhcare_service + 'payment/v1/alepay/request-profile'
-    }
+      create_new_card: isofhcare_service + 'payment/v1/alepay/request-profile',
+    },
   },
 };
