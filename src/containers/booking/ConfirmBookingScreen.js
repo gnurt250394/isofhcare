@@ -456,7 +456,6 @@ class ConfirmBookingScreen extends Component {
     }
   }
   onSuccess = url => {
-    console.log('url: ', url);
     snackbar.show('Đặt khám thành công', 'success');
     this.props.navigation.navigate('homeTab', {
       navigate: {
@@ -470,13 +469,11 @@ class ConfirmBookingScreen extends Component {
   };
   createBooking = ({phonenumber, momoToken, cardNumber}) => {
     const {booking, disabled, paymentMethod} = this.state;
-    console.log('booking: ', booking);
 
     connectionUtils
       .isConnected()
       .then(s => {
         this.setState({isLoading: true}, async () => {
-          console.log('this.state.voucher: ', this.state.voucher);
           if (this.state.voucher && this.state.voucher.code && !disabled) {
             let dataVoucher = await this.confirmVoucher(
               this.state.voucher,
@@ -837,7 +834,7 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
 
-              {this.getPriceSecive() == 0 ? null : (
+              {/* {this.getPriceSecive() == 0 ? null : (
                 <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_visa.png')}
                   onPress={this.selectPaymentmethod(
@@ -860,8 +857,8 @@ class ConfirmBookingScreen extends Component {
                     this.state.paymentMethod == constants.PAYMENT_METHOD.ATM
                   }
                 />
-              )}
-              <ButtonSelectPaymentMethod
+              )} */}
+              {/* <ButtonSelectPaymentMethod
                 icon={require('@images/new/booking/ic_momo.png')}
                 onPress={this.selectPaymentmethod(
                   constants.PAYMENT_METHOD.MOMO,
@@ -870,7 +867,7 @@ class ConfirmBookingScreen extends Component {
                 isSelected={
                   this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO
                 }
-              />
+              /> */}
               <ButtonSelectPaymentMethod
                 icon={require('@images/new/booking/ic_banktransfer.png')}
                 onPress={this.selectPaymentmethod(
@@ -882,14 +879,14 @@ class ConfirmBookingScreen extends Component {
                   constants.PAYMENT_METHOD.BANK_TRANSFER
                 }
               />
-              <ButtonSelectPaymentMethod
+              {/* <ButtonSelectPaymentMethod
                 icon={require('@images/new/booking/ic_qr_payment.png')}
                 onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.QR)}
                 title={constants.payment.QR}
                 isSelected={
                   this.state.paymentMethod == constants.PAYMENT_METHOD.QR
                 }
-              />
+              /> */}
             </React.Fragment>
           }
           <ButtonSelectPaymentMethod
@@ -905,7 +902,6 @@ class ConfirmBookingScreen extends Component {
         <ButtonPayment
           price={this.getPriceSecive()}
           voucher={this.state.voucher}
-          onPress={this.createBooking}
           paymentMethod={this.state.paymentMethod}
           allowBooking={this.state.allowBooking}
           title="Thanh toán"

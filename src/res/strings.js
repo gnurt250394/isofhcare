@@ -646,6 +646,9 @@ module.exports = {
     PAYOO_installment: 'PAYOO - Trả góp 0%',
     PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
     pay_later: 'Thanh toán sau tại CSYT',
+    VISA: 'Thanh toán bằng thẻ VISA/ Master',
+    ATM: 'Thanh toán bằng thẻ ATM nội địa',
+    QR: 'Thanh toán bằng QR Code',
   },
   booking: {
     hotline: 'Số hotline',

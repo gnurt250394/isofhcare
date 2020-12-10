@@ -506,7 +506,7 @@ class ConfirmBookingDoctorScreen extends Component {
             </View>
             {
               <React.Fragment>
-                <ButtonSelectPaymentMethod
+                {/* <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_visa.png')}
                   onPress={this.selectPaymentmethod(
                     constants.PAYMENT_METHOD.VISA,
@@ -515,8 +515,8 @@ class ConfirmBookingDoctorScreen extends Component {
                   isSelected={
                     this.state.paymentMethod == constants.PAYMENT_METHOD.VISA
                   }
-                />
-                <ButtonSelectPaymentMethod
+                /> */}
+                {/* <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_atm.png')}
                   onPress={this.selectPaymentmethod(
                     constants.PAYMENT_METHOD.ATM,
@@ -525,8 +525,8 @@ class ConfirmBookingDoctorScreen extends Component {
                   isSelected={
                     this.state.paymentMethod == constants.PAYMENT_METHOD.ATM
                   }
-                />
-                <ButtonSelectPaymentMethod
+                /> */}
+                {/* <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_momo.png')}
                   onPress={this.selectPaymentmethod(
                     constants.PAYMENT_METHOD.MOMO,
@@ -535,7 +535,7 @@ class ConfirmBookingDoctorScreen extends Component {
                   isSelected={
                     this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO
                   }
-                />
+                /> */}
                 <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_banktransfer.png')}
                   onPress={this.selectPaymentmethod(
@@ -547,7 +547,7 @@ class ConfirmBookingDoctorScreen extends Component {
                     constants.PAYMENT_METHOD.BANK_TRANSFER
                   }
                 />
-                <ButtonSelectPaymentMethod
+                {/* <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_qr_payment.png')}
                   onPress={this.selectPaymentmethod(
                     constants.PAYMENT_METHOD.QR,
@@ -556,7 +556,7 @@ class ConfirmBookingDoctorScreen extends Component {
                   isSelected={
                     this.state.paymentMethod == constants.PAYMENT_METHOD.QR
                   }
-                />
+                /> */}
                 {isOnline ? null : (
                   <ButtonSelectPaymentMethod
                     icon={require('@images/new/booking/ic_cash.png')}

@@ -242,7 +242,7 @@ export default {
         });
     },
 
-    confirmBooking(id, paymentMethod, voucher, phonenumber, momoToken) {
+    confirmBooking(id, paymentMethod, voucher, phonenumber, momoToken, cardNumber) {
         let data = {}
         data.voucher = {
             "code": voucher.code ? voucher.code : '',
@@ -251,6 +251,8 @@ export default {
         }
         if (phonenumber) data.phoneNumber = phonenumber
         if (momoToken) data.appData = momoToken
+        if (cardNumber) data.cardNumber = cardNumber
+
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "post",
