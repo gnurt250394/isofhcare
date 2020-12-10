@@ -6,6 +6,7 @@ import homeProvider from '@data-access/home-provider'
 import FastImage from 'react-native-fast-image'
 import { useSelector } from 'react-redux'
 import newsProvider from '@data-access/news-provider'
+import firebaseUtils from '@utils/firebase-utils'
 
 const NewsHighLight = memo(({ navigation, refreshing }) => {
     const [data, setData] = useState([])
@@ -36,6 +37,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
             getServiceHighLight()
     }, [refreshing])
     const goToDetailService = (item) => () => {
+        firebaseUtils.sendEvent('news_screen')
         navigation.navigate('detailNews', {
             item,
             // idCategories

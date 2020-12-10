@@ -23,6 +23,7 @@ import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import { logEventFB } from '@utils/facebook-utils';
+import firebaseUtils from '@utils/firebase-utils';
 
 class EhealthScreen extends Component {
   constructor(props) {
@@ -176,6 +177,7 @@ class EhealthScreen extends Component {
     this.props.navigation.navigate('listEhealthUpload');
   };
   goToHealthMonitoring=()=>{
+      firebaseUtils.sendEvent('Healthdairy_screen_personal');
       this.props.navigation.navigate('healthMonitoring')
   }
   render() {

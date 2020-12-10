@@ -42,6 +42,8 @@ export default {
         return academicDegree.value + ' ';
       } else if (typeof academicDegree == 'string') {
         return academicDegree + ' ';
+      }else{
+        return ''
       }
     }
   },

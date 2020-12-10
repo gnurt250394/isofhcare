@@ -43,6 +43,7 @@ import Deeplink from '@components/home/Deeplink';
 import CallScreen from '@components/community/CallScreen';
 import CallManager from '@components/community/CallManager';
 import userProvider from '@data-access/user-provider';
+import firebaseUtils from '@utils/firebase-utils';
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -53,6 +54,7 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      imgBackground: null,
       ads: [],
       refreshing: false,
       ads0: [],
@@ -97,6 +99,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/ic_calendar.png'),
           text: 'Lịch hẹn',
           onPress: () => {
+            firebaseUtils.sendEvent('Appointment_screen_home');
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('listBookingHistory');
             else
@@ -109,11 +112,12 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_ehealth.png'),
           text: 'Hồ sơ sức khoẻ',
           onPress: () => {
+            firebaseUtils.sendEvent('Healthrecord_screen_home');
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('ehealth');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: { screen: 'ehealth' },
+                nextScreen: {screen: 'ehealth'},
               });
           },
         },
@@ -121,6 +125,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
           onPress: () => {
+            firebaseUtils.sendEvent('Askdoctor_screen_home');
             // snackbar.show('Tính năng đang phát triển')
             // return
             // if (this.props.userApp.isLogin)
@@ -135,6 +140,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/covid/ic_covid.png'),
           text: 'Kiểm tra COVID-19',
           onPress: () => {
+            firebaseUtils.sendEvent('Covidtest_screen');
             // snackbar.show('Tính năng đang phát triển')
             // return
             this.props.navigation.navigate('introCovid');
@@ -157,6 +163,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_icd.png'),
           text: 'Tra cứu mã bệnh',
           onPress: () => {
+            firebaseUtils.sendEvent('diseasecode_search_screen');
             this.props.navigation.navigate('searchIcd');
 
             // this.props.navigation.navigate("videoCall", {
@@ -173,13 +180,14 @@ class HomeScreen extends Component {
           text: 'Nhật ký SK',
           new: true,
           onPress: () => {
+            firebaseUtils.sendEvent('Healthdairy_Screen');
             // snackbar.show('Tính năng đang phát triển')
             // return
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate('healthMonitoring');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: { screen: 'healthMonitoring' },
+                nextScreen: {screen: 'healthMonitoring'},
               });
           },
         },
@@ -190,6 +198,15 @@ class HomeScreen extends Component {
 
   onCallHotline = () => {
     Linking.openURL('tel:1900299983');
+  };
+  getSetting = async () => {
+    try {
+      let res = await appProvider.getSetting();
+
+      this.setState({
+        imgBackground: res?.appBackground,
+      });
+    } catch (error) {}
   };
   componentDidMount() {
     if (constants.route == 'home') {
@@ -205,6 +222,7 @@ class HomeScreen extends Component {
         }
       });
     }
+    this.getSetting();
     appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
     // AppState.addEventListener('change', this._handleAppStateChange);
@@ -240,6 +258,7 @@ class HomeScreen extends Component {
   }
 
   onRefresh = () => {
+    this.getSetting();
     this.setState(
       {
         refreshing: true,
@@ -334,32 +353,30 @@ class HomeScreen extends Component {
           {item.empty ? (
             <View style={[styles.viewEmpty]} />
           ) : (
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  { marginTop: 10 },
-                  { width: this.getItemWidth() },
-                ]}
-                onPress={item.onPress}>
-                <View style={styles.groupImageButton}>
-                  <ScaledImage
-                    style={[styles.icon]}
-                    source={item.icon}
-                    height={54}
-                  />
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {marginTop: 10},
+                {width: this.getItemWidth()},
+              ]}
+              onPress={item.onPress}>
+              <View style={styles.groupImageButton}>
+                <ScaledImage
+                  style={[styles.icon]}
+                  source={item.icon}
+                  height={54}
+                />
+              </View>
+              <Text style={[styles.label, {paddingHorizontal: 10}]}>
+                {item.text}
+              </Text>
+              {item.new ? (
+                <View style={[styles.containerNew]}>
+                  <Text>Mới</Text>
                 </View>
-                <Text style={[styles.label, { paddingHorizontal: 10 }]}>
-                  {item.text}
-                </Text>
-                {
-                  item.new ?
-                    <View style={[styles.containerNew]}>
-                      <Text >Mới</Text>
-                    </View>
-                    : null
-                }
-              </TouchableOpacity>
-            )}
+              ) : null}
+            </TouchableOpacity>
+          )}
         </Animatable.View>
       );
     });
@@ -404,7 +421,9 @@ class HomeScreen extends Component {
     }
   };
   render() {
-    const headerHome = require('@images/app/header.png');
+    const headerHome = this.state.imgBackground
+      ? {uri: this.state.imgBackground}
+      : require('@images/app/header.png');
     return (
       <ActivityPanel
         transparent={true}
@@ -484,7 +503,7 @@ const styles = StyleSheet.create({
     top: 0,
     paddingHorizontal: 5,
     paddingVertical: 3,
-    borderRadius: 5
+    borderRadius: 5,
   },
   containerImageDoctor: {
     borderRadius: 6,

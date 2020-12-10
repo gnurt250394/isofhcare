@@ -7,6 +7,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import ReadMoreText from '@components/ReadMoreText';
 import { useSelector } from 'react-redux'
 import serviceProvider from '@data-access/service-provider'
+import firebaseUtils from '@utils/firebase-utils';
 const { width, height } = Dimensions.get('window')
 const ListOfServiceScreen = ({ navigation }) => {
     const item = navigation.getParam('item', {})
@@ -20,6 +21,7 @@ const ListOfServiceScreen = ({ navigation }) => {
         data: [],
     })
     const onSelected = () => {
+        firebaseUtils.sendEvent('Service_choose')
         if(item && item.hospital){
             item.hospital.address = item.hospital.contact.address
         
@@ -84,6 +86,7 @@ const ListOfServiceScreen = ({ navigation }) => {
         }
     }
     useEffect(() => {
+        firebaseUtils.sendEvent('Service_detail')
         getDetailService()
     }, [])
     const renderDescription = (item) => {
@@ -96,6 +99,7 @@ const ListOfServiceScreen = ({ navigation }) => {
     }
 
     const goToHospital = () => {
+        firebaseUtils.sendEvent('Service_detail_hospital')
         navigation.navigate('profileHospital', {
             item: detail?.hospital,
             disableBooking: true

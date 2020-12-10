@@ -27,6 +27,7 @@ import ViewHeader from '@components/booking/doctor/ViewHeader';
 import profileProvider from '@data-access/profile-provider'
 import objectUtils from '@utils/object-utils';
 import { logEventFB } from '@utils/facebook-utils';
+import firebaseUtils from '@utils/firebase-utils';
 
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
@@ -214,6 +215,7 @@ class AddBookingDoctorScreen extends Component {
     }
 
     createBooking() {
+        firebaseUtils.sendEvent('Doctor_online_booking')
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.date).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
@@ -300,7 +302,8 @@ class AddBookingDoctorScreen extends Component {
                                     voucher: this.state.voucher,
                                     booking: s,
                                     bookingDate: this.state.bookingDate,
-                                    isOnline: this.state.isOnline
+                                    isOnline: this.state.isOnline,
+                                    profile: this.state.profile
                                     // }
                                     // }
                                 });

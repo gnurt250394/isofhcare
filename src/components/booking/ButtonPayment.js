@@ -1,14 +1,16 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, Platform, DeviceEventEmitter, NativeModules, NativeEventEmitter, StyleSheet, TouchableOpacity } from 'react-native'
-// import RNMomosdk from 'react-native-momosdk';
+import RNMomosdk from 'react-native-momosdk';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import voucherProvider from '@data-access/voucher-provider'
 import snackbar from '@utils/snackbar-utils';
 import NavigationService from '@navigators/NavigationService'
-// const RNMomosdkModule = NativeModules.RNMomosdk;
-// const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
+const RNMomosdkModule = NativeModules.RNMomosdk;
+const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
+import paymentProvider from '@data-access/payment-provider';
 
 import constants from '@resources/strings'
+import ModalCardNumber from './ModalCardNumber';
 const ButtonPayment = ({
     allowBooking,
     booking,
@@ -19,34 +21,45 @@ const ButtonPayment = ({
     createBooking,
 }) => {
     const isChecking = useRef(true)
-    // useEffect(() => {
-    //     EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
-    //         try {
-    //             console.log("<MoMoPay>Listen.Event::", response);
-    //             if (response && response.status == 0) {
-    //                 //SUCCESS: continue to submit momoToken,phonenumber to server
-    //                 let fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
-    //                 let momoToken = response.data;
-    //                 let phonenumber = response.phonenumber;
-    //                 let message = response.message;
-    //                 let orderId = response.refOrderId;
-    //                 createBooking(phonenumber, momoToken)
-    //             } else {
-    //                 //let message = response.message;
-    //                 //Has Error: show message here
-    //             }
-    //         } catch (ex) { }
-    //     });
-    //     //OPTIONAL
-    //     EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenState', (response) => {
-    //         console.log("<MoMoPay>Listen.RequestTokenState:: " + response.status);
-    //         // status = 1: Parameters valid & ready to open MoMo app.
-    //         // status = 2: canOpenURL failed for URL MoMo app 
-    //         // status = 3: Parameters invalid
-    //     })
-    //     return () => {
-    //     }
-    // }, [])
+    const [isVisible, setIsVisible] = useState(false)
+    const [data, setData] = useState([])
+    const getData = async () => {
+        try {
+            let res = await paymentProvider.getListCard()
+            setData(res)
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+        EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenReceived', (response) => {
+            try {
+                console.log("<MoMoPay>Listen.Event::", response);
+                if (response && response.status == 0) {
+                    //SUCCESS: continue to submit momoToken,phonenumber to server
+                    let fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
+                    let momoToken = response.data;
+                    let phonenumber = response.phonenumber;
+                    let message = response.message;
+                    let orderId = response.refOrderId;
+                    createBooking({ phonenumber, momoToken })
+                } else {
+                    //let message = response.message;
+                    //Has Error: show message here
+                }
+            } catch (ex) { }
+        });
+        //OPTIONAL
+        EventEmitter.addListener('RCTMoMoNoficationCenterRequestTokenState', (response) => {
+            console.log("<MoMoPay>Listen.RequestTokenState:: " + response.status);
+            // status = 1: Parameters valid & ready to open MoMo app.
+            // status = 2: canOpenURL failed for URL MoMo app 
+            // status = 3: Parameters invalid
+        })
+        return () => {
+        }
+    }, [])
 
     // TODO: Action to Request Payment MoMo App
     const requestPaymentMomo = async () => {
@@ -80,7 +93,7 @@ const ButtonPayment = ({
                 let momoToken = response.data;
                 let phonenumber = response.phonenumber;
                 let message = response.message;
-                createBooking(phonenumber, momoToken)
+                createBooking({ phonenumber, momoToken })
             } else {
                 isChecking.current = true
                 //let message = response.message;
@@ -92,21 +105,25 @@ const ButtonPayment = ({
     const onPress = async () => {
         // if (isChecking.current) {
         //     isChecking.current = false
+        console.log('paymentMethod: ', paymentMethod);
         switch (paymentMethod) {
             case constants.PAYMENT_METHOD.VNPAY: // 'VNPAY'
-                break
-            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
-                createBooking()
                 break
             case constants.PAYMENT_METHOD.MOMO: // 'Ví MoMo'
                 requestPaymentMomo()
                 break
-            // case constants.PAYMENT_METHOD.VNPAY: //'PAYOO - cửa hàng tiện ích'
-            //     break
-            // case constants.PAYMENT_METHOD.VNPAY: // 'PAYOO - trả góp 0%'
-            //     break
+            case constants.PAYMENT_METHOD.ATM: //' ATM'
+            case constants.PAYMENT_METHOD.VISA: // 'VISA'
+            case constants.PAYMENT_METHOD.QR: //'Thanh toán QR code'
+                if (data.length) {
+                    setIsVisible(true)
+                } else {
+                    createBooking({})
+                }
+                break;
+            case constants.PAYMENT_METHOD.CASH: // 'Thanh toán sau tại CSYT'
             case constants.PAYMENT_METHOD.BANK_TRANSFER: //'Chuyển khoản trực tiếp'
-                createBooking()
+                createBooking({})
                 break
             default:
                 break;
@@ -114,10 +131,18 @@ const ButtonPayment = ({
         // }
 
     }
+    const onBackdropPress = () => setIsVisible(false)
+    const onSend = (cardNumber) => {
+        createBooking({ cardNumber })
+        onBackdropPress()
+    }
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-            <Text style={styles.datkham}>{title}</Text>
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity onPress={onPress} style={[styles.button, allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
+                <Text style={styles.datkham}>{title}</Text>
+            </TouchableOpacity>
+            <ModalCardNumber isVisible={isVisible} onBackdropPress={onBackdropPress} data={data} onSend={onSend} />
+        </View>
     )
 }
 

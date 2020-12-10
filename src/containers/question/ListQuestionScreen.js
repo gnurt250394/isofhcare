@@ -26,6 +26,7 @@ import {IndicatorViewPager} from 'mainam-react-native-viewpager';
 import ItemQuestion from '@components/question/ItemQuestion';
 import ListSpecialQuestion from '@components/question/ListSpecialQuestion';
 import RenderPlaceHolder from '@components/community/RenderPlaceHolder';
+import firebaseUtils from '@utils/firebase-utils';
 const {width, height} = Dimensions.get('screen');
 
 const NAVBAR_HEIGHT = 180;
@@ -67,6 +68,7 @@ class ListQuestionScreen extends Component {
   _offsetValue = 0;
   _scrollValue = 0;
   componentDidMount() {
+    firebaseUtils.sendEvent('Community_screen')
     this.state.scrollAnim.addListener(({value}) => {
       const diff = value - this._scrollValue;
       this._scrollValue = value;
@@ -166,6 +168,7 @@ class ListQuestionScreen extends Component {
       }
       this.timeout = setTimeout(() => {
         this.setState({isLoading: true, page: 0}, () => {
+          firebaseUtils.sendEvent('question_search')
           this.getListQuestions();
         });
       }, 500);
@@ -197,9 +200,13 @@ class ListQuestionScreen extends Component {
     );
   };
   onClickCreateMenu = () => {
+    firebaseUtils.sendEvent('askdoctor_screen_community')
     this.props.navigation.navigate('createQuestionStep');
   };
-  onMyQuestion = () => this.props.navigation.navigate('listMyQuestion');
+  onMyQuestion = () =>{
+    firebaseUtils.sendEvent('Yourquestion_screen')
+    this.props.navigation.navigate('listMyQuestion')
+  };
   menuCreate() {
     return (
       <TouchableOpacity style={{marginRight: 20}} onPress={this.onMyQuestion}>
@@ -209,6 +216,7 @@ class ListQuestionScreen extends Component {
   }
 
   goToDetailQuestion = item => () => {
+    firebaseUtils.sendEvent('Question_detail')
     this.props.navigation.navigate('detailQuestion', {item, social: true});
   };
   keyExtractor = (item, index) => `${index}`;
