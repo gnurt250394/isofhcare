@@ -45,6 +45,7 @@ import FlashMessage from "react-native-flash-message";
 import InputPhone from '@components/account/InputPhone'
 import SocketProvider from "@data-access/socket-provider";
 import { MenuProvider } from 'react-native-popup-menu';
+import firebase from 'react-native-firebase';
 
 class Kernel extends Component {
   constructor(props) {
@@ -56,6 +57,7 @@ class Kernel extends Component {
   }
 
   componentDidMount() {
+    firebase.analytics().setAnalyticsCollectionEnabled(true)
     if (constants.route != 'home') {
       codePushUtils.checkupDate(true, true);
 
