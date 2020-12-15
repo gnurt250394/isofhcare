@@ -15,8 +15,23 @@ const DetailNewsScreen = ({ navigation }) => {
     const [data, setData] = useState([])
     const [isLoading, setLoading] = useState(false)
     const [detail, setDetail] = useState(navigation.getParam('item', {}))
+    const [content,setContent] = useState("")
     const [idCategories, setIdCategories] = useState(detail?.topic?.topicId)
+    useEffect(() => {
+        // getServiceHighLight()
+        getNews()
+        getList()
+    }, [detail.newsId])
+    const getNews = () => {
+        newsProvider.detailNews(detail?.newsId).then(res => {
+            
+            setContent(res.content.rawText)
+           
+        }).catch(err => {
 
+
+        })
+    }
     const getList = () => {
         setLoading(true)
         if (!idCategories) {
@@ -55,10 +70,7 @@ const DetailNewsScreen = ({ navigation }) => {
 
     }
 
-    useEffect(() => {
-        // getServiceHighLight()
-        getList()
-    }, [detail.newsId])
+    
     const getTime = () => {
         if (detail?.createdDate) {
             let time = detail?.createdDate?.substring(0, 10)
@@ -102,8 +114,8 @@ const DetailNewsScreen = ({ navigation }) => {
                         }}>{getTime()}</Text>
                         <FastImage source={{ uri: detail?.images[0]?.downloadUri?.absoluteUrl() || '' }} style={styles.imageNews} />
                         {
-                            detail?.content?.rawText ?
-                                <HTML html={'<div style="color: black">' + detail?.content?.rawText + '</div>'}
+                            content ?
+                                <HTML html={'<div style="color: black">' + content + '</div>'}
                                     allowFontScaling={false}
                                     renderers={{
                                         img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
