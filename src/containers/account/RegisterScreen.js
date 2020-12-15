@@ -326,34 +326,7 @@ class RegisterScreen extends Component {
                     this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
-                <Field style={styles.inputPass}>
-                  <TextField
-                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Nhập lại mật khẩu'}
-                      placeholderTextColor='#000'
-                      secureTextEntry={this.state.secureTextPass2Entry}
-                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ confirm_password: s });
-                    }}
-                    errorStyle={styles.errorStyle}
-                    validate={{
-                      rules: {
-                        required: true,
-                        equalTo: this.state.password
-                      },
-                      messages: {
-                        required: constants.confirm_password_not_null,
-                        equalTo: constants.new_password_not_match
-                      }
-                    }}
-                    autoCapitalize={"none"}
-                  />
-                  {
-                    this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                  }
-
-                </Field>
+              
                 <TouchableOpacity onPress={this.onCheck(!this.state.checked)} style={styles.viewCheckbox}>
                   {this.state.checked ? <ScaleImage style={styles.imgCheck} height={20} source={require('@images/new/account/ic_checked.png')} ></ScaleImage> : <ScaleImage height={20} style={styles.imgCheck} source={require('@images/new/account/ic_unchecked.png')} ></ScaleImage>}
                   <Text style={styles.txCheckbox}>Tôi có mã giới thiệu</Text>
