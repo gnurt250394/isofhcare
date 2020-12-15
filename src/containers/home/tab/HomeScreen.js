@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Text,
   StatusBar,
@@ -16,7 +16,7 @@ import {
   Linking,
   Image,
 } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import PushController from '@components/notification/PushController';
@@ -25,7 +25,7 @@ import snackbar from '@utils/snackbar-utils';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import NavigationService from '@navigators/NavigationService';
 import appProvider from '@data-access/app-provider';
-import {Card, Toast} from 'native-base';
+import { Card, Toast } from 'native-base';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import * as Animatable from 'react-native-animatable';
@@ -81,7 +81,7 @@ class HomeScreen extends Component {
           icon: require('@images/new/homev2/ic_hospital.png'),
           text: 'Cơ sở Y tế',
           onPress: () => {
-            this.props.navigation.navigate('selectHospital', {isBooking: true});
+            this.props.navigation.navigate('selectHospital', { isBooking: true });
           },
         },
         // {
@@ -104,7 +104,7 @@ class HomeScreen extends Component {
               this.props.navigation.navigate('listBookingHistory');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'listBookingHistory', param: {}},
+                nextScreen: { screen: 'listBookingHistory', param: {} },
               });
           },
         },
@@ -117,7 +117,7 @@ class HomeScreen extends Component {
               this.props.navigation.navigate('ehealth');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'ehealth'},
+                nextScreen: { screen: 'ehealth' },
               });
           },
         },
@@ -174,7 +174,7 @@ class HomeScreen extends Component {
               this.props.navigation.navigate('healthMonitoring');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'healthMonitoring'},
+                nextScreen: { screen: 'healthMonitoring' },
               });
           },
         },
@@ -193,7 +193,7 @@ class HomeScreen extends Component {
       this.setState({
         imgBackground: res?.appBackground,
       });
-    } catch (error) {}
+    } catch (error) { }
   };
   componentDidMount() {
     if (constants.route == 'home') {
@@ -233,7 +233,7 @@ class HomeScreen extends Component {
   componentWillReceiveProps(nextProps) {
     let navigate = nextProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
-      this.setState({navigate}, () => {
+      this.setState({ navigate }, () => {
         if (navigate) {
           this.props.navigation.navigate(navigate.screen, navigate.params);
         }
@@ -284,23 +284,23 @@ class HomeScreen extends Component {
           {item.empty ? (
             <View style={[styles.viewEmpty]} />
           ) : (
-            <TouchableOpacity
-              style={[styles.buttonBooking, {}]}
-              onPress={item.onPress}>
-              <View style={{alignItems: 'center'}}>
-                <View style={styles.groupImageButton}>
-                  <ScaledImage
-                    style={[styles.icon]}
-                    source={item.icon}
-                    height={40}
-                  />
+              <TouchableOpacity
+                style={[styles.buttonBooking, {}]}
+                onPress={item.onPress}>
+                <View style={{ alignItems: 'center' }}>
+                  <View style={styles.groupImageButton}>
+                    <ScaledImage
+                      style={[styles.icon]}
+                      source={item.icon}
+                      height={40}
+                    />
+                  </View>
+                  <Text style={[styles.label, { fontSize: 15, color: '#3161AD' }]}>
+                    {item.text.toUpperCase()}
+                  </Text>
                 </View>
-                <Text style={[styles.label, {fontSize: 15, color: '#3161AD'}]}>
-                  {item.text.toUpperCase()}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            )}
         </Animatable.View>
       );
     });
@@ -340,30 +340,30 @@ class HomeScreen extends Component {
           {item.empty ? (
             <View style={[styles.viewEmpty]} />
           ) : (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                {marginTop: 10},
-                {width: this.getItemWidth()},
-              ]}
-              onPress={item.onPress}>
-              <View style={styles.groupImageButton}>
-                <ScaledImage
-                  style={[styles.icon]}
-                  source={item.icon}
-                  height={54}
-                />
-              </View>
-              <Text style={[styles.label, {paddingHorizontal: 10}]}>
-                {item.text}
-              </Text>
-              {item.new ? (
-                <View style={[styles.containerNew]}>
-                  <Text>Mới</Text>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  { marginTop: 10 },
+                  { width: this.getItemWidth() },
+                ]}
+                onPress={item.onPress}>
+                <View style={styles.groupImageButton}>
+                  <ScaledImage
+                    style={[styles.icon]}
+                    source={item.icon}
+                    height={54}
+                  />
                 </View>
-              ) : null}
-            </TouchableOpacity>
-          )}
+                <Text style={[styles.label, { paddingHorizontal: 10 }]}>
+                  {item.text}
+                </Text>
+                {item.new ? (
+                  <View style={[styles.containerNew]}>
+                    <Text>Mới</Text>
+                  </View>
+                ) : null}
+              </TouchableOpacity>
+            )}
         </Animatable.View>
       );
     });
@@ -409,7 +409,7 @@ class HomeScreen extends Component {
   };
   render() {
     const headerHome = this.state.imgBackground
-      ? {uri: this.state.imgBackground}
+      ? { uri: this.state.imgBackground }
       : require('@images/app/header.png');
     return (
       <ActivityPanel
@@ -426,24 +426,41 @@ class HomeScreen extends Component {
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}>
-            <View style={[styles.scroll, {paddingTop: this.getHeightImage()}]}>
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage() }]}>
               <View
                 onLayout={e => {
-                  this.setState({height: e.nativeEvent.layout.height});
+                  this.setState({ height: e.nativeEvent.layout.height });
                 }}
                 style={[styles.padding21]}>
-                {/* {this.props.userApp.isLogin ?
+                {this.props.userApp.isLogin ?
                   <View
-                    style={styles.containerHeadertitle}>
+                    style={styles.containerHeaderTitle}>
+                    <ScaledImage
+                      source={require('@images/new/homev2/ic_isc_write.png')}
+                      height={30}
+                       style = { styles.scaleImage}
+                    >
+
+                    </ScaledImage>
                     <Text
                       style={styles.txtHeaderTitle}
-                    >Xin chào, </Text>
-                    <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
-                  </View> : <View style={styles.containerHeadertitle}>
-                  </View>} */}
+                    >Xin chào, <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name)}</Text></Text>
+                  </View> : <View
+                    style={styles.containerHeaderTitle}>
+                    <ScaledImage
+                      source={require('@images/new/homev2/ic_isc_write.png')}
+                      height={30}
+                      style={styles.scaleImage}
+                    >
+
+                    </ScaledImage>
+                    <Text
+                      style={styles.txtHeaderTitle}
+                    >Xin chào, <Text style={styles.colorUserName}>{'Guest'}</Text></Text>
+                  </View>}
                 <Card style={styles.card}>
                   <Text style={styles.txBooking}>ĐẶT LỊCH HẸN</Text>
-                  <View style={{justifyContent: 'center'}}>
+                  <View style={{ justifyContent: 'center' }}>
                     <View style={styles.containerButtonBooking}>
                       {this.renderButtonBooking()}
                     </View>
@@ -470,7 +487,7 @@ class HomeScreen extends Component {
                 {...this.props}
                 refreshing={this.state.refreshing}
               />
-              <View style={{height: 50, backgroundColor: '#fff'}} />
+              <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
           </ScrollView>
         </View>
@@ -546,21 +563,22 @@ const styles = StyleSheet.create({
   colorUserName: {
     color: '#fff',
     paddingLeft: 4,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   txtHeaderTitle: {
     marginLeft: 5,
-    fontSize: 18,
+    fontSize: 14,
     color: '#fff',
   },
-  containerHeadertitle: {
+  containerHeaderTitle: {
     alignItems: 'center',
-    flexDirection: 'row',
     // borderBottomColor: '#fff',
     marginHorizontal: 20,
     justifyContent: 'center',
     height: 40,
+    alignSelf:'flex-start',
+    marginBottom:8
   },
   txBooking: {
     marginVertical: 10,
@@ -571,8 +589,8 @@ const styles = StyleSheet.create({
   padding21: {
     paddingHorizontal: 21,
   },
-  card: {borderRadius: 20, paddingHorizontal: 10},
-  viewMenu: {backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5},
+  card: { borderRadius: 20, paddingHorizontal: 10 },
+  viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
     // paddingTop: 30,
@@ -628,9 +646,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     flex: 1,
   },
-  imgMore: {marginTop: 10, marginRight: 20},
-  listAds: {paddingHorizontal: 20},
-  viewFooter: {width: 35},
+  imgMore: { marginTop: 10, marginRight: 20 },
+  listAds: { paddingHorizontal: 20 },
+  viewFooter: { width: 35 },
   cardView: {
     borderRadius: 6,
     marginRight: 10,
@@ -653,11 +671,11 @@ const styles = StyleSheet.create({
     borderColor: '#9B9B9B',
     borderWidth: 0.5,
   },
-  cardViewDoctor: {width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18},
-  txContensDoctor: {color: '#000', margin: 13, marginLeft: 5},
-  txContensHospital: {color: '#000', margin: 13, marginLeft: 5, maxWidth: 259},
-  viewPagination: {position: 'absolute', bottom: 0, width: DEVICE_WIDTH},
-  dotContainer: {width: 10, margin: 0, padding: 0, height: 10},
+  cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
+  txContensDoctor: { color: '#000', margin: 13, marginLeft: 5 },
+  txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
+  viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
+  dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {
     width: 10,
     height: 10,
@@ -676,8 +694,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 0,
   },
-  viewRender: {flex: 1, position: 'relative'},
-  scaledImgRender: {position: 'absolute', top: 72, right: 0, left: 0},
+  viewRender: { flex: 1, position: 'relative' },
+  scaledImgRender: { position: 'absolute', top: 72, right: 0, left: 0 },
   viewLogo: {
     height: 75,
     flexDirection: 'row',
@@ -687,13 +705,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#7c817f',
     borderBottomWidth: 0.5,
   },
-  banner: {flex: 1, alignItems: 'center', marginLeft: 45},
+  banner: { flex: 1, alignItems: 'center', marginLeft: 45 },
   scrollViewRender: {
     flex: 1,
     paddingTop: 0,
   },
-  viewCard: {padding: 21},
-  cardRender: {borderRadius: 6, marginTop: 130},
+  viewCard: { padding: 21 },
+  cardRender: { borderRadius: 6, marginTop: 130 },
   viewLogin: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -703,8 +721,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'center',
   },
-  txHello: {marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: '#4a4a4a'},
-  txName: {color: 'rgb(255,138,21)'},
+  txHello: { marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: '#4a4a4a' },
+  txName: { color: 'rgb(255,138,21)' },
   viewFeatures: {
     flexDirection: 'row',
     padding: 10,
@@ -712,6 +730,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
+  scaleImage:{
+    marginBottom:8
+  }
 });
 
 function mapStateToProps(state) {
