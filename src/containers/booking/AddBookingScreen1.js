@@ -140,14 +140,15 @@ class AddBookingScreen extends Component {
                 if (!temp) {
                   imageUris.push({uri: image.path, loading: true});
                   imageProvider.upload(image.path, image.mime, (s, e) => {
+                    console.log('s: ', s);
                     if (s.success) {
-                      if (s && s.data.length > 0) {
+                      if (s?.data?.code == 0) {
                         let imageUris = this.state.imageUris;
                         imageUris.forEach(item => {
                           if (item.uri == s.uri) {
                             item.loading = false;
-                            item.url = s.data[0].fileDownloadUri;
-                            item.thumbnail = s.data[0].fileDownloadUri;
+                            item.url = s.data?.data?.images[0].imageLink;
+                            item.thumbnail = s.data?.data?.images[0].imageLink;
                           }
                         });
                         this.setState({
