@@ -1,4 +1,4 @@
-package com.isofh.appisofhcaredev;
+package com.isofh.appisofhcaretest;
 
 import cl.json.ShareApplication;
 import android.app.Application;
@@ -15,7 +15,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.isofh.appisofhcaredev.LaunchApplicationPackage;
+import com.isofh.appisofhcaretest.LaunchApplicationPackage;
 import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
 // public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication {
@@ -70,7 +70,7 @@ import com.microsoft.codepush.react.CodePush;
 
  @Override
      public String getFileProviderAuthority() {
-            return "com.isofh.appisofhcaredev.provider";
+            return "com.isofh.appisofhcaretest.provider";
      }
   // @Override
   // protected void attachBaseContext(Context base) {

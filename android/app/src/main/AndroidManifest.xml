@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-  package="com.isofh.appisofhcaredev">
+    package="com.isofh.appisofhcaretest">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,7 +19,6 @@ xmlns:tools="http://schemas.android.com/tools"
     <!-- These require runtime permissions on M -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <permission
             android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE"
             android:protectionLevel="signature" />
@@ -151,7 +150,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </service>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.isofh.appisofhcaredev.provider"
+            android:authorities="com.isofh.appisofhcaretest.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

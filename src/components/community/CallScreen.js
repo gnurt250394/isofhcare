@@ -46,7 +46,7 @@ const PATTERN = [
   2 * ONE_SECOND_IN_MS,
   3 * ONE_SECOND_IN_MS,
 ];
-const HOST = process.env.HOST || 'http://10.0.50.118:4443'
+const HOST = process.env.HOST || 'https://isofhcare-test.herokuapp.com'
 const isFront = true // Use Front camera?
 const DEFAULT_ICE = {
   iceServers: [

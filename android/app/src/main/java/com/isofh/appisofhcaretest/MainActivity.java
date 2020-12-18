@@ -1,4 +1,4 @@
-package com.isofh.appisofhcaredev;
+package com.isofh.appisofhcaretest;
 
 import android.content.Intent;
 import android.net.Uri;

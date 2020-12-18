@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>USER DEV</string>
+	<string>USER TEST</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -60,7 +60,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.appisofhcaredev</string>
+			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>payoo</string>
@@ -70,17 +70,17 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.appisofhcaredev</string>
+			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.appisofhcaredev</string>
+				<string>com.isofh.appisofhcaretest</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>103</string>
 	<key>CodePushDeploymentKey</key>
-	<string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
+	<string>FqWm2qyiPFklb-payLojC8vnDzM3r1BkLCS1H</string>
 	<key>FacebookAppID</key>
 	<string>187875142367413</string>
 	<key>FacebookCodelessDebugLogEnabled</key>

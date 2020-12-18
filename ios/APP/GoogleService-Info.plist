@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>553446981035-4ntr8349cdhiedu5n5ovnt119tkv00b8.apps.googleusercontent.com</string>
+	<string>553446981035-3c865duee0vo38befkkmcatt57l30n20.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.553446981035-4ntr8349cdhiedu5n5ovnt119tkv00b8</string>
+	<string>com.googleusercontent.apps.553446981035-3c865duee0vo38befkkmcatt57l30n20</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>553446981035-13crntjue56vmtueclp5q04uf695ll65.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.isofh.appisofhcaredev</string>
+	<string>com.isofh.appisofhcaretest</string>
 	<key>PROJECT_ID</key>
 	<string>isofhcare</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:553446981035:ios:4d5fb7a57c7951c5</string>
+	<string>1:553446981035:ios:09e58b0cd6888cb6</string>
 	<key>DATABASE_URL</key>
 	<string>https://isofhcare.firebaseio.com</string>
 </dict>

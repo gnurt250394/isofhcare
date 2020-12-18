@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.isofh.appisofhcaredev"
+        applicationId "com.isofh.appisofhcaretest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 100
@@ -177,8 +177,8 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
-            // def versionCodes = ["armeabi-v7a":1, "arm64-v8a":2]
+            // def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+            def versionCodes = ["armeabi-v7a":1, "arm64-v8a":2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -243,7 +243,6 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation "com.google.firebase:firebase-core:16.0.9"
-    implementation project(':react-native-fingerprint-change')
 
 
     if (enableHermes) {

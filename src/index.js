@@ -57,7 +57,8 @@ class Kernel extends Component {
 
   componentDidMount() {
     if (constants.route != 'home') {
-      // codePushUtils.checkupDate(true,true);
+      codePushUtils.checkupDate(true,true);
+
     }
   }
   SetDefaultText = () => {

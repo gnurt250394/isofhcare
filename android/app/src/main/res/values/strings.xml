@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">USER DEV</string>
+    <string name="app_name">USER TEST</string>
     <string name="facebook_app_id">187875142367413</string>
 <string name="fb_login_protocol_scheme">fb1457683741386685</string>
     <string name="default_notification_channel_id">isofh-care-channel</string>

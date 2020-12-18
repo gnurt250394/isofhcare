@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.isofh.appisofhcaredev",
+    package = "com.isofh.appisofhcaretest",
 )
 
 android_resource(
     name = "res",
-    package = "com.isofh.appisofhcaredev",
+    package = "com.isofh.appisofhcaretest",
     res = "src/main/res",
 )
 
