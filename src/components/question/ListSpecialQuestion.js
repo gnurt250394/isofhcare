@@ -7,8 +7,8 @@ import {
   Dimensions,
   Text,
 } from 'react-native';
-import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import NavigationService from '@navigators/NavigationService';
+import questionProvider from '@data-access/question-provider';
 const {height, width} = Dimensions.get('screen');
 const ListSpecialQuestion = ({onSelected, onFocus}) => {
   const [specialist, setSpecialist] = useState([]);
@@ -18,18 +18,19 @@ const ListSpecialQuestion = ({onSelected, onFocus}) => {
     if (onFocus) getListSpecialist();
   }, [page, onFocus]);
   const getListSpecialist = () => {
-    bookingDoctorProvider
-      .get_list_specialists(page, size)
+    questionProvider
+      .getListSpecialist()
       .then(res => {
-        if (res && res.length > 0) {
-          formatData(res);
-        } else {
-          formatData([]);
+        if (res?.length > 0) {
+          setSpecialist(
+            res.map(item => ({
+              name: item.specializationName,
+              id: item.specializationId,
+            })),
+          );
         }
       })
-      .catch(err => {
-        formatData([]);
-      });
+      .catch(err => {});
   };
   const formatData = data => {
     if (data.length == 0) {
@@ -138,8 +139,8 @@ const ListSpecialQuestion = ({onSelected, onFocus}) => {
         renderItem={renderListSpecialist}
         keyExtractor={keyExtractor}
         horizontal={true}
-        onEndReached={loadMoreSpecialist}
-        onEndReachedThreshold={0.7}
+        // onEndReached={loadMoreSpecialist}
+        // onEndReachedThreshold={0.7}
       />
     </View>
   );
