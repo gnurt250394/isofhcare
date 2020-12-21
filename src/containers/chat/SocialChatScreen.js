@@ -44,6 +44,7 @@ import {RectButton} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import io from 'socket.io-client';
 import RenderSocial from '@components/question/RenderSocial';
+import Footer from './Footer';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -200,40 +201,43 @@ const SocialChatScreen = ({
   };
 
   return (
-    <ScrollView>
-      <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
-        <RenderSocial item={item} social={social} />
-        <FlatList
-          style={{flex: 1, paddingBottom: 20}}
-          ref={flatList}
-          keyExtractor={(item, index) => index.toString()}
-          extraData={state}
-          data={data}
-          scrollEnabled={false}
-          ListFooterComponent={listFooter}
-          renderItem={props => (
-            <View>
-              {props.item?.userId != item?.doctorInfo?.id ? (
-                <MyMessage
-                  isLast={props.index == 0}
-                  message={props.item}
-                  preMessage={props.index == 0 ? null : data[props.index - 1]}
-                />
-              ) : (
-                <TheirMessage
-                  // chatProfile={getChatProfile(props.item.userId)}
-                  isLast={props.index == 0}
-                  message={props.item}
-                  info={item.doctorInfo}
-                  preMessage={props.index == 0 ? null : data[props.index - 1]}
-                />
-              )}
-            </View>
-          )}
-        />
-        <ImagePicker ref={imagePicker} />
-      </View>
-    </ScrollView>
+    <View style={{flex: 1}}>
+      <ScrollView>
+        <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+          <RenderSocial item={item} social={social} />
+          <FlatList
+            style={{flex: 1, paddingBottom: 20}}
+            ref={flatList}
+            keyExtractor={(item, index) => index.toString()}
+            extraData={state}
+            data={data}
+            scrollEnabled={false}
+            ListFooterComponent={listFooter}
+            renderItem={props => (
+              <View>
+                {props.item?.userId != item?.doctorInfo?.id ? (
+                  <MyMessage
+                    isLast={props.index == 0}
+                    message={props.item}
+                    preMessage={props.index == 0 ? null : data[props.index - 1]}
+                  />
+                ) : (
+                  <TheirMessage
+                    // chatProfile={getChatProfile(props.item.userId)}
+                    isLast={props.index == 0}
+                    message={props.item}
+                    info={item.doctorInfo}
+                    preMessage={props.index == 0 ? null : data[props.index - 1]}
+                  />
+                )}
+              </View>
+            )}
+          />
+          <ImagePicker ref={imagePicker} />
+        </View>
+      </ScrollView>
+      <Footer item={item} />
+    </View>
   );
 };
 
