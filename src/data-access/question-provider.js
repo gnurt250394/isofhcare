@@ -162,4 +162,20 @@ export default {
       );
     });
   },
+  setThanks(idQuestion) {
+    return new Promise((resolve, reject) => {
+      // reject();
+      client.requestApi(
+        'put',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/${idQuestion}/thanks`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };
