@@ -63,6 +63,7 @@ import RenderProfile from '@components/question/RenderProfile';
 import ImageLoad from 'mainam-react-native-image-loader';
 import {withNavigation} from 'react-navigation';
 import objectUtils from '@utils/object-utils';
+import Footer from './Footer';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -436,7 +437,7 @@ const ChatScreen = ({
   return (
     // <TouchableWithoutFeedback
     //   onPress={() => prevOpenedRow.current && prevOpenedRow.current.close()}>
-    <View style={{flex: 1, backgroundColor: '#FFF', paddingBottom: 10}}>
+    <View style={{flex: 1, backgroundColor: '#FFF'}}>
       <GiftedChat
         messages={data}
         // alwaysShowSend={true}
@@ -458,7 +459,9 @@ const ChatScreen = ({
                     paddingBottom: 5,
                     color: '#00BA99',
                   }}>
-                  {objectUtils.renderAcademic(item?.doctorInfo?.academicDegreeValue)}
+                  {objectUtils.renderAcademic(
+                    item?.doctorInfo?.academicDegreeValue,
+                  )}
                   {item.doctorInfo.name}
                 </Text>
               ) : null}
@@ -659,7 +662,7 @@ const ChatScreen = ({
           _id: item.userInfo.id,
         }}
       />
-
+      <Footer item={item}/>
       <ImagePicker ref={imagePicker} />
     </View>
   );
