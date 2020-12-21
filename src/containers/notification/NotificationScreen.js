@@ -213,6 +213,7 @@ class NotificationScreen extends Component {
           case 15:
             this.openQuestion(question?.question || question);
             break;
+          case 'detailNewsHighlight':
           case 19:
             NavigationService.navigate('detailNews', {
               item: {newsId: data.id},

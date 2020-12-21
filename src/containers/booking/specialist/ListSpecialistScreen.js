@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+import questionProvider from '@data-access/question-provider';
 const TYPE = {
   SEARCH: 'SEARCH',
   HOSPITAL: 'HOSPITAL',
@@ -26,23 +26,28 @@ class ListSpecialistScreen extends Component {
       keyword: '',
       type: '',
     };
+    this.data = [];
   }
 
   getData = () => {
     this.setState({refreshing: true}, () => {
-      bookingDoctorProvider
-        .get_list_specialists(0,999)
+      questionProvider
+        .getListSpecialist()
         .then(res => {
           this.setState({refreshing: false});
-          if (res && res.length > 0) {
-            this.formatData(res);
-          } else {
-            this.formatData([]);
+          if (res?.length > 0) {
+            let data = res.map(item => ({
+              name: item.specializationName,
+              id: item.specializationId,
+            }));
+            this.data = data;
+            this.setState({
+              data,
+            });
           }
         })
         .catch(err => {
           this.setState({refreshing: false});
-          this.formatData([]);
         });
     });
   };
@@ -79,7 +84,6 @@ class ListSpecialistScreen extends Component {
         this.setState({data});
       } else {
         this.setState(prev => {
-          console.log('prev: ', prev);
           return {data: [...prev.data, ...data]};
         });
       }
@@ -150,12 +154,25 @@ class ListSpecialistScreen extends Component {
     this.props.navigation.pop();
   };
   onChangeText = keyword => {
-    this.setState({keyword, type: TYPE.SEARCH}, () => {
-      this.searchData();
-    });
+    this.setState({keyword});
     if (!keyword) {
-      this.setState({type: ''});
       this.getData();
+    } else {
+      let list = this.data.filter(
+        item =>
+          item.name
+            .trim()
+            .unsignText()
+            .toLowerCase()
+            .indexOf(
+              keyword
+                .trim()
+                .unsignText()
+                .toLowerCase(),
+            ) != -1,
+      );
+
+      this.setState({data: list});
     }
   };
   renderFooter = () => {
