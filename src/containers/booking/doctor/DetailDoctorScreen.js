@@ -384,11 +384,13 @@ class DetailsDoctorScreen extends Component {
                     null
                   }
                 </View>
+                <View>
                 <Text style={styles.colorBold}>Kinh nghiệm khám chữa bệnh:</Text>
                 {profileDoctor.overview ?
                   <Text style={styles.txtPosition}>{profileDoctor.overview}</Text>
                   : null
                 }
+                </View>
                 <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
                 {this.renderWorking()}
                 <View style={styles.flex}>
