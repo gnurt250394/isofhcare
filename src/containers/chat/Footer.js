@@ -5,6 +5,7 @@ import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import {withNavigation} from 'react-navigation';
 
 const Footer = ({navigation, item}) => {
+  console.log('item: ', item);
   const [thanks, setThanks] = useState(item?.thankNo != 0);
   const onSetThanks = async () => {
     try {
@@ -16,7 +17,7 @@ const Footer = ({navigation, item}) => {
   };
   const onViewProfileDoctor = () => {
     if (item?.doctorInfo?.id)
-      navigation.navigate('detailsDoctor', {item: {id: item?.doctorInfo?.id}});
+      navigation.navigate('detailsDoctor', {item: {id: item?.doctorInfo?.doctorId}});
   };
   return (
     <View style={styles.container}>
@@ -35,7 +36,7 @@ const Footer = ({navigation, item}) => {
             height={18}
           />
         )}
-        <Text style={styles.txtThanks}>Cảm ơn</Text>
+        <Text style={styles.txtThanks}>{thanks?"Đã cảm ơn":"Cảm ơn"}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onViewProfileDoctor}
