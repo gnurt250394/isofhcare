@@ -17,12 +17,14 @@ const Footer = ({navigation, item}) => {
   };
   const onViewProfileDoctor = () => {
     if (item?.doctorInfo?.id)
-      navigation.navigate('detailsDoctor', {item: {id: item?.doctorInfo?.doctorId}});
+      navigation.navigate('detailsDoctor', {
+        item: {id: item?.doctorInfo?.doctorId},
+      });
   };
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        disabled={thanks}
+        disabled={thanks || !item?.doctorInfo?.doctorId}
         onPress={onSetThanks}
         style={styles.buttonThanks}>
         {thanks ? (
@@ -36,9 +38,10 @@ const Footer = ({navigation, item}) => {
             height={18}
           />
         )}
-        <Text style={styles.txtThanks}>{thanks?"Đã cảm ơn":"Cảm ơn"}</Text>
+        <Text style={styles.txtThanks}>{thanks ? 'Đã cảm ơn' : 'Cảm ơn'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
+        disabled={!item?.doctorInfo?.doctorId}
         onPress={onViewProfileDoctor}
         style={styles.buttonViewProfile}>
         <Text style={styles.txtDoctor}>Xem hồ sơ bác sĩ</Text>
