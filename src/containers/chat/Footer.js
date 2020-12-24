@@ -1,12 +1,14 @@
 import questionProvider from '@data-access/question-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import {withNavigation} from 'react-navigation';
 
 const Footer = ({navigation, item}) => {
-  console.log('item: ', item);
-  const [thanks, setThanks] = useState(item?.thankNo != 0);
+  const [thanks, setThanks] = useState(false);
+  useEffect(() => {
+    setThanks(item?.thanked);
+  }, [item?.thanked]);
   const onSetThanks = async () => {
     try {
       setThanks(true);
