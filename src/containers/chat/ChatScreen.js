@@ -661,8 +661,17 @@ const ChatScreen = ({
         user={{
           _id: item.userInfo.id,
         }}
+        renderChatFooter={() => (
+          <View style={styles.containerFooter}>
+            <ScaleImage
+              source={require('@images/new/ic_thanks.png')}
+              height={20}
+            />
+            <Text style={{paddingLeft: 5}}>{item?.thankNo}</Text>
+          </View>
+        )}
       />
-      <Footer item={item}/>
+      <Footer item={item} />
       <ImagePicker ref={imagePicker} />
     </View>
   );
@@ -671,6 +680,12 @@ const ChatScreen = ({
 export default withNavigation(ChatScreen);
 
 const styles = StyleSheet.create({
+  containerFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+    paddingBottom:15
+  },
   txtLoading: {
     fontWeight: 'bold',
     color: '#00CBA7',

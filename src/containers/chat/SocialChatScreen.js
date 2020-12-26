@@ -236,6 +236,10 @@ const SocialChatScreen = ({
           <ImagePicker ref={imagePicker} />
         </View>
       </ScrollView>
+      <View style={{flexDirection: 'row', paddingLeft: 10, paddingBottom: 5}}>
+        <ScaleImage source={require('@images/new/ic_thanks.png')} height={18} />
+        <Text>{item?.thankNo}</Text>
+      </View>
       <Footer item={item} />
     </View>
   );

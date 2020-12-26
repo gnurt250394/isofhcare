@@ -73,7 +73,8 @@ export default {
     return new Promise((resolve, reject) => {
       // reject();
       let params =
-        `?page=${page}&size=${size}` + (direction ? '&orderBy=id&direction=ASC' : '');
+        `?page=${page}&size=${size}` +
+        (direction ? '&orderBy=id&direction=ASC' : '');
       client.requestApi(
         'get',
         client.serviceChats +
@@ -170,6 +171,22 @@ export default {
         client.serviceChats +
           constants.api.question.list_anwser +
           `/${idQuestion}/thanks`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getListSpecialist() {
+    return new Promise((resolve, reject) => {
+      // reject();
+      client.requestApi(
+        'get',
+        client.serviceChats +
+          constants.api.question.list_anwser +
+          `/specializations/asked`,
         {},
         (s, e) => {
           if (s) resolve(s);
