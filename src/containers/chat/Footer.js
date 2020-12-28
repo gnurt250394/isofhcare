@@ -6,9 +6,16 @@ import {withNavigation} from 'react-navigation';
 
 const Footer = ({navigation, item}) => {
   const [thanks, setThanks] = useState(false);
+  const getDetail = async () => {
+    try {
+      let res = await questionProvider.getDetailQuestion(item.id);
+
+      setThanks(res.thanked);
+    } catch (error) {}
+  };
   useEffect(() => {
-    setThanks(item?.thanked);
-  }, [item?.thanked]);
+    getDetail();
+  }, []);
   const onSetThanks = async () => {
     try {
       setThanks(true);
