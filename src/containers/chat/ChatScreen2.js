@@ -63,6 +63,7 @@ import RenderProfile from '@components/question/RenderProfile';
 import ImageLoad from 'mainam-react-native-image-loader';
 import {withNavigation} from 'react-navigation';
 import objectUtils from '@utils/object-utils';
+import Footer from './Footer';
 const ChatView = Platform.select({
   ios: () => KeyboardAvoidingView,
   android: () => View,
@@ -665,6 +666,7 @@ const ChatScreen = ({
           _id: item.userInfo.id,
         }}
       />
+      <Footer item={item}/>
 
       <ImagePicker ref={imagePicker} />
     </View>

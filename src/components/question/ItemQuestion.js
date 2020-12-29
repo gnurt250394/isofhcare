@@ -113,16 +113,22 @@ class ItemQuestion extends Component {
                 : null}
             </Text>
           ) : null}
-          {item.commentNo ? (
-            <Text
-              style={{
-                paddingLeft: 20,
-                fontSize: 13,
-                color: '#00000090',
-              }}>
-              {item.commentNo} trả lời
-            </Text>
-          ) : null}
+          <View style={styles.containerRowChat}>
+            <View style={styles.groupChatCount}>
+              <ScaleImage
+                source={require('@images/new/ic_chat2.png')}
+                height={18}
+              />
+              <Text style={styles.txtCommentNo}>{item.commentNo}</Text>
+            </View>
+            <View style={styles.groupChatCount}>
+              <ScaleImage
+                source={require('@images/new/ic_ehealth.png')}
+                height={18}
+              />
+              <Text style={styles.txtCommentNo}>{item.thankNo}</Text>
+            </View>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -130,6 +136,17 @@ class ItemQuestion extends Component {
 }
 
 const styles = StyleSheet.create({
+  txtCommentNo: {
+    paddingLeft: 5,
+    fontSize: 13,
+    color: '#00000090',
+  },
+  groupChatCount: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+  },
+  containerRowChat: {flexDirection: 'row', alignItems: 'center'},
   txtSpecialist: {
     color: '#3161AD',
     fontSize: 13,
@@ -149,6 +166,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 7,
     paddingBottom: 14,
+    justifyContent: 'space-between',
   },
   imgQuestion: {
     width: '100%',
