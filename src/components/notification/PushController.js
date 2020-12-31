@@ -202,6 +202,12 @@ class PushController extends Component {
           case '15':
             this.openQuestion(question?.question || question);
             break;
+          case '19':
+          case 'detailNewsHighlight':
+            NavigationService.navigate('detailNews', {
+              item: {newsId: id},
+            });
+            break;
           case '-1':
             break;
           case 'NEWS': {
@@ -408,6 +414,12 @@ class PushController extends Component {
           case '15':
           case '16':
             this.openQuestion(question?.question || question);
+            break;
+          case '19':
+          case 'detailNewsHighlight':
+            NavigationService.navigate('detailNews', {
+              item: {newsId: id},
+            });
             break;
           case 'NEWS': {
             NavigationService.navigate('detailNewsHighlight', {item: {id}});
