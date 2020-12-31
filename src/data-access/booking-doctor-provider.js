@@ -114,8 +114,7 @@ export default {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                client.serviceSchedule +
-                constants.api.booking.doctor.get_detail_hospital +
+                constants.api.hospital.get_details_hospital +
                 "/" +
                 id,
                 {},
