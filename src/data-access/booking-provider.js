@@ -180,9 +180,8 @@ export default {
     time,
     idUser,
     images,
-    byHospital
+    byHospital,
   ) {
-    
     return new Promise((resolve, reject) => {
       let hospital = {
         id: (hospitals && hospitals.id) || '',
@@ -193,7 +192,8 @@ export default {
           '',
         checkInPlace: (hospitals && hospitals.checkInPlace) || '',
         hotLine:
-          (hospitals && (hospitals.hotLine || hospitals?.contact?.hotLine)) || '',
+          (hospitals && (hospitals.hotLine || hospitals?.contact?.hotLine)) ||
+          '',
         bank:
           (hospitals && (hospitals.bank || hospitals?.transferInfo?.bank)) ||
           '',
@@ -212,7 +212,7 @@ export default {
           (hospitals && (hospitals.note || hospitals?.transferInfo?.note)) ||
           '',
       };
-      
+
       let patient = {
         id: idUser,
         name: patientUser.name,
@@ -237,7 +237,7 @@ export default {
           //owner : true: đặt khám chính chủ, false: đặt khám hộ
           owner: patientUser.status == 1 ? true : false,
           images,
-          byHospital
+          byHospital,
         },
         (s, e) => {
           if (s) resolve(s);
@@ -246,16 +246,19 @@ export default {
       );
     });
   },
-  // payTranfer(bookingId) {
-  //   return new Promise((resolve, reject) => {
-  //     client.requestApi(
-  //       'get', `${constants.api.booking.pay_tranfer}/${bookingId}`, {}, (s, e) => {
-  //         if (s)
-  //           resolve(s)
-  //         else
-  //           reject(e)
-  //       }
-  //     )
-  //   })
-  // }
+  getCountBooking() {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.serviceBooking +
+          constants.api.booking.doctor.get_detail_booking +
+          '/accepted',
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };

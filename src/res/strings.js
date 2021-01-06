@@ -1222,8 +1222,8 @@ module.exports = {
       search_news_by_topic: '/v1/topics/',
     },
     payment: {
-      get_list_card: isofhcare_service + 'payment/v1/alepay/profiles',
-      create_new_card: isofhcare_service + 'payment/v1/alepay/request-profile',
+      get_list_card: 'payment/v1/alepay/profiles',
+      create_new_card: 'payment/v1/alepay/request-profile',
     },
   },
 };
