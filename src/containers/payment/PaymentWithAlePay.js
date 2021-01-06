@@ -76,7 +76,7 @@ class PaymentWithAlePay extends Component {
     navigationStateChangedHandler = ({ url }) => {
         console.log('url: ', url);
         const { navigation } = this.props
-        if (url.indexOf("isofhcare/payment/v1/alepay") != -1) {
+        if (url.indexOf("/payment/v1/alepay") != -1) {
             if (!this.isBack) {
                 this.isBack = true
                 console.log('this.isBack: ', this.isBack);
