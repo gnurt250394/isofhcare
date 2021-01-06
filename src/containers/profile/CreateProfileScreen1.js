@@ -417,7 +417,7 @@ class EditProfileScreen extends Component {
     onSelectCountry = () => {
         this.props.navigation.navigate('selectCountry', {
             onSelected: this.selectCountry.bind(this),
-
+            country:this.state.country
         })
     }
     onCreateProfile = () => {
@@ -636,13 +636,13 @@ class EditProfileScreen extends Component {
     onSelectNations = () => {
         this.props.navigation.navigate('selectNations', {
             onSelected: this.selectNations.bind(this),
-
+            nations: this.state.nations
         })
     }
     onSelectJobs = () => {
         this.props.navigation.navigate('getJobs', {
             onSelected: this.selectJobs.bind(this),
-
+            jobs: this.state.jobs
         })
     }
     _replaceSpace(str) {
