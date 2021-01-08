@@ -14,6 +14,7 @@ const CustomMenu = ({
   options,
   customOption,
   onSelected,
+  textStyle,
   ...props
 }) => {
   const onSelect = (e, i) => () => {
@@ -39,7 +40,7 @@ const CustomMenu = ({
                   style={styles.containerOption}
                   onSelect={onSelect(e, i)}>
                   <View style={[styles.buttonAnwser]}>
-                    <Text>{e.value}</Text>
+                    <Text style={{color:`${e.color || '#000000'}`}}>{e.value}</Text>
                   </View>
                 </MenuOption>
               );
