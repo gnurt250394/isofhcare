@@ -12,6 +12,7 @@ import ActionSheet from 'react-native-actionsheet'
 import snackbar from "@utils/snackbar-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import dateUtils from 'mainam-react-native-date-utils';
+import CustomMenu from '@components/CustomMenu'
 
 import { CheckBox } from 'native-base'
 class ListProfileScreen extends Component {
@@ -388,7 +389,36 @@ class ListProfileScreen extends Component {
             )
         }
     }
-    renderItem = ({ item }) => {
+    onSelectOptions = (options, item, index) => {
+        switch (options.id) {
+            case 1: {
+                this.setState({
+                    isVisibleShare: true,
+                    ehealth: item.medicalRecords.permission && item.medicalRecords.permission.indexOf('YBDT') >= 0 ? true : false,
+                    permissionsOld: item.medicalRecords.permission,
+                    id: item.medicalRecords.id,
+                    shareId: item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null,
+                    reset: 2
+                })
+            }
+                break
+            case 2: {
+                this.onEditProfile(item)
+            }
+                break
+            case 3: {
+                this.setState(
+                    {
+                        idProfile: item.medicalRecords.id,
+                        medicalName: item.medicalRecords.name,
+                        isVisible: true,
+
+                    });
+            }
+                break
+        }
+    }
+    renderItem = ({ item, index }) => {
         let age = item?.medicalRecords?.dob ? new Date().getFullYear() - item?.medicalRecords?.dob?.toDateObject('-').getFullYear() : null
 
         switch (item.medicalRecords.statusConfirm) {
@@ -541,9 +571,23 @@ class ListProfileScreen extends Component {
                                 {/* <Text style={styles.dobActive}>{'Mã bệnh nhân: '}{item?.medicalRecords?.value}</Text> */}
 
                             </View>
-                            {item?.medicalRecords?.status !== 1 ? <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item)}>
+                            <CustomMenu
+                                textStyle={{ color: '#ff0000' }}
+                                MenuSelectOption={
+                                    <View style={styles.buttonMenu}>
+                                        <ScaledImage
+                                            source={require('@images/new/ic_more.png')}
+                                            height={12}
+                                            style={{ resizeMode: 'contain' }}
+                                        />
+                                    </View>
+                                }
+                                options={[{ value: 'Cài đặt chia sẻ', id: 1 }, { value: 'Sửa thông tin', id: 2 }, { value: 'Xoá thành viên', id: 3, color: '#ff0000' }]}
+                                onSelected={(options) => this.onSelectOptions(options, item, index)}
+                            />
+                            {/* {item?.medicalRecords?.status !== 1 ? <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item)}>
                                 <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_dots.png')}></ScaledImage>
-                            </TouchableOpacity> : <View></View>}
+                            </TouchableOpacity> : <View></View>} */}
                         </View>
 
                     </TouchableOpacity>
@@ -634,6 +678,26 @@ class ListProfileScreen extends Component {
         if (nextProps.userApp.currentUser) {
             this.onLoad()
         }
+    }
+    onEdit(isEdit) {
+        debugger
+        if (isEdit) {
+            this.onLoad()
+        }
+    }
+    onEditProfile = (item) => {
+
+        if (this.props.userApp.currentUser.accountSource == 'VENDOR') {
+            this.props.navigation.replace('editProfileUsername', {
+                dataOld: item,
+                // onEdit: this.onEdit.bind(this)
+            })
+        }
+        else
+            this.props.navigation.navigate('createProfile', {
+                dataOld: item,
+                onEdit: this.onEdit.bind(this)
+            })
     }
     createProfile = () => {
         let itemOwer = this.state.itemOwer ? this.state.itemOwer.medicalRecords : null
@@ -740,13 +804,13 @@ class ListProfileScreen extends Component {
 
                     </View>
                 </Modal>
-                <ActionSheet
+                {/* <ActionSheet
                     ref={o => this.actionSheetOptions = o}
                     options={['Cài đặt chia sẻ', 'Xóa', 'Hủy']}
                     cancelButtonIndex={2}
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
-                />
+                /> */}
                 {/* <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerButtonAdd}>
                     <Card style={styles.card}>
                         <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
@@ -857,8 +921,8 @@ const styles = StyleSheet.create({
     txName: { color: '#02C39A', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
     txLabel: { color: '#02C39A' },
-    btnShare: { justifyContent: 'center', marginTop: 30, alignItems: 'center', height: 42, width: 254, backgroundColor: '#3161ad', borderRadius: 5, },
-    btnDone: { justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10, marginLeft: 10, backgroundColor: '#3161ad', borderRadius: 5, },
+    btnShare: { justifyContent: 'center', marginTop: 30, alignItems: 'center', height: 42, width: 254, backgroundColor: '#00CBA7', borderRadius: 5, },
+    btnDone: { justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10, marginLeft: 10, backgroundColor: '#00CBA7', borderRadius: 5, },
     btnReject: { justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10, width: 78, borderRadius: 5, backgroundColor: '#fff', borderColor: '#00000050', borderWidth: 1 },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
     txDone: { color: '#fff' },
@@ -900,7 +964,7 @@ const styles = StyleSheet.create({
     viewTxNeed: { fontSize: 16, color: '#000', },
     txPhoneNeed: { fontSize: 14, fontWeight: 'bold', color: '#00000050', marginVertical: 5 },
     viewBtnNeed: { flexDirection: 'row', alignItems: 'center' },
-    btnNeed: { backgroundColor: '#075BB5', borderRadius: 50, paddingHorizontal: 20, paddingVertical: 10, justifyContent: 'center', alignItems: 'center' },
+    btnNeed: { backgroundColor: '#00CBA7', borderRadius: 50, paddingHorizontal: 20, paddingVertical: 10, justifyContent: 'center', alignItems: 'center' },
     txNeed: { fontSize: 14, color: '#fff' },
     btnRejectNeed: { backgroundColor: '#fff', marginLeft: 10, borderWidth: 1, borderColor: '#000', borderRadius: 50, paddingHorizontal: 20, paddingVertical: 10, justifyContent: 'center', alignItems: 'center' },
     txDeleteNeed: { fontSize: 14, color: '#000' },
@@ -908,12 +972,15 @@ const styles = StyleSheet.create({
     viewItemActive: { marginLeft: 10, flex: 1 },
     nameActive: { fontSize: 16, fontWeight: 'bold', color: '#000' },
     phoneActive: { fontSize: 14, fontWeight: 'bold', color: '#00000050', marginVertical: 5 },
-    dobActive: { fontSize: 15, fontWeight: 'bold', color: '#075BB5' },
+    dobActive: { fontSize: 15, fontWeight: 'bold', color: '#00CBA7' },
     titleStyle: { marginLeft: 50 },
     containerStyle: { paddingHorizontal: 10, backgroundColor: '#f8f8f8' },
     btnAdd: {
         padding: 5
-    }
+    },
+    buttonMenu: {
+        padding: 5
+    },
 })
 function mapStateToProps(state) {
     return {
