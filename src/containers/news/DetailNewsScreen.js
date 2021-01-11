@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo} from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   View,
   Text,
@@ -18,9 +18,11 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import FastImage from 'react-native-fast-image';
 import Webview from 'react-native-webview';
 import newsProvider from '@data-access/news-provider';
+import { IGNORED_TAGS } from 'react-native-render-html/src/HTMLUtils'
+import _ from 'lodash'
 
-const {width, height} = Dimensions.get('window');
-const DetailNewsScreen = ({navigation}) => {
+const { width, height } = Dimensions.get('window');
+const DetailNewsScreen = ({ navigation }) => {
   const item = navigation.getParam('item', {});
   const [data, setData] = useState([]);
 
@@ -41,7 +43,7 @@ const DetailNewsScreen = ({navigation}) => {
         setContent(res.content.rawText);
         setDetail(res);
       })
-      .catch(err => {});
+      .catch(err => { });
   };
   const getList = () => {
     setLoading(true);
@@ -92,14 +94,53 @@ const DetailNewsScreen = ({navigation}) => {
     }
   };
   const goToDetailService = item => () => {
-    navigation.replace('detailNews', {item, idCategories});
+    navigation.replace('detailNews', { item, idCategories });
   };
-  const renderItem = ({item, index}) => {
+  const tags = _.without(IGNORED_TAGS,
+    'table', 'caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'
+  )
+
+  const tableDefaultStyle = {
+    flex: 1,
+    justifyContent: 'center',
+    borderWidth: 0.4,
+  }
+
+  const tableColumnStyle = {
+    ...tableDefaultStyle,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+
+  }
+
+  const tableRowStyle = {
+    ...tableDefaultStyle,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    borderColor: '#000000',
+
+  }
+
+  const tdStyle = {
+    ...tableDefaultStyle,
+    padding: 2,
+    flexDirection: 'row',
+
+  }
+
+  const thStyle = {
+    ...tdStyle,
+    backgroundColor: '#CCCCCC',
+    alignItems: 'flex-end',
+    borderColor: 'orange',
+
+  }
+  const renderItem = ({ item, index }) => {
     return (
-      <TouchableOpacity onPress={goToDetailService(item)} style={{flex: 1}}>
+      <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
         <View style={styles.cardView}>
           <FastImage
-            source={{uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || ''}}
+            source={{ uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || '' }}
             style={{
               borderRadius: 6,
               resizeMode: 'cover',
@@ -145,6 +186,7 @@ const DetailNewsScreen = ({navigation}) => {
               <HTML
                 html={'<div style="color: black">' + content + '</div>'}
                 allowFontScaling={false}
+                ignoredTags={tags}
                 renderers={{
                   img: (
                     htmlAttribs,
@@ -155,7 +197,7 @@ const DetailNewsScreen = ({navigation}) => {
                     return (
                       <FastImage
                         resizeMode={'contain'}
-                        source={{uri: htmlAttribs.src}}
+                        source={{ uri: htmlAttribs.src }}
                         style={{
                           width: width - 30,
                           height: parseInt(htmlAttribs.height) || 150,
@@ -164,7 +206,18 @@ const DetailNewsScreen = ({navigation}) => {
                       />
                     );
                   },
+                  table: (x, c) => <View style={tableColumnStyle}>{c}</View>,
+                  col: (x, c) => <View style={tableColumnStyle}>{c}</View>,
+                  colgroup: (x, c) => <View style={tableRowStyle}>{c}</View>,
+                  tbody: (x, c) => <View style={tableColumnStyle}>{c}</View>,
+                  tfoot: (x, c) => <View style={tableRowStyle}>{c}</View>,
+                  th: (x, c) => <View style={thStyle}>{c}</View>,
+                  thead: (x, c) => <View style={tableRowStyle}>{c}</View>,
+                  caption: (x, c) => <View style={tableColumnStyle}>{c}</View>,
+                  tr: (x, c) => <View style={tableRowStyle}>{c}</View>,
+                  td: (x, c) => <View style={tdStyle}>{c}</View>
                 }}
+
               />
             ) : null}
           </View>
@@ -177,7 +230,7 @@ const DetailNewsScreen = ({navigation}) => {
                         </TouchableOpacity>
                     </View> */}
           {data.length ? (
-            <View style={{backgroundColor: '#fff', marginTop: 10}}>
+            <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
               <View style={styles.viewAds}>
                 <Text style={styles.txAds}>Bài viết liên quan</Text>
               </View>
@@ -257,8 +310,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
   },
-  listAds: {paddingHorizontal: 20},
-  viewFooter: {width: 35},
+  listAds: { paddingHorizontal: 20 },
+  viewFooter: { width: 35 },
   cardView: {
     borderRadius: 6,
     marginRight: 10,
@@ -268,6 +321,6 @@ const styles = StyleSheet.create({
     height: 134,
     width: 259,
   },
-  txContensHospital: {color: '#000', margin: 13, marginLeft: 5, maxWidth: 259},
+  txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
 });
 export default DetailNewsScreen;
