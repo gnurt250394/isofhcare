@@ -26,6 +26,7 @@ import bookingDoctorProvider from '@data-access/booking-doctor-provider';
 import ButtonPayment from '@components/booking/ButtonPayment';
 import ButtonSelectPaymentMethod from '@components/booking/ButtonSelectPaymentMethod';
 import ModalUpdateProfile from './ModalUpdateProfile';
+import paymentProvider from '@data-access/payment-provider';
 
 var PayooModule = NativeModules.PayooModule;
 
@@ -33,6 +34,7 @@ class ConfirmBookingScreen extends Component {
   constructor(props) {
     super(props);
     let booking = this.props.navigation.state.params.booking;
+    console.log('booking: ', booking);
     let paymentMethod = this.props.navigation.state.params.paymentMethod;
     let disabled = this.props.navigation.state.params.disabled;
     let voucher = this.props.navigation.state.params.voucher;
@@ -45,19 +47,28 @@ class ConfirmBookingScreen extends Component {
       this.props.navigation.pop();
     }
     this.state = {
-      paymentMethod:
-        paymentMethod != constants.PAYMENT_METHOD.NONE &&
-        typeof paymentMethod != 'undefined'
-          ? paymentMethod
-          : constants.PAYMENT_METHOD.CASH,
+      paymentMethod: paymentMethod,
       booking,
       voucher: voucher || {},
       disabled,
       isVisibleModal: false,
       profile,
+      infoPayment: {},
     };
   }
+  getListPayment = async () => {
+    try {
+      let res = await paymentProvider.getListPayment(
+        this.state.booking.hospital?.id,
+      );
+      console.log('res: ', res);
+      this.setState({infoPayment: res});
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
   componentDidMount() {
+    this.getListPayment();
     // AppState.addEventListener('change', this._handleAppStateChange);
   }
   componentWillUnmount() {
@@ -647,7 +658,7 @@ class ConfirmBookingScreen extends Component {
     this.setState({isVisibleModal: false});
   };
   render() {
-    const {booking, disabled, isVisibleModal} = this.state;
+    const {booking, disabled, isVisibleModal, infoPayment} = this.state;
     return (
       <ActivityPanel
         style={styles.AcPanel}
@@ -837,7 +848,8 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity> */}
 
-              {this.getPriceSecive() == 0 ? null : (
+              {this.getPriceSecive() == 0 ||
+              !infoPayment?.paymentAlepay ? null : (
                 <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_visa.png')}
                   onPress={this.selectPaymentmethod(
@@ -849,7 +861,8 @@ class ConfirmBookingScreen extends Component {
                   }
                 />
               )}
-              {this.getPriceSecive() == 0 ? null : (
+              {this.getPriceSecive() == 0 ||
+              !infoPayment?.paymentAlepay ? null : (
                 <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_atm.png')}
                   onPress={this.selectPaymentmethod(
@@ -861,45 +874,55 @@ class ConfirmBookingScreen extends Component {
                   }
                 />
               )}
-              <ButtonSelectPaymentMethod
-                icon={require('@images/new/booking/ic_momo.png')}
-                onPress={this.selectPaymentmethod(
-                  constants.PAYMENT_METHOD.MOMO,
-                )}
-                title={constants.payment.MOMO}
-                isSelected={
-                  this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO
-                }
-              />
-              <ButtonSelectPaymentMethod
-                icon={require('@images/new/booking/ic_banktransfer.png')}
-                onPress={this.selectPaymentmethod(
-                  constants.PAYMENT_METHOD.BANK_TRANSFER,
-                )}
-                title={constants.payment.direct_transfer}
-                isSelected={
-                  this.state.paymentMethod ==
-                  constants.PAYMENT_METHOD.BANK_TRANSFER
-                }
-              />
-              <ButtonSelectPaymentMethod
-                icon={require('@images/new/booking/ic_qr_payment.png')}
-                onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.QR)}
-                title={constants.payment.QR}
-                isSelected={
-                  this.state.paymentMethod == constants.PAYMENT_METHOD.QR
-                }
-              />
+              {infoPayment.paymentMomo ? (
+                <ButtonSelectPaymentMethod
+                  icon={require('@images/new/booking/ic_momo.png')}
+                  onPress={this.selectPaymentmethod(
+                    constants.PAYMENT_METHOD.MOMO,
+                  )}
+                  title={constants.payment.MOMO}
+                  isSelected={
+                    this.state.paymentMethod == constants.PAYMENT_METHOD.MOMO
+                  }
+                />
+              ) : null}
+              {infoPayment?.paymentBankTranfer ? (
+                <ButtonSelectPaymentMethod
+                  icon={require('@images/new/booking/ic_banktransfer.png')}
+                  onPress={this.selectPaymentmethod(
+                    constants.PAYMENT_METHOD.BANK_TRANSFER,
+                  )}
+                  title={constants.payment.direct_transfer}
+                  isSelected={
+                    this.state.paymentMethod ==
+                    constants.PAYMENT_METHOD.BANK_TRANSFER
+                  }
+                />
+              ) : null}
+              {infoPayment?.paymentAlepay ? (
+                <ButtonSelectPaymentMethod
+                  icon={require('@images/new/booking/ic_qr_payment.png')}
+                  onPress={this.selectPaymentmethod(
+                    constants.PAYMENT_METHOD.QR,
+                  )}
+                  title={constants.payment.QR}
+                  isSelected={
+                    this.state.paymentMethod == constants.PAYMENT_METHOD.QR
+                  }
+                />
+              ) : null}
             </React.Fragment>
           }
-          <ButtonSelectPaymentMethod
-            icon={require('@images/new/booking/ic_cash.png')}
-            onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.CASH)}
-            title={constants.payment.pay_later}
-            isSelected={
-              this.state.paymentMethod == constants.PAYMENT_METHOD.CASH
-            }
-          />
+          {infoPayment?.paymentCash ? (
+            <ButtonSelectPaymentMethod
+              icon={require('@images/new/booking/ic_cash.png')}
+              onPress={this.selectPaymentmethod(constants.PAYMENT_METHOD.CASH)}
+              title={constants.payment.pay_later}
+              isSelected={
+                this.state.paymentMethod == constants.PAYMENT_METHOD.CASH
+              }
+            />
+          ) : null}
           <View style={styles.end} />
         </ScrollView>
         <ButtonPayment
