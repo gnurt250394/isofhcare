@@ -1110,6 +1110,7 @@ module.exports = {
         isofhcare_service + 'hospital/list-hospital-top-location',
       get_top_hospital: isofhcare_service + 'hospital/top',
       get_all_hospital: isofhcare_service + 'catalog/v1/hospitals',
+      get_list_payment: isofhcare_service + 'hospital/',
     },
     profile: {
       get_by_user: isofhcare_service + 'profile/get-by-user',
