@@ -298,7 +298,7 @@ class ListProfileScreen extends Component {
     onCloseModal = () => {
         this.setState({
             isVisible: false,
-            isVisibleShare: false
+            isVisibleShare: false,
         })
     }
     componentWillReceiveProps(nextProps) {
@@ -804,6 +804,7 @@ class ListProfileScreen extends Component {
 
                     </View>
                 </Modal>
+               
                 {/* <ActionSheet
                     ref={o => this.actionSheetOptions = o}
                     options={['Cài đặt chia sẻ', 'Xóa', 'Hủy']}
