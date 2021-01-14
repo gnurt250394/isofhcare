@@ -22,7 +22,7 @@ import Modal from "@components/modal";
 import NavigationService from "@navigators/NavigationService";
 import locationProvider from '@data-access/location-provider';
 import objectUtils from "@utils/object-utils";
-
+import SelectRelation from '@components/profile/SelectRelation'
 class EditProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +30,8 @@ class EditProfileScreen extends Component {
             isReset: 1,
             isLoading: false,
             image: null,
-            isVisible: false
+            isVisible: false,
+            isVisibleRelation: false
         }
     }
     componentDidMount() {
@@ -312,7 +313,8 @@ class EditProfileScreen extends Component {
     onCloseModal = () => {
         this.setState({
             isVisible: false,
-            id: null
+            id: null,
+            isVisibleRelation: false
         })
     }
     selectImage = () => {
@@ -417,7 +419,7 @@ class EditProfileScreen extends Component {
     onSelectCountry = () => {
         this.props.navigation.navigate('selectCountry', {
             onSelected: this.selectCountry.bind(this),
-            country:this.state.country
+            country: this.state.country
         })
     }
     onCreateProfile = () => {
@@ -649,6 +651,18 @@ class EditProfileScreen extends Component {
         if (str)
             return str.replace(/\u0020/, '\u00a0')
     }
+    onSelectRelation = () => {
+        this.setState({
+            isVisibleRelation: true
+        })
+    }
+    onAddRelation = (relation) => {
+        this.setState({
+            relation,
+            isVisibleRelation: false
+
+        })
+    }
     render() {
         const { avatar, isLoading } = this.state
         let age = this.state.dob ? new Date().getFullYear() - this.state.dob.getFullYear() : null
@@ -746,6 +760,34 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 {!this.state.id && <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} /> || <Field></Field>}
                             </Field>
+
+                            <Field style={[styles.containerField]}>
+                                <Text style={styles.txLabel}>Quan hệ</Text>
+                                <Field style={{ flex: 1, }}>
+                                    <TextField
+                                        multiline={true}
+                                        onPress={this.onSelectRelation}
+                                        editable={false}
+                                        inputStyle={[styles.input, { textAlignVertical: 'top' }]}
+                                        placeholder="Chọn quan hệ"
+                                        value={this.state.relation && this.state.relation.role ? this.state.relation.role : ''}
+                                        autoCapitalize={"none"}
+                                        errorStyle={styles.err}
+                                        // validate={{
+                                        //     rules: {
+                                        //         required: true,
+                                        //     },
+                                        //     messages: {
+                                        //         required: "Dân tộc không được để trống",
+                                        //     }
+                                        // }}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    >
+                                    </TextField>
+                                </Field>
+                                <ScaledImage height={10} source={require("@images/new/account/ic_next.png")} />
+                            </Field>
                             {/** Học vị */}
                             <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Ngày sinh</Text>
@@ -756,7 +798,7 @@ class EditProfileScreen extends Component {
                                         errorStyle={styles.err}
                                         splitDate={"/"}
                                         onPress={() => {
-                                            this.setState({ toggelDateTimePickerVisible: true }, () => {
+                                            this.setState({ toggeDateTimePickerVisible: true }, () => {
                                             })
                                         }}
                                         validate={{
@@ -1092,14 +1134,14 @@ class EditProfileScreen extends Component {
                     </View>
                 </KeyboardAwareScrollView>
                 <DateTimePicker
-                    isVisible={this.state.toggelDateTimePickerVisible}
+                    isVisible={this.state.toggeDateTimePickerVisible}
                     onConfirm={newDate => {
 
                         this.setState(
                             {
                                 dob: newDate,
                                 date: newDate.format("dd/MM/yyyy"),
-                                toggelDateTimePickerVisible: false
+                                toggeDateTimePickerVisible: false
                             },
                             () => {
                                 if (this.state.isSave) {
@@ -1109,7 +1151,7 @@ class EditProfileScreen extends Component {
                         );
                     }}
                     onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false });
+                        this.setState({ toggeDateTimePickerVisible: false });
                     }}
                     date={new Date()}
                     minimumDate={minDate}
@@ -1140,6 +1182,18 @@ class EditProfileScreen extends Component {
                         <Text style={styles.txDetails}>Vui lòng <Text style={styles.txSend}>GỬI</Text> và <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo tài khoản sẵn có.</Text>
                         <TouchableOpacity onPress={this.onSendConfirm} style={styles.btnConfirm}><Text style={styles.txConfirm}>Gửi xác nhận</Text></TouchableOpacity>
                     </View>
+                </Modal>
+                <Modal
+                    isVisible={this.state.isVisibleRelation}
+                    onBackdropPress={this.onCloseModal}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={styles.modalRelation}
+                    avoidKeyboard={true}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}>
+                    <SelectRelation onSelectRelation={(relation) => this.onAddRelation(relation)} ></SelectRelation>
                 </Modal>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
@@ -1195,7 +1249,7 @@ const styles = StyleSheet.create({
     },
     txtTitle1: {
         textAlign: 'center',
-        color: '#000',
+        color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
         paddingHorizontal: 30,
@@ -1409,5 +1463,10 @@ const styles = StyleSheet.create({
     txConfirm: {
         color: '#fff',
         fontSize: 14
+    },
+    modalRelation: {
+        flex: 1,
+        margin: 0,
+        justifyContent: 'flex-end'
     }
 })
