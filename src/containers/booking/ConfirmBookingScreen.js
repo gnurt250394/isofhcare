@@ -47,11 +47,7 @@ class ConfirmBookingScreen extends Component {
       this.props.navigation.pop();
     }
     this.state = {
-      paymentMethod:
-        paymentMethod != constants.PAYMENT_METHOD.NONE &&
-        typeof paymentMethod != 'undefined'
-          ? paymentMethod
-          : constants.PAYMENT_METHOD.CASH,
+      paymentMethod: paymentMethod,
       booking,
       voucher: voucher || {},
       disabled,
@@ -903,7 +899,7 @@ class ConfirmBookingScreen extends Component {
                   }
                 />
               ) : null}
-              {infoPayment?.paymentMomo ? (
+              {infoPayment?.paymentAlepay ? (
                 <ButtonSelectPaymentMethod
                   icon={require('@images/new/booking/ic_qr_payment.png')}
                   onPress={this.selectPaymentmethod(

@@ -44,13 +44,7 @@ class ConfirmBookingDoctorScreen extends Component {
     this.state = {
       isVisible: false,
       isOnline,
-      paymentMethod:
-        paymentMethod != constants.PAYMENT_METHOD.NONE &&
-        typeof paymentMethod != 'undefined'
-          ? paymentMethod
-          : isOnline
-          ? constants.PAYMENT_METHOD.BANK_TRANSFER
-          : constants.PAYMENT_METHOD.CASH,
+      paymentMethod: paymentMethod,
       booking,
       bookingDate,
       detailSchedule,
@@ -570,7 +564,7 @@ class ConfirmBookingDoctorScreen extends Component {
                     }
                   />
                 ) : null}
-                {infoPayment?.paymentMomo ? (
+                {infoPayment?.paymentAlepay ? (
                   <ButtonSelectPaymentMethod
                     icon={require('@images/new/booking/ic_qr_payment.png')}
                     onPress={this.selectPaymentmethod(
