@@ -1109,6 +1109,7 @@ module.exports = {
         isofhcare_service + 'hospital/list-hospital-top-location',
       get_top_hospital: isofhcare_service + 'hospital/top',
       get_all_hospital: isofhcare_service + 'catalog/v1/hospitals',
+      get_list_payment: isofhcare_service + 'hospital/',
     },
     profile: {
       get_by_user: isofhcare_service + 'profile/get-by-user',
@@ -1220,8 +1221,8 @@ module.exports = {
       search_news_by_topic: '/v1/topics/',
     },
     payment: {
-      get_list_card: isofhcare_service + 'payment/v1/alepay/profiles',
-      create_new_card: isofhcare_service + 'payment/v1/alepay/request-profile',
+      get_list_card: 'payment/v1/alepay/profiles',
+      create_new_card: 'payment/v1/alepay/request-profile',
     },
   },
 };

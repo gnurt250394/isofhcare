@@ -44,6 +44,7 @@ import CallScreen from '@components/community/CallScreen';
 import CallManager from '@components/community/CallManager';
 import userProvider from '@data-access/user-provider';
 import firebaseUtils from '@utils/firebase-utils';
+import bookingProvider from '@data-access/booking-provider';
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -98,6 +99,8 @@ class HomeScreen extends Component {
         {
           icon: require('@images/new/ic_calendar.png'),
           text: 'Lịch hẹn',
+          type: 'booking',
+          countBooking: 0,
           onPress: () => {
             firebaseUtils.sendEvent('Appointment_screen_home');
             if (this.props.userApp.isLogin)
@@ -124,12 +127,13 @@ class HomeScreen extends Component {
         {
           icon: require('@images/new/homev2/ic_advisory.png'),
           text: 'Hỏi bác sĩ',
+          free: true,
           onPress: () => {
             firebaseUtils.sendEvent('Askdoctor_screen_home');
             // snackbar.show('Tính năng đang phát triển')
             // return
             // if (this.props.userApp.isLogin)
-            this.props.navigation.navigate('createQuestionStep');
+            this.props.navigation.navigate('listQuestion');
             // else
             //   this.props.navigation.navigate("login", {
             //     nextScreen: { screen: "createQuestionStep1", param: {} }
@@ -208,7 +212,42 @@ class HomeScreen extends Component {
       });
     } catch (error) { }
   };
+  getCountHistoryBooking = async () => {
+    try {
+      let res = await bookingProvider.getCountBooking();
+      let data = [...this.state.features];
+      if (res) {
+        data.forEach(e => {
+          if (e.type == 'booking') {
+            e.countBooking = res;
+          }
+        });
+      } else {
+        data.forEach(e => {
+          if (e.type == 'booking') {
+            e.countBooking = 0;
+          }
+        });
+      }
+      this.setState({
+        features: data,
+      });
+    } catch (error) {
+      let data = [...this.state.features];
+      data.forEach(e => {
+        if (e.type == 'booking') {
+          e.countBooking = 0;
+        }
+      });
+      this.setState({
+        features: data,
+      });
+    }
+  };
   componentDidMount() {
+    this.onFocus = this.props.navigation.addListener('didFocus', () => {
+      this.getCountHistoryBooking();
+    });
     if (constants.route == 'home') {
       this.props.dispatch({
         type: constants.action.create_navigation_global,
@@ -234,6 +273,9 @@ class HomeScreen extends Component {
   }
 
   componentWillUnmount() {
+    if (this.onFocus) {
+      this.onFocus.remove();
+    }
     // AppState.removeEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
     CallManager.unregister(this.callRef);
@@ -375,6 +417,16 @@ class HomeScreen extends Component {
                     <Text>Mới</Text>
                   </View>
                 ) : null}
+                {item.free ? (
+                  <View style={[styles.containerNew]}>
+                    <Text>Free</Text>
+                  </View>
+                ) : null}
+                {item.countBooking ? (
+                  <View style={[styles.containerNew, { right: 8 }]}>
+                    <Text>{item.countBooking}</Text>
+                  </View>
+                ) : null}
               </TouchableOpacity>
             )}
         </Animatable.View>
@@ -420,6 +472,9 @@ class HomeScreen extends Component {
       return 0;
     }
   };
+  onLogin = () => {
+    this.props.navigation.navigate('login')
+  }
   render() {
     const headerHome = this.state.imgBackground
       ? { uri: this.state.imgBackground }
@@ -445,32 +500,35 @@ class HomeScreen extends Component {
                   this.setState({ height: e.nativeEvent.layout.height });
                 }}
                 style={[styles.padding21]}>
-                {this.props.userApp.isLogin ?
-                  <View
-                    style={styles.containerHeaderTitle}>
-                    <ScaledImage
-                      source={require('@images/new/homev2/ic_isc_write.png')}
-                      height={30}
-                       style = { styles.scaleImage}
-                    >
-
-                    </ScaledImage>
-                    <Text
-                      style={styles.txtHeaderTitle}
-                    >Xin chào, <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name)}</Text></Text>
-                  </View> : <View
-                    style={styles.containerHeaderTitle}>
+                {this.props.userApp.isLogin ? (
+                  <View style={styles.containerHeaderTitle}>
                     <ScaledImage
                       source={require('@images/new/homev2/ic_isc_write.png')}
                       height={30}
                       style={styles.scaleImage}
-                    >
-
-                    </ScaledImage>
-                    <Text
-                      style={styles.txtHeaderTitle}
-                    >Xin chào, <Text style={styles.colorUserName}>{'Guest'}</Text></Text>
-                  </View>}
+                    />
+                    <Text style={styles.txtHeaderTitle}>
+                      Xin chào,{' '}
+                      <Text style={styles.colorUserName}>
+                        {this.getUserName(this.props.userApp.currentUser.name)}
+                      </Text>
+                    </Text>
+                  </View>
+                ) : (
+                    <View style={styles.containerHeaderTitle}>
+                      <ScaledImage
+                        source={require('@images/new/homev2/ic_isc_write.png')}
+                        height={30}
+                        style={styles.scaleImage}
+                      />
+                      <TouchableOpacity style={{ padding: 5 }} onPress={this.onLogin}>
+                        <Text style={styles.txtHeaderTitle}>
+                          Xin chào,{' '}
+                          <Text style={styles.colorUserName}>{'Bạn chưa đăng nhập'}</Text>
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 <Card style={styles.card}>
                   <Text style={styles.txBooking}>ĐẶT LỊCH HẸN</Text>
                   <View style={{ justifyContent: 'center' }}>
@@ -517,7 +575,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFE600',
     position: 'absolute',
     right: 0,
-    top: 0,
+    top: -4,
     paddingHorizontal: 5,
     paddingVertical: 3,
     borderRadius: 5,
@@ -590,8 +648,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'center',
     height: 40,
-    alignSelf:'flex-start',
-    marginBottom:8
+    alignSelf: 'flex-start',
+    marginBottom: 8,
   },
   txBooking: {
     marginVertical: 10,
@@ -743,9 +801,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
-  scaleImage:{
-    marginBottom:8
-  }
+  scaleImage: {
+    marginBottom: 8,
+  },
 });
 
 function mapStateToProps(state) {
