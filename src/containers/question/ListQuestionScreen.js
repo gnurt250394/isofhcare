@@ -68,7 +68,7 @@ class ListQuestionScreen extends Component {
   _offsetValue = 0;
   _scrollValue = 0;
   componentDidMount() {
-    firebaseUtils.sendEvent('Community_screen')
+    firebaseUtils.sendEvent('Community_screen');
     this.state.scrollAnim.addListener(({value}) => {
       const diff = value - this._scrollValue;
       this._scrollValue = value;
@@ -85,6 +85,7 @@ class ListQuestionScreen extends Component {
       'hardwareBackPress',
       this.handleHardwareBack.bind(this),
     );
+    this.getListQuestions();
     this.onFocus = this.props.navigation.addListener('didFocus', payload => {
       if (!payload?.action?.preserveFocus)
         this.setState({page: 0, onFocus: true}, this.getListQuestions);
@@ -140,7 +141,7 @@ class ListQuestionScreen extends Component {
         page,
         size,
       );
-      console.log('res: ', res);
+
       this.setState({isLoading: false, refreshing: false});
       if (res?.content) {
         this.formatData(res.content);
@@ -148,7 +149,6 @@ class ListQuestionScreen extends Component {
         this.formatData([]);
       }
     } catch (error) {
-      console.log('error: ', error);
       this.formatData([]);
       this.setState({isLoading: false, refreshing: false});
     }
@@ -168,7 +168,7 @@ class ListQuestionScreen extends Component {
       }
       this.timeout = setTimeout(() => {
         this.setState({isLoading: true, page: 0}, () => {
-          firebaseUtils.sendEvent('question_search')
+          firebaseUtils.sendEvent('question_search');
           this.getListQuestions();
         });
       }, 500);
@@ -200,12 +200,12 @@ class ListQuestionScreen extends Component {
     );
   };
   onClickCreateMenu = () => {
-    firebaseUtils.sendEvent('askdoctor_screen_community')
+    firebaseUtils.sendEvent('askdoctor_screen_community');
     this.props.navigation.navigate('createQuestionStep');
   };
-  onMyQuestion = () =>{
-    firebaseUtils.sendEvent('Yourquestion_screen')
-    this.props.navigation.navigate('listMyQuestion')
+  onMyQuestion = () => {
+    firebaseUtils.sendEvent('Yourquestion_screen');
+    this.props.navigation.navigate('listMyQuestion');
   };
   menuCreate() {
     return (
@@ -216,7 +216,7 @@ class ListQuestionScreen extends Component {
   }
 
   goToDetailQuestion = item => () => {
-    firebaseUtils.sendEvent('Question_detail')
+    firebaseUtils.sendEvent('Question_detail');
     this.props.navigation.navigate('detailQuestion', {item, social: true});
   };
   keyExtractor = (item, index) => `${index}`;
