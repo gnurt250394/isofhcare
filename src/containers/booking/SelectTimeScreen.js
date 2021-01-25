@@ -96,6 +96,7 @@ class SelectTimeScreen extends Component {
       let objDate = this.state.listSchedule.find(
         e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()),
       );
+
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
       date.setMinutes(
         date.getMinutes() + (objDate.startTime || objDate.startTime == 0)
@@ -113,9 +114,17 @@ class SelectTimeScreen extends Component {
 
         if (
           this.getTimeBooking(date.format('HH:mm')) <
-            this.getTimeBooking(this.getTimeDate(objDate.lunchStartTime)) ||
+            this.getTimeBooking(
+              objDate.lunchStartTime
+                ? this.getTimeDate(objDate.lunchStartTime)
+                : '11:30',
+            ) ||
           this.getTimeBooking(date.format('HH:mm')) >=
-            this.getTimeBooking(this.getTimeDate(objDate.lunchEndTime))
+            this.getTimeBooking(
+              objDate.lunchEndTime
+                ? this.getTimeDate(objDate.lunchEndTime)
+                : '12:00',
+            )
         ) {
           listTime.push({
             key: date.getTime(),
