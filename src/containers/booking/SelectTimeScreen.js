@@ -96,6 +96,7 @@ class SelectTimeScreen extends Component {
       let objDate = this.state.listSchedule.find(
         e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()),
       );
+      console.log('objDate: ', objDate);
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
       date.setMinutes(
         date.getMinutes() + (objDate.startTime || objDate.startTime == 0)
@@ -112,9 +113,9 @@ class SelectTimeScreen extends Component {
 
         if (
           this.getTimeBooking(date.format('HH:mm')) <
-            this.getTimeBooking('12:30') ||
+            this.getTimeBooking(this.getTimeDate(objDate.lunchStartTime)) ||
           this.getTimeBooking(date.format('HH:mm')) >=
-            this.getTimeBooking('13:00')
+            this.getTimeBooking(this.getTimeDate(objDate.lunchEndTime))
         ) {
           listTime.push({
             key: date.getTime(),
@@ -122,6 +123,7 @@ class SelectTimeScreen extends Component {
             type: 3,
             date: date.format('yyyy-MM-dd'),
             time: date.format('HH:mm'),
+
             timeString: date.format('HH:mm:ss'),
           });
         }
@@ -133,6 +135,12 @@ class SelectTimeScreen extends Component {
           listTime: listTime.sort((a, b) => {
             return a.time - b.time;
           }),
+          lunchStartTime: objDate.lunchStartTime
+            ? this.getTimeDate(objDate.lunchStartTime)
+            : null,
+          lunchEndTime: objDate.lunchEndTime
+            ? this.getTimeDate(objDate.lunchEndTime)
+            : null,
         },
         () => {},
       );
@@ -570,8 +578,16 @@ class SelectTimeScreen extends Component {
                       </Text>
                     )}
 
-                    {this.renderTimePicker('0:0', '12:00', 'Sáng')}
-                    {this.renderTimePicker('13:00', '24:00', 'Chiều')}
+                    {this.renderTimePicker(
+                      '0:0',
+                      this.state.lunchStartTime || '11:30',
+                      'Sáng',
+                    )}
+                    {this.renderTimePicker(
+                      this.state.lunchEndTime || '12:00',
+                      '24:00',
+                      'Chiều',
+                    )}
                   </View>
                 ) : !this.state.isLoading ? (
                   <Text style={[styles.errorStyle]}>

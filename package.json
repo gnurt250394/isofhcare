@@ -15,7 +15,8 @@
     "pod": "cd ios && pod install && cd../",
     "pull": "git pull --rebase",
     "install-debug": "cd android/app/build/outputs/apk/debug && adb install -r .\\app-debug.apk",
-    "install-release": "cd android/app/build/outputs/apk/release && adb install -r .\\app-release.apk"
+    "install-release": "cd android/app/build/outputs/apk/release && adb install -r .\\app-release.apk",
+    "fix-image": "npx react-native-fix-image"
   },
   "dependencies": {
     "@react-native-community/art": "^1.2.0",
