@@ -113,6 +113,17 @@ class SelectTimeScreen extends Component {
           break;
 
         if (
+          objDate?.lunchStartTime &&
+          objDate?.lunchEndTime &&
+          this.getTimeBooking(date.format('HH:mm')) >=
+            this.getTimeBooking(this.getTimeDate(objDate.lunchStartTime)) &&
+          this.getTimeBooking(date.format('HH:mm')) <=
+            this.getTimeBooking(this.getTimeDate(objDate.lunchEndTime))
+        ) {
+          date.setMinutes(date.getMinutes() + 30);
+          continue;
+        }
+        if (
           this.getTimeBooking(date.format('HH:mm')) <
             this.getTimeBooking(
               objDate.lunchStartTime
@@ -588,16 +599,8 @@ class SelectTimeScreen extends Component {
                       </Text>
                     )}
 
-                    {this.renderTimePicker(
-                      '0:0',
-                      this.state.lunchStartTime || '11:30',
-                      'Sáng',
-                    )}
-                    {this.renderTimePicker(
-                      this.state.lunchEndTime || '12:00',
-                      '24:00',
-                      'Chiều',
-                    )}
+                    {this.renderTimePicker('0:0', '11:30', 'Sáng')}
+                    {this.renderTimePicker('12:00', '24:00', 'Chiều')}
                   </View>
                 ) : !this.state.isLoading ? (
                   <Text style={[styles.errorStyle]}>
