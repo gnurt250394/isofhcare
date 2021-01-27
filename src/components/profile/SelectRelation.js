@@ -23,55 +23,30 @@ import redux from "@redux-store";
 class SelectRelation extends Component {
     constructor(props) {
         super(props)
-        console.log(this.props.isVisible, 'this.props.isVisible');
+
         this.state = {
             isLoading: false,
             secureTextEntry: true,
             secureTextEntry2: true,
             isVisible: this.props.isVisible,
-            listRelation: [{
-                role: 'Ông',
-                id: 1,
-            },
-            {
-                role: 'Bà',
-                id: 2,
-            }
-                ,
-            {
-                role: 'Bố',
-                id: 3,
-            },
-            {
-                role: 'Mẹ',
-                id: 4,
-            },
-            {
-                role: 'Anh',
-                id: 5,
-            },
-            {
-                role: 'Em',
-                id: 6,
-            },
-            {
-                role: 'Con',
-                id: 7,
-            },
-            {
-                role: 'Cháu',
-                id: 8,
-            },
-            {
-                role: 'Chị',
-                id: 9,
-            }, {
-                role: 'Khác',
-                id: 10,
-            },]
+
         }
     }
+    componentDidMount() {
+        this.getListRelations()
+    }
+    getListRelations = () => {
+        profileProvider.getListRelations().then(res => {
 
+            this.setState({
+                listRelation: res
+            })
+
+        }).catch(err => {
+
+
+        })
+    }
     onBackdropPress = () => {
 
         this.setState({
@@ -84,7 +59,7 @@ class SelectRelation extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        console.log('nextProps: ', nextProps);
+
         if (nextProps.isVisible) {
             this.setState({
                 isVisible: true
@@ -148,7 +123,8 @@ class SelectRelation extends Component {
         })
     }
     onSelectRelation = () => {
-        this.props.onSelectRelation(this.state.itemSelect)
+        this.props.onSelectRelation(this.state.listRelation[this.state.indexSelect])
+
     }
     goHome = () => {
         NavigationService.navigate("homeTab", { showDraw: false });
@@ -157,32 +133,39 @@ class SelectRelation extends Component {
         })
     }
     onSelect = (index) => {
-        let dataOld = this.state.listRelation
-        for (let i = 0; i < dataOld.length; i++) {
-            if (index == i) {
-                dataOld[i].isSelect = true
-            } else {
-                dataOld[i].isSelect = false
-            }
-        }
         this.setState({
-            listRelation: dataOld,
-            itemSelect: dataOld[index],
+            indexSelect: index
         })
+    }
+    renderTextRelations = (type) => {
 
+        switch (type) {
+            case "FATHER": return 'BỐ'
+            case "MOTHER": return 'MẸ'
+            case "GRAND_MOTHER": return 'BÀ'
+            case "GRAND_FATHER": return 'ÔNG'
+            case "BROTHER": return 'ANH'
+            case "YOUNG_BROTHER": return 'EM TRAI'
+            case "SON": return 'CON'
+            case "GRAND_CHILDREN": return 'CHÁU'
+            case "SISTER": return 'CHỊ'
+            case "OTHER": return 'KHÁC'
+            default: return type
+        }
     }
     renderItem = ({ item, index }) => {
+
         return (
             <View style={styles.viewItem}>
                 <TouchableOpacity
                     onPress={() => this.onSelect(index)}
                     style={styles.btnSelect}
                 >
-                    {item.isSelect
+                    {index == this.state.indexSelect
                         ? <ScaleImage height={18} source={require('@images/new/profile/ic_checkbox_checked.png')}></ScaleImage>
                         :
                         <ScaleImage source={require('@images/new/profile/ic_checkbox_uncheck.png')} height={18}></ScaleImage>}
-                    <Text style={styles.txRole}>{item.role.toUpperCase()}</Text>
+                    <Text style={styles.txRole}>{this.renderTextRelations(item)}</Text>
                 </TouchableOpacity>
             </View>
         )

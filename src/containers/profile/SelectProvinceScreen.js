@@ -50,7 +50,7 @@ class SelectProvinceScreen extends Component {
             () => {
               if (s) {
                 s.data.provinces.forEach(e => {
-                  if (e.id == this.state.province?.id) {
+                  if (e.name == this.state.province?.name) {
                     e.selected = true;
                   }
                 });

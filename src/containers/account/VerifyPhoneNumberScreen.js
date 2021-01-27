@@ -358,12 +358,9 @@ class VerifyPhoneNumberScreen extends React.Component {
                             return
                         }
                         if (this.state.verify == 3) {
-
-                            let data = {
-                                'otp': text
-                            }
-                            if (data && this.state.id) {
-                                profileProvider.checkOtp(data, this.state.id).then(res => {
+                            
+                            if (text && this.state.id) {
+                                profileProvider.checkOtp(text, this.state.id).then(res => {
                                     if (res.code == 0) {
 
                                         this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
