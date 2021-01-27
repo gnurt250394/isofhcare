@@ -35,7 +35,7 @@ module.exports = {
     },
     verifyFillPhone(data) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.verify_fill_phone, data, (s, e) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.verify_fill_phone, data, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -54,7 +54,7 @@ module.exports = {
     },
     getUserInfo(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', constants.api.profile.get_details_user + "/" + id, {}, (s, e) => {
+            client.requestApi('get', client.serviceProfile + constants.api.profile.get_details_user + "/" + id, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 if (e)
@@ -64,7 +64,7 @@ module.exports = {
     },
     getProfileFamily() {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', constants.api.profile.get_profile_family, {}, (s, e) => {
+            client.requestApi('get', client.serviceProfile + constants.api.profile.get_profile_family, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 if (e)
@@ -74,7 +74,7 @@ module.exports = {
     },
     getListProfile() {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', constants.api.profile.get_list_profile, {}, (s, e) => {
+            client.requestApi('get', client.serviceProfile + constants.api.profile.profile, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -84,7 +84,7 @@ module.exports = {
     },
     deleteFamilyProfile(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('delete', `${constants.api.profile.delete_family_profile}/${id}`, {}, (s, e) => {
+            client.requestApi('delete', `${constants.api.profile.profile}/${id}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -94,7 +94,17 @@ module.exports = {
     },
     createProfile(data) {
         return new Promise((resolve, reject) => {
-            client.requestApi('post', `${constants.api.profile.create_profile}`, data, (s, e) => {
+            client.requestApi('post', client.serviceProfile + `${constants.api.profile.profile}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    createProfileMember(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('post', client.serviceProfile + `${constants.api.profile.profile}`, data, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -104,7 +114,7 @@ module.exports = {
     },
     updateProfile(id, data) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', `${constants.api.profile.update_profile}/${id}`, data, (s, e) => {
+            client.requestApi('put', client.serviceProfile + `${constants.api.profile.profile}/${id}`, data, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -134,7 +144,7 @@ module.exports = {
     },
     sendConfirmProfile(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', `${constants.api.profile.send_confirm}/${id}`, {}, (s, e) => {
+            client.requestApi('put', client.serviceProfile + `${constants.api.profile.send_confirm}/${id}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -144,7 +154,7 @@ module.exports = {
     },
     sharePermission(data) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.share_permission, data, (s, e) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.share_permission, data, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -152,9 +162,9 @@ module.exports = {
             })
         })
     },
-    checkOtp(data, id) {
+    checkOtp(confirmCode, id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.check_otp + '/' + id, data, (s, e) => {
+            client.requestApi('put', client.serviceProfile + `${constants.api.profile.profile_member}/${id}/confirm/${confirmCode}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -164,7 +174,7 @@ module.exports = {
     },
     resendOtp(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.resend_otp + '/' + id, {}, (s, e) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.resend_otp + '/' + id, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -174,7 +184,7 @@ module.exports = {
     },
     confirm(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.confirm + '/' + id, {}, (s, e) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.confirm + '/' + id, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -184,7 +194,7 @@ module.exports = {
     },
     getDetailsMedical(id) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', constants.api.profile.get_details_medical + '/' + id, {}, (s, e) => {
+            client.requestApi('get', client.serviceProfile + constants.api.profile.profile + '/' + id, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -194,7 +204,30 @@ module.exports = {
     },
     fillPhone(data) {
         return new Promise((resolve, reject) => {
-            client.requestApi('put', constants.api.profile.fill_phone, data, (s, e) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.fill_phone, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    getListRelations() {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', client.serviceProfile + constants.api.profile.list_relationship, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    getInfoProfile(data) {
+
+
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', client.serviceProfile + constants.api.profile.check_info_profile, data, (s, e) => {
+
                 if (s)
                     resolve(s)
                 else

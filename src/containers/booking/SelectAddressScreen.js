@@ -54,7 +54,7 @@ class SelectAddressScreen extends Component {
       snackbar.show('Bạn chưa chọn Tỉnh/Thành phố');
     }
   };
-  selectprovinces(provinces) {
+  selectProvinces(provinces) {
     let provincesError = provinces ? '' : this.state.provincesError;
     if (
       !provinces ||
@@ -73,7 +73,7 @@ class SelectAddressScreen extends Component {
   }
   onSelectProvince = () => {
     this.props.navigation.navigate('selectProvince', {
-      onSelected: this.selectprovinces.bind(this),
+      onSelected: this.selectProvinces.bind(this),
       province: this.state.provinces,
     });
   };

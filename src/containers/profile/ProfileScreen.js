@@ -5,13 +5,10 @@ import { connect } from 'react-redux';
 import ImageLoad from 'mainam-react-native-image-loader';
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
-import DateTimePicker from "mainam-react-native-date-picker";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
-import ActionSheet from 'react-native-actionsheet'
 import snackbar from "@utils/snackbar-utils";
-import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import connectionUtils from "@utils/connection-utils";
 import dateUtils from 'mainam-react-native-date-utils';
@@ -21,7 +18,6 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         let id = this.props.navigation.getParam('id', null)
-
         this.state = {
             id,
             dataProfile: {}
@@ -38,13 +34,14 @@ class ProfileScreen extends Component {
         }, () => {
             if (id) {
                 profileProvider.getDetailsMedical(id).then(res => {
+                    console.log('res: ', res);
+                    
+                    if (res) {
 
-                    if (res && res.code == 0) {
-                        console.log('res: ', res);
-                        if (res.data?.medicalRecords?.hospitalName && res.data?.medicalRecords?.value) {
+                        if (res?.profileInfo?.personal?.hospitalName && res?.profileInfo?.personal?.value) {
                             this.setState({
                                 fromHis: true,
-                                dataProfile: res.data,
+                                dataProfile: res,
                                 isLoading: false
                             }, () => {
                                 this.renderAddress()
@@ -52,7 +49,7 @@ class ProfileScreen extends Component {
                         } else {
                             this.setState({
                                 fromHis: false,
-                                dataProfile: res.data,
+                                dataProfile: res,
                                 isLoading: false
 
                             }, () => {
@@ -66,6 +63,7 @@ class ProfileScreen extends Component {
                         })
                     }
                 }).catch(err => {
+                    
                     this.setState({
                         isLoading: false
                     })
@@ -82,116 +80,8 @@ class ProfileScreen extends Component {
             this.onGetData()
         }
     }
-    renderRelation = () => {
+  
 
-        switch (this.state.relationshipType) {
-            case 'DAD':
-                this.setState({
-                    relationShip: {
-                        id: 1,
-                        name: 'Cha',
-                        type: 'DAD'
-                    }
-                })
-                break
-            case 'MOTHER':
-                this.setState({
-                    relationShip: {
-                        id: 2,
-                        name: 'Mẹ',
-                        type: 'MOTHER'
-                    }
-                })
-                break
-            case 'BOY':
-                this.setState({
-                    relationShip: {
-                        id: 3,
-                        name: 'Con trai',
-                        type: 'BOY'
-                    }
-                })
-                break
-            case 'DAUGHTER':
-                this.setState({
-                    relationShip: {
-                        id: 4,
-                        name: 'Con gái',
-                        type: 'DAUGHTER'
-                    }
-                })
-                break
-            case 'GRANDSON':
-                this.setState({
-                    relationShip: {
-                        id: 5,
-                        name: 'Cháu trai',
-                        type: 'GRANDSON'
-                    }
-                })
-                break
-            case 'NIECE':
-                this.setState({
-                    relationShip: {
-                        id: 6,
-                        name: 'Cháu gái',
-                        type: 'NIECE'
-                    }
-                })
-                break
-            case 'GRANDFATHER':
-                this.setState({
-                    relationShip: {
-                        id: 7,
-                        name: 'Ông',
-                        type: 'GRANDFATHER'
-                    }
-                })
-                break
-            case 'GRANDMOTHER':
-                this.setState({
-                    relationShip: {
-                        id: 8,
-                        name: 'Bà',
-                        type: 'GRANDMOTHER'
-                    }
-                })
-                break
-            case 'WIFE':
-                this.setState({
-                    relationShip: {
-                        id: 9,
-                        name: 'Vợ',
-                        type: 'WIFE'
-                    }
-                })
-                break
-            case 'HUSBAND':
-                this.setState({
-                    relationShip: {
-                        id: 10,
-                        name: 'Chồng',
-                        type: 'HUSBAND'
-                    }
-                })
-                break
-            case 'OTHER':
-                this.setState({
-                    relationShip: {
-                        id: 11,
-                        name: 'Khác',
-                        type: 'OTHER'
-                    }
-                })
-                break
-        }
-    }
-
-
-    onShowGender = () => {
-        this.actionSheetGender.show();
-
-    };
     onSetGender = index => {
         try {
             switch (index) {
@@ -236,122 +126,8 @@ class ProfileScreen extends Component {
             this.setState({ relationShip, relationShipError });
         }
     }
-    selectImage = () => {
-        if (this.imagePicker) {
-            this.imagePicker.open(true, 200, 200, image => {
 
 
-                this.setState({ isLoading: true }, () => {
-                    imageProvider
-                        .upload(image.path, image.mime)
-                        .then(s => {
-                            this.setState({ avatar: { uri: s.data.data.images[0].thumbnail.absoluteUrl(), isLoading: false } })
-                            // this.setState({ isLoading: false }, () => {
-                            //     if (s && s.data.code == 0) {
-                            //         let user = objectUtils.clone(this.props.userApp.currentUser);
-                            //         user.avatar = s.data.data.images[0].thumbnail;
-                            //         this.setState({ isLoading: true }, () => {
-                            //             userProvider
-                            //                 .update(this.props.userApp.currentUser.id, user)
-                            //                 .then(s => {
-                            //                     this.setState({ isLoading: false }, () => { });
-                            //                     if (s.code == 0) {
-                            //                         var user = s.data.user;
-                            //                         let current = this.props.userApp.currentUser;
-                            //                         user.bookingNumberHospital = current.bookingNumberHospital;
-                            //                         user.bookingStatus = current.bookingStatus;
-                            //                         this.props.dispatch(redux.userLogin(user));
-                            //                     } else {
-                            //                         snackbar.show(
-                            //                             "Cập nhật ảnh đại diện không thành công",
-                            //                             "danger"
-                            //                         );
-                            //                     }
-                            //                 })
-                            //                 .catch(e => {
-                            //                     this.setState({ isLoading: false }, () => { });
-                            //                     snackbar.show(
-                            //                         "Cập nhật ảnh đại diện không thành công",
-                            //                         "danger"
-                            //                     );
-                            //                 });
-                            //         });
-                            //     }
-                            // });
-                        })
-                        .catch(e => {
-
-                            this.setState({ isLoading: false }, () => { });
-                            snackbar.show("Upload ảnh không thành công", "danger");
-                        });
-                });
-            });
-        }
-    }
-    onSelectProvince = () => {
-        const { provinces, districts, zone, address } = this.state
-        this.props.navigation.navigate("selectAddress", {
-            onSelected: this.selectprovinces.bind(this),
-            provinces, districts, zone, address
-        });
-    }
-    selectprovinces(provinces, districts, zone, address) {
-
-        this.setState({ provinces, districts, zone, address })
-
-    }
-
-    onCreateProfile = () => {
-        Keyboard.dismiss();
-        if (!this.form.isValid()) {
-            return;
-        }
-
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                this.setState(
-                    {
-                        isLoading: true
-                    },
-                    () => {
-                        let id = this.state.id
-
-                        let data = {
-                            'name': this.state.name,
-                            "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
-                            "gender": this.state.gender ? this.state.gender : null,
-                            "height": this.state.height ? Number(this.state.height) : 0,
-                            "weight": this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0,
-                            "phone": this.state.phone,
-                            "provinceId": this.state.provinces ? this.state.provinces.id.toString() : null,
-                            "districtId": this.state.districts ? this.state.districts.id.toString() : null,
-                            "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
-                            "village": this.state.address ? this.state.address : ' ',
-                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
-                        }
-                        profileProvider.updateProfile(id, data).then(res => {
-                            switch (res.code) {
-                                case 0:
-                                    NavigationService.navigate('profile', { id: res.data.medicalRecords.id })
-                                    snackbar.show('Cập nhật hồ sơ thành công', "success");
-                                    break
-                                case 1:
-                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "danger");
-                                    break
-                                case 2:
-                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
-                                    break
-                            }
-                        }).catch(err => {
-
-                        })
-                    });
-            }
-            ).catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
-    }
     renderDob = (value) => {
         if (value) {
             let dateParam = value.split(/[\s/:]/)
@@ -362,12 +138,13 @@ class ProfileScreen extends Component {
         }
     }
     renderAddress = () => {
-        let dataLocaotion = this.state.dataProfile
+        let dataLocation = this.state.dataProfile?.profileInfo?.personal?.address || {}
+        
 
-        let district = dataLocaotion.district ? dataLocaotion.district.name : null
-        let province = dataLocaotion.province ? dataLocaotion.province.countryCode : null
-        let zone = dataLocaotion.zone ? dataLocaotion.zone.name : ''
-        let village = dataLocaotion.medicalRecords.village && dataLocaotion.medicalRecords.village != ' ' ? dataLocaotion.medicalRecords.village : null
+        let district = dataLocation.district ? dataLocation.district : null
+        let province = dataLocation.province ? dataLocation.province : null
+        let zone = dataLocation.city ? dataLocation.city : ''
+        let village = dataLocation.village && dataLocation.village != ' ' ? dataLocation.village : null
 
         if (district && province && zone && village) {
             this.setState({
@@ -419,13 +196,12 @@ class ProfileScreen extends Component {
         }
     }
     onEdit(isEdit) {
-        debugger
+
         if (isEdit) {
             this.onGetData()
         }
     }
     onEditProfile = () => {
-
         if (this.props.userApp.currentUser.accountSource == 'VENDOR') {
             this.props.navigation.replace('editProfileUsername', {
                 dataOld: this.state.dataProfile,
@@ -433,38 +209,38 @@ class ProfileScreen extends Component {
             })
         }
         else
-            this.props.navigation.navigate('createProfile', {
+            this.props.navigation.navigate('editProfile', {
                 dataOld: this.state.dataProfile,
                 onEdit: this.onEdit.bind(this)
             })
     }
     renderEdit = () => {
-        let phoneProfile = this.state.dataProfile?.medicalRecords?.phone
+        // let phoneProfile = this.state.dataProfile?.medicalRecords?.phone
 
-        let alreadyHaveAccount = this.state.dataProfile?.medicalRecords?.alreadyHaveAccount
+        // let alreadyHaveAccount = this.state.dataProfile?.medicalRecords?.alreadyHaveAccount
 
-        let phone = this.props.userApp.currentUser.phone
-        let accountSource = this.props.userApp.currentUser.accountSource == "VENDOR"
-        if (accountSource && phoneProfile) {
-            return null
-        }
-        else if (this.state.fromHis) {
-            return null
-        }
-        else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
-            return (
-                <TouchableOpacity
-                    onPress={this.onEditProfile}
-                    style={styles.buttonSave}>
-                    <Text style={styles.txtSave}>Sửa</Text>
-                </TouchableOpacity>
-            )
-        }
+        // let phone = this.props.userApp.currentUser.phone
+        // let accountSource = this.props.userApp.currentUser.accountSource == "VENDOR"
+        // if (accountSource && phoneProfile) {
+        //     return null
+        // }
+        // else if (this.state.fromHis) {
+        //     return null
+        // }
+        // else if (phoneProfile && phoneProfile == phone || !alreadyHaveAccount) {
+        return (
+            <TouchableOpacity
+                onPress={this.onEditProfile}
+                style={styles.buttonSave}>
+                <Text style={styles.txtSave}>Sửa</Text>
+            </TouchableOpacity>
+        )
+        // }
     }
     render() {
         const { dataProfile, avatar, isLoading, location } = this.state
-
-
+        const guardian = dataProfile?.profileInfo?.personal?.guardian
+        const personal = dataProfile?.profileInfo?.personal || {}
         let maxDate = new Date();
         maxDate = new Date(
             maxDate.getFullYear(),
@@ -477,8 +253,8 @@ class ProfileScreen extends Component {
             maxDate.getMonth(),
             maxDate.getDate()
         );
-        let age = dataProfile?.medicalRecords?.dob ? new Date().getFullYear() - dataProfile?.medicalRecords?.dob?.toDateObject('-').getFullYear() : null
-        let gender = dataProfile?.medicalRecords?.gender == 0 ? 'Nữ' : dataProfile?.medicalRecords?.gender == 1 ? 'Nam' : null
+        let age = personal?.dateOfBirth ? new Date().getFullYear() - personal?.dateOfBirth?.toDateObject('-').getFullYear() : null
+        let gender = personal?.gender == "FEMALE" ? 'Nữ' : 'Nam'
         return (
             <ActivityPanel
                 title={'Chi tiết hồ sơ'}
@@ -499,18 +275,18 @@ class ProfileScreen extends Component {
                                 imageStyle={styles.borderImage}
                                 borderRadius={40}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImage]}
-                                placeholderSource={dataProfile?.medicalRecords?.avatar ? { uri: dataProfile?.medicalRecords?.avatar } : require("@images/new/user.png")}
+                                placeholderSource={personal?.avatar ? { uri: personal?.avatar } : require("@images/new/user.png")}
                                 resizeMode="cover"
                                 loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={{ uri: dataProfile.medicalRecords && dataProfile.medicalRecords.avatar ? dataProfile.medicalRecords.avatar.absoluteUrl() : '' || '' }}
+                                source={{ uri: personal && personal.avatar ? personal.avatar.absoluteUrl() : '' || '' }}
                                 style={styles.image}
                                 defaultImage={this.defaultImage}
                             />
                             {/* <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} /> */}
                         </View>
                             <View style={{ marginLeft: 20 }}>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#000' }}>{dataProfile?.medicalRecords?.name || ''}</Text>
-                                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#075BB5' }}>{dataProfile?.medicalRecords?.dob?.toDateObject('-').format('dd/MM/yyyy') || ''} - {age ? age + ' tuổi' : age == 0 ? '1 tuổi' : ''}</Text>
+                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#000' }}>{personal?.fullName || ''}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#075BB5' }}>{personal?.dateOfBirth?.toDateObject('-').format('dd/MM/yyyy') || ''} - {age ? age + ' tuổi' : age == 0 ? '1 tuổi' : ''}</Text>
 
                             </View>
                         </View>
@@ -560,14 +336,14 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.nation?.name ? <Field style={[styles.containerField]}>
+                            {personal?.nation ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Dân tộc</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
                                         multiline={true}
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.nation?.name || ''}
+                                        value={personal?.nation || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
@@ -575,14 +351,14 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile && dataProfile.country && dataProfile.country.name ? <Field style={[styles.containerField]}>
+                            {dataProfile && personal.nationality ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Quốc tịch</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
                                         multiline={true}
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.country?.name || ''}
+                                        value={personal.nationality || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
@@ -590,14 +366,14 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.job?.name ? <Field style={[styles.containerField]}>
+                            {personal?.job ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Nghề nghiệp</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
                                         multiline={true}
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.job?.name || ''}
+                                        value={personal?.job || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
@@ -605,14 +381,14 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
+                            {personal?.hospitalName && this.state.fromHis ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Cơ sở y tế</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
                                         multiline={true}
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.hospitalName || ''}
+                                        value={personal?.hospitalName || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
@@ -620,14 +396,14 @@ class ProfileScreen extends Component {
                                     </TextField>
                                 </Field>
                             </Field> : <Field></Field>}
-                            {dataProfile?.medicalRecords?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
+                            {personal?.value && this.state.fromHis ? <Field style={[styles.containerField]}>
                                 <Text style={styles.txLabel}>Mã bệnh nhân</Text>
                                 <Field style={{ flex: 1 }}>
                                     <TextField
                                         multiline={true}
                                         onChangeText={this.onChangeText("address")}
                                         inputStyle={[styles.input]}
-                                        value={dataProfile?.medicalRecords?.value || ''}
+                                        value={personal?.value || ''}
                                         autoCapitalize={"none"}
                                         editable={false}
                                         autoCorrect={false}
@@ -653,7 +429,7 @@ class ProfileScreen extends Component {
                             </Field> */}
                             {age && age < 14 || age == 0 ?
                                 <Field>
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianName ? <Field style={[styles.containerField, {
+                                    {guardian.fullName ? <Field style={[styles.containerField, {
                                         marginTop: 10,
                                         borderTopColor: '#00000011',
                                         borderTopWidth: 1
@@ -665,7 +441,7 @@ class ProfileScreen extends Component {
                                                 editable={false}
                                                 inputStyle={[styles.input]}
                                                 errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianName || ''}
+                                                value={guardian?.fullName || ''}
                                                 autoCapitalize={"none"}
                                                 autoCorrect={false}
                                             >
@@ -673,7 +449,7 @@ class ProfileScreen extends Component {
                                             </TextField>
                                         </Field>
                                     </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianPhone ? <Field style={[styles.containerField]}>
+                                    {guardian.mobileNumber ? <Field style={[styles.containerField]}>
                                         <Text style={styles.txLabel}>SĐT người bảo lãnh</Text>
                                         <Field style={{ flex: 1 }}>
                                             <TextField
@@ -681,7 +457,7 @@ class ProfileScreen extends Component {
                                                 editable={false}
                                                 inputStyle={[styles.input]}
                                                 errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianPhone || ''}
+                                                value={guardian.mobileNumber || ''}
                                                 autoCapitalize={"none"}
                                                 autoCorrect={false}
                                             >
@@ -689,7 +465,7 @@ class ProfileScreen extends Component {
                                             </TextField>
                                         </Field>
                                     </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.guardianPassport ? <Field style={[styles.containerField,]}>
+                                    {guardian.idNumber ? <Field style={[styles.containerField,]}>
                                         <Text style={styles.txLabel}>CMTND/ HC người bảo lãnh</Text>
                                         <Field style={{ flex: 1 }}>
                                             <TextField
@@ -697,7 +473,7 @@ class ProfileScreen extends Component {
                                                 editable={false}
                                                 inputStyle={[styles.input]}
                                                 errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.guardianPassport || ''}
+                                                value={guardian.idNumber || ''}
                                                 autoCapitalize={"none"}
                                                 autoCorrect={false}
                                             >
@@ -707,7 +483,7 @@ class ProfileScreen extends Component {
                                     </Field> : <Field></Field>}
                                 </Field>
                                 : <Field>
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.phone ? <Field style={[styles.containerField]}>
+                                    {dataProfile && personal && personal.mobileNumber ? <Field style={[styles.containerField]}>
                                         <Text style={styles.txLabel}>Số điện thoại</Text>
                                         <Field style={{ flex: 1 }}>
                                             <TextField
@@ -715,7 +491,7 @@ class ProfileScreen extends Component {
                                                 editable={false}
                                                 inputStyle={[styles.input]}
                                                 errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.phone || ''}
+                                                value={personal.mobileNumber || ''}
                                                 autoCapitalize={"none"}
                                                 autoCorrect={false}
                                             >
@@ -723,7 +499,7 @@ class ProfileScreen extends Component {
                                             </TextField>
                                         </Field>
                                     </Field> : <Field></Field>}
-                                    {dataProfile && dataProfile.medicalRecords && dataProfile.medicalRecords.passport ? <Field style={[styles.containerField,]}>
+                                    {personal.idNumber ? <Field style={[styles.containerField,]}>
                                         <Text style={styles.txLabel}>Số CMND</Text>
                                         <Field style={{ flex: 1 }}>
                                             <TextField
@@ -731,7 +507,7 @@ class ProfileScreen extends Component {
                                                 editable={false}
                                                 inputStyle={[styles.input]}
                                                 errorStyle={styles.err}
-                                                value={dataProfile?.medicalRecords?.passport || ''}
+                                                value={personal.idNumber || ''}
                                                 autoCapitalize={"none"}
                                                 autoCorrect={false}
                                             >
@@ -744,37 +520,6 @@ class ProfileScreen extends Component {
                         </Form>
                     </View>
                 </ScrollView>
-                <DateTimePicker
-                    isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-
-                        this.setState(
-                            {
-                                dob: newDate,
-                                date: newDate.format("dd/MM/yyyy"),
-                                toggelDateTimePickerVisible: false
-                            },
-                            () => {
-                            }
-                        );
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false });
-                    }}
-                    minimumDate={minDate}
-                    maximumDate={new Date()}
-                    cancelTextIOS={constants.actionSheet.cancel2}
-                    confirmTextIOS={constants.actionSheet.confirm}
-                    date={this.state.dob || new Date()}
-                />
-                <ActionSheet
-                    ref={o => this.actionSheetGender = o}
-                    options={[constants.actionSheet.male, constants.actionSheet.female, constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    // destructiveButtonIndex={1}
-                    onPress={this.onSetGender}
-                />
-                <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
         );
     }
