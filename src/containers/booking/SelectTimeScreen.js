@@ -61,7 +61,7 @@ class SelectTimeScreen extends Component {
   constructor(props) {
     super(props);
     let service = this.props.navigation.state.params.service;
-    console.log('service: ', service);
+
     let byHospital = service?.length ? service[0].byHospital : false;
     let hospital = this.props.navigation.state.params.hospital;
     let isNotHaveSchedule = this.props.navigation.state.params
@@ -96,14 +96,14 @@ class SelectTimeScreen extends Component {
       let objDate = this.state.listSchedule.find(
         e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()),
       );
-      console.log('objDate: ', objDate);
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
       date.setMinutes(
         date.getMinutes() + (objDate.startTime || objDate.startTime == 0)
           ? objDate.startTime
           : 8 * 60,
       );
-      let endTime = this.getTimeDate(objDate.endTime);
+      let endTime = this.getTimeDate(objDate.endTime - 30);
+
       while (true) {
         if (
           date.format('HH:mm') > endTime ||
@@ -130,6 +130,7 @@ class SelectTimeScreen extends Component {
         date.setMinutes(date.getMinutes() + 30);
       }
       this.setState({listTime});
+
       this.setState(
         {
           listTime: listTime.sort((a, b) => {
@@ -406,7 +407,7 @@ class SelectTimeScreen extends Component {
       snackbar.show(constants.msg.booking.full_slot_on_this_time, 'danger');
       return;
     }
-    console.log('item: ', item);
+
     this.setState({schedule: item, allowBooking: true});
   };
 
