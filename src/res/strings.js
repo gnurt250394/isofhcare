@@ -1,6 +1,7 @@
 let isofhcare_service = 'isofhcare/';
-// let wallet_services = 'wallet-services-test/'; //test
-let wallet_services = 'wallet-services-dev/'; //dev
+let wallet_services = 'wallet-services-test/'; //test
+// let wallet_services = 'wallet-services-dev/'; //dev
+const profilePath = 'v1/'
 module.exports = {
   route: '',
   package_name: 'com.isofh.appisofhcaredev',
