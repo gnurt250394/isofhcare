@@ -23,11 +23,13 @@ const realWidth = height > width ? width : height;
 const realHeight = height > width ? height : width;
 const TestResultScreen = ({navigation}) => {
   const [data, setData] = useState(state => navigation.getParam('data', {}));
+  console.log('data: ', data);
   const [suggestion, setSuggestion] = useState(state =>
     (data?.suggestion?.guides || []).concat(
       data?.advice?.suggestion?.guides || [],
     ),
   );
+  console.log('suggestion: ', suggestion);
   const [offsetAnim, setOffsetAnim] = useState(new Animated.Value(0));
   const [scrollY, setScrollY] = useState(new Animated.Value(0));
   const scrollRef = useRef();
@@ -365,7 +367,7 @@ const styles = StyleSheet.create({
   txtHeader: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 20,
     paddingRight: 30,
   },
   txtHome: {
@@ -392,6 +394,7 @@ const styles = StyleSheet.create({
   txtBooking: {
     color: '#FFF',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   buttonBooking: {
     alignItems: 'center',
@@ -408,10 +411,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: 10,
     textAlign: 'center',
+    fontSize: 18,
   },
   txtGuide: {
     color: '#FFF',
     paddingLeft: 10,
+    fontSize: 16,
   },
   containerGuideList: {
     flexDirection: 'row',
@@ -421,7 +426,7 @@ const styles = StyleSheet.create({
   txtTitleGuide: {
     color: '#00CBA7',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 17,
     textAlign: 'center',
   },
   containerGuide: {
@@ -433,6 +438,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textAlign: 'center',
     padding: 15,
+    fontSize: 16,
   },
   flex: {
     flex: 1,

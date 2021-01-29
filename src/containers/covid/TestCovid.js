@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import {
   View,
@@ -11,8 +11,8 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import { useSelector } from 'react-redux';
+import {GiftedChat} from 'react-native-gifted-chat';
+import {useSelector} from 'react-redux';
 import covidProvider from '@data-access/covid-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import stringUtils from 'mainam-react-native-string-utils';
@@ -21,8 +21,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import snackbar from '@utils/snackbar-utils';
 import useBackButton from '@components/useBackButton';
 import CustomSlider from '@components/covid/CustomSlider';
-const { width, height } = Dimensions.get('window');
-const TestCovid = ({ navigation }) => {
+const {width, height} = Dimensions.get('window');
+const TestCovid = ({navigation}) => {
   const [data, setData] = useState([]);
   const [listAnswer, setListAnswer] = useState([]);
   const [value, setValue] = useState(20);
@@ -63,7 +63,7 @@ const TestCovid = ({ navigation }) => {
       list.forEach(e => {
         e.text = e.content;
         e._id = stringUtils.guid();
-        e.user = { _id: 2, avatar: require('@images/new/covid/ic_robot.png') };
+        e.user = {_id: 2, avatar: require('@images/new/covid/ic_robot.png')};
       });
       listQuestionAll.current = list;
     } catch (error) {
@@ -99,7 +99,7 @@ const TestCovid = ({ navigation }) => {
         .map(e => ({
           text: e.content.value,
           _id: stringUtils.guid(),
-          user: { _id: 1 },
+          user: {_id: 1},
           ...e,
         }));
       let obj = listAnswer.find(e => e.type == 'DEFAULT');
@@ -122,7 +122,7 @@ const TestCovid = ({ navigation }) => {
       } else {
         setData(state =>
           GiftedChat.append(state, [
-            { _id: stringUtils.guid(), text: 'Tiếp tục', user: { _id: 1 } },
+            {_id: stringUtils.guid(), text: 'Tiếp tục', user: {_id: 1}},
           ]),
         );
       }
@@ -153,14 +153,14 @@ const TestCovid = ({ navigation }) => {
         {
           text: value,
           _id: stringUtils.guid(),
-          user: { _id: 1 },
+          user: {_id: 1},
         },
       ];
       listFinal.current.push({
         id: currentQuestion.id,
         answers: dataAnswer.map(e => ({
           uid: e.uid,
-          content: { value: Number(value) },
+          content: {value: Number(value)},
         })),
       });
       setData(state => GiftedChat.append(state, dataAnswer));
@@ -170,7 +170,7 @@ const TestCovid = ({ navigation }) => {
     }
     setData(state =>
       GiftedChat.append(state, [
-        { _id: stringUtils.guid(), text: 'Tiếp tục', user: { _id: 1 } },
+        {_id: stringUtils.guid(), text: 'Tiếp tục', user: {_id: 1}},
       ]),
     );
     setIsShowContinue(false);
@@ -248,7 +248,7 @@ const TestCovid = ({ navigation }) => {
         {
           _id: stringUtils.guid(),
           text: item.content.value,
-          user: { _id: 1 },
+          user: {_id: 1},
         },
       ];
     } else if (typeof item.content.value == 'object') {
@@ -260,7 +260,7 @@ const TestCovid = ({ navigation }) => {
             item.content.value.minimum +
             ' đến ' +
             item.content.value.maximum,
-          user: { _id: 1 },
+          user: {_id: 1},
         },
       ];
     }
@@ -296,58 +296,64 @@ const TestCovid = ({ navigation }) => {
           <View
             style={[
               styles.containerList,
-              { flexWrap: type == 'CHECKBOX' ? 'nowrap' : 'wrap' },
+              {flexWrap: type == 'CHECKBOX' ? 'nowrap' : 'wrap'},
             ]}>
             {listAnswer?.length
               ? listAnswer.map((e, i) => {
-                if (e.type == 'DEFAULT') return null;
-                if (typeof e?.content?.value == 'string') {
-                  return (
-                    <TouchableOpacity
-                      key={i}
-                      onPress={onSelectAnswer(e)}
-                      style={[styles.buttonSelect]}>
-                      {type == 'MULTIPLE_CHOICE' && e.checked ? (
-                        <LinearGradient
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                          colors={['#EB5569', '#FEB692']}
-                          style={{
-                            padding: 10,
-                            borderRadius: 5,
-                          }}>
+                  if (e.type == 'DEFAULT') return null;
+                  if (typeof e?.content?.value == 'string') {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={onSelectAnswer(e)}
+                        style={[styles.buttonSelect]}>
+                        {type == 'MULTIPLE_CHOICE' && e.checked ? (
+                          <LinearGradient
+                            start={{x: 0, y: 0}}
+                            end={{x: 1, y: 0}}
+                            colors={['#EB5569', '#FEB692']}
+                            style={{
+                              padding: 10,
+                              borderRadius: 5,
+                            }}>
+                            <Text
+                              style={{
+                                textAlign: 'center',
+                                fontSize: 16,
+                                color:
+                                  type == 'MULTIPLE_CHOICE' && e.checked
+                                    ? '#FFF'
+                                    : '#000',
+                              }}>
+                              {e?.content?.value}
+                            </Text>
+                          </LinearGradient>
+                        ) : (
                           <Text
                             style={{
                               textAlign: 'center',
-                              color:
-                                type == 'MULTIPLE_CHOICE' && e.checked
-                                  ? '#FFF'
-                                  : '#000',
+                              padding: 10,
+                              fontSize: 16,
                             }}>
                             {e?.content?.value}
                           </Text>
-                        </LinearGradient>
-                      ) : (
-                          <Text style={{ textAlign: 'center', padding: 10 }}>
-                            {e?.content?.value}
-                          </Text>
                         )}
-                    </TouchableOpacity>
-                  );
-                } else if (typeof e?.content?.value == 'object') {
-                  return (
-                    <TouchableOpacity
-                      key={i}
-                      onPress={onSelectAnswer(e)}
-                      style={[styles.buttonSelect, { padding: 10 }]}>
-                      <Text style={{ textAlign: 'center' }}>
-                        Từ {e.content.value.minimum} đến{' '}
-                        {e.content.value.maximum}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                } else return null;
-              })
+                      </TouchableOpacity>
+                    );
+                  } else if (typeof e?.content?.value == 'object') {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        onPress={onSelectAnswer(e)}
+                        style={[styles.buttonSelect, {padding: 10}]}>
+                        <Text style={{textAlign: 'center', fontSize: 16}}>
+                          Từ {e.content.value.minimum} đến{' '}
+                          {e.content.value.maximum}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  } else return null;
+                })
               : null}
           </View>
         </ScrollView>
@@ -372,7 +378,7 @@ const TestCovid = ({ navigation }) => {
             },
           },
         ],
-        { cancelable: true },
+        {cancelable: true},
       );
     else navigation.goBack();
   };
@@ -414,14 +420,14 @@ const TestCovid = ({ navigation }) => {
               return (
                 <View>
                   <LinearGradient
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     colors={['#EB5569', '#FEB692']}
                     style={{
                       padding: 10,
                       borderRadius: 25,
                     }}>
-                    <Text style={{ color: '#FFF' }}>
+                    <Text style={{color: '#FFF', fontSize: 16}}>
                       {props.currentMessage.text}
                     </Text>
                   </LinearGradient>
@@ -429,7 +435,7 @@ const TestCovid = ({ navigation }) => {
                     source={require('@images/new/covid/ic_ehealth.png')}
                     height={13}
                     width={13}
-                    style={{ position: 'absolute', bottom: 0, right: 0 }}
+                    style={{position: 'absolute', bottom: 0, right: 0}}
                   />
                 </View>
               );
@@ -444,7 +450,8 @@ const TestCovid = ({ navigation }) => {
                     padding: 10,
                     maxWidth: '80%',
                   }}>
-                  <Text style={{ textAlign: 'left', color: '#000' }}>
+                  <Text
+                    style={{textAlign: 'left', color: '#000', fontSize: 16}}>
                     {props.currentMessage.text}
                   </Text>
                 </View>
@@ -457,7 +464,7 @@ const TestCovid = ({ navigation }) => {
           renderInputToolbar={() => null}
         />
         {/* {type == 'MULTIPLE_CHOICE' || type == 'CHECKBOX' ? ( */}
-        <View style={{ paddingBottom: 20 }}>
+        <View style={{paddingBottom: 20}}>
           {/* <Text
               style={{
                 color: '#3161AD',
@@ -517,7 +524,7 @@ const styles = StyleSheet.create({
   buttonSelect: {
     backgroundColor: '#FFF',
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.2,
     borderRadius: 5,
     marginLeft: 10,
@@ -538,6 +545,7 @@ const styles = StyleSheet.create({
     color: '#EB5569',
     paddingLeft: 5,
     fontWeight: '600',
+    fontSize: 16,
   },
   buttonContinue: {
     alignItems: 'center',
