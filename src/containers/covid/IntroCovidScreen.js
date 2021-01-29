@@ -25,7 +25,7 @@ const IntroCovidScreen = ({}) => {
       }}
       icBack={require('@images/new/covid/ic_back_black.png')}
       actionbarStyle={{
-        height: height / 5,
+        height: height / 4,
       }}
       backgroundHeader={require('@images/new/covid/ic_intro_covid.png')}>
       <ScrollView
@@ -66,7 +66,7 @@ export default IntroCovidScreen;
 
 const styles = StyleSheet.create({
   flex: {flex: 1},
-  txtStart: {color: '#FFF', fontSize: 15, fontWeight: 'bold'},
+  txtStart: {color: '#FFF', fontSize: 17, fontWeight: 'bold'},
   buttonStart: {
     backgroundColor: '#00CBA7',
     alignSelf: 'center',
@@ -80,10 +80,11 @@ const styles = StyleSheet.create({
   txtContent: {
     paddingBottom: 24,
     color: '#444',
+    fontSize: 16,
   },
   txtTitle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 18,
     paddingBottom: 5,
   },
   containerIntro: {
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   txtIntro: {
     color: '#00BA99',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: 'bold',
     paddingTop: 24,
   },
