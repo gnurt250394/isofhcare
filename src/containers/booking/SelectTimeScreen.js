@@ -117,26 +117,12 @@ class SelectTimeScreen extends Component {
           objDate?.lunchEndTime &&
           this.getTimeBooking(date.format('HH:mm')) >=
             this.getTimeBooking(this.getTimeDate(objDate.lunchStartTime)) &&
-          this.getTimeBooking(date.format('HH:mm')) <=
+          this.getTimeBooking(date.format('HH:mm')) <
             this.getTimeBooking(this.getTimeDate(objDate.lunchEndTime))
         ) {
           date.setMinutes(date.getMinutes() + 30);
           continue;
         }
-        if (
-          this.getTimeBooking(date.format('HH:mm')) <
-            this.getTimeBooking(
-              objDate.lunchStartTime
-                ? this.getTimeDate(objDate.lunchStartTime)
-                : '11:30',
-            ) ||
-          this.getTimeBooking(date.format('HH:mm')) >=
-            this.getTimeBooking(
-              objDate.lunchEndTime
-                ? this.getTimeDate(objDate.lunchEndTime)
-                : '12:00',
-            )
-        ) {
           listTime.push({
             key: date.getTime(),
             schedule: {},
@@ -146,7 +132,6 @@ class SelectTimeScreen extends Component {
 
             timeString: date.format('HH:mm:ss'),
           });
-        }
         date.setMinutes(date.getMinutes() + 30);
       }
       this.setState({listTime});
