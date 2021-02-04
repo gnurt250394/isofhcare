@@ -7,9 +7,9 @@ const PreventativeMethod = () => {
     <View style={styles.container}>
       <Text style={styles.txtHeader}>BIỆN PHÁP NGĂN NGỪA</Text>
       <Text style={styles.txtContent}>
-        Hiện tại, chưa có vắc xin ngăn ngừa COVID-19 tại Việt Nam. Tránh tiếp xúc với virus
-        là cách tốt nhất để ngăn ngừa lây nhiễm. Các biện pháp tiêu chuẩn để
-        ngăn chặn sự lây lan của virus đường hô hấp, bao gồm:
+        Hiện tại, chưa có vắc xin ngăn ngừa COVID-19 tại Việt Nam. Tránh tiếp
+        xúc với virus là cách tốt nhất để ngăn ngừa lây nhiễm. Các biện pháp
+        tiêu chuẩn để ngăn chặn sự lây lan của virus đường hô hấp, bao gồm:
       </Text>
       <View style={styles.containerGuide1}>
         <ScaledImage
@@ -105,10 +105,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#00000060',
     paddingHorizontal: 20,
+    fontSize: 15,
   },
   txtCenter: {
     textAlign: 'center',
     paddingTop: 5,
+    fontSize: 16,
   },
   containerGuide1: {
     alignItems: 'center',
@@ -120,12 +122,13 @@ const styles = StyleSheet.create({
   txtContent: {
     color: '#00000080',
     textAlign: 'center',
+    fontSize: 16,
   },
   txtHeader: {
     color: '#3161AD',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 19,
     paddingBottom: 10,
   },
   container: {

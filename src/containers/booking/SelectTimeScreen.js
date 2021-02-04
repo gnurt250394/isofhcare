@@ -61,7 +61,7 @@ class SelectTimeScreen extends Component {
   constructor(props) {
     super(props);
     let service = this.props.navigation.state.params.service;
-    console.log('service: ', service);
+
     let byHospital = service?.length ? service[0].byHospital : false;
     let hospital = this.props.navigation.state.params.hospital;
     let isNotHaveSchedule = this.props.navigation.state.params
@@ -96,13 +96,15 @@ class SelectTimeScreen extends Component {
       let objDate = this.state.listSchedule.find(
         e => e.dayOfWeek == this.convertDayOfWeek(date.getDay()),
       );
+
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
       date.setMinutes(
         date.getMinutes() + (objDate.startTime || objDate.startTime == 0)
           ? objDate.startTime
           : 8 * 60,
       );
-      let endTime = this.getTimeDate(objDate.endTime);
+      let endTime = this.getTimeDate(objDate.endTime - 30);
+
       while (true) {
         if (
           date.format('HH:mm') > endTime ||
@@ -111,28 +113,40 @@ class SelectTimeScreen extends Component {
           break;
 
         if (
-          this.getTimeBooking(date.format('HH:mm')) <
-            this.getTimeBooking('12:30') ||
+          objDate?.lunchStartTime &&
+          objDate?.lunchEndTime &&
           this.getTimeBooking(date.format('HH:mm')) >=
-            this.getTimeBooking('13:00')
+            this.getTimeBooking(this.getTimeDate(objDate.lunchStartTime)) &&
+          this.getTimeBooking(date.format('HH:mm')) <
+            this.getTimeBooking(this.getTimeDate(objDate.lunchEndTime))
         ) {
+          date.setMinutes(date.getMinutes() + 30);
+          continue;
+        }
           listTime.push({
             key: date.getTime(),
             schedule: {},
             type: 3,
             date: date.format('yyyy-MM-dd'),
             time: date.format('HH:mm'),
+
             timeString: date.format('HH:mm:ss'),
           });
-        }
         date.setMinutes(date.getMinutes() + 30);
       }
       this.setState({listTime});
+
       this.setState(
         {
           listTime: listTime.sort((a, b) => {
             return a.time - b.time;
           }),
+          lunchStartTime: objDate.lunchStartTime
+            ? this.getTimeDate(objDate.lunchStartTime)
+            : null,
+          lunchEndTime: objDate.lunchEndTime
+            ? this.getTimeDate(objDate.lunchEndTime)
+            : null,
         },
         () => {},
       );
@@ -398,7 +412,7 @@ class SelectTimeScreen extends Component {
       snackbar.show(constants.msg.booking.full_slot_on_this_time, 'danger');
       return;
     }
-    console.log('item: ', item);
+
     this.setState({schedule: item, allowBooking: true});
   };
 
@@ -570,8 +584,8 @@ class SelectTimeScreen extends Component {
                       </Text>
                     )}
 
-                    {this.renderTimePicker('0:0', '12:00', 'Sáng')}
-                    {this.renderTimePicker('13:00', '24:00', 'Chiều')}
+                    {this.renderTimePicker('0:0', '11:30', 'Sáng')}
+                    {this.renderTimePicker('12:00', '24:00', 'Chiều')}
                   </View>
                 ) : !this.state.isLoading ? (
                   <Text style={[styles.errorStyle]}>
