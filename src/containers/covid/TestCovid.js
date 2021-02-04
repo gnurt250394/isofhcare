@@ -321,6 +321,7 @@ const TestCovid = ({navigation}) => {
                             <Text
                               style={{
                                 textAlign: 'center',
+                                fontSize: 16,
                                 color:
                                   type == 'MULTIPLE_CHOICE' && e.checked
                                     ? '#FFF'
@@ -330,7 +331,12 @@ const TestCovid = ({navigation}) => {
                             </Text>
                           </LinearGradient>
                         ) : (
-                          <Text style={{textAlign: 'center', padding: 10}}>
+                          <Text
+                            style={{
+                              textAlign: 'center',
+                              padding: 10,
+                              fontSize: 16,
+                            }}>
                             {e?.content?.value}
                           </Text>
                         )}
@@ -342,7 +348,7 @@ const TestCovid = ({navigation}) => {
                         key={i}
                         onPress={onSelectAnswer(e)}
                         style={[styles.buttonSelect, {padding: 10}]}>
-                        <Text style={{textAlign: 'center'}}>
+                        <Text style={{textAlign: 'center', fontSize: 16}}>
                           Từ {e.content.value.minimum} đến{' '}
                           {e.content.value.maximum}
                         </Text>
@@ -423,7 +429,7 @@ const TestCovid = ({navigation}) => {
                       padding: 10,
                       borderRadius: 25,
                     }}>
-                    <Text style={{color: '#FFF'}}>
+                    <Text style={{color: '#FFF', fontSize: 16}}>
                       {props.currentMessage.text}
                     </Text>
                   </LinearGradient>
@@ -446,7 +452,8 @@ const TestCovid = ({navigation}) => {
                     padding: 10,
                     maxWidth: '80%',
                   }}>
-                  <Text style={{textAlign: 'left', color: '#000'}}>
+                  <Text
+                    style={{textAlign: 'left', color: '#000', fontSize: 16}}>
                     {props.currentMessage.text}
                   </Text>
                 </View>
@@ -540,6 +547,7 @@ const styles = StyleSheet.create({
     color: '#EB5569',
     paddingLeft: 5,
     fontWeight: '600',
+    fontSize: 16,
   },
   buttonContinue: {
     alignItems: 'center',

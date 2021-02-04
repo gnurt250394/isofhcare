@@ -729,8 +729,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                                 null
                                         }
 
-                                        {this.renderTimePicker('0:0', '12:00', "Buổi sáng")}
-                                        {this.renderTimePicker('13:00', '24:00', "Buổi chiều")}
+                                        {this.renderTimePicker('0:0', '11:30', "Buổi sáng")}
+                                        {this.renderTimePicker('12:00', '24:00', "Buổi chiều")}
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
