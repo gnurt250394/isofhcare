@@ -42,7 +42,7 @@ class SelectServiceScreen extends Component {
     };
   }
   componentDidMount() {
-    firebaseUtils.sendEvent('Hospital_service')
+    firebaseUtils.sendEvent('Hospital_service');
     this.onRefresh();
   }
 
@@ -66,7 +66,6 @@ class SelectServiceScreen extends Component {
           true,
         )
         .then(s => {
-          console.log('s: ', s);
           this.setState(
             {
               refreshing: false,
@@ -110,7 +109,7 @@ class SelectServiceScreen extends Component {
     this.setState({searchValue: s});
   };
   onSearch = () => {
-    firebaseUtils.sendEvent('Hospital_service_search')
+    firebaseUtils.sendEvent('Hospital_service_search');
     var s = this.state.searchValue;
     var listSearch = this.state.listService.filter(item => {
       return (
@@ -190,6 +189,8 @@ class SelectServiceScreen extends Component {
     );
   }
   onPressItem1 = item => () => {
+    let onSelected = this.props.navigation.getParam('onSelected');
+    if (onSelected) onSelected([item]);
     this.props.navigation.navigate('addBooking1', {
       listServicesSelected: [item],
       hospital: this.state.hospital,
@@ -260,7 +261,6 @@ class SelectServiceScreen extends Component {
     });
   };
   renderItem = ({item}) => {
-    console.log('item: ', item);
     return (
       <TouchableOpacity onPress={this.onPressItem1(item)}>
         <View
