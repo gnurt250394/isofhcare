@@ -220,6 +220,7 @@ class AddBookingScreen extends Component {
   };
 
   selectService(services) {
+    console.log('services: ', services);
     let servicesError = services ? '' : this.state.servicesError;
     if (
       !services ||
