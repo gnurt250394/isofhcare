@@ -79,8 +79,8 @@ module.exports = {
   serviceCovid: 'http://10.0.0.88:49396/',
   serviceNews: 'http://10.0.0.98:36545',
   requestPayment: 'http://10.0.0.98:8083/',
-  // serviceProfile: 'http://10.0.0.98:8000/', sever test
-  serviceProfile:'http://10.0.50.211:50771/',
+  serviceProfile: 'http://10.0.0.98:8000/', //sever test
+  // serviceProfile:'http://10.0.50.211:50771/',
   response: {
     ok(data, message) {
       if (!message) message = '';
