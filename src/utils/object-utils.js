@@ -45,4 +45,30 @@ export default {
       }
     }
   },
+  renderTextRelations(type) {
+    switch (type) {
+      case 'FATHER':
+        return 'BỐ';
+      case 'MOTHER':
+        return 'MẸ';
+      case 'GRAND_MOTHER':
+        return 'BÀ';
+      case 'GRAND_FATHER':
+        return 'ÔNG';
+      case 'BROTHER':
+        return 'ANH';
+      case 'YOUNG_BROTHER':
+        return 'EM TRAI';
+      case 'SON':
+        return 'CON';
+      case 'GRAND_CHILDREN':
+        return 'CHÁU';
+      case 'SISTER':
+        return 'CHỊ';
+      case 'OTHER':
+        return 'KHÁC';
+      default:
+        return '';
+    }
+  },
 };

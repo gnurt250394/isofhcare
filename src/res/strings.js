@@ -1,7 +1,7 @@
 let isofhcare_service = 'isofhcare/';
 let wallet_services = 'wallet-services-test/'; //test
 // let wallet_services = 'wallet-services-dev/'; //dev
-const profilePath = 'v1/'
+const profilePath = 'profile/v1/'
 module.exports = {
   route: '',
   package_name: 'com.isofh.appisofhcaretest',
@@ -1116,8 +1116,8 @@ module.exports = {
     profile: {
       profile: profilePath + 'profiles',
       profile_member: profilePath + 'profile-registries',
-      list_relationship: profilePath + 'profiles/relationships/types',
-      check_info_profile: profilePath + 'profiles/load',
+      list_relationship: profilePath + 'profiles/relationship-types',
+      check_info_profile: profilePath + 'profiles/pre-check',
       // get_by_user: isofhcare_service + 'profile/get-by-user',
       // get_details_user: isofhcare_service + '/user/get-detail',
       // get_profile_family:
@@ -1138,7 +1138,7 @@ module.exports = {
       // confirm: isofhcare_service + 'medical-records/confirm',
       // get_details_medical:
       //   isofhcare_service + 'medical-records/get-detail-medical-record',
-      // verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
+      verify_fill_phone: profilePath + 'profiles',
       // fill_phone: isofhcare_service + 'user/fill-phone',
       // get_detail_profile: isofhcare_service + 'medical-records/by-user/',
     },
