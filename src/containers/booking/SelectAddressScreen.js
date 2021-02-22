@@ -17,6 +17,7 @@ class SelectAddressScreen extends Component {
     super(props);
 
     let dataLocation = this.props.navigation.getParam('dataLocation', null);
+    console.log('dataLocation: ', dataLocation);
     let provinces = dataLocation && dataLocation.provinces;
     let districts = dataLocation && dataLocation.districts;
     let zone = dataLocation && dataLocation.zone;
@@ -98,13 +99,15 @@ class SelectAddressScreen extends Component {
       this.props.navigation.navigate('selectZone', {
         onSelected: this.selectZone.bind(this),
         id: this.state.districts.id,
-        zone: this.state.zone
+        zone: this.state.zone,
       });
       return;
     }
   };
   _replaceSpace(str) {
-    if (str) return str.replace(/\u0020/, '\u00a0');
+    if (typeof str === 'string') {
+      return str.replace(/\u0020/, '\u00a0');
+    }
   }
 
   onChangeText = type => text => {
@@ -162,14 +165,14 @@ class SelectAddressScreen extends Component {
                   inputStyle={[
                     styles.ktq,
                     {minHeight: 41},
-                    this.state.provinces && this.state.provinces.countryCode
+                    this.state.provinces && this.state.provinces.name
                       ? {}
                       : {color: '#8d8d8d'},
                   ]}
                   errorStyle={styles.errorStyle}
                   value={
-                    this.state.provinces && this.state.provinces.countryCode
-                      ? this.state.provinces.countryCode
+                    this.state.provinces && this.state.provinces.name
+                      ? this.state.provinces.name
                       : 'Tỉnh/Thành phố'
                   }
                   autoCapitalize={'none'}

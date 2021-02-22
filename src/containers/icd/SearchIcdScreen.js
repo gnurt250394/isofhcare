@@ -52,7 +52,7 @@ class SearchIcdScreen extends Component {
         try {
             let { keyword, page, size } = this.state
 
-            let res = await diseaseProvider.search(keyword, page, size)
+            let res = await diseaseProvider.search(keyword.trim(), page, size)
             this.setState({ refreshing: false })
             if (res && res.content && res.content.length > 0) {
                 this.formatData(res.content)
