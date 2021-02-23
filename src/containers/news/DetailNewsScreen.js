@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, {useState, useEffect, memo} from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,11 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import FastImage from 'react-native-fast-image';
 import Webview from 'react-native-webview';
 import newsProvider from '@data-access/news-provider';
-import { IGNORED_TAGS } from 'react-native-render-html/src/HTMLUtils'
-import _ from 'lodash'
-
-const { width, height } = Dimensions.get('window');
-const DetailNewsScreen = ({ navigation }) => {
+import {IGNORED_TAGS} from 'react-native-render-html/src/HTMLUtils';
+import _ from 'lodash';
+import {ShareDialog} from 'react-native-fbsdk';
+const {width, height} = Dimensions.get('window');
+const DetailNewsScreen = ({navigation}) => {
   const item = navigation.getParam('item', {});
   const [data, setData] = useState([]);
 
@@ -36,6 +36,7 @@ const DetailNewsScreen = ({ navigation }) => {
     getNews();
     getList();
   }, [detail.newsId]);
+  console.log('detail: ', detail);
   const getNews = () => {
     newsProvider
       .detailNews(detail?.newsId)
@@ -43,7 +44,7 @@ const DetailNewsScreen = ({ navigation }) => {
         setContent(res.content.rawText);
         setDetail(res);
       })
-      .catch(err => { });
+      .catch(err => {});
   };
   const getList = () => {
     setLoading(true);
@@ -94,53 +95,59 @@ const DetailNewsScreen = ({ navigation }) => {
     }
   };
   const goToDetailService = item => () => {
-    navigation.replace('detailNews', { item, idCategories });
+    navigation.replace('detailNews', {item, idCategories});
   };
-  const tags = _.without(IGNORED_TAGS,
-    'table', 'caption', 'col', 'colgroup', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr'
-  )
+  const tags = _.without(
+    IGNORED_TAGS,
+    'table',
+    'caption',
+    'col',
+    'colgroup',
+    'tbody',
+    'td',
+    'tfoot',
+    'th',
+    'thead',
+    'tr',
+  );
 
   const tableDefaultStyle = {
     flex: 1,
     justifyContent: 'center',
     borderWidth: 0.4,
-  }
+  };
 
   const tableColumnStyle = {
     ...tableDefaultStyle,
     flexDirection: 'column',
     alignItems: 'stretch',
-
-  }
+  };
 
   const tableRowStyle = {
     ...tableDefaultStyle,
     flexDirection: 'row',
     alignItems: 'stretch',
     borderColor: '#000000',
-
-  }
+  };
 
   const tdStyle = {
     ...tableDefaultStyle,
     padding: 2,
     flexDirection: 'row',
-
-  }
+  };
 
   const thStyle = {
     ...tdStyle,
     backgroundColor: '#CCCCCC',
     alignItems: 'flex-end',
     borderColor: 'orange',
-
-  }
-  const renderItem = ({ item, index }) => {
+  };
+  const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={goToDetailService(item)} style={{ flex: 1 }}>
+      <TouchableOpacity onPress={goToDetailService(item)} style={{flex: 1}}>
         <View style={styles.cardView}>
           <FastImage
-            source={{ uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || '' }}
+            source={{uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || ''}}
             style={{
               borderRadius: 6,
               resizeMode: 'cover',
@@ -162,7 +169,32 @@ const DetailNewsScreen = ({ navigation }) => {
     // snackbar.show('Tính năng đang phát triển')
     navigation.navigate('introCovid');
   };
+  const shareLinkContent = {
+    contentType: 'link',
+    contentUrl: 'https://isofhcare.com/' + detail?.identity,
+  };
 
+  const onShare = () => {
+    console.log('shareLinkContent: ', shareLinkContent);
+    ShareDialog.canShow(shareLinkContent)
+      .then(function(canShow) {
+        if (canShow) {
+          return ShareDialog.show(shareLinkContent);
+        }
+      })
+      .then(
+        function(result) {
+          if (result.isCancelled) {
+            console.log('Share cancelled');
+          } else {
+            console.log('Share success with postId: ' + result.postId);
+          }
+        },
+        function(error) {
+          console.log('Share fail with error: ' + error);
+        },
+      );
+  };
   return (
     <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">
       <ScrollView style={styles.container}>
@@ -197,7 +229,7 @@ const DetailNewsScreen = ({ navigation }) => {
                     return (
                       <FastImage
                         resizeMode={'contain'}
-                        source={{ uri: htmlAttribs.src }}
+                        source={{uri: htmlAttribs.src}}
                         style={{
                           width: width - 30,
                           height: parseInt(htmlAttribs.height) || 150,
@@ -215,22 +247,42 @@ const DetailNewsScreen = ({ navigation }) => {
                   thead: (x, c) => <View style={tableRowStyle}>{c}</View>,
                   caption: (x, c) => <View style={tableColumnStyle}>{c}</View>,
                   tr: (x, c) => <View style={tableRowStyle}>{c}</View>,
-                  td: (x, c) => <View style={tdStyle}>{c}</View>
+                  td: (x, c) => <View style={tdStyle}>{c}</View>,
                 }}
-
               />
             ) : null}
           </View>
-          {/* <View style={styles.containerButton}>
-                        <Text style={styles.txtLabel}>ISOFHCARE hỗ trợ kiểm tra bạn có nằm trong nhóm nguy cơ nhiễm virus Covid 19 không?</Text>
-                        <TouchableOpacity
-                            onPress={onGoToTest}
-                            style={styles.buttonTest}>
-                            <Text style={styles.btxtTest}>KIỂM TRA COVID NGAY</Text>
-                        </TouchableOpacity>
-                    </View> */}
+          <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
+            <ScaledImage
+              source={require('@images/new/news/ic_share.png')}
+              height={20}
+              width={20}
+            />
+            <Text>Chia sẻ</Text>
+          </TouchableOpacity>
+          <View style={{paddingLeft: 10}}>
+            <Text style={{paddingTop: 5}}>
+              Chuyên mục:{' '}
+              <Text style={styles.txtTopicName}>
+                {detail.topic?.name?.rawText}
+              </Text>
+            </Text>
+            <Text style={{paddingTop: 5}}>
+              <Text style={{color: '#00CBA7', fontWeight: 'bold'}}>
+                iSofHcare{' '}
+              </Text>
+              <Text>
+                | Ngày đăng{' '}
+                {new Date(detail?.topic?.createdAt).format('dd/MM/yyyy')}
+              </Text>
+            </Text>
+            <Text style={{paddingTop: 5}}>
+              Cập nhật lần cuối:{' '}
+              {new Date(detail?.topic?.lastModified).format('dd/MM/yyyy')}
+            </Text>
+          </View>
           {data.length ? (
-            <View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+            <View style={{backgroundColor: '#fff', marginTop: 10}}>
               <View style={styles.viewAds}>
                 <Text style={styles.txAds}>Bài viết liên quan</Text>
               </View>
@@ -251,6 +303,23 @@ const DetailNewsScreen = ({ navigation }) => {
   );
 };
 const styles = StyleSheet.create({
+  txtTopicName: {
+    fontWeight: 'bold',
+    color: '#3161AD',
+    textDecorationLine: 'underline',
+  },
+  buttonShare: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#00000050',
+    alignSelf: 'flex-end',
+    padding: 5,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginRight: 10,
+  },
   btxtTest: {
     color: '#FFF',
     fontWeight: 'bold',
@@ -294,7 +363,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: '#00000010',
+    backgroundColor: '#FFF',
   },
   viewAds: {
     flexDirection: 'row',
@@ -310,8 +379,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
   },
-  listAds: { paddingHorizontal: 20 },
-  viewFooter: { width: 35 },
+  listAds: {paddingHorizontal: 20},
+  viewFooter: {width: 35},
   cardView: {
     borderRadius: 6,
     marginRight: 10,
@@ -321,6 +390,6 @@ const styles = StyleSheet.create({
     height: 134,
     width: 259,
   },
-  txContensHospital: { color: '#000', margin: 13, marginLeft: 5, maxWidth: 259 },
+  txContensHospital: {color: '#000', margin: 13, marginLeft: 5, maxWidth: 259},
 });
 export default DetailNewsScreen;
