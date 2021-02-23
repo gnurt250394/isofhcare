@@ -377,7 +377,7 @@ class CreateProfileScreen extends Component {
   onScan = async data => {
     try {
       let s = await profileProvider.getInfoProfilewithQrcode(data);
-      let dataProfile = s?.profileInfo;
+      let dataProfile = s;
       if (dataProfile) {
         this.setState({
           isFinding: false,
@@ -385,6 +385,7 @@ class CreateProfileScreen extends Component {
           userDoesNotExist: 2,
           dataProfile,
           disabled: true,
+          phone: dataProfile?.personal?.mobileNumber,
           name: dataProfile?.personal?.fullName
             ? dataProfile?.personal.fullName
             : '',
@@ -398,9 +399,9 @@ class CreateProfileScreen extends Component {
             : '',
           valueGender: dataProfile?.personal?.gender,
           userPassport: dataProfile?.personal?.idNumber || '',
-          guardianPassport: s.profileInfo?.guardian?.idNumber || '',
-          guardianName: s.profileInfo?.guardian?.fullName || '',
-          guardianPhone: s.profileInfo?.guardian?.mobileNumber || '',
+          guardianPassport: s?.guardian?.idNumber || '',
+          guardianName: s?.guardian?.fullName || '',
+          guardianPhone: s?.guardian?.mobileNumber || '',
         });
       }
       console.log('res: ', res);
