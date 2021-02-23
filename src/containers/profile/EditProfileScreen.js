@@ -1426,10 +1426,6 @@ const styles = StyleSheet.create({
   err: {
     fontSize: 12,
     color: 'red',
-    position: 'absolute',
-    bottom: -5,
-    right: 10,
-    width: '120%',
     fontStyle: 'italic',
     flexWrap: 'nowrap',
     textAlign: 'right',

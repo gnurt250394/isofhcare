@@ -315,4 +315,17 @@ export default {
       );
     });
   },
+  getInfoProfilewithQrcode(data) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.profile.info_profile + data,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };

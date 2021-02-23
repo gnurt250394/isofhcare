@@ -42,6 +42,7 @@ class CreateProfileScreen extends Component {
       email: '',
       phone: '',
       name: '',
+      disabled: false,
     };
   }
   componentDidMount() {
@@ -361,16 +362,51 @@ class CreateProfileScreen extends Component {
   };
   onScanQrCode = () => {
     this.props.navigation.navigate('qrcodeScanner', {
-      title: 'Quét mã giới thiệu',
-      textHelp: 'Di chuyển camera đến vùng chứa mã giới thiệu để quét',
+      title: 'Quét mã iSofHcare',
+      textHelp: 'Di chuyển camera đến vùng chứa mã iSofHcare để quét',
       onCheckData: data => {
         return new Promise((resolve, reject) => {
           this.setState({isofhcareCode: data}, () => {
             resolve();
+            this.onScan(data);
           });
         });
       },
     });
+  };
+  onScan = async data => {
+    try {
+      let s = await profileProvider.getInfoProfilewithQrcode(data);
+      let dataProfile = s?.profileInfo;
+      if (dataProfile) {
+        this.setState({
+          isFinding: false,
+          findFinish: true,
+          userDoesNotExist: 2,
+          dataProfile,
+          disabled: true,
+          name: dataProfile?.personal?.fullName
+            ? dataProfile?.personal.fullName
+            : '',
+          date: dataProfile?.personal?.dateOfBirth
+            ? dataProfile.personal.dateOfBirth
+                .toDateObject('-')
+                .format('dd/MM/yyyy')
+            : '',
+          dob: dataProfile?.personal?.dateOfBirth
+            ? dataProfile.personal.dateOfBirth.toDateObject('-')
+            : '',
+          valueGender: dataProfile?.personal?.gender,
+          userPassport: dataProfile?.personal?.idNumber || '',
+          guardianPassport: s.profileInfo?.guardian?.idNumber || '',
+          guardianName: s.profileInfo?.guardian?.fullName || '',
+          guardianPhone: s.profileInfo?.guardian?.mobileNumber || '',
+        });
+      }
+      console.log('res: ', res);
+    } catch (error) {
+      console.log('error: ', error);
+    }
   };
   selectImage = () => {
     if (this.imagePicker) {
@@ -653,6 +689,7 @@ class CreateProfileScreen extends Component {
                 isFinding: false,
                 findFinish: true,
                 userDoesNotExist: 1,
+                disabled: false,
                 dataProfile: {},
                 date: null,
                 dob: null,
@@ -670,6 +707,7 @@ class CreateProfileScreen extends Component {
                 findFinish: true,
                 userDoesNotExist: 2,
                 dataProfile,
+                disabled: true,
                 name: dataProfile?.personal?.fullName
                   ? dataProfile?.personal.fullName
                   : '',
@@ -715,7 +753,6 @@ class CreateProfileScreen extends Component {
       maxDate.getMonth(),
       maxDate.getDate(),
     );
-    console.log('this.state.dataProfile: ', this.state.dataProfile);
 
     return (
       <ActivityPanel
@@ -795,7 +832,7 @@ class CreateProfileScreen extends Component {
                         onChangeText={this.onChangeText('name')}
                         value={this._replaceSpace(this.state.name)}
                         autoCapitalize={'none'}
-                        editable={!this.state.id}
+                        editable={!this.state.disabled}
                         autoCorrect={false}
                       />
                     </Field>
@@ -812,7 +849,7 @@ class CreateProfileScreen extends Component {
                         placeholder="Nhập số điện thoại"
                         value={this.state.phone}
                         errorStyle={styles.err}
-                        editable={!this.state.id}
+                        editable={!this.state.disabled}
                         maxLength={10}
                         autoCapitalize={'none'}
                         onBlur={this.onBlur}
@@ -919,12 +956,7 @@ class CreateProfileScreen extends Component {
                             required: 'Ngày sinh không được để trống',
                           },
                         }}
-                        disabled={
-                          this.state.dataProfile?.personal?.dateOfBirth &&
-                          this.state.date
-                            ? true
-                            : false
-                        }
+                        disabled={this.state.disabled}
                         editable={false}
                         inputStyle={[styles.input]}
                         placeholder="Chọn ngày sinh"
@@ -947,12 +979,7 @@ class CreateProfileScreen extends Component {
                         errorStyle={styles.err}
                         multiline={true}
                         onPress={this.onShowGender}
-                        disabled={
-                          this.state.dataProfile?.personal?.gender &&
-                          this.state.valueGender
-                            ? true
-                            : false
-                        }
+                        disabled={this.state.disabled}
                         editable={false}
                         inputStyle={[styles.input]}
                         placeholder="Chọn giới tính"
@@ -1004,7 +1031,7 @@ class CreateProfileScreen extends Component {
                           // underlineColorAndroid="transparent"
                           autoCorrect={false}
                           keyboardType={'numeric'}
-                          editable={!this.state.dataProfile?.personal?.idNumber}
+                          editable={!this.state.disabled}
                         />
                       </Field>
                       <ScaledImage
@@ -1025,9 +1052,7 @@ class CreateProfileScreen extends Component {
                             inputStyle={[styles.input]}
                             placeholder="Nhập người bảo lãnh"
                             errorStyle={styles.err}
-                            editable={
-                              !this.state.dataProfile?.guardian?.fullName
-                            }
+                            editable={!this.state.disabled}
                             value={this._replaceSpace(this.state.guardianName)}
                             autoCapitalize={'none'}
                             // underlineColorAndroid="transparent"
@@ -1057,9 +1082,7 @@ class CreateProfileScreen extends Component {
                             placeholder="Nhập SĐT người bảo lãnh"
                             value={this.state.guardianPhone}
                             autoCapitalize={'none'}
-                            editable={
-                              !this.state.dataProfile?.guardian?.mobileNumber
-                            }
+                            editable={!this.state.disabled}
                             keyboardType={'numeric'}
                             errorStyle={styles.err}
                             maxLength={10}
@@ -1105,9 +1128,7 @@ class CreateProfileScreen extends Component {
                             value={this.state.guardianPassport}
                             errorStyle={[styles.err]}
                             autoCapitalize={'none'}
-                            editable={
-                              !this.state.dataProfile?.guardian?.idNumber
-                            }
+                            editable={!this.state.disabled}
                             // validate={{
                             //     rules: {
                             //         required: true,
@@ -1384,10 +1405,6 @@ const styles = StyleSheet.create({
   err: {
     fontSize: 12,
     color: 'red',
-    position: 'absolute',
-    bottom: -5,
-    right: 10,
-    width: '120%',
     fontStyle: 'italic',
     flexWrap: 'nowrap',
     textAlign: 'right',
