@@ -215,8 +215,8 @@ export default {
 
       let patient = {
         id: idUser,
-        name: patientUser.name,
-        phone: patientUser.phone,
+        name: patientUser.fullName,
+        phone: patientUser.mobileNumber,
       };
       client.requestApi(
         'post',
