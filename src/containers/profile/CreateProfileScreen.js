@@ -1021,14 +1021,14 @@ class CreateProfileScreen extends Component {
                           value={this.state.userPassport}
                           errorStyle={[styles.err, {flexWrap: 'nowrap'}]}
                           autoCapitalize={'none'}
-                          // validate={{
-                          //   rules: {
-                          //     required: true,
-                          //   },
-                          //   messages: {
-                          //     required: 'Số CMND không được để trống',
-                          //   },
-                          // }}
+                          validate={{
+                            rules: {
+                              maxlength: 13,
+                            },
+                            messages: {
+                              maxlength: 'Số CMND không được quá 13 ký tự',
+                            },
+                          }}
                           // underlineColorAndroid="transparent"
                           autoCorrect={false}
                           keyboardType={'numeric'}
