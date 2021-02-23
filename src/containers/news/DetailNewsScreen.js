@@ -273,12 +273,16 @@ const DetailNewsScreen = ({navigation}) => {
               </Text>
               <Text>
                 | Ngày đăng{' '}
-                {new Date(detail?.topic?.createdAt).format('dd/MM/yyyy')}
+                {detail?.topic?.createdAt
+                  ?.toDateObject('-')
+                  .format('dd/MM/yyyy')}
               </Text>
             </Text>
             <Text style={{paddingTop: 5}}>
               Cập nhật lần cuối:{' '}
-              {new Date(detail?.topic?.lastModified).format('dd/MM/yyyy')}
+              {detail?.topic?.lastModified
+                ?.toDateObject('-')
+                .format('dd/MM/yyyy')}
             </Text>
           </View>
           {data.length ? (

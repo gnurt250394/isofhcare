@@ -941,10 +941,10 @@ class EditProfileScreen extends Component {
                     autoCapitalize={'none'}
                     validate={{
                       rules: {
-                        required: true,
+                        maxlength: 13,
                       },
                       messages: {
-                        required: 'Số CMND không được để trống',
+                        maxlength: 'Số CMND không được quá 13 ký tự',
                       },
                     }}
                     // underlineColorAndroid="transparent"
@@ -1157,14 +1157,14 @@ class EditProfileScreen extends Component {
                         value={this.state.guardianPassport}
                         errorStyle={[styles.err]}
                         autoCapitalize={'none'}
-                        // validate={{
-                        //     rules: {
-                        //         required: true,
-                        //     },
-                        //     messages: {
-                        //         required: "CMTND/HC người bảo lãnh không được để trống",
-                        //     }
-                        // }}
+                        validate={{
+                          rules: {
+                            maxlength: 13,
+                          },
+                          messages: {
+                            maxlength: 'Số CMND không được quá 13 ký tự',
+                          },
+                        }}
                         numberOfLines={1}
                         // underlineColorAndroid="transparent"
                         autoCorrect={false}
