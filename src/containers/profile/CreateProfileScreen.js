@@ -676,15 +676,15 @@ class CreateProfileScreen extends Component {
         profileProvider
           .getInfoProfile(data)
           .then(s => {
-            // if (s.resultMessage == 'PROFILE_INFO_ALREADY_EXISTS') {
-            //   this.setState({
-            //     isFinding: false,
-            //     findFinish: false,
-            //     // userDoesNotExist: 1,
-            //   });
-            // snackbar.show('Số điện thoại đã tồn tại', 'danger');
-            // return;
-            // }
+            if (s.resultMessage == 'FRIEND_CREATED_ALREADY_EXISTS') {
+              this.setState({
+                isFinding: false,
+                findFinish: false,
+                // userDoesNotExist: 1,
+              });
+              snackbar.show('Số điện thoại đã thành viên của tài khoản khác', 'danger');
+              return;
+            }
             if (!s?.profileInfo?.guardian && !s?.profileInfo?.personal) {
               this.setState({
                 isFinding: false,

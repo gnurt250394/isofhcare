@@ -32,8 +32,15 @@ class ProfileScreen extends Component {
     };
   }
   componentDidMount() {
-    this.onGetData();
+    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+      this.onGetData();
+    });
   }
+  componentWillUnmount = () => {
+    if (this.onFocus) {
+      this.onFocus.remove();
+    }
+  };
   onGetData = () => {
     let id = this.state.id;
     this.setState(
