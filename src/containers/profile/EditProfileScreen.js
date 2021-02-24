@@ -497,7 +497,7 @@ class EditProfileScreen extends Component {
                         ? this.state.dob.format('yyyy-MM-dd')
                         : null,
                       gender: this.state.valueGender,
-                      mobileNumber: this.props.userApp.currentUser.phone,
+                      mobileNumber: this.state.phone,
                       nation: this.state.nation.name,
                       nationality: this.state.nationality?.name,
                       job: this.state.job ? this.state.job?.name : '',
@@ -1160,8 +1160,11 @@ class EditProfileScreen extends Component {
                         validate={{
                           rules: {
                             maxlength: 13,
+                            required: true,
                           },
                           messages: {
+                            required:
+                              'CMTND/HC người bảo lãnh không được để trống',
                             maxlength: 'Số CMND không được quá 13 ký tự',
                           },
                         }}

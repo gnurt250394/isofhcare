@@ -13,6 +13,7 @@ import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import dateUtils from 'mainam-react-native-date-utils';
 import CustomMenu from '@components/CustomMenu';
+import SelectRelation from '@components/profile/SelectRelation';
 
 import {CheckBox} from 'native-base';
 import objectUtils from '@utils/object-utils';
@@ -25,6 +26,7 @@ class ListProfileScreen extends Component {
       size: 10,
       page: 1,
       isVisible: false,
+      isVisibleRelation: false,
     };
   }
   onShowOptions = item => {
@@ -80,9 +82,15 @@ class ListProfileScreen extends Component {
     } catch (error) {}
   };
   componentDidMount() {
-    this.onRefresh();
+    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+        this.onLoad();
+    });
   }
-
+  componentWillUnmount = () => {
+    if (this.onFocus) {
+      this.onFocus.remove();
+    }
+  };
   updatePermission = () => {
     let id = this.state.id;
     let shareId = this.state.shareId;
@@ -187,6 +195,7 @@ class ListProfileScreen extends Component {
     this.setState({
       isVisible: false,
       isVisibleShare: false,
+      isVisibleRelation: false,
     });
   };
   componentWillReceiveProps(nextProps) {
@@ -287,10 +296,18 @@ class ListProfileScreen extends Component {
           });
         }
         break;
+      case 4:
+        {
+          this.setState({
+            idProfile: item?.userProfileId,
+            profileInfo: item?.profileInfo,
+            isVisibleRelation: true,
+          });
+        }
+        break;
     }
   };
   renderItem = ({item, index}) => {
-    console.log('item: ', item);
     let age = item?.profileInfo?.personal?.dateOfBirth
       ? new Date().getFullYear() -
         item?.profileInfo?.personal?.dateOfBirth
@@ -329,11 +346,6 @@ class ListProfileScreen extends Component {
             <View style={styles.viewItemActive}>
               <Text style={styles.nameActive}>
                 {item?.profileInfo?.personal?.fullName}
-                {item.defaultProfile
-                  ? ' (Chủ tài khoản)'
-                  : objectUtils.renderTextRelations(
-                      item.profileInfo?.personal.relationshipType,
-                    )}
               </Text>
 
               {item?.profileInfo?.personal?.mobileNumber && (
@@ -341,15 +353,15 @@ class ListProfileScreen extends Component {
                   SĐT {item?.profileInfo?.personal?.mobileNumber}
                 </Text>
               )}
-              <Text style={styles.dobActive}>
-                {item?.profileInfo?.personal?.value &&
-                item?.profileInfo?.personal?.hospitalName
-                  ? item?.profileInfo?.personal?.hospitalName
-                  : ''}
+              <Text
+                style={{color: '#3161AD', fontWeight: 'bold', fontSize: 15}}>
+                {item.defaultProfile
+                  ? 'Chủ tài khoản'
+                  : objectUtils.renderTextRelations(item.relationshipType)}
               </Text>
-              {/* <Text style={styles.dobActive}>{'Mã bệnh nhân: '}{item?.medicalRecords?.value}</Text> */}
             </View>
             <CustomMenu
+              placement={'left'}
               textStyle={{color: '#ff0000'}}
               MenuSelectOption={
                 <View style={styles.buttonMenu}>
@@ -362,11 +374,18 @@ class ListProfileScreen extends Component {
               }
               options={
                 !item?.defaultProfile
-                  ? [
-                      {value: 'Cài đặt chia sẻ', id: 1},
-                      {value: 'Sửa thông tin', id: 2},
-                      {value: 'Xoá thành viên', id: 3, color: '#ff0000'},
-                    ]
+                  ? this.props?.userApp?.currentUser.username != item.userId
+                    ? [
+                        {value: 'Cài đặt chia sẻ', id: 1},
+                        {value: 'Sửa mối quan hệ', id: 4},
+                        {value: 'Xoá thành viên', id: 3, color: '#ff0000'},
+                      ]
+                    : [
+                        {value: 'Cài đặt chia sẻ', id: 1},
+                        {value: 'Sửa thông tin', id: 2},
+                        {value: 'Sửa mối quan hệ', id: 4},
+                        {value: 'Xoá thành viên', id: 3, color: '#ff0000'},
+                      ]
                   : [{value: 'Sửa thông tin', id: 2}]
               }
               onSelected={options => this.onSelectOptions(options, item, index)}
@@ -442,6 +461,26 @@ class ListProfileScreen extends Component {
     } else {
       return;
     }
+  };
+  onAddRelation = relation => {
+    let id = this.state.idProfile;
+    var data = {
+      relationshipType: relation,
+      profileInfo: this.state.profileInfo,
+    };
+
+    profileProvider
+      .updateProfile(id, data)
+      .then(res => {
+        this.setState({
+          isVisibleRelation: false,
+        });
+        this.onLoad();
+        snackbar.show('Sửa mối quan hệ thành công', 'success');
+      })
+      .catch(err => {
+        snackbar.show('Sửa mối quan hệ thất bại', 'danger');
+      });
   };
   render() {
     return (
@@ -536,11 +575,30 @@ class ListProfileScreen extends Component {
             </TouchableOpacity>
           </View>
         </Modal>
+        <Modal
+          isVisible={this.state.isVisibleRelation}
+          onBackdropPress={this.onCloseModal}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={styles.modalRelation}
+          avoidKeyboard={true}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}>
+          <SelectRelation
+            onSelectRelation={relation => this.onAddRelation(relation)}
+          />
+        </Modal>
       </ActivityPanel>
     );
   }
 }
 const styles = StyleSheet.create({
+  modalRelation: {
+    flex: 1,
+    margin: 0,
+    justifyContent: 'flex-end',
+  },
   cardItem: {
     padding: 10,
     borderRadius: 6,

@@ -220,6 +220,10 @@ class ProfileScreen extends Component {
     });
   };
   renderEdit = () => {
+    if (
+      this.props?.userApp?.currentUser.username != this.state.dataProfile.userId
+    )
+      return null;
     return (
       <TouchableOpacity onPress={this.onEditProfile} style={styles.buttonSave}>
         <Text style={styles.txtSave}>Sửa</Text>
@@ -289,8 +293,8 @@ class ProfileScreen extends Component {
                 />
                 {/* <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} /> */}
               </View>
-              <View style={{marginLeft: 20}}>
-                <Text style={{fontSize: 18, fontWeight: 'bold', color: '#000'}}>
+              <View style={{marginLeft: 20, flex: 1}}>
+                <Text style={styles.txtFullName}>
                   {personal?.fullName || ''}
                 </Text>
                 <Text
@@ -458,6 +462,12 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(ProfileScreen);
 
 const styles = StyleSheet.create({
+  txtFullName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    paddingHorizontal: 5,
+  },
   txtRight: {
     flex: 1,
     textAlign: 'right',
