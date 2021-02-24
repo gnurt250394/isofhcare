@@ -173,6 +173,7 @@ import FileViewerScreen from '@containers/image/FileViewerScreen';
 //news
 import ListNewsScreen from '@containers/news/ListNewsScreen';
 import DetailNewsScreen from '@containers/news/DetailNewsScreen';
+import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -525,9 +526,10 @@ const RootNavigator = (route = 'splash') =>
       healthMonitoring: { screen: HealthMonitoringScreen },
       fileViewer: { screen: FileViewerScreen },
       // chatBot: { screen: ChatBotScreen },
-      // paymenntAlePay: { screen: PaymentWithAlePay },
+      paymenntAlePay: { screen: PaymentWithAlePay },
       listNews: { screen: ListNewsScreen },
-      detailNews: { screen: DetailNewsScreen }
+      detailNews: { screen: DetailNewsScreen },
+
 
     },
     {

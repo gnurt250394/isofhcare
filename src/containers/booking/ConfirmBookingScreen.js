@@ -480,6 +480,7 @@ class ConfirmBookingScreen extends Component {
   };
   createBooking = ({phonenumber, momoToken, cardNumber}) => {
     const {booking, disabled, paymentMethod} = this.state;
+    console.log('paymentMethod: ', paymentMethod);
 
     connectionUtils
       .isConnected()
@@ -518,6 +519,7 @@ class ConfirmBookingScreen extends Component {
                   case constants.PAYMENT_METHOD.VISA:
                   case constants.PAYMENT_METHOD.QR:
                     if (res?.checkoutUrl) {
+                      console.log('res: ', res);
                       this.props.navigation.navigate('paymenntAlePay', {
                         urlPayment: res.checkoutUrl,
                         title:
