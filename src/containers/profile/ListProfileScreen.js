@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
 import {Card} from 'native-base';
@@ -17,6 +24,7 @@ import SelectRelation from '@components/profile/SelectRelation';
 
 import {CheckBox} from 'native-base';
 import objectUtils from '@utils/object-utils';
+import ListInvite from '@components/profile/ListInvite';
 class ListProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +35,7 @@ class ListProfileScreen extends Component {
       page: 1,
       isVisible: false,
       isVisibleRelation: false,
+      listInvite: [],
     };
   }
   onShowOptions = item => {
@@ -490,17 +499,20 @@ class ListProfileScreen extends Component {
         titleStyle={styles.titleStyle}
         containerStyle={styles.containerStyle}
         menuButton={this.renderBtn()}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={this.state.data || []}
-          extraData={this.state}
-          keyExtractor={this.keyExtractor}
-          onRefresh={this.onRefresh}
-          refreshing={this.state.refreshing}
-          renderItem={this.renderItem}
-          ListFooterComponent={this.footerComponent}
-          ListHeaderComponent={this.headerComponent}
-        />
+        <ScrollView>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={this.state.data || []}
+            extraData={this.state}
+            keyExtractor={this.keyExtractor}
+            onRefresh={this.onRefresh}
+            refreshing={this.state.refreshing}
+            renderItem={this.renderItem}
+            ListFooterComponent={this.footerComponent}
+            ListHeaderComponent={this.headerComponent}
+          />
+          <ListInvite />
+        </ScrollView>
         <Modal
           isVisible={this.state.isVisible}
           onBackdropPress={this.onCloseModal}

@@ -328,4 +328,17 @@ export default {
       );
     });
   },
+  getListWaitting(type) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.serviceProfile + constants.api.profile.list_waitting + type,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };

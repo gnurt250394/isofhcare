@@ -1119,6 +1119,7 @@ module.exports = {
       list_relationship: profilePath + 'profiles/relationship-types',
       check_info_profile: profilePath + 'profiles/pre-check',
       info_profile: isofhcare_service + 'user/profiles/info?uid=',
+      list_waitting: profilePath + '/friends/requests?eventType=',
       // get_by_user: isofhcare_service + 'profile/get-by-user',
       // get_details_user: isofhcare_service + '/user/get-detail',
       // get_profile_family:
