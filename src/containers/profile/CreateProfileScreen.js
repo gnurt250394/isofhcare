@@ -660,9 +660,9 @@ class CreateProfileScreen extends Component {
     });
   };
   onFinding = () => {
-    // if (!this.form.isValid()) {
-    //   return;
-    // }
+    if (!this.form.isValid()) {
+      return;
+    }
     this.setState(
       {
         isFinding: true,
@@ -989,7 +989,7 @@ class CreateProfileScreen extends Component {
                             ? 'Nữ'
                             : this.state.valueGender == 'MALE'
                             ? 'Nam'
-                            : 'Chọn giới tính'
+                            : ''
                         }
                         autoCapitalize={'none'}
                         validate={{
@@ -1130,14 +1130,17 @@ class CreateProfileScreen extends Component {
                             errorStyle={[styles.err]}
                             autoCapitalize={'none'}
                             editable={!this.state.disabled}
-                            // validate={{
-                            //     rules: {
-                            //         required: true,
-                            //     },
-                            //     messages: {
-                            //         required: "CMTND/HC người bảo lãnh không được để trống",
-                            //     }
-                            // }}
+                            validate={{
+                              rules: {
+                                required: true,
+                                maxlength: 13,
+                              },
+                              messages: {
+                                required:
+                                  'CMTND/HC người bảo lãnh không được để trống',
+                                maxlength: 'Số CMND không được quá 13 ký tự',
+                              },
+                            }}
                             numberOfLines={1}
                             // underlineColorAndroid="transparent"
                             autoCorrect={false}
