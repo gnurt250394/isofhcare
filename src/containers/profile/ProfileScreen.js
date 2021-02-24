@@ -289,7 +289,7 @@ class ProfileScreen extends Component {
                 />
                 {/* <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} /> */}
               </View>
-              <View style={{marginLeft: 20}}>
+              <View style={{marginLeft: 20, flex: 1}}>
                 <Text style={{fontSize: 18, fontWeight: 'bold', color: '#000'}}>
                   {personal?.fullName || ''}
                 </Text>
