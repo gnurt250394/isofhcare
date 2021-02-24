@@ -556,9 +556,7 @@ class EditProfileScreen extends Component {
                   this.setState({
                     isLoading: false,
                   });
-                  this.props.navigation.navigate('profile', {
-                    id: res.userProfileId,
-                  });
+                  this.props.navigation.pop()
                   snackbar.show('Cập nhật hồ sơ thành công', 'success');
                 })
                 .catch(err => {
