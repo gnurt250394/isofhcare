@@ -562,9 +562,12 @@ class ConfirmBookingScreen extends Component {
               }
             })
             .catch(err => {
+              console.log('err: ', err);
               this.setState({isLoading: false});
               if (err?.response?.status == 406) {
-                this.setState({isVisibleModal: true});
+                setTimeout(() => {
+                  this.setState({isVisibleModal: true});
+                }, 500);
                 return;
               }
               snackbar.show(constants.msg.booking.booking_err2, 'danger');

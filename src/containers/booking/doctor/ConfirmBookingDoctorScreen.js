@@ -195,7 +195,9 @@ class ConfirmBookingDoctorScreen extends Component {
         .catch(err => {
           this.setState({isLoading: false});
           if (err?.response?.status == 406) {
-            this.setState({isVisibleModal: true});
+            setTimeout(() => {
+              this.setState({isVisibleModal: true});
+            }, 500);
             return;
           }
           snackbar.show('Đặt khám thất bại', 'danger');

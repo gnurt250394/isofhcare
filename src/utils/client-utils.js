@@ -75,6 +75,7 @@ module.exports = {
   serviceCovid: "http://10.0.0.88:49396/",
   serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
   serviceNews: 'http://10.0.0.88:36545',
+  requestPayment: 'http://10.0.0.98:8083/',
   response: {
     ok(data, message) {
       if (!message) message = '';
