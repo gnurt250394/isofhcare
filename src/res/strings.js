@@ -1119,30 +1119,9 @@ module.exports = {
       list_relationship: profilePath + 'profiles/relationship-types',
       check_info_profile: profilePath + 'profiles/pre-check',
       info_profile: isofhcare_service + 'user/profiles/info?uid=',
-      list_waitting: profilePath + '/friends/requests?eventType=',
-      // get_by_user: isofhcare_service + 'profile/get-by-user',
-      // get_details_user: isofhcare_service + '/user/get-detail',
-      // get_profile_family:
-      //   isofhcare_service + 'booking/get-group-patient-history',
-      // get_list_profile:
-      //   isofhcare_service + 'medical-records/get-list-medical-records',
-      // delete_family_profile: isofhcare_service + 'medical-records/delete',
-      // create_profile:
-      //   isofhcare_service + 'medical-records/create-medical-records',
-      // update_profile:
-      //   isofhcare_service + 'medical-records/update-medical-records',
-      // update_cover: isofhcare_service + 'user/update-cover',
-      // update_avatar: isofhcare_service + 'medical-records/update-avatar',
-      // send_confirm: isofhcare_service + 'medical-records/send-confirm',
-      // share_permission: isofhcare_service + 'medical-records/update-permission',
-      // check_otp: isofhcare_service + 'medical-records/check-otp',
-      // resend_otp: isofhcare_service + 'medical-records/resend-otp',
-      // confirm: isofhcare_service + 'medical-records/confirm',
-      // get_details_medical:
-      //   isofhcare_service + 'medical-records/get-detail-medical-record',
+      list_waitting: profilePath + 'friends/requests',
+      default_profile: profilePath + 'user-profiles',
       verify_fill_phone: profilePath + 'profiles',
-      // fill_phone: isofhcare_service + 'user/fill-phone',
-      // get_detail_profile: isofhcare_service + 'medical-records/by-user/',
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',

@@ -92,7 +92,7 @@ class ListProfileScreen extends Component {
   };
   componentDidMount() {
     this.onFocus = this.props.navigation.addListener('didFocus', payload => {
-        this.onLoad();
+      this.onLoad();
     });
   }
   componentWillUnmount = () => {
@@ -500,6 +500,11 @@ class ListProfileScreen extends Component {
         containerStyle={styles.containerStyle}
         menuButton={this.renderBtn()}>
         <ScrollView>
+          <TouchableOpacity>
+            <Text style={{color: '#00000060', fontSize: 15}}>
+              Tất cả thành viên
+            </Text>
+          </TouchableOpacity>
           <FlatList
             showsVerticalScrollIndicator={false}
             data={this.state.data || []}
@@ -511,7 +516,10 @@ class ListProfileScreen extends Component {
             ListFooterComponent={this.footerComponent}
             ListHeaderComponent={this.headerComponent}
           />
-          <ListInvite />
+          <TouchableOpacity>
+            <Text style={{color: '#00000060', fontSize: 15}}>Chờ xác nhận</Text>
+          </TouchableOpacity>
+          <ListInvite onRefresh={this.onRefresh} />
         </ScrollView>
         <Modal
           isVisible={this.state.isVisible}
