@@ -328,4 +328,78 @@ export default {
       );
     });
   },
+  getListWaitting(type) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.serviceProfile +
+          constants.api.profile.list_waitting +
+          '?eventType=' +
+          type,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  acceptProfile(requestId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'put',
+        client.serviceProfile +
+          constants.api.profile.list_waitting +
+          `/${requestId}/accept`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  rejectProfile(requestId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'put',
+        client.serviceProfile +
+          constants.api.profile.list_waitting +
+          `/${requestId}/reject`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  cancelProfile(requestId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'put',
+        client.serviceProfile +
+          constants.api.profile.list_waitting +
+          `/${requestId}/cancel`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getDefaultProfile() {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.serviceProfile + constants.api.profile.default_profile,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };
