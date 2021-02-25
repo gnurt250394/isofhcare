@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import profileProvider from '@data-access/profile-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
@@ -6,11 +6,19 @@ import snackbar from '@utils/snackbar-utils';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import objectUtils from '@utils/object-utils';
 
-const ListInvite = ({onRefresh}) => {
+const ListInvite = ({onRefresh, navigation}) => {
   const [data, setData] = useState([]);
   const [isShow, setIsShow] = useState(true);
+  const onFocus = useRef();
   useEffect(() => {
-    getListAwaitProfile();
+    onFocus.current = navigation.addListener('didFocus', payload => {
+      getListAwaitProfile();
+    });
+    return () => {
+      if (onFocus.current) {
+        onFocus.current.remove();
+      }
+    };
   }, []);
   const getListAwaitProfile = async () => {
     try {
@@ -137,6 +145,7 @@ const ListInvite = ({onRefresh}) => {
     setIsShow(isShow => !isShow);
   };
   const _keyExtractor = (item, index) => index.toString();
+  if (!data?.length) return null;
   return (
     <View style={{flex: 1, paddingBottom: 30}}>
       <TouchableOpacity onPress={onShowAll} style={styles.buttonShowAll}>

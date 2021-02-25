@@ -545,7 +545,7 @@ class CreateProfileScreen extends Component {
                         ? this.state.dob.format('yyyy-MM-dd')
                         : null,
                       gender: this.state.valueGender,
-                      mobileNumber: this.props.userApp.currentUser.phone,
+                      mobileNumber: this.state.phone,
                       idNumber: this.state.userPassport,
                       guardian: {
                         fullName: this.state.guardianName
@@ -593,10 +593,7 @@ class CreateProfileScreen extends Component {
                       phone: this.state.phone,
                     });
                   } else {
-                    snackbar.show(
-                      constants.msg.user.add_member_success,
-                      'success',
-                    );
+                    snackbar.show('Đã gửi lời mời tới thành viên', 'success');
                     NavigationService.navigate('listProfileUser', {
                       reset: this.state.reset + 1,
                     });
@@ -681,7 +678,10 @@ class CreateProfileScreen extends Component {
                 findFinish: false,
                 // userDoesNotExist: 1,
               });
-              snackbar.show('Số điện thoại đã thành viên của tài khoản khác', 'danger');
+              snackbar.show(
+                'SĐT đã tồn tại trong danh sách hồ sơ của bạn',
+                'danger',
+              );
               return;
             }
             if (!s?.profileInfo?.guardian && !s?.profileInfo?.personal) {

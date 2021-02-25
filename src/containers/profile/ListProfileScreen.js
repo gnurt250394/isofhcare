@@ -533,7 +533,7 @@ class ListProfileScreen extends Component {
             />
           ) : null}
 
-          <ListInvite onRefresh={this.onRefresh} />
+          <ListInvite navigation={this.props.navigation} onRefresh={this.onRefresh} />
         </ScrollView>
         <Modal
           isVisible={this.state.isVisible}
