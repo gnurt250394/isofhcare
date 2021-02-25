@@ -588,9 +588,8 @@ class CreateProfileScreen extends Component {
                   });
 
                   if (res?.profileRegistryId) {
-                    NavigationService.navigate('verifyPhone', {
+                    NavigationService.navigate('verifyPhoneProfile', {
                       profileRegistryId: res.profileRegistryId,
-                      verify: 4,
                       phone: this.state.phone,
                     });
                   } else {

@@ -276,12 +276,14 @@ export default {
       );
     });
   },
-  fillPhone(data) {
+  fillPhone(profileRegistryId) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         'put',
-        client.serviceProfile + constants.api.profile.fill_phone,
-        data,
+        client.serviceProfile +
+          constants.api.profile.verify_fill_phone +
+          `/${profileRegistryId}/resend-confirmation-code`,
+        {},
         (s, e) => {
           if (s) resolve(s);
           else reject(e);
