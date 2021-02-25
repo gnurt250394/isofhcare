@@ -174,6 +174,7 @@ import FileViewerScreen from '@containers/image/FileViewerScreen';
 import ListNewsScreen from '@containers/news/ListNewsScreen';
 import DetailNewsScreen from '@containers/news/DetailNewsScreen';
 import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
+import ListPaymentCardScreen from '@containers/booking/ListPaymentCardScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -527,6 +528,7 @@ const RootNavigator = (route = 'splash') =>
       fileViewer: { screen: FileViewerScreen },
       // chatBot: { screen: ChatBotScreen },
       paymenntAlePay: { screen: PaymentWithAlePay },
+      listCardPayment: { screen: ListPaymentCardScreen },
       listNews: { screen: ListNewsScreen },
       detailNews: { screen: DetailNewsScreen },
 
