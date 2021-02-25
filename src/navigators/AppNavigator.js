@@ -178,6 +178,7 @@ import ListNewsScreen from '@containers/news/ListNewsScreen';
 import CategoriesNewsScreen from '@containers/news/CategoriesNewsScreen';
 import ListPaymentCardScreen from '@containers/booking/ListPaymentCardScreen';
 import DetailNewsScreen from '@containers/news/DetailNewsScreen';
+import VerifyPhoneNumberProfileScreen from '@containers/profile/VerifyPhoneNumberProfileScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -532,7 +533,8 @@ const RootNavigator = (route = 'splash') =>
       categoriesNews: { screen: CategoriesNewsScreen },
       listCardPayment: { screen: ListPaymentCardScreen },
       detailNews: { screen: DetailNewsScreen },
-      checkInfo: { screen: CheckInfoScreen }
+      checkInfo: { screen: CheckInfoScreen },
+      verifyPhoneProfile: { screen: VerifyPhoneNumberProfileScreen },
 
     },
     {
