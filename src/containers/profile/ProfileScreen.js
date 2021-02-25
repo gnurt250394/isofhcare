@@ -270,7 +270,12 @@ class ProfileScreen extends Component {
         <ScrollView>
           <View style={styles.container}>
             <View
-              style={{flexDirection: 'row', alignItems: 'center', margin: 10}}>
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                margin: 10,
+                flex: 1,
+              }}>
               <View
                 // onPress={this.selectImage}
                 style={styles.buttonAvatar}>
@@ -300,7 +305,12 @@ class ProfileScreen extends Component {
                 />
                 {/* <ScaledImage source={require('@images/new/profile/ic_camera.png')} height={18} style={styles.icCamera} /> */}
               </View>
-              <View style={{marginLeft: 20, flex: 1}}>
+              <View
+                style={{
+                  paddingLeft: 20,
+                  paddingRight: 10,
+                  flex: 1,
+                }}>
                 <Text style={styles.txtFullName}>
                   {personal?.fullName || ''}
                 </Text>
@@ -473,7 +483,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
-    paddingHorizontal: 5,
   },
   txtRight: {
     flex: 1,

@@ -17,10 +17,11 @@ import ListCategories from '@components/news/ListCategories';
 import redux from '@redux-store';
 import {connect} from 'react-redux';
 import {useSelector, useDispatch} from 'react-redux';
+import moment from 'moment';
 const ListNews = ({navigation, props}) => {
   const [listNews, setListNews] = useState([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(100);
+  const [size, setSize] = useState(10);
   const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const [isNew, setIsNew] = useState(true);
@@ -36,17 +37,19 @@ const ListNews = ({navigation, props}) => {
     // getList(page, size)
   };
   const getList = () => {
-    setLoading(true);
     if (!idCategories) {
       newsProvider
         .listNews(page, size)
         .then(res => {
           if (res) {
-            setListNews(res.content);
+            formatData(res.content);
+          } else {
+            formatData([]);
           }
           setLoading(false);
         })
         .catch(err => {
+          formatData([]);
           setLoading(false);
         });
     } else {
@@ -54,19 +57,35 @@ const ListNews = ({navigation, props}) => {
         .searchNewsByTopic(idCategories, page, size)
         .then(res => {
           if (res) {
-            setListNews(res.content);
+            formatData(res.content);
+          } else {
+            formatData([]);
           }
           setLoading(false);
         })
         .catch(err => {
+          formatData([]);
           setLoading(false);
         });
     }
   };
 
+  const formatData = data => {
+    if (data?.length == 0) {
+      if (page == 0) {
+        setListNews(data);
+      }
+    } else {
+      if (page == 0) {
+        setListNews(data);
+      } else {
+        setListNews(listNews => [...listNews, ...data]);
+      }
+    }
+  };
   const loadMore = () => {
     if (listNews.length >= (page + 1) * size) {
-      // setPage(page + 1)
+      setPage(page => page + 1);
       // getList(page, size)
     }
   };
@@ -116,7 +135,7 @@ const ListNews = ({navigation, props}) => {
           source={{uri: `${urlImage}`}}
         />
         <View style={styles.viewTitle}>
-          <Text style={styles.txTitle}>{item?.title?.rawText}</Text>
+          <Text style={styles.txTitle}>{item?.shortTitle?.rawText}</Text>
           <View style={styles.readingTime}>
             <View style={styles.viewTime}>
               <ScaledImage
@@ -124,7 +143,9 @@ const ListNews = ({navigation, props}) => {
                 height={15}
               />
               <Text style={styles.txTime}>
-                {item?.alias?.createdAt ? date?.format('dd/MM/yyyy') : ''}
+                {item?.createdAt
+                  ? moment(item?.createdAt)?.format('DD/MM/YYYY')
+                  : ''}
               </Text>
             </View>
             <View style={styles.viewTime}>

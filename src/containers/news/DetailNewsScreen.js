@@ -281,6 +281,27 @@ const DetailNewsScreen = ({navigation}) => {
               Cập nhật lần cuối:{' '}
               {moment(detail?.topic?.lastModified).format('DD/MM/yyyy')}
             </Text>
+            <Text style={styles.txtConsultation}>Tham vấn y khoa:</Text>
+            <View style={styles.containerConsultation}>
+              <FastImage
+                source={
+                  detail?.authorRef?.avatar
+                    ? {
+                        uri: detail?.authorRef?.avatar?.absoluteUrl() || '',
+                      }
+                    : require('@images/new/user.png')
+                }
+                style={styles.imgConsultation}
+              />
+              <View style={{flex: 1, paddingLeft: 10, paddingRight: 10}}>
+                <Text style={styles.txtNameConsultation}>
+                  {detail?.authorRef?.fullName}
+                </Text>
+                <Text style={{color: '#00000060'}}>
+                  {detail?.authorRef?.description}
+                </Text>
+              </View>
+            </View>
           </View>
           {data.length ? (
             <View style={{backgroundColor: '#fff', marginTop: 10}}>
@@ -304,6 +325,31 @@ const DetailNewsScreen = ({navigation}) => {
   );
 };
 const styles = StyleSheet.create({
+  txtNameConsultation: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  imgConsultation: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+  },
+  containerConsultation: {
+    backgroundColor: '#E3EBF7',
+    borderTopRightRadius: 40,
+    borderBottomRightRadius: 40,
+    flexDirection: 'row',
+    borderBottomLeftRadius: 40,
+    marginRight: 15,
+    padding: 10,
+  },
+  txtConsultation: {
+    color: '#000',
+    fontWeight: 'bold',
+    paddingTop: 20,
+    paddingBottom: 5,
+    fontSize: 15,
+  },
   txtTopicName: {
     fontWeight: 'bold',
     color: '#3161AD',
