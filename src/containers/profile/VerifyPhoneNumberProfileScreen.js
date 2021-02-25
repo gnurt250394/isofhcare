@@ -44,7 +44,7 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
         ? this.props.navigation.state.params.id
         : null;
     this.nextScreen = this.props.navigation.getParam('nextScreen', null);
-    console.log('this.nextScreen: ', this.nextScreen);
+
     this.state = {
       seconds: 90,
       txErr: '',
@@ -60,6 +60,7 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
       // appState: AppState.currentState,
     };
   }
+  count = 0;
   componentDidMount() {
     this.interval = setInterval(() => {
       if (this.state.seconds > 0)
@@ -80,40 +81,6 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  // setInterval = () => {
-  //     setInterval(() => {
-  //         if (this.state.seconds > 0)
-  //             this.setState(preState => {
-  //                 return {
-  //                     seconds: preState.seconds - 1
-  //                 }
-  //             })
-  //     }, 1000);
-  // }
-  // componentWillUnmount() {
-  //     AppState.removeEventListener('change', this._handleAppStateChange);
-  // }
-
-  // _handleAppStateChange = (nextAppState) => {
-  //
-  //     if (
-  //         nextAppState === 'background'
-  //     ) {
-  //         this.a = setInterval(() => {
-  //             let { seconds } = this.state
-  //
-  //             if (seconds > 0)
-  //                 this.setState(preState => {
-  //                     return {
-  //                         seconds: preState.seconds - 1
-  //                     }
-  //                 })
-  //         }, 1000);
-  //     } else {
-  //         clearInterval(this.a)
-  //     }
-  //     this.setState({ appState: nextAppState });
-  // };
 
   onReSendPhone = () => {
     let verify = this.state.verify;
@@ -151,35 +118,38 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
     );
   };
   onCheckOtp = text => {
-    if (this.state.isCheck && text.length == 6) {
-      if (text.length == 6) {
-        connectionUtils
-          .isConnected()
-          .then(s => {
-            let profileRegistryId = this.props.navigation.getParam(
-              'profileRegistryId',
-              null,
-            );
-            profileProvider
-              .verifyFillPhone(profileRegistryId, text)
-              .then(res => {
-                this.setState({
-                  disabled: false,
-                });
-                this.props.navigation.navigate('listProfileUser', {
-                  reset: this.state.reset + 1,
-                });
-                snackbar.show('Thêm số điện thoại thành công', 'success');
-              })
-              .catch(err => {
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger');
+    if (text.length == 6) {
+      // this.count += 1;
+
+      connectionUtils
+        .isConnected()
+        .then(s => {
+          let profileRegistryId = this.props.navigation.getParam(
+            'profileRegistryId',
+            null,
+          );
+          profileProvider
+            .verifyFillPhone(profileRegistryId, text)
+            .then(res => {
+              this.setState({
+                disabled: false,
               });
-          })
-          .catch(e => {
-            snackbar.show('Không có kết nối mạng', 'danger');
-          });
-        return;
-      }
+              this.props.navigation.navigate('listProfileUser', {
+                reset: this.state.reset + 1,
+              });
+              snackbar.show('Thêm số điện thoại thành công', 'success');
+            })
+            .catch(err => {
+              snackbar.show(
+                'Mã xác thực đã hết hạn hoăc không đúng vui lòng nhập lại',
+                'danger',
+              );
+            });
+        })
+        .catch(e => {
+          snackbar.show('Không có kết nối mạng', 'danger');
+        });
+      return;
     }
   };
 
