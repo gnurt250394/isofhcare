@@ -8,6 +8,7 @@ import objectUtils from '@utils/object-utils';
 
 const ListInvite = ({onRefresh}) => {
   const [data, setData] = useState([]);
+  const [isShow, setIsShow] = useState(true);
   useEffect(() => {
     getListAwaitProfile();
   }, []);
@@ -32,7 +33,10 @@ const ListInvite = ({onRefresh}) => {
       console.log('res: ', res);
       onRefresh();
       getListAwaitProfile();
-    } catch (error) {}
+      snackbar.show('Xác nhận mối quan hệ thành công', 'success');
+    } catch (error) {
+      snackbar.show('Xác nhận mối quan hệ thất bại', 'danger');
+    }
   };
 
   const onReject = id => async () => {
@@ -40,14 +44,20 @@ const ListInvite = ({onRefresh}) => {
       let res = await profileProvider.rejectProfile(id);
       onRefresh();
       getListAwaitProfile();
-    } catch (error) {}
+      snackbar.show('Từ chối mối quan hệ thành công', 'success');
+    } catch (error) {
+      snackbar.show('Từ chối mối quan hệ thất bại', 'danger');
+    }
   };
   const onCancel = id => async () => {
     try {
       let res = await profileProvider.cancelProfile(id);
       onRefresh();
       getListAwaitProfile();
-    } catch (error) {}
+      snackbar.show('Huỷ mối quan hệ thành công', 'success');
+    } catch (error) {
+      snackbar.show('Huỷ mối quan hệ thất bại', 'danger');
+    }
   };
 
   const _renderItem = ({item, index}) => {
@@ -123,19 +133,46 @@ const ListInvite = ({onRefresh}) => {
       </View>
     );
   };
+  const onShowAll = () => {
+    setIsShow(isShow => !isShow);
+  };
   const _keyExtractor = (item, index) => index.toString();
   return (
     <View style={{flex: 1, paddingBottom: 30}}>
-      <FlatList
-        data={data}
-        renderItem={_renderItem}
-        keyExtractor={_keyExtractor}
-      />
+      <TouchableOpacity onPress={onShowAll} style={styles.buttonShowAll}>
+        <Text style={styles.txtAll}>Chờ xác nhận ({data?.length})</Text>
+        <ScaledImage
+          source={require('@images/new/profile/ic_dropdown.png')}
+          height={16}
+          width={16}
+          style={{
+            transform: [{rotate: !isShow ? '-180deg' : '0deg'}],
+          }}
+        />
+      </TouchableOpacity>
+      {isShow ? (
+        <FlatList
+          data={data}
+          renderItem={_renderItem}
+          keyExtractor={_keyExtractor}
+        />
+      ) : null}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  txtAll: {
+    color: '#86899B',
+    fontSize: 15,
+    paddingRight: 10,
+  },
+  buttonShowAll: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   buttonDelete: {
     padding: 5,
     borderRadius: 25,

@@ -1120,7 +1120,7 @@ module.exports = {
       check_info_profile: profilePath + 'profiles/pre-check',
       info_profile: isofhcare_service + 'user/profiles/info?uid=',
       list_waitting: profilePath + 'friends/requests',
-      default_profile: profilePath + 'user-profiles',
+      default_profile: profilePath + 'profile',
       verify_fill_phone: profilePath + 'profiles',
     },
     serviceType: {
