@@ -58,7 +58,7 @@ export default {
       case 'BROTHER':
         return 'ANH';
       case 'YOUNG_BROTHER':
-        return 'EM TRAI';
+        return 'EM';
       case 'SON':
         return 'CON';
       case 'GRAND_CHILDREN':
