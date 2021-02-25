@@ -21,6 +21,7 @@ import newsProvider from '@data-access/news-provider';
 import {IGNORED_TAGS} from 'react-native-render-html/src/HTMLUtils';
 import _ from 'lodash';
 import {ShareDialog} from 'react-native-fbsdk';
+import moment from 'moment';
 const {width, height} = Dimensions.get('window');
 const DetailNewsScreen = ({navigation}) => {
   const item = navigation.getParam('item', {});
@@ -273,16 +274,12 @@ const DetailNewsScreen = ({navigation}) => {
               </Text>
               <Text>
                 | Ngày đăng{' '}
-                {detail?.topic?.createdAt
-                  ?.toDateObject('-')
-                  .format('dd/MM/yyyy')}
+                {moment(detail?.topic?.createdAt).format('DD/MM/YYYY')}
               </Text>
             </Text>
             <Text style={{paddingTop: 5}}>
               Cập nhật lần cuối:{' '}
-              {detail?.topic?.lastModified
-                ?.toDateObject('-')
-                .format('dd/MM/yyyy')}
+              {moment(detail?.topic?.lastModified).format('DD/MM/yyyy')}
             </Text>
           </View>
           {data.length ? (
