@@ -36,6 +36,7 @@ class ListProfileScreen extends Component {
       isVisible: false,
       isVisibleRelation: false,
       listInvite: [],
+      isShow: true,
     };
   }
   onShowOptions = item => {
@@ -491,6 +492,9 @@ class ListProfileScreen extends Component {
         snackbar.show('Sửa mối quan hệ thất bại', 'danger');
       });
   };
+  showAll = () => {
+    this.setState({isShow: !this.state.isShow});
+  };
   render() {
     return (
       <ActivityPanel
@@ -500,25 +504,35 @@ class ListProfileScreen extends Component {
         containerStyle={styles.containerStyle}
         menuButton={this.renderBtn()}>
         <ScrollView>
-          <TouchableOpacity>
-            <Text style={{color: '#00000060', fontSize: 15}}>
-              Tất cả thành viên
+          <TouchableOpacity
+            onPress={this.showAll}
+            style={styles.buttonShowAllProfile}>
+            <Text style={styles.txtAllProfile}>
+              Tất cả thành viên ({this.state.data?.length})
             </Text>
+            <ScaledImage
+              source={require('@images/new/profile/ic_dropdown.png')}
+              height={16}
+              width={16}
+              style={{
+                transform: [{rotate: !this.state.isShow ? '-180deg' : '0deg'}],
+              }}
+            />
           </TouchableOpacity>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={this.state.data || []}
-            extraData={this.state}
-            keyExtractor={this.keyExtractor}
-            onRefresh={this.onRefresh}
-            refreshing={this.state.refreshing}
-            renderItem={this.renderItem}
-            ListFooterComponent={this.footerComponent}
-            ListHeaderComponent={this.headerComponent}
-          />
-          <TouchableOpacity>
-            <Text style={{color: '#00000060', fontSize: 15}}>Chờ xác nhận</Text>
-          </TouchableOpacity>
+          {this.state.isShow ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={this.state.data || []}
+              extraData={this.state}
+              keyExtractor={this.keyExtractor}
+              onRefresh={this.onRefresh}
+              refreshing={this.state.refreshing}
+              renderItem={this.renderItem}
+              ListFooterComponent={this.footerComponent}
+              ListHeaderComponent={this.headerComponent}
+            />
+          ) : null}
+
           <ListInvite onRefresh={this.onRefresh} />
         </ScrollView>
         <Modal
@@ -614,6 +628,17 @@ class ListProfileScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  txtAllProfile: {
+    color: '#86899B',
+    fontSize: 15,
+    paddingRight: 10,
+  },
+  buttonShowAllProfile: {
+    paddingTop: 15,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   modalRelation: {
     flex: 1,
     margin: 0,
