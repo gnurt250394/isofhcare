@@ -281,27 +281,31 @@ const DetailNewsScreen = ({navigation}) => {
               Cập nhật lần cuối:{' '}
               {moment(detail?.topic?.lastModified).format('DD/MM/yyyy')}
             </Text>
-            <Text style={styles.txtConsultation}>Tham vấn y khoa:</Text>
-            <View style={styles.containerConsultation}>
-              <FastImage
-                source={
-                  detail?.authorRef?.avatar
-                    ? {
-                        uri: detail?.authorRef?.avatar?.absoluteUrl() || '',
-                      }
-                    : require('@images/new/user.png')
-                }
-                style={styles.imgConsultation}
-              />
-              <View style={{flex: 1, paddingLeft: 10, paddingRight: 10}}>
-                <Text style={styles.txtNameConsultation}>
-                  {detail?.authorRef?.fullName}
-                </Text>
-                <Text style={{color: '#00000060'}}>
-                  {detail?.authorRef?.description}
-                </Text>
+            {detail?.authorRef?.fullName ? (
+              <View>
+                <Text style={styles.txtConsultation}>Tham vấn y khoa:</Text>
+                <View style={styles.containerConsultation}>
+                  <FastImage
+                    source={
+                      detail?.authorRef?.avatar
+                        ? {
+                            uri: detail?.authorRef?.avatar?.absoluteUrl() || '',
+                          }
+                        : require('@images/new/user.png')
+                    }
+                    style={styles.imgConsultation}
+                  />
+                  <View style={{flex: 1, paddingLeft: 10, paddingRight: 10}}>
+                    <Text style={styles.txtNameConsultation}>
+                      {detail?.authorRef?.fullName}
+                    </Text>
+                    <Text style={{color: '#00000060'}}>
+                      {detail?.authorRef?.description}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
+            ) : null}
           </View>
           {data.length ? (
             <View style={{backgroundColor: '#fff', marginTop: 10}}>

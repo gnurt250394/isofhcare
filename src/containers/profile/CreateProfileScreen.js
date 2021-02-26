@@ -404,7 +404,6 @@ class CreateProfileScreen extends Component {
           guardianPhone: s?.guardian?.mobileNumber || '',
         });
       }
-      console.log('res: ', res);
     } catch (error) {
       console.log('error: ', error);
     }
@@ -519,6 +518,9 @@ class CreateProfileScreen extends Component {
       if (!this.form.isValid()) {
         return;
       }
+      if (!this.form2.isValid()) {
+        return;
+      }
       connectionUtils
         .isConnected()
         .then(s => {
@@ -583,11 +585,12 @@ class CreateProfileScreen extends Component {
               profileProvider
                 .createProfile(data)
                 .then(res => {
+                  console.log('res: ', res);
                   this.setState({
                     isLoading: false,
                   });
 
-                  if (res?.profileRegistryId) {
+                  if (!res?.profileRegistryId) {
                     NavigationService.navigate('verifyPhoneProfile', {
                       profileRegistryId: res.profileRegistryId,
                       phone: this.state.phone,
@@ -656,7 +659,7 @@ class CreateProfileScreen extends Component {
     });
   };
   onFinding = () => {
-    if (!this.form.isValid()) {
+    if (!this.form2.isValid()) {
       return;
     }
     this.setState(
@@ -801,8 +804,7 @@ class CreateProfileScreen extends Component {
               <Text style={styles.txOr}>Hoặc</Text>
               <Text style={styles.inputInfo}>NHẬP THÔNG TIN THÀNH VIÊN</Text>
             </View>
-            <Form ref={ref => (this.form = ref)}>
-              {/** Văn bằng chuyên môn */}
+            <Form ref={ref => (this.form2 = ref)}>
               <Field style={styles.viewPhoneName}>
                 <Field style={styles.viewInfoName}>
                   <Field
@@ -887,6 +889,9 @@ class CreateProfileScreen extends Component {
                   )}
                 </View>
               </Field>
+            </Form>
+            <Form ref={ref => (this.form = ref)}>
+              {/** Văn bằng chuyên môn */}
 
               {this.state.userDoesNotExist == 2 ? (
                 <Text style={styles.txResult}>
