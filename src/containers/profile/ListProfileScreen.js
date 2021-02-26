@@ -354,7 +354,7 @@ class ListProfileScreen extends Component {
               }}
             />
             <View style={styles.viewItemActive}>
-              <Text style={styles.nameActive}>
+              <Text textBreakStrategy="simple" style={styles.nameActive}>
                 {item?.profileInfo?.personal?.fullName}
               </Text>
 
@@ -533,7 +533,10 @@ class ListProfileScreen extends Component {
             />
           ) : null}
 
-          <ListInvite navigation={this.props.navigation} onRefresh={this.onRefresh} />
+          <ListInvite
+            navigation={this.props.navigation}
+            onRefresh={this.onRefresh}
+          />
         </ScrollView>
         <Modal
           isVisible={this.state.isVisible}
@@ -894,8 +897,18 @@ const styles = StyleSheet.create({
   },
   txDeleteNeed: {fontSize: 14, color: '#000'},
   viewActive: {flexDirection: 'row', alignItems: 'center'},
-  viewItemActive: {marginLeft: 10, flex: 1},
-  nameActive: {fontSize: 16, fontWeight: 'bold', color: '#000'},
+  viewItemActive: {
+    marginLeft: 10,
+    flex: 1,
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+  },
+  nameActive: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    writingDirection:'ltr'
+  },
   phoneActive: {
     fontSize: 14,
     fontWeight: 'bold',
