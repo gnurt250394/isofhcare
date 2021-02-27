@@ -687,6 +687,18 @@ class CreateProfileScreen extends Component {
               );
               return;
             }
+            if (s?.resultMessage == 'PROFILE_INFO_ALREADY_EXISTS') {
+              this.setState({
+                isFinding: false,
+                findFinish: false,
+                // userDoesNotExist: 1,
+              });
+              snackbar.show(
+                'Đã tồn tại thông tin thành viên trong danh sách',
+                'danger',
+              );
+              return;
+            }
             if (!s?.profileInfo?.guardian && !s?.profileInfo?.personal) {
               this.setState({
                 isFinding: false,
