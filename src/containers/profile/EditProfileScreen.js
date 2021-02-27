@@ -913,7 +913,7 @@ class EditProfileScreen extends Component {
                         ? 'Nữ'
                         : this.state.valueGender == 'MALE'
                         ? 'Nam'
-                        : 'Chọn giới tính'
+                        : ''
                     }
                     autoCapitalize={'none'}
                     validate={{

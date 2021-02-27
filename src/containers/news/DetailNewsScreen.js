@@ -161,7 +161,7 @@ const DetailNewsScreen = ({navigation}) => {
           numberOfLines={2}
           ellipsizeMode="tail"
           style={styles.txContensHospital}>
-          {item?.title?.rawText}
+          {item?.shortTitle?.rawText}
         </Text>
       </TouchableOpacity>
     );
