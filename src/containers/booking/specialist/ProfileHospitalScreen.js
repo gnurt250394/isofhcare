@@ -278,15 +278,16 @@ class ProfileHospitalScreen extends Component {
     const item = this.props.navigation.getParam('item', {});
     const {profileHospital} = this.state;
     let images =
-      profileHospital &&
-      profileHospital.imagePath &&
-      profileHospital.imagePath.startsWith('/')
-        ? profileHospital.imagePath.replace('/', '')
-        : profileHospital && profileHospital.imagePath
-        ? profileHospital.imagePath
-        : '';
+    profileHospital &&
+    profileHospital.avatar &&
+    profileHospital.avatar.startsWith('/')
+    ? profileHospital.avatar.replace('/', '')
+    : profileHospital && profileHospital.avatar
+    ? profileHospital.avatar
+    : '';
+    console.log('images: ', images);
     const source =
-      this.state.profileHospital && this.state.profileHospital.imagePath
+      this.state.profileHospital && this.state.profileHospital.avatar
         ? {uri: images}
         : icSupport;
     const contact = (profileHospital && profileHospital.contact) || {};
@@ -401,32 +402,32 @@ class ProfileHospitalScreen extends Component {
                   </TouchableOpacity>
                   <Text style={styles.colorBold}>Liên hệ</Text>
                   {/* {contact?.hotLine && <Text style={styles.txtPhone}>Hotline: <Text style={styles.txtBold}>{contact.hotLine}</Text></Text>} */}
-                  {contact?.telephone && (
+                  {profileHospital?.phone && (
                     <Text style={styles.txtPhone}>
                       Số điện thoại:{' '}
                       <Text style={styles.txtBold}>
-                        {contact.telephone ? contact.telephone : ''}
+                        {profileHospital.phone ? profileHospital.phone : ''}
                       </Text>
                     </Text>
                   )}
-                  {contact?.email && (
+                  {profileHospital?.email && (
                     <Text style={styles.txtPhone}>
                       Email:{' '}
                       <Text style={styles.txtBold}>
-                        {contact.email ? contact.email : ''}
+                        {profileHospital.email ? profileHospital.email : ''}
                       </Text>
                     </Text>
                   )}
                   <Text style={styles.txtPhone}>
                     Website:{' '}
                     <Text style={styles.txtBold}>
-                      {contact.website ? contact.website : ''}
+                      {profileHospital.website ? profileHospital.website : ''}
                     </Text>
                   </Text>
                   <Text style={styles.txtPhone}>
                     Fanpage:{' '}
                     <Text style={styles.txtBold}>
-                      {contact.fanPage ? contact.fanPage : ''}
+                      {profileHospital.fanPage ? profileHospital.fanPage : ''}
                     </Text>
                   </Text>
                   <Text style={styles.colorBold}>Giới thiệu chung</Text>
