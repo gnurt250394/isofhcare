@@ -58,8 +58,12 @@ class AccountScreen extends Component {
   getDetailUser = async () => {
     try {
       let res = await profileProvider.getDefaultProfile();
+      console.log('res: ', res);
 
       this.setState({profile: res?.profileInfo?.personal});
+      let user = this.props.userApp.currentUser;
+      user.fullName = res?.profileInfo?.personal?.fullName;
+      this.props.dispatch(redux.userLogin(user));
     } catch (error) {}
   };
   componentDidMount() {

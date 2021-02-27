@@ -556,7 +556,9 @@ class EditProfileScreen extends Component {
                   this.setState({
                     isLoading: false,
                   });
-                  this.props.navigation.pop()
+                  this.props.navigation.pop();
+                  let onEdit = this.props.navigation.getParam('onEdit');
+                  if (onEdit) onEdit();
                   snackbar.show('Cập nhật hồ sơ thành công', 'success');
                 })
                 .catch(err => {

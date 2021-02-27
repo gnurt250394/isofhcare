@@ -590,7 +590,7 @@ class CreateProfileScreen extends Component {
                     isLoading: false,
                   });
 
-                  if (!res?.profileRegistryId) {
+                  if (res?.profileRegistryId) {
                     NavigationService.navigate('verifyPhoneProfile', {
                       profileRegistryId: res.profileRegistryId,
                       phone: this.state.phone,
