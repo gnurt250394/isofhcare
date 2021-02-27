@@ -274,12 +274,12 @@ const DetailNewsScreen = ({navigation}) => {
               </Text>
               <Text>
                 | Ngày đăng{' '}
-                {moment(detail?.topic?.createdAt).format('DD/MM/YYYY')}
+                {moment(detail?.createdAt).format('DD/MM/YYYY')}
               </Text>
             </Text>
             <Text style={{paddingTop: 5}}>
               Cập nhật lần cuối:{' '}
-              {moment(detail?.topic?.lastModified).format('DD/MM/yyyy')}
+              {moment(detail?.lastUpdated).format('DD/MM/yyyy')}
             </Text>
             {detail?.authorRef?.fullName ? (
               <View>

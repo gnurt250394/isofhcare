@@ -36,37 +36,23 @@ const ListNews = ({navigation, props}) => {
     setPage(0);
     // getList(page, size)
   };
-  const getList = () => {
-    if (!idCategories) {
-      newsProvider
-        .listNews(page, size)
-        .then(res => {
-          if (res) {
-            formatData(res.content);
-          } else {
-            formatData([]);
-          }
-          setLoading(false);
-        })
-        .catch(err => {
-          formatData([]);
-          setLoading(false);
-        });
-    } else {
-      newsProvider
-        .searchNewsByTopic(idCategories, page, size)
-        .then(res => {
-          if (res) {
-            formatData(res.content);
-          } else {
-            formatData([]);
-          }
-          setLoading(false);
-        })
-        .catch(err => {
-          formatData([]);
-          setLoading(false);
-        });
+  const getList = async () => {
+    try {
+      let res;
+      if (!idCategories) {
+        res = await newsProvider.listNews(page, size);
+      } else {
+        res = await newsProvider.searchNewsByTopic(idCategories, page, size);
+      }
+      if (res) {
+        formatData(res.content);
+      } else {
+        formatData([]);
+      }
+      setLoading(false);
+    } catch (error) {
+      formatData([]);
+      setLoading(false);
     }
   };
 

@@ -497,7 +497,7 @@ class HomeScreen extends Component {
                     <Text style={styles.txtHeaderTitle}>
                       Xin chào,{' '}
                       <Text style={styles.colorUserName}>
-                        {this.getUserName(this.props.userApp.currentUser.name)}
+                        {this.getUserName(this.props.userApp.currentUser?.fullName)}
                       </Text>
                     </Text>
                   </View>

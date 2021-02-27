@@ -39,6 +39,7 @@ class ConfirmBookingScreen extends Component {
     let disabled = this.props.navigation.state.params.disabled;
     let voucher = this.props.navigation.state.params.voucher;
     let profile = this.props.navigation.state.params.profile;
+    console.log('profile: ', profile);
     if (voucher) {
       voucher.price = voucher.discount;
     }
@@ -652,7 +653,7 @@ class ConfirmBookingScreen extends Component {
   onBackdropPress = () => this.setState({isVisibleModal: false});
   onUpdateProfile = () => {
     this.props.navigation.navigate('editProfile', {
-      item: this.state.profile,
+      dataOld: this.state.profile,
       isBooking: true,
     });
     this.setState({isVisibleModal: false});
