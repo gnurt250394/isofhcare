@@ -32,9 +32,9 @@ class ProfileScreen extends Component {
     };
   }
   componentDidMount() {
-    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
-      this.onGetData();
-    });
+    // this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+    this.onGetData();
+    // });
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
@@ -308,7 +308,6 @@ class ProfileScreen extends Component {
               <View
                 style={{
                   paddingLeft: 20,
-                  paddingRight: 10,
                   flex: 1,
                 }}>
                 <Text style={styles.txtFullName}>
@@ -480,9 +479,10 @@ export default connect(mapStateToProps)(ProfileScreen);
 
 const styles = StyleSheet.create({
   txtFullName: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
     color: '#000',
+    flexShrink: 1,
   },
   txtRight: {
     flex: 1,

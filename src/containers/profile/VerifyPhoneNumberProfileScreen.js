@@ -47,6 +47,7 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
 
     this.state = {
       seconds: 90,
+      countResend: 0,
       txErr: '',
       reset: 2,
       phone,
@@ -61,19 +62,24 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
     };
   }
   count = 0;
+  countDownTimer = () => {
+    this.setState({seconds: 90}, () => {
+      this.interval = setInterval(() => {
+        if (this.state.seconds > 0)
+          this.setState(preState => {
+            return {
+              seconds: preState.seconds - 1,
+            };
+          });
+      }, 1000);
+    });
+  };
   componentDidMount() {
-    this.interval = setInterval(() => {
-      if (this.state.seconds > 0)
-        this.setState(preState => {
-          return {
-            seconds: preState.seconds - 1,
-          };
-        });
-    }, 1000);
+    this.countDownTimer();
     // AppState.addEventListener('change', this._handleAppStateChange);
   }
   componentDidUpdate() {
-    if (this.state.timer === 0) {
+    if (this.state.seconds === 0) {
       clearInterval(this.interval);
     }
   }
@@ -83,6 +89,8 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
   }
 
   onReSendPhone = () => {
+    this.setState({countResend: this.state.countResend + 1});
+    this.countDownTimer();
     let verify = this.state.verify;
     this.setState(
       {
@@ -186,34 +194,39 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
                 inputContainerStyles={styles.inputStyle}
                 inputStyles={styles.txInput}
               />
-              <Text style={styles.txTime}>
-                Mã xác thực hiệu lực trong:{' '}
-                <Text style={styles.txCountTime}>
-                  {this.state.seconds > 9
-                    ? this.state.seconds
-                    : '0' + this.state.seconds}
-                  s
+              {this.state.seconds ? (
+                <Text style={styles.txTime}>
+                  Vui lòng chờ{' '}
+                  <Text style={styles.txCountTime}>
+                    {this.state.seconds > 9
+                      ? this.state.seconds
+                      : '0' + this.state.seconds}{' '}
+                    giây
+                  </Text>{' '}
+                  để gửi lại mã
                 </Text>
-              </Text>
+              ) : (
+                <View style={{height: 40}} />
+              )}
             </View>
-            {this.state.countResend ? (
+            {this.state.countResend == 5 ? (
               <Text style={[styles.txReSent, {color: 'red', marginTop: 10}]}>
                 Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại
-                sau 60 phút
+                sau.
               </Text>
-            ) : (
+            ) : !this.state.seconds ? (
               <View style={{flex: 1, padding: 10}}>
                 <Text style={{color: '#000', marginTop: 50, fontSize: 14}}>
                   Bạn cho rằng mình chưa nhận được mã ?
                 </Text>
                 <TouchableOpacity
                   style={styles.btnReSend}
-                  disabled={this.state.disabled}
+                  disabled={this.state.seconds != 0}
                   onPress={this.onReSendPhone}>
                   <Text style={styles.txBtnReSend}>Gửi lại mã</Text>
                 </TouchableOpacity>
               </View>
-            )}
+            ) : null}
           </KeyboardAvoidingView>
           <View style={{height: 50}} />
         </ScrollView>
@@ -290,7 +303,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   txCountTime: {
-    color: '#808080',
+    color: '#000000',
     fontStyle: 'italic',
     fontWeight: 'bold',
     fontSize: 16,
@@ -301,6 +314,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     fontSize: 14,
+    paddingHorizontal: 10,
   },
   btnFinish: {
     backgroundColor: 'rgb(2,195,154)',

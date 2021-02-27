@@ -560,6 +560,11 @@ class EditProfileScreen extends Component {
                   let onEdit = this.props.navigation.getParam('onEdit');
                   if (onEdit) onEdit();
                   snackbar.show('Cập nhật hồ sơ thành công', 'success');
+                  let user = this.props.userApp.currentUser;
+                  user.fullName = res?.profileInfo?.personal?.fullName;
+                  user.mobileNumber = res?.profileInfo?.personal?.mobileNumber;
+                  user.avatar = res?.profileInfo?.personal?.avatar;
+                  this.props.dispatch(redux.userLogin(user));
                 })
                 .catch(err => {
                   snackbar.show('Cập nhật hồ sơ thất bại', 'danger');
