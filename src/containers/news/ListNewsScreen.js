@@ -18,6 +18,7 @@ import redux from '@redux-store';
 import {connect} from 'react-redux';
 import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image'
 const ListNews = ({navigation, props}) => {
   const [listNews, setListNews] = useState([]);
   const [page, setPage] = useState(0);
@@ -115,9 +116,8 @@ const ListNews = ({navigation, props}) => {
       <TouchableOpacity
         onPress={() => onShowDetails(item, index)}
         style={styles.viewItem}>
-        <ScaledImage
-          width={133}
-          style={{resizeMode: 'contain', height: 70}}
+        <FastImage
+          style={{resizeMode: 'contain', height: 70, width: 133}}
           source={{uri: `${urlImage}`}}
         />
         <View style={styles.viewTitle}>
