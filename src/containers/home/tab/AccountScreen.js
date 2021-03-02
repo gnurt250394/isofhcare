@@ -55,7 +55,13 @@ class AccountScreen extends Component {
       callback();
     }
   };
-  
+  getDetailUser = async () => {
+    try {
+      let res = await profileProvider.getDefaultProfile();
+
+      this.setState({profile: res?.profileInfo?.personal});
+    } catch (error) {}
+  };
   componentDidMount() {
     if (this.props.userApp.isLogin) {
       dataCacheProvider.read('', constants.key.storage.KEY_FINGER, s => {
@@ -72,6 +78,9 @@ class AccountScreen extends Component {
         .catch(error => {
           this.setState({isSupportSensor: false});
         });
+        this.onFocus = this.props.navigation.addListener('didFocus', () => {
+          this.getDetailUser()
+          });
     }
     DeviceEventEmitter.addListener(
       'hardwareBackPress',
@@ -79,6 +88,9 @@ class AccountScreen extends Component {
     );
   }
   componentWillUnmount = () => {
+    if (this.onFocus) {
+      this.onFocus.remove()
+    }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   };
   handleHardwareBack = () => {
@@ -140,8 +152,8 @@ class AccountScreen extends Component {
   }
   renderCurrentUserInfo() {
     const icSupport = require('@images/new/user.png');
-    const source = this.props.userApp?.currentUser?.avatar
-      ? {uri: this.props.userApp?.currentUser?.avatar?.absoluteUrl()}
+    const source = this.state?.profile?.avatar
+      ? {uri: this.state?.profile?.avatar?.absoluteUrl()}
       : icSupport;
 
     return (
@@ -177,9 +189,9 @@ class AccountScreen extends Component {
           />
         </TouchableOpacity>
         <View style={styles.viewInfo}>
-          <Text style={styles.txUserName}>{this.props.userApp?.currentUser.fullName}</Text>
+          <Text style={styles.txUserName}>{this.state?.profile?.fullName}</Text>
           <Text style={styles.txViewProfile}>
-            {this.props.userApp?.currentUser.mobileNumber}
+            {this.state?.profile?.mobileNumber}
           </Text>
         </View>
       </View>

@@ -278,7 +278,20 @@ export default {
       );
     });
   },
-  fillPhone(profileRegistryId) {
+  fillPhone(data) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'put',
+        constants.api.profile.fill_phone,
+        data,
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  verifyPhone(profileRegistryId) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         'put',

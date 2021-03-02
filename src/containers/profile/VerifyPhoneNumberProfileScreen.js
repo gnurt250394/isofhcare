@@ -107,7 +107,7 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
           },
           () => {
             profileProvider
-              .fillPhone(profileRegistryId)
+              .verifyPhone(profileRegistryId)
               .then(res => {
                 this.setState({
                   isLoading: false,
