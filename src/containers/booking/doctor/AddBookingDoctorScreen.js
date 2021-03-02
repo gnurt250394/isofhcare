@@ -327,6 +327,7 @@ class AddBookingDoctorScreen extends Component {
                 idUser,
                 img,
                 detailSchedule.blockTime,
+                profile?.userProfileId
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {

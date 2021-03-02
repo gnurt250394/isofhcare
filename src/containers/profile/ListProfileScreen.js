@@ -177,7 +177,7 @@ class ListProfileScreen extends Component {
   onClickDone = () => {
     this.state.idProfile &&
       profileProvider
-        .deleteFamilyProfile(this.state.idProfile)
+        .deleteFamilyProfile(this.state.idProfile, this.state.userProfileId)
         .then(res => {
           this.setState({
             isVisible: false,
@@ -198,6 +198,11 @@ class ListProfileScreen extends Component {
           this.setState({
             isVisible: false,
           });
+
+          if (typeof err?.response?.data?.message == 'string') {
+            snackbar.show(err?.response?.data?.message, 'danger');
+            return;
+          }
           snackbar.show(constants.msg.notification.error_retry, 'danger');
         });
   };
@@ -303,6 +308,7 @@ class ListProfileScreen extends Component {
             idProfile: item?.userProfileId,
             medicalName: item?.profileInfo?.personal?.fullName,
             isVisible: true,
+            userProfileId: item?.userProfileId,
           });
         }
         break;
@@ -907,7 +913,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
-    writingDirection:'ltr'
+    writingDirection: 'ltr',
   },
   phoneActive: {
     fontSize: 14,

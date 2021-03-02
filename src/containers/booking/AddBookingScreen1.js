@@ -397,6 +397,7 @@ class AddBookingScreen extends Component {
             });
             let bookingDate = this.state.bookingDate.format('yyyy-MM-dd');
             let idUser = this.props.userApp.currentUser.id;
+
             bookingProvider
               .createBooking(
                 bookingDate,
@@ -408,6 +409,7 @@ class AddBookingScreen extends Component {
                 idUser,
                 img,
                 byHospital,
+                this.state.profile?.userProfileId
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {
