@@ -57,7 +57,7 @@ const NewsHighLight = memo(({ navigation, refreshing }) => {
                         style={{ borderRadius: 6, resizeMode: 'cover', width: 'auto', height: 134 }}
                     />
                 </View>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.title?.rawText || ""}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensHospital}>{item?.shortTitle?.rawText || ""}</Text>
             </TouchableOpacity>
         )
     }
