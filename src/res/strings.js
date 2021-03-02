@@ -1122,6 +1122,7 @@ module.exports = {
       list_waitting: profilePath + 'friends/requests',
       default_profile: profilePath + 'profile',
       verify_fill_phone: profilePath + 'profiles',
+      fill_phone: isofhcare_service + 'user/fill-phone',
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',
