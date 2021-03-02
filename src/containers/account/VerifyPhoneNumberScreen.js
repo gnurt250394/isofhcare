@@ -473,20 +473,33 @@ class VerifyPhoneNumberScreen extends React.Component {
               }
             }
             if (this.state.verify == 4) {
-              let profileRegistryId = this.props.navigation.getParam(
-                'profileRegistryId',
-                null,
-              );
+              let data = {
+                otp: text,
+              };
+              let dataOld = this.props.navigation.getParam('dataOld', null);
               profileProvider
-                .verifyFillPhone(profileRegistryId, text)
+                .verifyFillPhone(data)
                 .then(res => {
                   this.setState({
                     disabled: false,
                   });
-                  this.props.navigation.navigate('listProfileUser', {
-                    reset: this.state.reset + 1,
-                  });
-                  snackbar.show('Thêm số điện thoại thành công', 'success');
+                  if (res.code == 0) {
+                    if (dataOld) {
+                      this.props.navigation.replace('profile', {
+                        id: dataOld?.medicalRecords?.id,
+                      });
+                    } else {
+                      let user = this.props.userApp.currentUser;
+                      user.phone = this.props.navigation.getParam('phone');
+                      user.requestInputPhone = false;
+                      this.props.dispatch(redux.userLogin(user));
+                      this.props.navigation.pop();
+                    }
+                    snackbar.show('Thêm số điện thoại thành công', 'success');
+                  } else if (res.code == 4) {
+                    snackbar.show('Mã xác thực không đúng');
+                    return;
+                  }
                 })
                 .catch(err => {
                   snackbar.show(

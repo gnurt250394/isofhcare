@@ -46,16 +46,29 @@ export default {
       );
     }
   },
-  verifyFillPhone(profileRegistryId, confirmCode) {
+  verifyFillPhoneProfile(profileRegistryId, confirmCode) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         'put',
         client.serviceProfile +
-          constants.api.profile.verify_fill_phone +
+          constants.api.profile.verify_fill_phone_profile +
           `/${profileRegistryId}/confirm`,
         {
           confirmationCode: confirmCode,
         },
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  verifyFillPhone(data) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'put',
+        constants.api.profile.verify_fill_phone,
+        data,
         (s, e) => {
           if (s) resolve(s);
           else reject(e);
@@ -296,7 +309,7 @@ export default {
       client.requestApi(
         'put',
         client.serviceProfile +
-          constants.api.profile.verify_fill_phone +
+          constants.api.profile.verify_fill_phone_profile +
           `/${profileRegistryId}/resend-confirmation-code`,
         {},
         (s, e) => {
