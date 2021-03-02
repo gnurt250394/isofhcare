@@ -199,7 +199,8 @@ export default {
             let patient = {
                 id: idUser,
                 name: patients.fullName,
-                phone: patients.mobileNumber
+                phone: patients.mobileNumber,
+                avatar: patients.avatar
             }
             //     
             client.requestApi(

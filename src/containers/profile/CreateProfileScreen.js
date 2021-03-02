@@ -596,7 +596,12 @@ class CreateProfileScreen extends Component {
                       phone: this.state.phone,
                     });
                   } else {
-                    snackbar.show('Đã gửi lời mời tới thành viên', 'success');
+                    snackbar.show(
+                      res?.defaultProfile
+                        ? 'Đã gửi lời mời tới thành viên'
+                        : 'Thêm thành viên thành công',
+                      'success',
+                    );
                     NavigationService.navigate('listProfileUser', {
                       reset: this.state.reset + 1,
                     });

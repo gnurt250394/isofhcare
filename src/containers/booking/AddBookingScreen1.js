@@ -566,7 +566,7 @@ class AddBookingScreen extends Component {
   render() {
     let avatar = this.state.profile?.profileInfo?.personal?.avatar;
     console.log('this.state.profile: ', this.state.profile);
-    const source = avatar ? {uri: avatar} : require('@images/new/user.png');
+    const source = avatar ? {uri: avatar?.absoluteUrl()} : require('@images/new/user.png');
     let minDate = new Date();
     minDate.setDate(minDate.getDate() + 1);
     // minDate.setDate(minDate.getDate());

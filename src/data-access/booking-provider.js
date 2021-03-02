@@ -217,6 +217,7 @@ export default {
         id: idUser,
         name: patientUser.fullName,
         phone: patientUser.mobileNumber,
+        avatar:patientUser.avatar
       };
       client.requestApi(
         'post',

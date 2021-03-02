@@ -37,7 +37,7 @@ const DetailNewsScreen = ({navigation}) => {
     getNews();
     getList();
   }, [detail.newsId]);
-  console.log('detail: ', detail);
+
   const getNews = () => {
     newsProvider
       .detailNews(detail?.newsId)
@@ -176,7 +176,6 @@ const DetailNewsScreen = ({navigation}) => {
   };
 
   const onShare = () => {
-    console.log('shareLinkContent: ', shareLinkContent);
     ShareDialog.canShow(shareLinkContent)
       .then(function(canShow) {
         if (canShow) {
@@ -186,14 +185,10 @@ const DetailNewsScreen = ({navigation}) => {
       .then(
         function(result) {
           if (result.isCancelled) {
-            console.log('Share cancelled');
           } else {
-            console.log('Share success with postId: ' + result.postId);
           }
         },
-        function(error) {
-          console.log('Share fail with error: ' + error);
-        },
+        function(error) {},
       );
   };
   return (
@@ -273,8 +268,7 @@ const DetailNewsScreen = ({navigation}) => {
                 iSofHcare{' '}
               </Text>
               <Text>
-                | Ngày đăng{' '}
-                {moment(detail?.createdAt).format('DD/MM/YYYY')}
+                | Ngày đăng {moment(detail?.createdAt).format('DD/MM/YYYY')}
               </Text>
             </Text>
             <Text style={{paddingTop: 5}}>
