@@ -181,6 +181,7 @@ export default {
     idUser,
     images,
     byHospital,
+    userProfileId,
   ) {
     return new Promise((resolve, reject) => {
       let hospital = {
@@ -217,7 +218,7 @@ export default {
         id: idUser,
         name: patientUser.fullName,
         phone: patientUser.mobileNumber,
-        avatar:patientUser.avatar
+        avatar: patientUser.avatar,
       };
       client.requestApi(
         'post',
@@ -239,6 +240,7 @@ export default {
           owner: patientUser.status == 1 ? true : false,
           images,
           byHospital,
+          userProfileId,
         },
         (s, e) => {
           if (s) resolve(s);

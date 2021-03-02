@@ -117,11 +117,13 @@ export default {
       );
     });
   },
-  deleteFamilyProfile(id) {
+  deleteFamilyProfile(id, userProfileId) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         'delete',
-        `${client.serviceProfile}${constants.api.profile.profile}/${id}`,
+        `${client.serviceProfile}${
+          constants.api.profile.profile
+        }/${id}?userProfileId=${userProfileId}`,
         {},
         (s, e) => {
           if (s) resolve(s);
