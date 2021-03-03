@@ -43,7 +43,7 @@ class DetailHistoryBookingScreen extends Component {
   }
 
   componentDidMount() {
-    firebaseUtils.sendEvent('Appointment_detail')
+    firebaseUtils.sendEvent('Appointment_detail');
     this.getData();
     // this.setState({ isLoading: true }, () => {
     //     bookingProvider.detail(this.state.id).then(s => {
@@ -440,10 +440,9 @@ class DetailHistoryBookingScreen extends Component {
     let isOnline = this.state.booking?.invoice?.services
       ? this.state.booking.invoice.services.find(e => e.isOnline == true)
       : null;
-    const avatar =
-      this.props.userApp.currentUser && this.props.userApp.currentUser.avatar
-        ? {uri: this.props.userApp.currentUser.avatar}
-        : require('@images/new/user.png');
+    const avatar = this.state.booking?.patient?.avatar
+      ? {uri: this.state.booking.patient.avatar}
+      : require('@images/new/user.png');
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
