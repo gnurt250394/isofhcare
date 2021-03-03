@@ -441,7 +441,7 @@ class DetailHistoryBookingScreen extends Component {
       ? this.state.booking.invoice.services.find(e => e.isOnline == true)
       : null;
     const avatar = this.state.booking?.patient?.avatar
-      ? {uri: this.state.booking.patient.avatar}
+      ? {uri: this.state.booking.patient.avatar.absoluteUrl()}
       : require('@images/new/user.png');
     return (
       <ActivityPanel
