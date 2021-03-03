@@ -139,9 +139,22 @@ class VerifyPhoneNumberProfileScreen extends React.Component {
           profileProvider
             .verifyFillPhoneProfile(profileRegistryId, text)
             .then(res => {
+              console.log('res: ', res);
               this.setState({
                 disabled: false,
               });
+              if (res?.status == 'CREATED') {
+                snackbar.show('Mã xác thực không chính xác', 'danger');
+                return;
+              }
+              if (res?.status == 'LOCKED') {
+                snackbar.show(
+                  'Bạn đã nhập sai quá 5 lần vui lòng thử lại sau',
+                  'danger',
+                );
+                this.props.navigation.pop();
+                return;
+              }
               this.props.navigation.navigate('listProfileUser', {
                 reset: this.state.reset + 1,
               });
