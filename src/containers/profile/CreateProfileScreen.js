@@ -793,7 +793,7 @@ class CreateProfileScreen extends Component {
         }
         containerStyle={{backgroundColor: '#f8f8f8'}}
         titleStyle={styles.titleStyle}>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <KeyboardAwareScrollView >
           <View style={styles.container}>
             {this.state.badInfo ? (
               <View style={styles.groupTitle}>

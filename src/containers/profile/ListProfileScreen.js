@@ -37,6 +37,7 @@ class ListProfileScreen extends Component {
       isVisibleRelation: false,
       listInvite: [],
       isShow: true,
+      isLoading: true,
     };
   }
   onShowOptions = item => {
@@ -148,6 +149,7 @@ class ListProfileScreen extends Component {
         this.setState(
           {
             refreshing: false,
+            isLoading: false,
           },
           () => {
             if (s.length) {
@@ -161,6 +163,7 @@ class ListProfileScreen extends Component {
       .catch(e => {
         this.setState({
           refreshing: false,
+          isLoading: false,
         });
       });
   };
@@ -502,6 +505,7 @@ class ListProfileScreen extends Component {
         title={'Thành viên gia đình'}
         style={styles.container}
         titleStyle={styles.titleStyle}
+        isLoading={this.state.isLoading}
         containerStyle={styles.containerStyle}
         menuButton={this.renderBtn()}>
         <ScrollView>
