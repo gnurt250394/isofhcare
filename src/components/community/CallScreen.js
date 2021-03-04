@@ -46,7 +46,7 @@ const PATTERN = [
   2 * ONE_SECOND_IN_MS,
   3 * ONE_SECOND_IN_MS,
 ];
-const HOST = process.env.HOST || 'http://52.74.210.243:3333'
+const HOST = process.env.HOST || 'http://46.137.230.41:3333'
 const isFront = true // Use Front camera?
 const DEFAULT_ICE = {
   iceServers: [
@@ -54,7 +54,7 @@ const DEFAULT_ICE = {
       urls: ['stun:stun.l.google.com:19302'],
     },
     {
-      urls: 'turn:52.74.210.243:3478',
+      urls: 'turn:46.137.230.41:3478',
       username: 'mainam',
       credential: '123456',
     },
