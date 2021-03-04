@@ -291,7 +291,10 @@ class CreateProfileScreen extends Component {
   // };
 
   onShowGender = () => {
-    this.actionSheetGender.show();
+    Keyboard.dismiss();
+    setTimeout(() => {
+      this.actionSheetGender.show();
+    }, 250);
   };
   onSetGender = index => {
     try {
@@ -653,6 +656,7 @@ class CreateProfileScreen extends Component {
     if (str) return str.replace(/\u0020/, '\u00a0');
   }
   onSelectRelation = () => {
+    Keyboard.dismiss();
     this.setState({
       isVisibleRelation: true,
     });
@@ -793,7 +797,7 @@ class CreateProfileScreen extends Component {
         }
         containerStyle={{backgroundColor: '#f8f8f8'}}
         titleStyle={styles.titleStyle}>
-        <KeyboardAwareScrollView >
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.container}>
             {this.state.badInfo ? (
               <View style={styles.groupTitle}>
@@ -965,6 +969,7 @@ class CreateProfileScreen extends Component {
                         errorStyle={styles.err}
                         splitDate={'/'}
                         onPress={() => {
+                          Keyboard.dismiss();
                           this.setState(
                             {toggleDateTimePickerVisible: true},
                             () => {},
