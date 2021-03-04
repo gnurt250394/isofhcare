@@ -2,7 +2,7 @@ import client from '@utils/client-utils';
 import constants from '@resources/strings';
 import dataCacheProvider from "@data-access/datacache-provider";
 
-module.exports = {
+export default  {
     listNews(page, size) {
         return new Promise((resolve, reject) => {
             client.requestApi('get', client.serviceNews + constants.api.news.list_news + `?page=${page}&size=${size}&orderBy`, {}, (s, e) => {

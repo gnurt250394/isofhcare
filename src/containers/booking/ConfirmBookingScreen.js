@@ -480,6 +480,7 @@ class ConfirmBookingScreen extends Component {
   };
   createBooking = ({phonenumber, momoToken, cardNumber}) => {
     const {booking, disabled, paymentMethod} = this.state;
+    console.log('paymentMethod: ', paymentMethod);
 
     connectionUtils
       .isConnected()
@@ -518,6 +519,7 @@ class ConfirmBookingScreen extends Component {
                   case constants.PAYMENT_METHOD.VISA:
                   case constants.PAYMENT_METHOD.QR:
                     if (res?.checkoutUrl) {
+                      console.log('res: ', res);
                       this.props.navigation.navigate('paymenntAlePay', {
                         urlPayment: res.checkoutUrl,
                         title:
@@ -562,9 +564,12 @@ class ConfirmBookingScreen extends Component {
               }
             })
             .catch(err => {
+              console.log('err: ', err);
               this.setState({isLoading: false});
               if (err?.response?.status == 406) {
-                this.setState({isVisibleModal: true});
+                setTimeout(() => {
+                  this.setState({isVisibleModal: true});
+                }, 500);
                 return;
               }
               snackbar.show(constants.msg.booking.booking_err2, 'danger');

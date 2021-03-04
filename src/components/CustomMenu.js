@@ -14,6 +14,8 @@ const CustomMenu = ({
   options,
   customOption,
   onSelected,
+  textStyle,
+  placement = 'bottom',
   ...props
 }) => {
   const onSelect = (e, i) => () => {
@@ -24,7 +26,7 @@ const CustomMenu = ({
       {...props}
       renderer={Popover}
       rendererProps={{
-        placement: 'bottom',
+        placement,
         anchorStyle: {backgroundColor: '#00CBA7'},
       }}>
       <MenuTrigger>{MenuSelectOption}</MenuTrigger>
@@ -39,7 +41,9 @@ const CustomMenu = ({
                   style={styles.containerOption}
                   onSelect={onSelect(e, i)}>
                   <View style={[styles.buttonAnwser]}>
-                    <Text>{e.value}</Text>
+                    <Text style={{color: `${e.color || '#000000'}`}}>
+                      {e.value}
+                    </Text>
                   </View>
                 </MenuOption>
               );

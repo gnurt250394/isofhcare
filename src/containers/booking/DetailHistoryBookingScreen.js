@@ -43,7 +43,7 @@ class DetailHistoryBookingScreen extends Component {
   }
 
   componentDidMount() {
-    firebaseUtils.sendEvent('Appointment_detail')
+    firebaseUtils.sendEvent('Appointment_detail');
     this.getData();
     // this.setState({ isLoading: true }, () => {
     //     bookingProvider.detail(this.state.id).then(s => {
@@ -112,33 +112,35 @@ class DetailHistoryBookingScreen extends Component {
   };
   renderStatus = () => {
     switch (this.state.booking.invoice.payment) {
-      case 'CASH':
+      case constants.PAYMENT_METHOD.CASH:
         return (
           <Text style={styles.paymentHospital}>
-            {constants.booking.status.payment_CSYT}
+            {constants.payment.pay_later}
           </Text>
         );
-      case 'VNPAY':
+      case constants.PAYMENT_METHOD.VISA:
+        return (
+          <Text style={styles.paymentHospital}>{constants.payment.VISA}</Text>
+        );
+      case constants.PAYMENT_METHOD.ATM:
+        return (
+          <Text style={styles.paymentHospital}>{constants.payment.ATM}</Text>
+        );
+      case constants.PAYMENT_METHOD.BANK_TRANSFER:
         return (
           <Text style={styles.paymentHospital}>
-            {constants.booking.status.payment_VNPAY}
+            {constants.payment.direct_transfer}
           </Text>
         );
-      case 'PAYOO':
+      case constants.PAYMENT_METHOD.QR:
         return (
-          <Text style={styles.paymentHospital}>
-            {constants.booking.status.payment_payoo}
-          </Text>
+          <Text style={styles.paymentHospital}>{constants.payment.QR}</Text>
         );
-      case 'BANK_TRANSFER':
-        return (
-          <Text style={styles.paymentHospital}>Chuyển khoản trực tiếp</Text>
-        );
-      case 'MOMO':
+      case constants.PAYMENT_METHOD.MOMO:
         return (
           <Text style={styles.paymentHospital}>{constants.payment.MOMO}</Text>
         );
-      case 'NONE':
+      case constants.PAYMENT_METHOD.NONE:
         return <Text style={styles.paymentHospital}>Không xác định</Text>;
       // case 0:
       //     return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
