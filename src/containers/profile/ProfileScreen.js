@@ -166,47 +166,14 @@ class ProfileScreen extends Component {
     let dataLocation =
       this.state.dataProfile?.profileInfo?.personal?.address || {};
 
-    let district = dataLocation.district ? dataLocation.district : null;
-    let province = dataLocation.province ? dataLocation.province : null;
-    let zone = dataLocation.city ? dataLocation.city : '';
-    let village =
-      dataLocation.village && dataLocation.village != ' '
-        ? dataLocation.village
-        : null;
+    let district = dataLocation.district ? dataLocation.district : '';
+    let province = dataLocation.province ? dataLocation.province : '';
+    let zone = dataLocation.street1 ? dataLocation.street1 : '';
+    let village = dataLocation.street2 ? dataLocation.street2 : '';
 
-    if (district && province && zone && village) {
-      this.setState({
-        location: `${village}\n${zone}\n${district}\n${province}`,
-      });
-    } else if (district && province && zone) {
-      this.setState({
-        location: `${zone}\n${district}\n${province}`,
-      });
-    } else if (district && province && village) {
-      this.setState({
-        location: `${village}\n${district}\n${province}`,
-      });
-    } else if (district && province) {
-      this.setState({
-        location: `${district}\n${province}`,
-      });
-    } else if (province && village) {
-      this.setState({
-        location: `${village}\n${province}`,
-      });
-    } else if (province) {
-      this.setState({
-        location: `${province}`,
-      });
-    } else if (village) {
-      this.setState({
-        location: `${village}`,
-      });
-    } else if (!village && !district && !province && !zone) {
-      this.setState({
-        location: null,
-      });
-    }
+    this.setState({
+      location: `${village}\n${zone}\n${district}\n${province}`,
+    });
   };
   onEdit(isEdit) {
     if (isEdit) {

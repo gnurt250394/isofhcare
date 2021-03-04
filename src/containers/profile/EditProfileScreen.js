@@ -52,12 +52,13 @@ class EditProfileScreen extends Component {
     if (dataOld) {
       let dataProfile = dataOld.profileInfo?.personal || {};
       let dataLocationOld = dataOld.profileInfo?.personal?.address;
+
       let badInfo = this.props.navigation.getParam('badInfo', false);
       let dataLocation = {
         districts: {name: dataLocationOld?.district || ''},
         provinces: {name: dataLocationOld?.province || ''},
-        zone: {name: dataLocationOld?.city || ''},
-        address: {name: dataLocationOld?.village || ''},
+        zone: {name: dataLocationOld?.street1 || ''},
+        address: dataLocationOld?.street2 || '',
       };
 
       this.setState(
@@ -206,14 +207,15 @@ class EditProfileScreen extends Component {
   renderAddress = () => {
     let dataLocation = this.state.dataLocation;
 
-    let district = dataLocation.districts.name;
-    let province = dataLocation.provinces.name;
-    let zone = dataLocation.zone.name;
+    let district = dataLocation?.districts?.name || '';
+    let province = dataLocation?.provinces?.name || '';
+    let zone = dataLocation?.zone?.name || '';
+    let address = dataLocation?.address || '';
 
-    if (district && province && zone) {
+    if (district || province || zone) {
       this.setState(
         {
-          location: `${zone}\n${district}\n${province}`,
+          location: `${address}\n${zone}\n${district}\n${province}`,
         },
         () => {
           if (this.state.isSave) {
@@ -221,10 +223,10 @@ class EditProfileScreen extends Component {
           }
         },
       );
-    } else if (district && province && zone) {
+    } else {
       this.setState(
         {
-          location: `${zone}\n${district}\n${province}`,
+          location: null,
         },
         () => {
           if (this.state.isSave) {
@@ -232,54 +234,6 @@ class EditProfileScreen extends Component {
           }
         },
       );
-    } else if (district && province) {
-      this.setState(
-        {
-          location: `${district}\n${province}`,
-        },
-        () => {
-          if (this.state.isSave) {
-            this.form.isValid();
-          }
-        },
-      );
-    } else if (district && province) {
-      this.setState(
-        {
-          location: `${district}\n${province}`,
-        },
-        () => {
-          if (this.state.isSave) {
-            this.form.isValid();
-          }
-        },
-      );
-    } else if (province) {
-      this.setState(
-        {
-          location: `${province}`,
-        },
-        () => {
-          if (this.state.isSave) {
-            this.form.isValid();
-          }
-        },
-      );
-    } else if (province) {
-      this.setState(
-        {
-          location: `${province}`,
-        },
-        () => {
-          if (this.state.isSave) {
-            this.form.isValid();
-          }
-        },
-      );
-    } else if (!district && !province && !zone) {
-      this.setState({
-        location: null,
-      });
     }
   };
   // componentDidMount = () => {
@@ -472,16 +426,10 @@ class EditProfileScreen extends Component {
               let id = this.state.id;
               let dataLocation = this.state.dataLocation;
 
-              let district = dataLocation?.districts?.name
-                ? dataLocation.districts?.name
-                : null;
-              let province = dataLocation?.provinces?.name
-                ? dataLocation.provinces?.name
-                : null;
-              let zone = dataLocation?.zone?.name
-                ? dataLocation.zone?.name
-                : '';
-              let village = dataLocation.address ? dataLocation.address : null;
+              let district = dataLocation?.districts?.name || null;
+              let province = dataLocation?.provinces?.name || null;
+              let zone = dataLocation?.zone?.name || '';
+              let village = dataLocation.address || null;
               let age = this.state.dob
                 ? new Date().getFullYear() - this.state.dob.getFullYear()
                 : null;
@@ -505,8 +453,9 @@ class EditProfileScreen extends Component {
 
                       address: {
                         province: province ? province.toString() : null,
-                        city: zone ? zone.toString() : null,
+                        street1: zone ? zone.toString() : null,
                         district: district ? district.toString() : null,
+                        street2: village ? village.toString() : null,
                       },
                     },
                     guardian: {
@@ -537,8 +486,9 @@ class EditProfileScreen extends Component {
                       mobileNumber: this.state.phone,
                       address: {
                         province: province ? province.toString() : null,
-                        city: zone ? zone.toString() : null,
+                        street1: zone ? zone.toString() : null,
                         district: district ? district.toString() : null,
+                        street2: village ? village.toString() : null,
                       },
                       idNumber: this.state.userPassport,
                       countryId: this.state.nationality?.id,
@@ -553,7 +503,6 @@ class EditProfileScreen extends Component {
               profileProvider
                 .updateProfile(id, data)
                 .then(res => {
-                  console.log('res: ', res);
                   this.setState({
                     isLoading: false,
                   });
@@ -672,7 +621,7 @@ class EditProfileScreen extends Component {
       maxDate.getMonth(),
       maxDate.getDate(),
     );
-    console.log('guardianName: ', this.state.guardianName);
+
     return (
       <ActivityPanel
         title={'Chỉnh sửa hồ sơ'}
