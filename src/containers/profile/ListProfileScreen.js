@@ -364,7 +364,7 @@ class ListProfileScreen extends Component {
             />
             <View style={styles.viewItemActive}>
               <Text textBreakStrategy="simple" style={styles.nameActive}>
-                {item?.profileInfo?.personal?.fullName}
+                {item?.profileInfo?.personal?.fullName?.trim()}
               </Text>
 
               {item?.profileInfo?.personal?.mobileNumber && (

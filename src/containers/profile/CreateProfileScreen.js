@@ -789,11 +789,13 @@ class CreateProfileScreen extends Component {
         }
         isLoading={isLoading}
         menuButton={
-          <TouchableOpacity
-            onPress={this.onCreateProfile}
-            style={styles.buttonSave}>
-            <Text style={styles.txtSave}>Lưu</Text>
-          </TouchableOpacity>
+          !this.state.findFinish ? null : (
+            <TouchableOpacity
+              onPress={this.onCreateProfile}
+              style={styles.buttonSave}>
+              <Text style={styles.txtSave}>Lưu</Text>
+            </TouchableOpacity>
+          )
         }
         containerStyle={{backgroundColor: '#f8f8f8'}}
         titleStyle={styles.titleStyle}>
