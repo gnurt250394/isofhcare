@@ -278,7 +278,7 @@ class ProfileScreen extends Component {
                   flex: 1,
                 }}>
                 <Text style={styles.txtFullName}>
-                  {personal?.fullName || ''}
+                  {personal?.fullName?.trim() || ''}
                 </Text>
                 <Text
                   style={{fontSize: 14, fontWeight: 'bold', color: '#075BB5'}}>
