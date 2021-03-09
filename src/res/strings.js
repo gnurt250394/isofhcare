@@ -1086,7 +1086,7 @@ module.exports = {
     covid: {
       surveys: 'v1/surveys',
       questions: 'v1/questions',
-      annswer: 'v1/questionnaireId/questionnaires/',
+      annswer: 'v1/questionnaires/questionnaireId/respond',
     },
     comment: {
       create: isofhcare_service + 'comment/create',
