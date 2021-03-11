@@ -118,10 +118,10 @@ class HomeScreen extends Component {
           onPress: () => {
             firebaseUtils.sendEvent('Healthrecord_screen_home');
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate('ehealth');
+              this.props.navigation.navigate('listEhealth');
             else
               this.props.navigation.navigate('login', {
-                nextScreen: {screen: 'ehealth'},
+                nextScreen: {screen: 'listEhealth'},
               });
           },
         },

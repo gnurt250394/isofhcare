@@ -1,359 +1,755 @@
-import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
-import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
+import React, {Component} from 'react';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
+import ScaleImage from 'mainam-react-native-scaleimage';
 import constants from '@resources/strings';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import {Table, TableWrapper, Row, Cell} from 'react-native-table-component';
 import resultUtils from '@ehealth/utils/result-utils';
-import ActionSheet from 'react-native-actionsheet'
+import ActionSheet from 'react-native-actionsheet';
 import ImageEhealth from './ImageEhealth';
-
+import {Card} from 'native-base';
+import ScaledImage from 'mainam-react-native-scaleimage';
+import {object} from 'prop-types';
 
 class MedicalTestResult extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
-    componentDidMount() {
-        let result1 = this.props.result;
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShow: false,
+    };
+  }
+  componentDidMount() {
+    this.onGetData();
+  }
 
-        let hasResult = false;
-        if (result1) {
-            if (result1?.ListResulHuyetHoc?.length && result1?.ListResulHuyetHoc[0]?.ListMedical?.length) {
-                hasResult = true;
-            }
-            if (result1?.ListResulHoaSinh?.length && result1?.ListResulHoaSinh[0]?.ListMedical?.length) {
-                hasResult = true;
-            }
-            if (result1?.ListResulOther?.length && result1?.ListResulOther[0]?.ListMedical?.length) {
-                hasResult = true;
-            }
-            if (result1?.ListResulViSinh?.length && result1?.ListResulViSinh[0]?.ListMedical?.length) {
-                hasResult = true;
-            }
-        }
-        if (!hasResult) {
-            this.setState({ hasResult: false, medicalTestResult: result1?.ListResulHoaSinh || [] })
-            return null;
-        }
-
-        let result = [];
-        if (result1.ListResulHoaSinh && result1.ListResulHoaSinh.length > 0) {
-            var item = {
-                type: 'Hóa Sinh',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-            result1.ListResulHoaSinh.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
-
-        if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length > 0) {
-            var item = {
-                type: 'Huyết Học',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-            result1.ListResulHuyetHoc.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
-        if (result1.ListResulViSinh && result1.ListResulViSinh.length > 0) {
-            var item = {
-                type: 'Vi Sinh',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-
-            result1.ListResulViSinh.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
-
-        if (result1.ListResulOther && result1.ListResulOther.length > 0) {
-            var item = {
-                type: 'Xét Nghiệm Khác',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-            result1.ListResulOther.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
-
-
-        this.setState({
-            hasResult: true,
-            listTime: [],
-            medicalTestResult: result,
-            currentGroup: result[0]
-        })
-    }
-    componentWillReceiveProps(nextProps) {
-        if (this.props.result != nextProps.result) {
-            this.componentDidMount();
-        }
-    }
-    viewGroup(item) {
-        this.setState({
-            currentGroup: item
-        })
-    }
-    renderMedicalTestLine(item, index) {
-        // let borderBottomWidth = index == ,
-        return (
-            <View key={index}>
-                <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={styles.containerValue}></Cell>
-                {
-                    item.ServiceMedicTestLine.map((item2, i) => {
-                        var range = resultUtils.getRangeMedicalTest(item2);
-
-                        var isHighlight = resultUtils.showHighlight(item2);
-                        let borderBottomWidth = i == item.ServiceMedicTestLine.length - 1 ? 0.6 : 0;
-
-                        return (
-                            this.state.currentGroup.type == 'Vi Sinh' ?
-                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
-                                    <Cell style={[styles.LineCell, { borderBottomWidth }]} data={item2.NameLine.trim()} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={resultUtils.getResult(item2)} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                                </TableWrapper>
-                                :
-                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
-                                    <Cell style={[styles.LineCell, { borderBottomWidth }]} data={item2.NameLine.trim()} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={resultUtils.getResult(item2)} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                                    <Cell data={range} borderStyle={{ borderWidth: 0.6, }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={item2.Unit} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue,]}></Cell>
-                                </TableWrapper>
-                        )
-                    })
-                }
-            </View>
+  onGetData = (medicalTest) => {
+    console.log('medicalTest: ', medicalTest);
+    if (!medicalTest) return null;
+    var listHaveChild = [];
+    for (var key in medicalTest) {
+      if (!medicalTest[key].length) {
+        delete medicalTest[key];
+      } else {
+        var listHaveChild = medicalTest[key].filter(
+          obj => obj?.lines?.length && !obj.isNotChild,
         );
 
+        var dataNotChild = [];
+        medicalTest[key].map((obj, i) => {
+          if (
+            Object.keys(obj?.result || {}).length &&
+            key !== 'anatomy' &&
+            !obj?.lines?.length
+          ) {
+            obj.lines = [];
+            if (!obj.result.nameLine) {
+              obj.result.nameLine = obj.serviceName;
+            }
+            dataNotChild.push(obj.result);
+            medicalTest[key] = [
+              {
+                lines: obj.lines.concat(dataNotChild),
+                serviceName: obj.serviceName,
+                isNotChild: true,
+              },
+            ].concat(listHaveChild);
+          }
+        });
+      }
     }
 
-    renderMedical(item, index) {
-        let borderBottomWidth = index == this.state.currentGroup.value.ListMedical.length - 1 ? 0.6 : 0;
-        if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
-            return (this.renderMedicalTestLine(item, index));
-        }
-        if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) {
-            var range = resultUtils.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
-            var isHighlight = resultUtils.showHighlight(item.ServiceMedicTestLine[0]);
+    let firstKey = Object.keys(medicalTest)[0];
+    let actions = this.renderKey(medicalTest);
+    let tableHead =
+      firstKey == 'microbiology'
+        ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ']
+        : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BT', 'ĐƠN VỊ'];
+    let keySelect = this.renderLabel(firstKey);
+    let currentGroup =
+      medicalTest[firstKey] && medicalTest[firstKey].filter(obj => obj);
+    this.setState({
+      listTime: [],
+      medicalTest,
+      tableHead,
+      actions,
+      currentGroup: currentGroup,
+      keySelect: keySelect,
+      valueSelect: firstKey,
+      // currentGroup: medicalTest[0]
+    });
+  };
+  componentWillReceiveProps(nextProps) {
+    console.log('nextProps: ', nextProps);
+    if (this.props.medicalTest != nextProps.medicalTest) {
+      this.onGetData(nextProps.medicalTest);
+    }
+  }
+  renderKey = medicalTest => {
+    var actions = Object.keys(medicalTest).map(item => {
+      switch (item) {
+        case 'hematology':
+          return 'Huyết học';
+        case 'biochemistry':
+          return 'Hoá sinh';
+        case 'microbiology':
+          return 'Vi sinh';
+        case 'anatomy':
+          return 'Giải phẫu bệnh';
+        case 'other':
+          return 'Xét nghiệm khác';
+        default:
+          return '';
+      }
+    });
+    actions.push('Hủy');
 
-            var data =
-                this.state.currentGroup.type == 'Vi Sinh' ?
-                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                        <Cell data={item.ServiceName.trim()} borderStyle={{ borderWidth: 0.6 }} style={[styles.LineCell, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
+    return actions;
+  };
+  viewGroup(item) {
+    this.setState({
+      currentGroup: item,
+    });
+  }
 
-                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                    </TableWrapper>
-                    :
-                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                        <Cell data={item.ServiceName.trim()} borderStyle={{ borderWidth: 0.6 }} style={{ borderLeftWidth: 0.6, flex: 1 }} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                        <Cell data={irange} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={item.ServiceMedicTestLine[0].Unit} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue,]}></Cell>
-                    </TableWrapper>
-            return data;
-        }
-        var range = resultUtils.getRangeMedicalTest(item);
-        var isHighlight = resultUtils.showHighlight(item);
-        var data = this.state.currentGroup.type == 'Vi Sinh' ?
-            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                <Cell data={item.ServiceName.trim()} style={[styles.LineCell, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={resultUtils.getResult(item)} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+  renderLabel = type => {
+    var key = '';
+    switch (type) {
+      case 'hematology':
+        return (key = 'Huyết học');
+      case 'biochemistry':
+        return (key = 'Hoá sinh');
+      case 'microbiology':
+        return (key = 'Vi sinh');
+      case 'anatomy':
+        return (key = 'Giải phẫu bệnh');
+      case 'other':
+        return (key = 'Xét nghiệm khác');
+      default:
+        return key;
+    }
+  };
+
+  onSelect = (index, medicalTest) => {
+    if (index <= Object.keys(medicalTest).length - 1) {
+      let valueSelect = Object.keys(medicalTest)[index];
+      let tableHead =
+        valueSelect == 'microbiology'
+          ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ']
+          : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BT', 'ĐƠN VỊ'];
+      let textSelect = this.renderLabel(valueSelect);
+      let currentGroup = medicalTest[valueSelect].filter(obj => obj);
+      this.setState({
+        currentGroup: currentGroup,
+        keySelect: textSelect,
+        tableHead,
+        valueSelect,
+      });
+    }
+  };
+  renderMedicalTestLine(item, index) {
+    return (
+      <View key={index}>
+        <Cell
+          data={item.serviceName}
+          textStyle={[styles.textValue, {fontWeight: 'bold'}]}
+          style={styles.containerValue}
+        />
+        {item.ServiceMedicTestLine.map((item2, i) => {
+          var range = resultUtils.getRangeMedicalTest(item2);
+
+          var isHighlight = resultUtils.showHighlight(item2);
+          let borderBottomWidth =
+            i == item.ServiceMedicTestLine.length - 1 ? 0.6 : 0;
+
+          return this.state.valueSelect == 'microbiology' ? (
+            <TableWrapper
+              style={[
+                styles.tableWrapper,
+                index % 2 == 0
+                  ? {backgroundColor: '#f5f5f5'}
+                  : {backgroundColor: '#fff'},
+              ]}
+              key={i}>
+              <Cell
+                style={[styles.LineCell, {borderBottomWidth}]}
+                data={item2?.nameLine?.trim()}
+                borderStyle={{borderWidth: 0.6}}
+                textStyle={[styles.textValue]}
+              />
+              <Cell
+                data={resultUtils.getResult(item2)}
+                style={[styles.flex, {borderBottomWidth}]}
+                borderStyle={{borderWidth: 0.6}}
+                textStyle={[
+                  styles.textValue,
+                  isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                ]}
+              />
             </TableWrapper>
-            :
-            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                <Cell data={item.ServiceName.trim()} style={[styles.LineCell, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={resultUtils.getResult(item)} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                <Cell data={range} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
-                <Cell data={item.Unit} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue,]}></Cell>
+          ) : (
+            <TableWrapper
+              style={[
+                styles.tableWrapper,
+                index % 2 == 0
+                  ? {backgroundColor: '#f5f5f5'}
+                  : {backgroundColor: '#fff'},
+              ]}
+              key={i}>
+              <Cell
+                style={[styles.LineCell, {borderBottomWidth}]}
+                data={item2?.nameLine?.trim()}
+                borderStyle={{borderWidth: 0.6}}
+                textStyle={[styles.textValue]}
+              />
+              <Cell
+                data={resultUtils.getResult(item2)}
+                style={[styles.flex, {borderBottomWidth}]}
+                borderStyle={{borderWidth: 0.6}}
+                textStyle={[
+                  styles.textValue,
+                  isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                ]}
+              />
+              <Cell
+                data={range}
+                borderStyle={{borderWidth: 0.6}}
+                style={[styles.flex, {borderBottomWidth}]}
+                textStyle={[styles.textValue, {color: '#00000050'}]}
+              />
+              <Cell
+                data={item2.unit}
+                borderStyle={{borderWidth: 0.6}}
+                style={[styles.flex, {borderBottomWidth}]}
+                textStyle={[styles.textValue]}
+              />
             </TableWrapper>
-        return data;
+          );
+        })}
+      </View>
+    );
+  }
+  onSetShow = () => {
+    this.setState({isShow: !this.state.isShow});
+  };
+  renderMedical(item, index) {
+    let borderBottomWidth = 0;
+    if (
+      item.serviceMedicTestLine &&
+      item.serviceMedicTestLine.length > 0 &&
+      item.serviceMedicTestLine[0].nameLine != 0
+    ) {
+      return this.renderMedicalTestLine(item, index);
     }
-    renderData() {
-        return this.state.currentGroup.value.ListMedical.map((data, i) => (
-            this.renderMedical(data, i)
-        ))
-    }
+    if (item.serviceMedicTestLine && item.serviceMedicTestLine.length > 0) {
+      var range = resultUtils.getRangeMedicalTest(item.serviceMedicTestLine[0]);
+      var isHighlight = resultUtils.showHighlight(item.serviceMedicTestLine[0]);
 
-    render() {
-        if (!this.state.currentGroup || !this.state.hasResult) {
-            if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.SummaryResult || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
-                console.log('this.state?.medicalTestResult?.length: ', this.state?.medicalTestResult);
-                return this.state.medicalTestResult.map((e, i) => {
-                    return (
-                        <View key={i} style={{
-                            flex: 1,
-                            padding: 10
-                        }}>
-                            <View style={[styles.item, { marginTop: 0 }]}>
-                                <View style={styles.round1}>
-                                    <View style={styles.round2} />
-                                </View>
-                                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
-                                </View>
-                            </View>
-                            <View style={styles.containerDescription}>
-                                {e?.SummaryResult ?
-                                    <View>
-                                        <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
-                                        <View style={styles.containerTitle}>
-                                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
-                                            <Text>{e.SummaryResult}</Text>
-                                        </View>
-                                    </View> : null
-                                }
-
-                                <ImageEhealth images={e.Image} />
-                            </View>
-                        </View>
-                    )
-                })
-            }
-            return null;
-
-        }
-
-        const tableHead = this.state.currentGroup && this.state.currentGroup.type == 'Vi Sinh' ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'] : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BÌNH THƯỜNG', 'ĐƠN VỊ'];
-        let actions = this.state.medicalTestResult.map(item => item.type);
-        actions.push("Hủy");
-
-        return (<View style={{ flex: 1, padding: 10 }}>
-            {
-                (this.props.showTitle == true || this.props.showTitle == undefined) &&
-                <View style={[styles.item, { marginTop: 0 }]}>
-                    <View style={styles.round1}>
-                        <View style={styles.round2} />
-                    </View>
-                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
-                    </View>
-                </View>
-            }
-
-            {
-                this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
-                    this.actionSheetChooseType.show();
-                }} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ marginRight: 10 }}>{this.state.currentGroup.type}</Text>
-                    <ScaleImage source={require("@images/new/down.png")} width={10} />
-                </TouchableOpacity></View>
-            }
-            {
-                this.state.currentGroup ?
-                    <View>
-                        <Table>
-                            <Row data={tableHead} style={styles.head} textStyle={styles.text} />
-                            {this.renderData()}
-                        </Table>
-                    </View> : null
-            }
-            <ActionSheet
-                ref={o => this.actionSheetChooseType = o}
-                options={actions}
-                cancelButtonIndex={actions.length - 1}
-                destructiveButtonIndex={actions.length - 1}
-                onPress={(index) => {
-                    if (index <= this.state.medicalTestResult.length - 1) {
-                        this.setState({ currentGroup: this.state.medicalTestResult[index] });
-                    }
-                }}
+      var data =
+        this.state.valueSelect == 'microbiology' ? (
+          <TableWrapper
+            style={[
+              styles.tableWrapper,
+              index % 2 == 0
+                ? {backgroundColor: '#f5f5f5'}
+                : {backgroundColor: '#fff'},
+            ]}
+            key={index}>
+            <Cell
+              data={item.nameLine.trim()}
+              borderStyle={{borderWidth: 0}}
+              style={[styles.LineCell, {borderBottomWidth}]}
+              textStyle={[styles.textValue]}
             />
-        </View>)
+
+            <Cell
+              data={resultUtils.getResult(item.ServiceMedicTestLine[0])}
+              style={[styles.flex, {borderBottomWidth}]}
+              borderStyle={{borderWidth: 0}}
+              textStyle={[
+                styles.textValue,
+                isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+              ]}
+            />
+          </TableWrapper>
+        ) : (
+          <TableWrapper
+            style={[
+              styles.tableWrapper,
+              index % 2 == 0
+                ? {backgroundColor: '#f5f5f5'}
+                : {backgroundColor: '#fff'},
+            ]}
+            key={index}>
+            <Cell
+              data={item?.nameLine?.trim() || ''}
+              borderStyle={{borderWidth: 0}}
+              style={{borderLeftWidth: 0, flex: 1}}
+              textStyle={[styles.textValue]}
+            />
+            <Cell
+              data={resultUtils.getResult(item.ServiceMedicTestLine[0])}
+              style={[styles.flex, {borderBottomWidth}]}
+              borderStyle={{borderWidth: 0}}
+              textStyle={[
+                styles.textValue,
+                isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+              ]}
+            />
+            <Cell
+              data={irange}
+              borderStyle={{borderWidth: 0}}
+              style={[styles.flex, {borderBottomWidth}]}
+              textStyle={[styles.textValue, {color: '#000000'}]}
+            />
+            <Cell
+              data={item.ServiceMedicTestLine[0].unit}
+              style={[styles.flex, {borderBottomWidth}]}
+              borderStyle={{borderWidth: 0}}
+              textStyle={[styles.textValue]}
+            />
+          </TableWrapper>
+        );
+      return data;
     }
+    var range = resultUtils.getRangeMedicalTest(item);
+    var isHighlight = resultUtils.showHighlight(item);
+
+    var data =
+      this.state.valueSelect == 'microbiology' ? (
+        <TableWrapper
+          style={[
+            styles.tableWrapper,
+            index % 2 == 0
+              ? {backgroundColor: '#f5f5f5'}
+              : {backgroundColor: '#fff'},
+          ]}
+          key={index}>
+          <Cell
+            data={item?.nameLine?.trim()}
+            style={[styles.LineCell, {borderBottomWidth}, styles.center]}
+            borderStyle={{borderWidth: 0}}
+            textStyle={[styles.textValue, {fontWeight: 'bold'}]}
+          />
+          <Cell
+            data={resultUtils.getResult(item)}
+            borderStyle={{borderWidth: 0}}
+            style={[styles.flex, {borderBottomWidth}, styles.center]}
+            textStyle={[
+              styles.textValue,
+              isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+            ]}
+          />
+        </TableWrapper>
+      ) : (
+        <TableWrapper
+          style={[
+            styles.tableWrapper,
+            index % 2 == 0
+              ? {backgroundColor: '#f5f5f5'}
+              : {backgroundColor: '#fff'},
+          ]}
+          key={index}>
+          <Cell
+            data={item?.nameLine?.trim()}
+            style={[
+              styles.LineCell,
+              {borderBottomWidth, width: '100%', flex: 0.8},
+              styles.center,
+            ]}
+            borderStyle={{borderWidth: 0}}
+            textStyle={[styles.textValue, {fontWeight: 'bold'}]}
+          />
+          <Cell
+            data={resultUtils.getResult(item)}
+            borderStyle={{borderWidth: 0}}
+            style={[styles.flex, {borderBottomWidth}, styles.center]}
+            textStyle={[
+              styles.textValue,
+              isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+            ]}
+          />
+          <Cell
+            data={range}
+            borderStyle={{borderWidth: 0}}
+            style={[styles.flex, {borderBottomWidth}, styles.center]}
+            textStyle={[styles.textValue, {color: '#000000'}]}
+          />
+          <Cell
+            data={item.unit}
+            borderStyle={{borderWidth: 0}}
+            style={[styles.flex, {borderBottomWidth}, styles.center]}
+            textStyle={[styles.textValue]}
+          />
+        </TableWrapper>
+      );
+    return data;
+  }
+  renderAtomy(obj) {
+    return (
+      <View style={styles.result}>
+        <Text
+          style={[
+            styles.groupName,
+            {color: '#000000', fontSize: 14, marginTop: -10},
+          ]}>
+          {obj?.serviceName?.toUpperCase()}
+        </Text>
+        {obj?.result?.nameLine ? (
+          <View style={{marginTop: 5}}>
+            <Text style={styles.diagnosticLabel}>{'Mô tả'}</Text>
+            <View style={styles.containerTitle}>
+              <ScaleImage
+                source={require('@images/new/ehealth/ic_dot.png')}
+                width={5}
+                style={{marginRight: 10}}
+              />
+              <Text>{obj?.result?.nameLine}</Text>
+            </View>
+          </View>
+        ) : null}
+        {obj?.result?.result ? (
+          <View>
+            <Text style={styles.diagnosticLabel}>{'Kết quả'}</Text>
+            <View style={styles.containerTitle}>
+              <ScaleImage
+                source={require('@images/new/ehealth/ic_dot.png')}
+                width={5}
+                style={{marginRight: 10}}
+              />
+              <Text>{obj?.result?.result}</Text>
+            </View>
+          </View>
+        ) : null}
+        {obj?.result?.conclusion ? (
+          <View>
+            <Text style={styles.diagnosticLabel}>{'Kết luận'}</Text>
+            <View style={styles.containerTitle}>
+              <ScaleImage
+                source={require('@images/new/ehealth/ic_dot.png')}
+                width={5}
+                style={{marginRight: 10}}
+              />
+              <Text>{obj?.result?.conclusion}</Text>
+            </View>
+          </View>
+        ) : null}
+      </View>
+    );
+
+    //
+    // return
+    // return this.state.currentGroup.value.lines.map((data, i) => (
+    //     this.renderMedical(data, i)
+    // ))
+  }
+
+  render() {
+    console.log('this.state.currentGroup: ', this.state.currentGroup);
+    if (!this.state.currentGroup?.length) {
+      return null;
+    }
+    // if (!this.state.currentGroup || !this.state.hasResult) {
+    //     if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.anatomy || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
+
+    //         return this.state.medicalTestResult.map((e, i) => {
+    //             return (
+    //                 <View key={i} style={{
+    //                     flex: 1,
+    //                     paddingHorizontal: 10
+    //                 }}>
+    //                     <Card>
+    //                         <TouchableOpacity
+    //                             onPress={this.onSetShow}
+    //                             style={[styles.buttonShowInfo, this.state.isShow ? { backgroundColor: '#3161AD' } : {}]}>
+    //                             <ScaledImage source={require('@images/new/ehealth/ic_info.png')} height={19} style={{
+    //                                 tintColor: this.state.isShow ? "#FFF" : '#3161AD'
+    //                             }} />
+    //                             <Text style={[styles.txtTitle, this.state.isShow ? { color: '#FFF' } : {}]}>KẾT QUẢ XÉT NGHIỆM</Text>
+    //                             <ScaledImage source={require('@images/new/ehealth/ic_down2.png')} height={10} style={this.state.isShow ? {
+    //                                 tintColor: "#FFF",
+    //                             } : {
+    //                                     transform: [{ rotate: '-90deg' }],
+    //                                     tintColor: '#3161AD'
+    //                                 }} />
+    //                         </TouchableOpacity>
+    //                         {this.state.isShow ?
+    //                             <View style={{
+    //                                 padding: 10
+    //                             }}>
+    //                                 <View style={styles.containerDescription}>
+    //                                     {e?.SummaryResult ?
+    //                                         <View>
+    //                                             <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
+    //                                             <View style={styles.containerTitle}>
+    //                                                 <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
+    //                                                 <Text>{e.SummaryResult}</Text>
+    //                                             </View>
+    //                                         </View> : null
+    //                                     }
+
+    //                                     <ImageEhealth images={e.Image} />
+    //                                 </View>
+    //                             </View>
+    //                             : null
+    //                         }
+    //                     </Card>
+    //                 </View>
+    //             )
+    //         })
+    //     }
+    //     return null;
+
+    // }
+
+    let medicalTest = this.state.medicalTest;
+
+    return (
+      <View style={{flex: 1, paddingHorizontal: 10}}>
+        <Card style={styles.card}>
+          <TouchableOpacity
+            onPress={this.onSetShow}
+            style={[
+              styles.buttonShowInfo,
+              this.state.isShow ? {backgroundColor: '#3161AD'} : {},
+            ]}>
+            <ScaledImage
+              source={require('@images/new/ehealth/ic_test_results.png')}
+              height={19}
+              style={{
+                tintColor: this.state.isShow ? '#FFF' : '#3161AD',
+              }}
+            />
+            <Text
+              style={[
+                styles.txtTitle,
+                this.state.isShow ? {color: '#FFF'} : {},
+              ]}>
+              KẾT QUẢ XÉT NGHIỆM
+            </Text>
+            <ScaledImage
+              source={require('@images/new/ehealth/ic_down2.png')}
+              height={10}
+              style={
+                this.state.isShow
+                  ? {
+                      tintColor: '#FFF',
+                    }
+                  : {
+                      transform: [{rotate: '-90deg'}],
+                      tintColor: '#3161AD',
+                    }
+              }
+            />
+          </TouchableOpacity>
+          {this.state.isShow ? (
+            <View style={{}}>
+              {this.state.currentGroup && (
+                <TouchableOpacity
+                  onPress={() => {
+                    this.actionSheetChooseType.show();
+                  }}
+                  style={styles.viewType}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text style={[styles.groupName]}>
+                      {this.state.keySelect}
+                    </Text>
+                    <ScaleImage
+                      style={{tintColor: '#0291E1', marginTop: 5}}
+                      source={require('@images/new/down.png')}
+                      width={13}
+                    />
+                  </View>
+                </TouchableOpacity>
+              )}
+              {this.state.valueSelect == 'anatomy' ? (
+                this.state.currentGroup && this.state.currentGroup.length ? (
+                  this.state.currentGroup.map((obj, i) => {
+                    return <View key={i}>{this.renderAtomy(obj)}</View>;
+                  })
+                ) : null
+              ) : (
+                <View>
+                  <Table>
+                    <Row
+                      data={this.state.tableHead}
+                      style={styles.head}
+                      textStyle={styles.text}
+                    />
+                    {this.state.currentGroup && this.state.currentGroup.length
+                      ? this.state.currentGroup.map((obj, i) => {
+                          return (
+                            <View key={i}>
+                              {!obj?.isNotChild ? (
+                                <Text
+                                  style={[
+                                    styles.groupName,
+                                    {
+                                      marginLeft: 10,
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                      fontSize: 14,
+                                    },
+                                  ]}>
+                                  {obj?.serviceName?.toUpperCase()}
+                                </Text>
+                              ) : (
+                                <View />
+                              )}
+                              {obj.lines
+                                .filter(
+                                  obj =>
+                                    obj.result ||
+                                    obj.normalRange ||
+                                    obj.resultState ||
+                                    obj.conclusion ||
+                                    obj.higherIndicator ||
+                                    obj.lowerIndicator,
+                                )
+                                .map((data, i) => this.renderMedical(data, i))}
+                            </View>
+                          );
+                        })
+                      : null}
+                  </Table>
+                </View>
+              )}
+            </View>
+          ) : null}
+        </Card>
+        <ActionSheet
+          ref={o => (this.actionSheetChooseType = o)}
+          options={this.state.actions}
+          cancelButtonIndex={this.state.actions.length - 1}
+          destructiveButtonIndex={this.state.actions.length - 1}
+          onPress={index => this.onSelect(index, medicalTest)}
+        />
+      </View>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    return {
-        userApp: state.auth.userApp,
-        ehealth: state.auth.ehealth
-    };
+  return {
+    userApp: state.userApp,
+    ehealth: state.ehealth,
+  };
 }
 const styles = StyleSheet.create({
-    containerTitle: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingBottom: 10
-    },
-    containerDescription: {
-        backgroundColor: "#ffffff",
-        shadowColor: "rgba(0, 0, 0, 0.05)",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowRadius: 10,
-        shadowOpacity: 1,
-        elevation: 3,
-        borderRadius: 5,
-        padding: 10
-    },
-    containerValue: {
-        backgroundColor: '#DFF5F2',
-        borderLeftWidth: 0.6,
-        borderRightWidth: 0.6,
-        borderColor: '#111'
-    },
-    flex: { flex: 1 },
-    LineCell: { borderLeftWidth: 0.6, flex: 1, },
-    round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-    round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
-    round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
-    itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
-    itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' },
-    head: {
-        backgroundColor: '#c8e1ff',
-        borderColor: '#111',
-        borderTopWidth: 0.6,
-        borderLeftWidth: 0.6,
-    },
-    text: {
-        marginRight: 6,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 12,
-        paddingTop: 7,
-        borderRightWidth: 0.6,
-        borderRightColor: '#111',
-        width: '100%',
-        flex: 1
-    },
-    textValue: {
-        marginRight: 6,
-        padding: 4,
-        fontSize: 11
-    },
-    diagnosticLabel:
-    {
-        color: constants.colors.primary_bold,
-        fontWeight: 'bold', marginBottom: 10,
-    },
-    groupSelected: {
-        color: constants.colors.primary_bold
-    },
-    cellStyle: { backgroundColor: '#DFF5F2' },
-    tableWrappe: { flexDirection: 'row' },
-    viewCurrentGroup: { alignItems: 'flex-end', marginVertical: 10 },
-    btnCurrentGroup: { flexDirection: 'row', alignItems: 'center' },
-    txCurrent: { marginRight: 10 }
-})
+  txtTitle: {
+    flex: 1,
+    paddingHorizontal: 10,
+    color: '#3161AD',
+    fontWeight: 'bold',
+  },
+  buttonShowInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  card: {
+    borderRadius: 5,
+  },
+  container: {
+    padding: 10,
+  },
+  containerTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  containerDescription: {
+    backgroundColor: '#ffffff',
+    // shadowColor: "rgba(0, 0, 0, 0.05)",
+    // shadowOffset: {
+    //     width: 0,
+    //     height: 2
+    // },
+    // shadowRadius: 10,
+    // shadowOpacity: 1,
+    // elevation: 3,
+    borderRadius: 5,
+    padding: 10,
+  },
+  containerValue: {
+    backgroundColor: '#DFF5F2',
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: '#111',
+  },
+  flex: {flex: 1},
+  LineCell: {
+    borderLeftWidth: 0,
+    flex: 1,
+    alignItems: 'center',
+    padding: 5,
+    width: '100%',
+  },
+  center: {alignItems: 'center', justifyContent: 'center'},
+  round1: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#FFF',
+    borderColor: '#8fa1aa',
+    borderWidth: 1.5,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  round2: {width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c'},
+  round3: {width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444'},
+  itemlabel: {marginLeft: 5, flex: 1, marginTop: 2},
+  itemcontent: {color: '#0291E1'},
+  item: {marginTop: 10, flexDirection: 'row'},
+  head: {
+    backgroundColor: '#0291E120',
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    paddingVertical: 10,
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 14,
+    width: '100%',
+    flex: 1,
+    color: '#0291E1',
+    fontWeight: 'bold',
+  },
+  textValue: {
+    fontSize: 14,
+  },
+  diagnosticLabel: {
+    color: constants.colors.primary_bold,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  groupSelected: {
+    color: constants.colors.primary_bold,
+  },
+  cellStyle: {backgroundColor: '#DFF5F2'},
+  tableWrappe: {flexDirection: 'row'},
+  viewCurrentGroup: {alignItems: 'flex-end', marginVertical: 10},
+  btnCurrentGroup: {flexDirection: 'row', alignItems: 'center'},
+  txCurrent: {marginRight: 10},
+  viewType: {
+    marginVertical: 10,
+    justifyContent: 'flex-start',
+    backgroundColor: '#0291E120',
+    flex: 1,
+    padding: 10,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+  },
+  tableWrapper: {flexDirection: 'row', padding: 5},
+  groupName: {color: '#0291E1', fontSize: 14, fontWeight: 'bold', width: '90%'},
+  result: {
+    padding: 10,
+  },
+});
 export default connect(mapStateToProps)(MedicalTestResult);
