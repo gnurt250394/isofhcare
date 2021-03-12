@@ -219,6 +219,7 @@ const SocialChatScreen = ({
                   <MyMessage
                     isLast={props.index == 0}
                     message={props.item}
+                    item={item}
                     preMessage={props.index == 0 ? null : data[props.index - 1]}
                   />
                 ) : (
@@ -227,6 +228,7 @@ const SocialChatScreen = ({
                     isLast={props.index == 0}
                     message={props.item}
                     info={item.doctorInfo}
+                    item={item}
                     preMessage={props.index == 0 ? null : data[props.index - 1]}
                   />
                 )}
