@@ -36,11 +36,20 @@ import ChatScreen from '@containers/chat/ChatScreen';
 import CustomMenu from '@components/CustomMenu';
 import SocialChatScreen from '@containers/chat/SocialChatScreen';
 import {withNavigation} from 'react-navigation';
+import ImageSensitive from './ImageSensitive';
 const {width, height} = Dimensions.get('window');
 const icSupport = require('@images/new/user.png');
 
 const RenderSocial = ({navigation, item, social}) => {
+  console.log('item: ', item);
   const [textShow, setTextShow] = useState(true);
+  const [listImage, setListImage] = useState(() => {
+    let data = [];
+    for (let i = 0; i < item?.imageNo; i++) {
+      data.push(i);
+    }
+    return data;
+  });
 
   const onShowText = () => {
     setTextShow(pre => {
@@ -71,7 +80,16 @@ const RenderSocial = ({navigation, item, social}) => {
               alignItems: 'center',
               width: '100%',
             }}>
-            { item?.images?.length
+            {item?.sensitive
+              ? listImage.map((item, index) => {
+                  return (
+                    <Image
+                      source={require('@images/new/community/ic_sensitive.png')}
+                      style={styles.imgQuestion}
+                    />
+                  );
+                })
+              : item?.images?.length
               ? item.images.map((e, i) => {
                   return (
                     <TouchableOpacity key={i} onPress={showImage(i)}>
