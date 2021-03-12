@@ -172,7 +172,8 @@ class TheirMessage extends React.Component {
                 })}
               </View>
             ) : null}
-            <Text style={{textAlign: 'left', paddingHorizontal: 5}}>
+            <Text
+              style={{textAlign: 'left', paddingHorizontal: 5, fontSize: 16}}>
               {message.content}
             </Text>
 
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: '800',
     color: '#000000',
-    fontSize: 15,
+    fontSize: 16,
     paddingRight: 10,
   },
   txtDate: {

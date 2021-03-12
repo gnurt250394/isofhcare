@@ -145,6 +145,7 @@ const RenderSocial = ({navigation, item, social}) => {
 const styles = StyleSheet.create({
   txtMessage: {
     color: '#000',
+    fontSize: 17,
   },
   txtHide: {
     color: '#00000070',

@@ -121,7 +121,13 @@ class MyMessage extends React.Component {
                 })}
               </View>
             ) : null}
-            <Text style={{color: 'white', textAlign: 'right', paddingRight: 5}}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'right',
+                paddingRight: 5,
+                fontSize: 16,
+              }}>
               {message.content}
             </Text>
 
