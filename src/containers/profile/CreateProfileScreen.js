@@ -545,7 +545,7 @@ class CreateProfileScreen extends Component {
                   profileInfo: {
                     personal: {
                       avatar: this.state.imagePath,
-                      fullName: this.state.name,
+                      fullName: this.state.name.trim(),
                       dob: this.state.dob
                         ? this.state.dob.format('yyyy-MM-dd')
                         : null,
@@ -572,7 +572,7 @@ class CreateProfileScreen extends Component {
                   profileInfo: {
                     personal: {
                       avatar: this.state.imagePath,
-                      fullName: this.state.name,
+                      fullName: this.state.name.trim(),
                       dateOfBirth: this.state.dob
                         ? this.state.dob.format('yyyy-MM-dd')
                         : null,

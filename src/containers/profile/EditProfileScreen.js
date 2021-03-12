@@ -446,7 +446,7 @@ class EditProfileScreen extends Component {
                         : null,
                       gender: this.state.valueGender,
                       mobileNumber: this.state.phone,
-                      nation: this.state.nation.name,
+                      nation: this.state.nation.name.trim(),
                       nationality: this.state.nationality?.name,
                       job: this.state.job ? this.state.job?.name : '',
                       idNumber: this.state.userPassport,
@@ -477,7 +477,7 @@ class EditProfileScreen extends Component {
                   profileInfo: {
                     personal: {
                       avatar: this.state.imagePath,
-                      fullName: this.state.name,
+                      fullName: this.state.name.trim(),
                       email: this.state.email,
                       dateOfBirth: this.state.dob
                         ? this.state.dob.format('yyyy-MM-dd')
