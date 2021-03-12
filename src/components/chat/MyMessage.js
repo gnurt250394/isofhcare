@@ -57,7 +57,7 @@ class MyMessage extends React.Component {
     } catch (error) {}
   };
   render() {
-    let {message, loadingMessage} = this.props;
+    let {message, loadingMessage, item} = this.props;
     if (!message)
       message = {
         message: '',
@@ -99,9 +99,13 @@ class MyMessage extends React.Component {
                         placeholderSource={require('@images/noimage.png')}
                         style={{width: 100, height: 100}}
                         loadingStyle={{size: 'small', color: 'gray'}}
-                        source={{
-                          uri: e,
-                        }}
+                        source={
+                          item?.sensitive
+                            ? require('@images/new/community/ic_sensitive.png')
+                            : {
+                                uri: e,
+                              }
+                        }
                         defaultImage={() => {
                           return (
                             <ScaleImage
