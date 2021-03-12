@@ -519,11 +519,11 @@ class RegisterScreen extends Component {
                 <TouchableOpacity
                   disabled={!this.state.termChecked || this.state.disabled}
                   onPress={this.onRegiter}
-                  style={styles.btnSignup}>
+                  style={[styles.btnSignup,!this.state.termChecked?{backgroundColor:'#00000050'}:{}]}>
                   {this.state.disabled ? (
                     <ActivityIndicator size={'small'} color="#fff" />
                   ) : (
-                    <Text style={styles.txSignUp}>{'TIẾP TỤC'}</Text>
+                    <Text style={styles.txSignUp}>{'ĐĂNG KÝ'}</Text>
                   )}
                 </TouchableOpacity>
               </View>
