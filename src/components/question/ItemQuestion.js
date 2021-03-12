@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   txtComment: {
     paddingTop: 7.28,
     paddingBottom: 8,
+    fontSize: 17,
   },
   txtTime: {
     color: '#00000080',
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
   txtname: {
     color: '#000',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
     shadowColor: '#00000040',
     shadowOffset: {height: 1, width: 1},
     shadowOpacity: 0.3,

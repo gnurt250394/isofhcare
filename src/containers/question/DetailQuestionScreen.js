@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   txtname: {
     color: '#3161AD',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
   },
   groupName: {
     paddingLeft: 10,
