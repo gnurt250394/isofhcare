@@ -94,7 +94,7 @@ class ItemQuestion extends Component {
           numberOfLines={3}>
           {item.content}
         </Text>
-        {item?.sensitive ? (
+        {item?.sensitive && item?.imageNo ? (
           <ImageSensitive style={styles.imgQuestion} />
         ) : item?.images?.length ? (
           <Image source={{uri: item.images[0]}} style={styles.imgQuestion} />
