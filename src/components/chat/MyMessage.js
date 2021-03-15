@@ -58,6 +58,7 @@ class MyMessage extends React.Component {
   };
   render() {
     let {message, loadingMessage, item} = this.props;
+    console.log('item: ', item);
     if (!message)
       message = {
         message: '',
@@ -96,7 +97,7 @@ class MyMessage extends React.Component {
                       onPress={this.photoViewer(message.images, i)}>
                       <ImageLoad
                         resizeMode="cover"
-                        placeholderSource={require('@images/noimage.png')}
+                        placeholderSource={require('@images/new/community/ic_sensitive.png')}
                         style={{width: 100, height: 100}}
                         loadingStyle={{size: 'small', color: 'gray'}}
                         source={
