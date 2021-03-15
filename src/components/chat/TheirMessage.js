@@ -38,12 +38,13 @@ class TheirMessage extends React.Component {
         : false,
     };
   }
-  photoViewer = (urls, index) => () => {
+  photoViewer = (urls, index, item) => () => {
     try {
       if (!urls) {
         snackbar.show(constants.msg.message.none_image);
         return;
       }
+      if (item?.sensitive) return;
       this.props.navigation.navigate('photoViewer', {
         index,
         urls: urls.map(e => ({uri: e})),
@@ -144,7 +145,7 @@ class TheirMessage extends React.Component {
                   return (
                     <TouchableOpacity
                       key={i}
-                      onPress={this.photoViewer(message.images, i)}>
+                      onPress={this.photoViewer(message.images, i, item)}>
                       <ImageLoad
                         resizeMode="cover"
                         placeholderSource={require('@images/new/community/ic_sensitive.png')}

@@ -45,7 +45,9 @@ const RenderSocial = ({navigation, item, social}) => {
   const [textShow, setTextShow] = useState(true);
   const [listImage, setListImage] = useState(() => {
     let data = [];
-    for (let i = 0; i < item?.imageNo; i++) {
+    let length = item?.imageNo || item?.images.length;
+
+    for (let i = 0; i < length; i++) {
       data.push(i);
     }
     return data;
@@ -84,6 +86,7 @@ const RenderSocial = ({navigation, item, social}) => {
               ? listImage.map((item, index) => {
                   return (
                     <Image
+                      key={index}
                       source={require('@images/new/community/ic_sensitive.png')}
                       style={styles.imgQuestion}
                     />
