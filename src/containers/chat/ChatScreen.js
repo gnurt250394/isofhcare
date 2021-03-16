@@ -336,7 +336,7 @@ const ChatScreen = ({
     });
     setListImage([]);
 
-    txtMessage.current.clear();
+    // txtMessage.current.clear();
     // Keyboard.dismiss();
   };
   const onScrollToEnd = () => {
@@ -575,55 +575,22 @@ const ChatScreen = ({
         renderComposer={props => {
           if (item.status == 'REPLY')
             return (
-              <View style={styles.containerSendMes}>
+              <View  style={[
+                styles.containerSendMes,
+                {
+                  height:
+                    props.composerHeight < 50 ? 50 : props.composerHeight,
+                },
+              ]}>
                 <View
-                  style={[
-                    styles.containerInput,
-                    Platform.OS == 'ios' ? {padding: 10, paddingTop: 7} : {},
-                  ]}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flex: 1,
-                    }}>
-                    {listImage.length
-                      ? listImage.map((item, index) => (
-                          <View key={index} style={styles.groupImagePicker}>
-                            <View style={styles.groupImage}>
-                              <Image
-                                source={{uri: item.url}}
-                                resizeMode="cover"
-                                style={styles.imagePicker}
-                              />
-                              {item.error ? (
-                                <View style={styles.imageError}>
-                                  <ScaleImage
-                                    source={require('@images/ic_warning.png')}
-                                    width={40}
-                                  />
-                                </View>
-                              ) : item.loading ? (
-                                <View style={styles.imageLoading}>
-                                  <ScaleImage
-                                    source={require('@images/loading.gif')}
-                                    width={20}
-                                  />
-                                </View>
-                              ) : null}
-                            </View>
-                            <TouchableOpacity
-                              onPress={removeImage(index)}
-                              style={styles.buttonClose}>
-                              <ScaleImage
-                                source={require('@images/new/ic_close.png')}
-                                width={15}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        ))
-                      : null}
-                  </View>
-                  <TextInput
+                 style={[
+                  styles.containerInput,
+                  {
+                    height:
+                      props.composerHeight < 50 ? 50 : props.composerHeight,
+                  },
+                ]}>
+                  {/* <TextInput
                     ref={txtMessage}
                     style={styles.inputMes}
                     placeholderTextColor="#cacaca"
@@ -636,6 +603,18 @@ const ChatScreen = ({
                     onFocus={() => {
                       onScrollToEnd();
                     }}
+                  /> */}
+                   <Composer
+                    {...props}
+                    ref={txtMessage}
+                    textInputStyle={styles.inputMes}
+                    placeholderTextColor="#cacaca"
+                    underlineColorAndroid="transparent"
+                    placeholder={'Nhập nội dung cần gửi'}
+                    onTextChanged={onChangeText}
+                    multiline={true}
+                    autoCorrect={false}
+                    text={state.newMessage}
                   />
                 </View>
               </View>
@@ -662,12 +641,57 @@ const ChatScreen = ({
           _id: item.userInfo.id,
         }}
         renderChatFooter={() => (
-          <View style={styles.containerFooter}>
-            <ScaleImage
-              source={require('@images/new/ic_thanks.png')}
-              height={20}
-            />
-            <Text style={{paddingLeft: 5}}>{item?.thankNo}</Text>
+          <View style={{height: listImage.length ? 130 : undefined}}>
+            <View style={styles.containerFooter}>
+              <ScaleImage
+                source={require('@images/new/ic_thanks.png')}
+                height={20}
+              />
+              <Text style={{paddingLeft: 5}}>{item?.thankNo}</Text>
+            </View>
+            {listImage.length ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flex: 1,
+                  height: 100,
+                }}>
+                {listImage.map((item, index) => (
+                  <View key={index} style={styles.groupImagePicker}>
+                    <View style={styles.groupImage}>
+                      <Image
+                        source={{uri: item.url}}
+                        resizeMode="cover"
+                        style={styles.imagePicker}
+                      />
+                      {item.error ? (
+                        <View style={styles.imageError}>
+                          <ScaleImage
+                            source={require('@images/ic_warning.png')}
+                            width={40}
+                          />
+                        </View>
+                      ) : item.loading ? (
+                        <View style={styles.imageLoading}>
+                          <ScaleImage
+                            source={require('@images/loading.gif')}
+                            width={20}
+                          />
+                        </View>
+                      ) : null}
+                    </View>
+                    <TouchableOpacity
+                      onPress={removeImage(index)}
+                      style={styles.buttonClose}>
+                      <ScaleImage
+                        source={require('@images/new/ic_close.png')}
+                        width={15}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            ) : null}
           </View>
         )}
       />
@@ -684,7 +708,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    paddingBottom:15
+    paddingBottom: 15,
   },
   txtLoading: {
     fontWeight: 'bold',
