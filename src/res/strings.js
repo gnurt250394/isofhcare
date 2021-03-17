@@ -167,12 +167,12 @@ module.exports = {
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?',
   },
   momo_config: {
-    enviroment: '0', //"0": SANBOX , "1": PRODUCTION
+    enviroment: '1', //"0": SANBOX , "1": PRODUCTION
     action: 'gettoken', // DO NOT EDIT
     partner: 'merchant', // DO NOT EDIT
-    app_scheme: 'momocomu20200526', // get from info account in web momo
+    app_scheme: 'momohpoc20210312', // get from info account in web momo
     partner_name: 'Bệnh viện Phổi TW',
-    partner_code: 'MOMOCOMU20200526',
+    partner_code: 'MOMOHPOC20210312',
     partner_label: 'Người nhận',
     order_label: 'Mã khám bệnh',
   },
