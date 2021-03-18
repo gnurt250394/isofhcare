@@ -323,9 +323,7 @@ class DetailHistoryBookingScreen extends Component {
     return (total > 0 ? total : 0).formatPrice();
   };
   openLinkHotline = () => {
-    if (this.state.booking.hospital.hotLine) {
-      Linking.openURL(`tel:${this.state.booking.hospital.hotLine}`);
-    }
+      Linking.openURL(`tel:1900638367`);
   };
   onCallVideo = () => {
     CallManager.startCall(this.state.booking, true);
@@ -712,9 +710,7 @@ class DetailHistoryBookingScreen extends Component {
                 <Text style={styles.itemText}>Hỗ trợ</Text>
                 <View style={{alignItems: 'flex-end'}}>
                   {/* <Text style={{ fontWeight: 'bold', color: '#00CBA7' }}>1900299983</Text> */}
-                  {this.state.booking.hospital.hotLine ? (
-                    <Text>{this.state.booking.hospital.hotLine}</Text>
-                  ) : null}
+                    <Text>1900638367</Text>
                 </View>
               </TouchableOpacity>
 
