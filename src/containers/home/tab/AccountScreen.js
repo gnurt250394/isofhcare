@@ -90,9 +90,9 @@ class AccountScreen extends Component {
 
 
         });
-      this.onFocus = this.props.navigation.addListener('didFocus', () => {
       firebaseUtils.sendEvent('Personal_screen')
-      this.getDetailUser()
+      this.onFocus = this.props.navigation.addListener('didFocus', () => {
+        this.getDetailUser();
       });
     }
     DeviceEventEmitter.addListener(
@@ -103,7 +103,7 @@ class AccountScreen extends Component {
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
-      this.onFocus.remove()
+      this.onFocus.remove();
     }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   }
@@ -248,8 +248,22 @@ class AccountScreen extends Component {
     );
   }
   openLinkHotline = () => {
-    Linking.openURL(
-      'tel:1900299983'
+    Linking.openURL('tel:1900638367');
+  };
+  logout = () => {
+    this.setState(
+      {
+        showSetting: false,
+      },
+      () => {
+        dataCacheProvider.save(
+          this.props.userApp.currentUser.id,
+          constants.key.storage.LASTEST_PROFILE,
+          null,
+        );
+        this.props.dispatch(redux.userLogout());
+        if (this.props.onLogout) this.props.onLogout();
+      },
     );
   }
   logout = () => {
@@ -554,8 +568,13 @@ class AccountScreen extends Component {
               height={24}
             />
             <Text style={styles.itemText}>Hỗ trợ</Text>
-            <Text style={{ flex: 1, textAlign: "right", paddingRight: 10 }}>1900299983</Text>
-            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+            <Text style={{flex: 1, textAlign: 'right', paddingRight: 10}}>
+              1900638367
+            </Text>
+            <ScaledImage
+              height={10}
+              source={require('@images/new/booking/ic_next.png')}
+            />
           </TouchableOpacity>
           <View style={[styles.borderMenu, { width: '95%' }]}></View>
           <TouchableOpacity
