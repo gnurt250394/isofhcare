@@ -78,9 +78,9 @@ class AccountScreen extends Component {
         .catch(error => {
           this.setState({isSupportSensor: false});
         });
-        this.onFocus = this.props.navigation.addListener('didFocus', () => {
-          this.getDetailUser()
-          });
+      this.onFocus = this.props.navigation.addListener('didFocus', () => {
+        this.getDetailUser();
+      });
     }
     DeviceEventEmitter.addListener(
       'hardwareBackPress',
@@ -89,7 +89,7 @@ class AccountScreen extends Component {
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
-      this.onFocus.remove()
+      this.onFocus.remove();
     }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
   };
@@ -232,7 +232,7 @@ class AccountScreen extends Component {
     Linking.openURL(link);
   };
   openLinkHotline = () => {
-    Linking.openURL('tel:1900299983');
+    Linking.openURL('tel:1900638367');
   };
   logout = () => {
     this.setState(
@@ -582,7 +582,7 @@ class AccountScreen extends Component {
             />
             <Text style={styles.itemText}>Hỗ trợ</Text>
             <Text style={{flex: 1, textAlign: 'right', paddingRight: 10}}>
-              1900299983
+              1900638367
             </Text>
             <ScaledImage
               height={10}
