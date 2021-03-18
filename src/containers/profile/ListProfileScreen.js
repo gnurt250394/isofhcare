@@ -400,7 +400,7 @@ class ListProfileScreen extends Component {
                         {value: 'Xoá thành viên', id: 3, color: '#ff0000'},
                       ]
                     : [
-                        {value: 'Cài đặt chia sẻ', id: 1},
+                        // {value: 'Cài đặt chia sẻ', id: 1},
                         {value: 'Sửa thông tin', id: 2},
                         {value: 'Sửa mối quan hệ', id: 4},
                         {value: 'Xoá thành viên', id: 3, color: '#ff0000'},

@@ -32,9 +32,9 @@ class ProfileScreen extends Component {
     };
   }
   componentDidMount() {
-    // this.onFocus = this.props.navigation.addListener('didFocus', payload => {
-    this.onGetData();
-    // });
+    this.onFocus = this.props.navigation.addListener('didFocus', payload => {
+      this.onGetData();
+    });
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
