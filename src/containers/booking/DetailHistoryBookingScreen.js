@@ -323,7 +323,9 @@ class DetailHistoryBookingScreen extends Component {
     return (total > 0 ? total : 0).formatPrice();
   };
   openLinkHotline = () => {
-    Linking.openURL('tel:1900299983');
+    if (this.state.booking.hospital.hotLine) {
+      Linking.openURL(`tel:${this.state.booking.hospital.hotLine}`);
+    }
   };
   onCallVideo = () => {
     CallManager.startCall(this.state.booking, true);
