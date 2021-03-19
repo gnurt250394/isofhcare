@@ -189,7 +189,7 @@ class LoginScreen extends Component {
     this.setState({[state]: value});
   };
   openLinkHotline = () => {
-    Linking.openURL('tel:1900299983');
+    Linking.openURL('tel:1900638367');
   };
   goHome = () => {
     this.props.navigation.goBack();

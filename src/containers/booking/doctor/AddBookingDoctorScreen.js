@@ -76,22 +76,16 @@ class AddBookingDoctorScreen extends Component {
   }
   componentDidMount() {
     // AppState.addEventListener('change', this._handleAppStateChange);
-    profileProvider.getListProfile().then(s => {
-      switch (s.code) {
-        case 0:
-          if (s.data && s.data && s.data.length != 0) {
-            let data = s.data;
-            let profile = s.find(item => item.defaultProfile);
-            if (profile) {
-              this.setState({profile: profile});
-              dataCacheProvider.save(
-                this.props.userApp.currentUser.id,
-                constants.key.storage.LASTEST_PROFILE,
-                profile,
-              );
-            }
-          }
-          break;
+    profileProvider.getDefaultProfile().then(s => {
+      if (s) {
+        if (s) {
+          this.setState({profile: s});
+          dataCacheProvider.save(
+            this.props.userApp.currentUser.id,
+            constants.key.storage.LASTEST_PROFILE,
+            s,
+          );
+        }
       }
     });
   }
