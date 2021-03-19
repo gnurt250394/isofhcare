@@ -56,4 +56,18 @@ export default {
       );
     });
   },
+  getConfigMomo(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        client.requestPayment +
+          constants.api.payment.get_payment_momo.replace('hospitalId', id),
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          if (e) reject(e);
+        },
+      );
+    });
+  },
 };

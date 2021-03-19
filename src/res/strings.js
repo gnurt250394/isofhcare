@@ -1225,6 +1225,7 @@ module.exports = {
     payment: {
       get_list_card: 'payment/v1/alepay/profiles',
       create_new_card: 'payment/v1/alepay/request-profile',
+      get_payment_momo: 'payment/v1/hospitals/hospitalId/payment/momo',
     },
   },
 };
