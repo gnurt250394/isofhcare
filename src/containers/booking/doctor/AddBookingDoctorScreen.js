@@ -76,34 +76,24 @@ class AddBookingDoctorScreen extends Component {
   }
   componentDidMount() {
     // AppState.addEventListener('change', this._handleAppStateChange);
-    dataCacheProvider.read(
-      this.props.userApp.currentUser.id,
-      constants.key.storage.LASTEST_PROFILE,
-      (s, e) => {
-        if (s) {
-          this.setState({profile: s});
-        } else {
-          profileProvider.getListProfile().then(s => {
-            switch (s.code) {
-              case 0:
-                if (s.data && s.data && s.data.length != 0) {
-                  let data = s.data;
-                  let profile = s.find(item => item.defaultProfile);
-                  if (profile) {
-                    this.setState({profile: profile});
-                    dataCacheProvider.save(
-                      this.props.userApp.currentUser.id,
-                      constants.key.storage.LASTEST_PROFILE,
-                      profile,
-                    );
-                  }
-                }
-                break;
+    profileProvider.getListProfile().then(s => {
+      switch (s.code) {
+        case 0:
+          if (s.data && s.data && s.data.length != 0) {
+            let data = s.data;
+            let profile = s.find(item => item.defaultProfile);
+            if (profile) {
+              this.setState({profile: profile});
+              dataCacheProvider.save(
+                this.props.userApp.currentUser.id,
+                constants.key.storage.LASTEST_PROFILE,
+                profile,
+              );
             }
-          });
-        }
-      },
-    );
+          }
+          break;
+      }
+    });
   }
   selectImage() {
     if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -327,7 +317,7 @@ class AddBookingDoctorScreen extends Component {
                 idUser,
                 img,
                 detailSchedule.blockTime,
-                profile?.userProfileId
+                profile?.userProfileId,
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {
@@ -684,9 +674,7 @@ class AddBookingDoctorScreen extends Component {
               onPress={this.onSelectProfile}
               button={true}
               source={require('@images/new/booking/ic_people.png')}
-              name={
-                this.state.profile?.profileInfo?.personal?.fullName
-              }
+              name={this.state.profile?.profileInfo?.personal?.fullName}
               subName={constants.booking.select_profile}
               label={'Người tới khám'}
             />
