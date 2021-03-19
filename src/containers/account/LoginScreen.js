@@ -448,7 +448,7 @@ class LoginScreen extends Component {
                   source={require('@images/new/account/ic_phone.png')}
                 />
                 <Text style={styles.txCall}>
-                  Hotline: <Text style={styles.txNumber}>1900299983</Text>
+                  Hotline: <Text style={styles.txNumber}>1900638367</Text>
                 </Text>
               </TouchableOpacity>
             </View>
