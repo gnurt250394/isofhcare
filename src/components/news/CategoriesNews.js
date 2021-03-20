@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     },
     btnCancel: {
         padding: 5,
-        margin: 10
+        margin: 10,
+        alignSelf:'flex-end'
     },
     txWrite: {
         color: '#fff',
