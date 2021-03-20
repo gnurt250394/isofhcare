@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import newsProvider from '@data-access/news-provider';
@@ -18,7 +19,7 @@ import redux from '@redux-store';
 import {connect} from 'react-redux';
 import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
-import FastImage from 'react-native-fast-image'
+import FastImage from 'react-native-fast-image';
 const ListNews = ({navigation, props}) => {
   const [listNews, setListNews] = useState([]);
   const [page, setPage] = useState(0);
@@ -27,20 +28,31 @@ const ListNews = ({navigation, props}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [idCategories, setIdCategories] = useState(null);
+  const [keyword, setKeyword] = useState('');
+  const [type, setType] = useState('');
   const dispatch = useDispatch();
-
+  const timeout = useRef();
   useEffect(() => {
-    getList();
-  }, [page, idCategories]);
+    timeout.current = setTimeout(() => {
+      getList();
+    }, 500);
+    return () => {
+      if (timeout.current) clearTimeout(timeout.current);
+    };
+  }, [page, idCategories, keyword]);
 
   const onRefresh = () => {
     setPage(0);
+    setKeyword('');
+    setType('');
     // getList(page, size)
   };
   const getList = async () => {
     try {
       let res;
-      if (!idCategories) {
+      if (keyword.trim()) {
+        res = await newsProvider.searchNews(keyword, page, size);
+      } else if (!idCategories) {
         res = await newsProvider.listNews(page, size);
       } else {
         res = await newsProvider.searchNewsByTopic(idCategories, page, size);
@@ -149,53 +161,95 @@ const ListNews = ({navigation, props}) => {
     );
   };
 
+  const onSearch = async () => {
+    if (keyword.trim()) getList();
+  };
+  const onChangeText = value => {
+    setPage(0);
+    setKeyword(value);
+  };
   return (
     <ActivityPanel
       title="Cẩm nang y tế"
+      transparent={true}
       isLoading={loading}
       style={styles.container}>
-      <View style={styles.viewHeader}>
-        <TouchableOpacity
-          disabled={isNew}
-          onPress={onSelectNew}
-          style={[
-            styles.btnItem,
-            isNew ? styles.btnSelect : styles.btnUnselect,
-          ]}>
-          <Text
-            style={[
-              styles.txItem,
-              isNew ? styles.txSelect : styles.txUnSelect,
-            ]}>
-            Mới nhất
-          </Text>
-        </TouchableOpacity>
-        <ListCategories
-          idCategories={idCategories}
-          isNew={isNew}
-          onSelectCategories={item => onSelectCategories(item)}
+      <View style={styles.groupSearch}>
+        <TextInput
+          value={keyword}
+          onChangeText={onChangeText}
+          onSubmitEditing={onSearch}
+          returnKeyType="search"
+          style={styles.inputSearch}
+          placeholder={'Tìm bài viết'}
+          underlineColorAndroid={'transparent'}
         />
-        <TouchableOpacity onPress={onSelectTopics} style={styles.btnTopics}>
-          <ScaledImage
-            style={styles.imagesDown}
-            height={20}
-            source={require('@images/new/news/ic_dots.png')}
-          />
-        </TouchableOpacity>
+        {keyword.trim() ? (
+          <TouchableOpacity
+            style={[
+              styles.buttonSearch,
+              {borderLeftColor: '#BBB', borderLeftWidth: 0.7},
+            ]}
+            onPress={onRefresh}>
+            <ScaledImage source={require('@images/ic_close.png')} height={16} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={[styles.buttonSearch]} onPress={onSearch}>
+            <ScaledImage
+              source={require('@images/new/hospital/ic_search.png')}
+              height={16}
+            />
+          </TouchableOpacity>
+        )}
       </View>
+      <View
+        style={{
+          backgroundColor: '#FFF',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        }}>
+        <View style={styles.viewHeader}>
+          <TouchableOpacity
+            disabled={isNew}
+            onPress={onSelectNew}
+            style={[
+              styles.btnItem,
+              isNew ? styles.btnSelect : styles.btnUnselect,
+            ]}>
+            <Text
+              style={[
+                styles.txItem,
+                isNew ? styles.txSelect : styles.txUnSelect,
+              ]}>
+              Mới nhất
+            </Text>
+          </TouchableOpacity>
+          <ListCategories
+            idCategories={idCategories}
+            isNew={isNew}
+            onSelectCategories={item => onSelectCategories(item)}
+          />
+          <TouchableOpacity onPress={onSelectTopics} style={styles.btnTopics}>
+            <ScaledImage
+              style={styles.imagesDown}
+              height={20}
+              source={require('@images/new/news/ic_dots.png')}
+            />
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        data={listNews}
-        onRefresh={onRefresh}
-        refreshing={false}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.7}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={footerComponent}
-        extraData={listNews}
-      />
+        <FlatList
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          data={listNews}
+          onRefresh={onRefresh}
+          refreshing={false}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.7}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={footerComponent}
+        />
+      </View>
       <Modal
         isVisible={isVisible}
         onBackdropPress={onBackdropPress}
@@ -216,6 +270,28 @@ const ListNews = ({navigation, props}) => {
   );
 };
 const styles = StyleSheet.create({
+  buttonSearch: {
+    marginRight: -2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    height: '100%',
+  },
+  groupSearch: {
+    backgroundColor: '#FFF',
+    margin: 10,
+    borderRadius: 7,
+    flexDirection: 'row',
+    height: 41,
+    alignItems: 'center',
+  },
+  inputSearch: {
+    flex: 1,
+    height: 41,
+    fontWeight: 'bold',
+    paddingLeft: 9,
+    color: '#000',
+  },
   container: {
     flex: 1,
   },

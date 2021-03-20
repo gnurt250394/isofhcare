@@ -29,6 +29,7 @@ const DetailNewsScreen = ({navigation}) => {
 
   const [isLoading, setLoading] = useState(false);
   const [detail, setDetail] = useState(item);
+  console.log('detail: ', detail);
 
   const [content, setContent] = useState('');
   const [idCategories, setIdCategories] = useState(detail?.topic?.topicId);
@@ -88,8 +89,9 @@ const DetailNewsScreen = ({navigation}) => {
   };
 
   const getTime = () => {
-    if (detail?.createdDate) {
-      let time = detail?.createdDate?.substring(0, 10);
+    console.log('detail?.createdDate: ', detail?.createdDate);
+    if (detail?.createdAt) {
+      let time = detail?.createdAt?.substring(0, 10);
       return new Date(time).format('dd/MM/yyyy');
     } else {
       return '';
@@ -191,25 +193,38 @@ const DetailNewsScreen = ({navigation}) => {
         function(error) {},
       );
   };
+  const showImage = (urls, index) => () => {
+    navigation.navigate('photoViewer', {
+      index,
+      urls,
+    });
+  };
   return (
     <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">
       <ScrollView style={styles.container}>
         <View style={styles.flex}>
           <View style={styles.containerTitle}>
             <Text style={styles.txtTitle}>{detail?.title?.rawText}</Text>
-            <Text
-              style={{
-                color: '#00000070',
-                paddingBottom: 10,
-              }}>
-              {getTime()}
-            </Text>
-            <FastImage
-              source={{
-                uri: detail?.images?.[0]?.downloadUri?.absoluteUrl() || '',
-              }}
-              style={styles.imageNews}
-            />
+            <View style={styles.containerTime}>
+              <Text style={[styles.txtTime, {paddingRight: 20}]}>
+                {getTime()}
+              </Text>
+              <Text style={styles.txtTime}>
+                {detail?.estimatedReadingTime} phút đọc
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={showImage(
+                [{uri: detail?.images?.[0]?.downloadUri?.absoluteUrl()}],
+                0,
+              )}>
+              <FastImage
+                source={{
+                  uri: detail?.images?.[0]?.downloadUri?.absoluteUrl() || '',
+                }}
+                style={styles.imageNews}
+              />
+            </TouchableOpacity>
             {content ? (
               <HTML
                 html={'<div style="color: black">' + content + '</div>'}
@@ -223,15 +238,25 @@ const DetailNewsScreen = ({navigation}) => {
                     passProps,
                   ) => {
                     return (
-                      <FastImage
-                        resizeMode={'contain'}
-                        source={{uri: htmlAttribs.src}}
-                        style={{
-                          width: width - 30,
-                          height: parseInt(htmlAttribs.height) || 150,
-                          resizeMode: 'contain',
-                        }}
-                      />
+                      <TouchableOpacity
+                        onPress={showImage(
+                          [
+                            {
+                              uri: htmlAttribs.src,
+                            },
+                          ],
+                          0,
+                        )}>
+                        <FastImage
+                          resizeMode={'contain'}
+                          source={{uri: htmlAttribs.src}}
+                          style={{
+                            width: width - 30,
+                            height: parseInt(htmlAttribs.height) || 150,
+                            resizeMode: 'contain',
+                          }}
+                        />
+                      </TouchableOpacity>
                     );
                   },
                   table: (x, c) => <View style={tableColumnStyle}>{c}</View>,
@@ -323,6 +348,14 @@ const DetailNewsScreen = ({navigation}) => {
   );
 };
 const styles = StyleSheet.create({
+  containerTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txtTime: {
+    color: '#00000070',
+    paddingBottom: 10,
+  },
   txtNameConsultation: {
     fontWeight: 'bold',
     fontSize: 16,
