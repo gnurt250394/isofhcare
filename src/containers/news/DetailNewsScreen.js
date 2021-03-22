@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 20,
+    flexWrap: 'wrap',
   },
   viewItem: {
     flexDirection: 'row',
@@ -397,6 +398,7 @@ const styles = StyleSheet.create({
   txTime: {
     marginLeft: 5,
     color: '#2F3035',
+    fontSize: 13,
   },
   containerTime: {
     flexDirection: 'row',
