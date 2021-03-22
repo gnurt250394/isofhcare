@@ -153,14 +153,16 @@ const DetailNewsScreen = ({navigation}) => {
 
     return (
       <TouchableOpacity
-        onPress={() => onShowDetails(item, index)}
+        onPress={goToDetailService(item)}
         style={styles.viewItem}>
         <FastImage
           style={{resizeMode: 'contain', height: 70, width: 133}}
           source={{uri: `${urlImage}`}}
         />
         <View style={styles.viewTitle}>
-          <Text style={styles.txTitle}>{item?.shortTitle?.rawText}</Text>
+          <Text style={styles.txTitle} numberOfLines={2}>
+            {item?.shortTitle?.rawText}
+          </Text>
           <View style={styles.readingTime}>
             <View style={styles.viewTime}>
               <ScaledImage
