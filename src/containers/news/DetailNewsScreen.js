@@ -89,7 +89,6 @@ const DetailNewsScreen = ({navigation}) => {
   };
 
   const getTime = () => {
-    console.log('detail?.createdDate: ', detail?.createdDate);
     if (detail?.createdAt) {
       let time = detail?.createdAt?.substring(0, 10);
       return new Date(time).format('dd/MM/yyyy');
@@ -146,25 +145,45 @@ const DetailNewsScreen = ({navigation}) => {
     borderColor: 'orange',
   };
   const renderItem = ({item, index}) => {
+    let date = item?.alias?.createdAt
+      ? new Date(item?.alias?.createdAt.replace('+0000', ''))
+      : '';
+
+    let urlImage = item?.images[0].downloadUri;
+
     return (
-      <TouchableOpacity onPress={goToDetailService(item)} style={{flex: 1}}>
-        <View style={styles.cardView}>
-          <FastImage
-            source={{uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || ''}}
-            style={{
-              borderRadius: 6,
-              resizeMode: 'cover',
-              width: 'auto',
-              height: 134,
-            }}
-          />
+      <TouchableOpacity
+        onPress={() => onShowDetails(item, index)}
+        style={styles.viewItem}>
+        <FastImage
+          style={{resizeMode: 'contain', height: 70, width: 133}}
+          source={{uri: `${urlImage}`}}
+        />
+        <View style={styles.viewTitle}>
+          <Text style={styles.txTitle}>{item?.shortTitle?.rawText}</Text>
+          <View style={styles.readingTime}>
+            <View style={styles.viewTime}>
+              <ScaledImage
+                source={require('@images/new/news/ic_time.png')}
+                height={15}
+              />
+              <Text style={styles.txTime}>
+                {item?.createdAt
+                  ? moment(item?.createdAt)?.format('DD/MM/YYYY')
+                  : ''}
+              </Text>
+            </View>
+            <View style={styles.viewTime}>
+              <ScaledImage
+                source={require('@images/new/news/ic_time_reading.png')}
+                height={15}
+              />
+              <Text style={styles.txTime}>
+                {item?.estimatedReadingTime || 1} phút đọc
+              </Text>
+            </View>
+          </View>
         </View>
-        <Text
-          numberOfLines={2}
-          ellipsizeMode="tail"
-          style={styles.txContensHospital}>
-          {item?.shortTitle?.rawText}
-        </Text>
       </TouchableOpacity>
     );
   };
@@ -329,14 +348,14 @@ const DetailNewsScreen = ({navigation}) => {
           {data.length ? (
             <View style={{backgroundColor: '#fff', marginTop: 10}}>
               <View style={styles.viewAds}>
-                <Text style={styles.txAds}>Bài viết liên quan</Text>
+                <Text style={styles.txAds}>Cùng chuyên mục</Text>
               </View>
               <FlatList
                 contentContainerStyle={styles.listAds}
-                horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => `${item.newsId || index}`}
                 data={data}
+                style={{paddingBottom: 30}}
                 ListFooterComponent={<View style={styles.viewFooter} />}
                 renderItem={renderItem}
               />
@@ -348,6 +367,37 @@ const DetailNewsScreen = ({navigation}) => {
   );
 };
 const styles = StyleSheet.create({
+  readingTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+  },
+  viewItem: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  txTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    width: '95%',
+    textAlign: 'left',
+  },
+  viewTitle: {
+    paddingHorizontal: 10,
+    width: '70%',
+    justifyContent: 'space-between',
+  },
+  viewTime: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txTime: {
+    marginLeft: 5,
+    color: '#2F3035',
+  },
   containerTime: {
     flexDirection: 'row',
     alignItems: 'center',
