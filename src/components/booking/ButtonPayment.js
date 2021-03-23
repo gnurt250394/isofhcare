@@ -86,22 +86,18 @@ const ButtonPayment = ({
 
   // TODO: Action to Request Payment MoMo App
   const requestPaymentMomo = async () => {
-    if (!momoPartnerCode) {
-      snackbar.show('Vui lòng cài đặt đầy đủ thông tin', 'danger');
-      return;
-    }
     let jsonData = {};
     jsonData.enviroment = constants.momo_config.enviroment; //SANBOX OR PRODUCTION
     jsonData.action = constants.momo_config.action;
     jsonData.partner = constants.momo_config.partner;
-    jsonData.merchantcode = momoPartnerCode; //edit your merchantcode here
+    jsonData.merchantcode = momoPartnerCode|| constants.momo_config.partner_code; //edit your merchantcode here
     jsonData.merchantname = booking?.hospital?.name; //edit your merchantname here
     jsonData.merchantnamelabel = constants.momo_config.partner_label;
     jsonData.description = `Thanh toán cho mã đặt khám ${booking?.reference}`;
     jsonData.amount = parseInt(price) || 0; //order total amount
     jsonData.orderId = booking?.reference;
     jsonData.orderLabel = constants.momo_config.order_label;
-    jsonData.appScheme = momoPartnerCode.toLowerCase(); // iOS App Only , match with Schemes Indentify from your  Info.plist > key URL types > URL Schemes
+    jsonData.appScheme = momoPartnerCode?.toLowerCase()|| constants.momo_config.app_scheme; // iOS App Only , match with Schemes Indentify from your  Info.plist > key URL types > URL Schemes
     console.log('data_request_payment ' + JSON.stringify(jsonData));
     if (Platform.OS === 'android') {
       let dataPayment = await RNMomosdk.requestPayment(jsonData);
