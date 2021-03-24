@@ -27,6 +27,7 @@ import ButtonPayment from '@components/booking/ButtonPayment';
 import ButtonSelectPaymentMethod from '@components/booking/ButtonSelectPaymentMethod';
 import ModalUpdateProfile from './ModalUpdateProfile';
 import paymentProvider from '@data-access/payment-provider';
+import NetInfo from '@react-native-community/netinfo';
 
 var PayooModule = NativeModules.PayooModule;
 
@@ -34,7 +35,7 @@ class ConfirmBookingScreen extends Component {
   constructor(props) {
     super(props);
     let booking = this.props.navigation.state.params.booking;
-    console.log('booking: ', booking);
+
     let paymentMethod = this.props.navigation.state.params.paymentMethod;
     let disabled = this.props.navigation.state.params.disabled;
     let voucher = this.props.navigation.state.params.voucher;
@@ -61,11 +62,9 @@ class ConfirmBookingScreen extends Component {
       let res = await paymentProvider.getListPayment(
         this.state.booking.hospital?.id,
       );
-      console.log('res: ', res);
+
       this.setState({infoPayment: res});
-    } catch (error) {
-      console.log('error: ', error);
-    }
+    } catch (error) {}
   };
   componentDidMount() {
     this.getListPayment();
@@ -480,8 +479,10 @@ class ConfirmBookingScreen extends Component {
   };
   createBooking = ({phonenumber, momoToken, cardNumber}) => {
     const {booking, disabled, paymentMethod} = this.state;
-    console.log('paymentMethod: ', paymentMethod);
 
+    function isNetworkError(err) {
+      return !!err.isAxiosError && !err.response;
+    }
     connectionUtils
       .isConnected()
       .then(s => {
@@ -519,7 +520,6 @@ class ConfirmBookingScreen extends Component {
                   case constants.PAYMENT_METHOD.VISA:
                   case constants.PAYMENT_METHOD.QR:
                     if (res?.checkoutUrl) {
-                      console.log('res: ', res);
                       this.props.navigation.navigate('paymenntAlePay', {
                         urlPayment: res.checkoutUrl,
                         title:
@@ -564,7 +564,10 @@ class ConfirmBookingScreen extends Component {
               }
             })
             .catch(err => {
-              console.log('err: ', err);
+              if (isNetworkError(err)) {
+                this.createBooking({momoToken, cardNumber, phonenumber});
+                return;
+              }
               this.setState({isLoading: false});
               if (err?.response?.status == 406) {
                 setTimeout(() => {
