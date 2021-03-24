@@ -34,7 +34,7 @@ import com.microsoft.codepush.react.CodePush;
 
     @Override
     public boolean getUseDeveloperSupport() {
-      return true;
+      return BuildConfig.DEBUG;
     }
 
     @Override
