@@ -28,6 +28,7 @@ import ListInvite from '@components/profile/ListInvite';
 class ListProfileScreen extends Component {
   constructor(props) {
     super(props);
+    let isNoti = this.props.navigation.getParam('isNoti');
     this.state = {
       data: [],
       refreshing: false,
@@ -36,8 +37,9 @@ class ListProfileScreen extends Component {
       isVisible: false,
       isVisibleRelation: false,
       listInvite: [],
-      isShow: true,
+      isShow: isNoti == true ? false : true,
       isLoading: true,
+      isNoti,
     };
   }
   onShowOptions = item => {
