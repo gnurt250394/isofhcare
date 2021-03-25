@@ -434,10 +434,9 @@ class DetailHistoryBookingScreen extends Component {
     let isOnline = this.state.booking?.invoice?.services
       ? this.state.booking.invoice.services.find(e => e.isOnline == true)
       : null;
-    const avatar =
-      this.props.userApp.currentUser && this.props.userApp.currentUser.avatar
-        ? {uri: this.props.userApp.currentUser.avatar}
-        : require('@images/new/user.png');
+    const avatar = this.state.booking?.patient?.avatar
+      ? {uri: this.state.booking.patient.avatar.absoluteUrl()}
+      : require('@images/new/user.png');
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}

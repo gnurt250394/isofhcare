@@ -27,7 +27,7 @@ import imageProvider from '@data-access/image-provider';
 import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import ModalConfirm from '@components/question/ModalConfirm';
-import { logEventFB } from '@utils/facebook-utils';
+import {logEventFB} from '@utils/facebook-utils';
 import firebaseUtils from '@utils/firebase-utils';
 
 const {width, height} = Dimensions.get('screen');
@@ -63,7 +63,7 @@ class CreateQuestionStep1Screen extends Component {
     };
   }
   componentDidMount() {
-    logEventFB("question")
+    logEventFB('question');
     dataCacheProvider.read(
       this.props.userApp.currentUser.id,
       constants.key.storage.LASTEST_POSTS,
@@ -173,13 +173,13 @@ class CreateQuestionStep1Screen extends Component {
                   imageProvider.upload(image.path, image.mime, (s, e) => {
                     console.log('s: ', s);
                     if (s.success) {
-                      if (s.data && s.data.length > 0) {
+                      if (s.data.code == 0) {
                         let imageUris = this.state.imageUris;
                         imageUris.forEach(item => {
                           if (item.uri == s.uri) {
                             item.loading = false;
-                            item.url = s.data[0].fileDownloadUri;
-                            item.thumbnail = s.data[0].fileDownloadUri;
+                            item.url = s.data?.data?.images[0].imageLink;
+                            item.thumbnail = s.data?.data?.images[0].imageLink;
                           }
                         });
                         this.setState({
@@ -271,7 +271,7 @@ class CreateQuestionStep1Screen extends Component {
                   constants.key.storage.LASTEST_INFO,
                   '',
                 );
-                firebaseUtils.sendEvent('Question_Publish')
+                firebaseUtils.sendEvent('Question_Publish');
               } else {
                 snackbar.show(
                   constants.msg.question.create_question_failed,

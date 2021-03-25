@@ -76,6 +76,7 @@ module.exports = {
   serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
   serviceNews: 'http://10.0.0.88:36545',
   requestPayment: 'http://10.0.0.88:8079/',
+  serviceProfile: 'http://10.0.0.88:8000/', //sever test
   response: {
     ok(data, message) {
       if (!message) message = '';

@@ -4,17 +4,17 @@
  * @flow
  */
 
-import React, { Component, PropTypes } from 'react';
-import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import dateUtils from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import snackbar from '@utils/snackbar-utils';
 import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import constants from '@resources/strings';
-import { withNavigation } from 'react-navigation';
+import {withNavigation} from 'react-navigation';
 import objectUtils from '@utils/object-utils';
 
 class TheirMessage extends React.Component {
@@ -24,35 +24,36 @@ class TheirMessage extends React.Component {
       showAuthor: !this.props.preMessage
         ? true
         : this.props.message.userId != this.props.preMessage.userId
-          ? true
-          : false,
+        ? true
+        : false,
       showDate: !this.props.preMessage
         ? true
         : this.props.message.createdAt &&
           this.props.preMessage.createdAt &&
           this.props.message.createdAt.toDateObject('-').format('dd/MM/yyyy') !=
-          this.props.preMessage.createdAt
-            .toDateObject('-')
-            .format('dd/MM/yyyy')
-          ? true
-          : false,
+            this.props.preMessage.createdAt
+              .toDateObject('-')
+              .format('dd/MM/yyyy')
+        ? true
+        : false,
     };
   }
-  photoViewer = (urls, index) => () => {
+  photoViewer = (urls, index, item) => () => {
     try {
       if (!urls) {
         snackbar.show(constants.msg.message.none_image);
         return;
       }
+      if (item?.sensitive) return;
       this.props.navigation.navigate('photoViewer', {
         index,
-        urls: urls.map(e => ({ uri: e })),
+        urls: urls.map(e => ({uri: e})),
       });
-    } catch (error) { }
+    } catch (error) {}
   };
   goToProfileDoctor = doctorInfo => () => {
     this.props.navigation.navigate('detailsDoctor', {
-      item: { id: doctorInfo.doctorId },
+      item: {id: doctorInfo.doctorId},
     });
   };
   renderName = info => {
@@ -69,7 +70,8 @@ class TheirMessage extends React.Component {
       .toUpperCase();
   };
   render() {
-    let { isShowProfile, message, chatProfile, info } = this.props;
+    let {isShowProfile, message, chatProfile, info, item} = this.props;
+    console.log('item: ', item);
 
     if (!message)
       message = {
@@ -77,10 +79,10 @@ class TheirMessage extends React.Component {
         createdDate: new Date(),
       };
     const icSupport = require('@images/new/user.png');
-    let avatar = info?.avatar ? { uri: info?.avatar } : icSupport;
+    let avatar = info?.avatar ? {uri: info?.avatar} : icSupport;
 
     return (
-      <View style={{ marginBottom: this.props.isLast ? 30 : 0, flex: 1 }}>
+      <View style={{marginBottom: this.props.isLast ? 30 : 0, flex: 1}}>
         {this.state.showDate ? (
           <DateMessage message={this.props.message} />
         ) : null}
@@ -92,7 +94,7 @@ class TheirMessage extends React.Component {
                 resizeMode="cover"
                 placeholderSource={icSupport}
                 style={styles.defaultImage}
-                loadingStyle={{ size: 'small', color: 'gray' }}
+                loadingStyle={{size: 'small', color: 'gray'}}
                 borderRadius={25}
                 imageStyle={styles.defaultImage}
                 source={avatar}
@@ -102,16 +104,16 @@ class TheirMessage extends React.Component {
                       resizeMode="cover"
                       source={icSupport}
                       width={40}
-                      style={{ borderRadius: 20 }}
+                      style={{borderRadius: 20}}
                     />
                   );
                 }}
               />
             ) : (
-                <View style={styles.containerImageName}>
-                  <Text style={styles.txtName}>{this.renderName(info)}</Text>
-                </View>
-              )}
+              <View style={styles.containerImageName}>
+                <Text style={styles.txtName}>{this.renderName(info)}</Text>
+              </View>
+            )}
           </TouchableOpacity>
 
           <View
@@ -123,7 +125,9 @@ class TheirMessage extends React.Component {
               },
             ]}>
             {!isShowProfile && info?.id == message.userId ? (
-              <TouchableOpacity style={{ padding: 2 }} onPress={this.goToProfileDoctor(info)}>
+              <TouchableOpacity
+                style={{padding: 2}}
+                onPress={this.goToProfileDoctor(info)}>
                 <Text style={styles.txtNameProfile}>
                   {objectUtils.renderAcademic(info?.academicDegreeValue)}
                   {info?.name}
@@ -141,15 +145,19 @@ class TheirMessage extends React.Component {
                   return (
                     <TouchableOpacity
                       key={i}
-                      onPress={this.photoViewer(message.images, i)}>
+                      onPress={this.photoViewer(message.images, i, item)}>
                       <ImageLoad
                         resizeMode="cover"
-                        placeholderSource={require('@images/noimage.png')}
-                        style={{ width: 100, height: 100 }}
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={{
-                          uri: e,
-                        }}
+                        placeholderSource={require('@images/new/community/ic_sensitive.png')}
+                        style={{width: 100, height: 100}}
+                        loadingStyle={{size: 'small', color: 'gray'}}
+                        source={
+                          item?.sensitive
+                            ? require('@images/new/community/ic_sensitive.png')
+                            : {
+                                uri: e,
+                              }
+                        }
                         defaultImage={() => {
                           return (
                             <ScaleImage
@@ -165,7 +173,8 @@ class TheirMessage extends React.Component {
                 })}
               </View>
             ) : null}
-            <Text style={{ textAlign: 'left', paddingHorizontal: 5 }}>
+            <Text
+              style={{textAlign: 'left', paddingHorizontal: 5, fontSize: 16}}>
               {message.content}
             </Text>
 
@@ -191,7 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: '800',
     color: '#000000',
-    fontSize: 15,
+    fontSize: 16,
     paddingRight: 10,
   },
   txtDate: {

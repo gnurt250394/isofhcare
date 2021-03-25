@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from "react";
-import ActivityPanel from "@components/ActivityPanel";
+import React, {Component, PropTypes} from 'react';
+import ActivityPanel from '@components/ActivityPanel';
 import {
   View,
   Text,
@@ -10,40 +10,42 @@ import {
   StyleSheet,
   Dimensions,
   DeviceEventEmitter,
-  Switch
-} from "react-native";
-import { connect } from "react-redux";
-const DEVICE_WIDTH = Dimensions.get("window").width;
-import Carousel, { Pagination } from "react-native-snap-carousel";
-import advertiseProvider from "@data-access/advertise-provider";
-import snackbar from "@utils/snackbar-utils";
-import { Card } from "native-base";
-import ImageLoad from "mainam-react-native-image-loader";
-import clientUtils from "@utils/client-utils";
-import objectUtils from "@utils/object-utils";
-import ScaledImage from "mainam-react-native-scaleimage";
-import redux from "@redux-store";
-import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
-import userProvider from "@data-access/user-provider";
+  Switch,
+} from 'react-native';
+import {connect} from 'react-redux';
+const DEVICE_WIDTH = Dimensions.get('window').width;
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import advertiseProvider from '@data-access/advertise-provider';
+import snackbar from '@utils/snackbar-utils';
+import {Card} from 'native-base';
+import ImageLoad from 'mainam-react-native-image-loader';
+import clientUtils from '@utils/client-utils';
+import objectUtils from '@utils/object-utils';
+import ScaledImage from 'mainam-react-native-scaleimage';
+import redux from '@redux-store';
+import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
+import userProvider from '@data-access/user-provider';
 import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
-import { red } from "ansi-colors";
+import {red} from 'ansi-colors';
 import constants from '@resources/strings';
-import socketProvider from "@data-access/socket-provider";
-import firebase from 'react-native-firebase'
-import NavigationService from "@navigators/NavigationService";
-import Modal from "@components/modal";
-import FingerprintPopup from "@components/account/FingerprintPopup";
+import socketProvider from '@data-access/socket-provider';
+import firebase from 'react-native-firebase';
+import NavigationService from '@navigators/NavigationService';
+import Modal from '@components/modal';
+import FingerprintPopup from '@components/account/FingerprintPopup';
 import FingerprintScanner from 'react-native-fingerprint-scanner';
-import dataCacheProvider from "@data-access/datacache-provider";
-import firebaseUtils from "@utils/firebase-utils";
+import dataCacheProvider from '@data-access/datacache-provider';
+import firebaseUtils from '@utils/firebase-utils';
+import profileProvider from '@data-access/profile-provider';
 
 class AccountScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFinger: false
+      isFinger: false,
+      profile: {},
     };
   }
   showLoading = (loading, callback) => {
@@ -52,43 +54,29 @@ class AccountScreen extends Component {
     } else {
       callback();
     }
-  }
+  };
   getDetailUser = async () => {
     try {
-      let res = await userProvider.detail(this.props.userApp.currentUser.id)
-      console.log('res: ', res);
-      if (res.code == 0) {
-        let user = res.data.user
-        user.bookingNumberHospital = res.data.bookingNumberHospital;
-        user.bookingStatus = res.data.bookingStatus;
-        if (JSON.stringify(user) != JSON.stringify(this.props.userApp.currentUser))
-          this.props.dispatch(redux.userLogin(user));
+      let res = await profileProvider.getDefaultProfile();
 
-      }
-    } catch (error) {
-      console.log('error: ', error);
-
-    }
-  }
+      this.setState({profile: res?.profileInfo?.personal});
+    } catch (error) {}
+  };
   componentDidMount() {
     if (this.props.userApp.isLogin) {
-      dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
+      dataCacheProvider.read('', constants.key.storage.KEY_FINGER, s => {
         if (s && s.userId && s.userId == this.props.userApp.currentUser.id) {
           this.setState({
-            loginWithFinger: true
-          })
+            loginWithFinger: true,
+          });
         }
-      })
-      FingerprintScanner
-        .isSensorAvailable()
+      });
+      FingerprintScanner.isSensorAvailable()
         .then(biometryType => {
-          this.setState({ isSupportSensor: true })
-          console.log('biometryType: ', biometryType);
-        }).catch(error => {
-          console.log('error: ', error);
-          this.setState({ isSupportSensor: false })
-
-
+          this.setState({isSupportSensor: true});
+        })
+        .catch(error => {
+          this.setState({isSupportSensor: false});
         });
       firebaseUtils.sendEvent('Personal_screen')
       this.onFocus = this.props.navigation.addListener('didFocus', () => {
@@ -99,14 +87,13 @@ class AccountScreen extends Component {
       'hardwareBackPress',
       this.handleHardwareBack.bind(this),
     );
-
   }
   componentWillUnmount = () => {
     if (this.onFocus) {
       this.onFocus.remove();
     }
     DeviceEventEmitter.removeAllListeners('hardwareBackPress');
-  }
+  };
   handleHardwareBack = () => {
     // this.props.navigation.goBack();
     return true;
@@ -126,26 +113,28 @@ class AccountScreen extends Component {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
                       .then(s => {
-                        this.showLoading(false, () => { });
+                        this.showLoading(false, () => {});
                         if (s.code == 0) {
                           var user = s.data.user;
                           let current = this.props.userApp.currentUser;
-                          user.bookingNumberHospital = current.bookingNumberHospital;
+                          user.bookingNumberHospital =
+                            current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
-                          user.avatar = s.data.user.avatar
+                          user.avatar = s.data.user.avatar;
+
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
-                            "Cập nhật ảnh đại diện không thành công",
-                            "danger"
+                            'Cập nhật ảnh đại diện không thành công',
+                            'danger',
                           );
                         }
                       })
                       .catch(e => {
-                        this.showLoading(false, () => { });
+                        this.showLoading(false, () => {});
                         snackbar.show(
-                          "Cập nhật ảnh đại diện không thành công",
-                          "danger"
+                          'Cập nhật ảnh đại diện không thành công',
+                          'danger',
                         );
                       });
                   });
@@ -153,26 +142,23 @@ class AccountScreen extends Component {
               });
             })
             .catch(e => {
-              this.showLoading(false, () => { });
-              snackbar.show("Upload ảnh không thành công", "danger");
+              this.showLoading(false, () => {});
+              snackbar.show('Upload ảnh không thành công', 'danger');
             });
         });
       });
     }
   }
   renderCurrentUserInfo() {
-    const icSupport = require("@images/new/user.png");
-    const source = this.props.userApp.currentUser.avatar
-      ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
+    const icSupport = require('@images/new/user.png');
+    const source = this.state?.profile?.avatar
+      ? {uri: this.state?.profile?.avatar?.absoluteUrl()}
       : icSupport;
     return (
-      <View
-        style={styles.viewCurrentUser}
-      >
+      <View style={styles.viewCurrentUser}>
         <TouchableOpacity
           style={styles.btnImage}
-          onPress={this.selectImage.bind(this)}
-        >
+          onPress={this.selectImage.bind(this)}>
           <ImageLoad
             resizeMode="cover"
             imageStyle={styles.imageStyle}
@@ -181,7 +167,7 @@ class AccountScreen extends Component {
             placeholderSource={icSupport}
             style={styles.styleImgLoad}
             resizeMode="cover"
-            loadingStyle={{ size: "small", color: "gray" }}
+            loadingStyle={{size: 'small', color: 'gray'}}
             source={source}
             defaultImage={() => {
               return (
@@ -195,17 +181,15 @@ class AccountScreen extends Component {
             }}
           />
           <ScaledImage
-            source={require("@images/new/ic_account_add.png")}
+            source={require('@images/new/ic_account_add.png')}
             width={20}
             style={styles.scaledImage}
           />
         </TouchableOpacity>
         <View style={styles.viewInfo}>
-          <Text style={styles.txUserName}>
-            {this.props.userApp.currentUser.name}
-          </Text>
+          <Text style={styles.txUserName}>{this.state?.profile?.fullName}</Text>
           <Text style={styles.txViewProfile}>
-            {this.props.userApp.currentUser.phone}
+            {this.state?.profile?.mobileNumber}
           </Text>
         </View>
       </View>
@@ -218,35 +202,33 @@ class AccountScreen extends Component {
     } else {
       snackbar.show(constants.msg.app.in_development);
     }
-
-  }
+  };
   showSetting = () => {
-    this.setState({ showSetting: !this.state.showSetting });
-  }
+    this.setState({showSetting: !this.state.showSetting});
+  };
   renderViewUserNotLogin() {
     return (
       <View style={styles.viewUserNotLogin}>
         <View style={styles.viewScaledImg}>
           <ScaledImage
-            source={require("@images/logotext.png")}
+            source={require('@images/logotext.png')}
             width={116}
             height={21}
           />
         </View>
         <TouchableOpacity
-          onPress={this.navigate_to("login")}
-          style={styles.btnLogin}
-        >
-          <Text style={styles.txLogin}>{constants.account_screens.signin_or_signup}</Text>
+          onPress={this.navigate_to('login')}
+          style={styles.btnLogin}>
+          <Text style={styles.txLogin}>
+            {constants.account_screens.signin_or_signup}
+          </Text>
         </TouchableOpacity>
       </View>
     );
   }
-  openLink = (link) => () => {
-    Linking.openURL(
-      link
-    );
-  }
+  openLink = link => () => {
+    Linking.openURL(link);
+  };
   openLinkHotline = () => {
     Linking.openURL('tel:1900638367');
   };
@@ -265,67 +247,51 @@ class AccountScreen extends Component {
         if (this.props.onLogout) this.props.onLogout();
       },
     );
-  }
-  logout = () => {
-    this.setState({
-      showSetting: false
-    }, () => {
-      dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
-      this.props.dispatch(redux.userLogout());
-      if (this.props.onLogout) this.props.onLogout();
-    })
-
-  }
+  };
   checkUpdate = () => {
-    snackbar.show(constants.msg.app.check_update, "success");
+    snackbar.show(constants.msg.app.check_update, 'success');
     codePushUtils.checkupDate();
-  }
+  };
   onLogout = async () => {
-    console.log(1111)
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
-  }
+  };
   handleFingerprintDismissed = () => {
     console.log('handler')
     this.setState({
-      isFinger: false
+      isFinger: false,
     });
   };
   onFingerClick = () => {
     // this.props.navigation.navigate('FingerSettingScreen')
     if (this.state.loginWithFinger) {
-      dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
+      dataCacheProvider.save('', constants.key.storage.KEY_FINGER, {
         userId: null,
-        refreshToken: null
+        refreshToken: null,
       });
       this.setState({
-        loginWithFinger: false
+        loginWithFinger: false,
       });
     } else {
       this.setState({
-        isFinger: true
-      })
+        isFinger: true,
+      });
     }
-
   };
   handlePopupDismissedDone = () => {
-    console.log('done');
     this.setState({
       loginWithFinger: true,
-      isFinger: false
-
-    })
-  }
+      isFinger: false,
+    });
+  };
   render() {
-    console.log(this.state.isFinger, 'this.state.isFinger')
     return (
       <ActivityPanel
-        style={{ flex: 1, }}
+        style={{flex: 1}}
         hideActionbar={true}
         showFullScreen={true}
-        containerStyle={{ backgroundColor: '#F8F8F8' }}
-      >
-        <ScrollView showsVerticalScrollIndicator={false} >
+        containerStyle={{backgroundColor: '#F8F8F8'}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin
             ? this.renderCurrentUserInfo()
             : this.renderViewUserNotLogin()}
@@ -333,104 +299,135 @@ class AccountScreen extends Component {
           {this.props.userApp.isLogin ? (
             <View>
               <TouchableOpacity
-                style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
+                style={[
+                  styles.itemMenu,
+                  {
+                    marginTop: 40,
+                    borderTopColor: '#00000011',
+                    borderTopWidth: 1,
+                  },
+                ]}
                 onPress={() => {
-                  this.props.navigation.navigate("code");
-                }}
-              >
+                  this.props.navigation.navigate('code');
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_qrCode.png")}
+                  source={require('@images/new/account/ic_qrCode.png')}
                   width={22}
                   height={22}
                 />
                 <Text style={styles.itemText}>Mã iSofHcare</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+                <ScaledImage
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.itemMenu, styles.bottomLine]}
                 onPress={() => {
-                  this.props.navigation.navigate("historyCumulative");
-                }}
-              >
+                  this.props.navigation.navigate('historyCumulative');
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_coin.png")}
+                  source={require('@images/new/account/ic_coin.png')}
                   width={22}
                   height={22}
                 />
                 <Text style={styles.itemText}>Lịch sử tích luỹ điểm</Text>
                 <View style={styles.containerCoin}>
-                  <Text style={styles.txtCoin}>{this.props.userApp?.currentUser?.accumulatedPoint}</Text>
+                  <Text style={styles.txtCoin}>
+                    {this.props.userApp?.currentUser?.accumulatedPoint}
+                  </Text>
                   <ScaledImage
-                    source={require("@images/new/account/ic_coin.png")}
+                    source={require('@images/new/account/ic_coin.png')}
                     width={20}
                     height={20}
                   />
                 </View>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+                <ScaledImage
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
+                style={[
+                  styles.itemMenu,
+                  {
+                    marginTop: 40,
+                    borderTopColor: '#00000011',
+                    borderTopWidth: 1,
+                  },
+                ]}
                 onPress={() => {
-                  this.props.navigation.navigate("listProfileUser");
-                }}
-              >
+                  this.props.navigation.navigate('listProfileUser');
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_profile.png")}
+                  source={require('@images/new/account/ic_profile.png')}
                   width={22}
                   height={22}
                 />
                 <Text style={styles.itemText}>Thành viên gia đình</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+                <ScaledImage
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
               </TouchableOpacity>
-              <View style={styles.borderMenu}></View>
+              <View style={styles.borderMenu} />
               <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
-                  firebaseUtils.sendEvent('healthrecord_screen_personal')
-                  this.props.navigation.navigate("ehealth");
-                }}
-              >
+                  firebaseUtils.sendEvent('healthrecord_screen_personal');
+                  this.props.navigation.navigate('ehealth');
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_ehealth.png")}
+                  source={require('@images/new/account/ic_ehealth.png')}
                   width={32}
                   height={32}
                 />
                 <Text style={styles.itemText}>Hồ sơ sức khoẻ</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+                <ScaledImage
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
               </TouchableOpacity>
-              <View style={styles.borderMenu}></View>
+              <View style={styles.borderMenu} />
               <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
-                  firebaseUtils.sendEvent('Appointment_screen_personal')
-                  this.props.navigation.navigate("listBookingHistory", {
-                    title: "Lịch khám"
+                  firebaseUtils.sendEvent('Appointment_screen_personal');
+                  this.props.navigation.navigate('listBookingHistory', {
+                    title: 'Lịch khám',
                   });
-                }}
-              >
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_booking.png")}
+                  source={require('@images/new/account/ic_booking.png')}
                   width={24}
                   height={24}
                 />
                 <Text style={styles.itemText}>Lịch hẹn</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-              </TouchableOpacity>
-              <View style={styles.borderMenu}></View>
-              <TouchableOpacity
-                style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-                onPress={() => {
-                  this.props.navigation.navigate("listCardPayment");
-                  // snackbar.show("Chức năng đang phát triển");
-                }}
-              >
                 <ScaledImage
-                  source={require("@images/new/account/ic_tranfer.png")}
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
+              </TouchableOpacity>
+              <View style={styles.borderMenu} />
+              <TouchableOpacity
+                style={[
+                  styles.itemMenu,
+                  {borderBottomColor: '#00000011', borderBottomWidth: 1},
+                ]}
+                onPress={() => {
+                  this.props.navigation.navigate('listCardPayment');
+                  // snackbar.show("Chức năng đang phát triển");
+                }}>
+                <ScaledImage
+                  source={require('@images/new/account/ic_tranfer.png')}
                   width={26}
                   height={26}
                 />
                 <Text style={styles.itemText}>Danh sách thẻ liên kết</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+                <ScaledImage
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
+                />
               </TouchableOpacity>
               {/* <TouchableOpacity
                 style={[styles.itemMenu]}
@@ -468,45 +465,56 @@ class AccountScreen extends Component {
                 />
               </TouchableOpacity> */}
               <TouchableOpacity
-                style={[styles.itemMenu, { marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+                style={[
+                  styles.itemMenu,
+                  {
+                    marginVertical: 20,
+                    borderTopColor: '#00000011',
+                    borderTopWidth: 1,
+                    borderBottomColor: '#00000011',
+                    borderBottomWidth: 1,
+                  },
+                ]}
                 onPress={() => {
-                  this.props.navigation.navigate("changePassword");
-                }}
-              >
+                  this.props.navigation.navigate('changePassword');
+                }}>
                 <ScaledImage
-                  source={require("@images/new/account/ic_change_pass.png")}
+                  source={require('@images/new/account/ic_change_pass.png')}
                   width={26}
                   height={26}
                 />
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>
-                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-              </TouchableOpacity>
-              {this.state.isSupportSensor && <View
-                style={[styles.itemMenu, styles.bottomLine]}
-
-              >
                 <ScaledImage
-                  source={require("@images/new/finger/ic_finger_setting.png")}
-                  width={22}
-                  height={22}
+                  height={10}
+                  source={require('@images/new/booking/ic_next.png')}
                 />
-                <Text style={styles.itemText}>Đăng nhập vân tay</Text>
-                <Switch
-                  trackColor={{ false: "#00000010", true: "#00BA9920" }}
-                  thumbColor={this.state.loginWithFinger ? "#00BA99" : "#00000080"}
-                  ios_backgroundColor={this.state.loginWithFinger ? '#00BA9920' : "#00000050"}
-                  onValueChange={this.onFingerClick}
-                  value={this.state.loginWithFinger}
-                />
-              </View>}
+              </TouchableOpacity>
+              {this.state.isSupportSensor && (
+                <View style={[styles.itemMenu, styles.bottomLine]}>
+                  <ScaledImage
+                    source={require('@images/new/finger/ic_finger_setting.png')}
+                    width={22}
+                    height={22}
+                  />
+                  <Text style={styles.itemText}>Đăng nhập vân tay</Text>
+                  <Switch
+                    trackColor={{false: '#00000010', true: '#00BA9920'}}
+                    thumbColor={
+                      this.state.loginWithFinger ? '#00BA99' : '#00000080'
+                    }
+                    ios_backgroundColor={
+                      this.state.loginWithFinger ? '#00BA9920' : '#00000050'
+                    }
+                    onValueChange={this.onFingerClick}
+                    value={this.state.loginWithFinger}
+                  />
+                </View>
+              )}
             </View>
           ) : null}
           {this.state.showSetting && (
             <View>
-
-              {
-                /* login with finger*/
-              }
+              {/* login with finger*/}
               {/* <TouchableOpacity
               style={[styles.itemMenu, { paddingLeft: 40 }]}
               onPress={this.onFingerClick}
@@ -539,20 +547,25 @@ class AccountScreen extends Component {
           </TouchableOpacity>
         } */}
           <TouchableOpacity
-            style={[styles.itemMenu, { borderTopColor: "#00000011", borderTopWidth: 1 }]}
+            style={[
+              styles.itemMenu,
+              {borderTopColor: '#00000011', borderTopWidth: 1},
+            ]}
             onPress={() => {
-              this.props.navigation.navigate("about");
-            }}
-          >
+              this.props.navigation.navigate('about');
+            }}>
             <ScaledImage
-              source={require("@images/new/account/ic_about_isc.png")}
+              source={require('@images/new/account/ic_about_isc.png')}
               width={24}
               height={24}
             />
             <Text style={styles.itemText}>Về iSofH</Text>
-            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+            <ScaledImage
+              height={10}
+              source={require('@images/new/booking/ic_next.png')}
+            />
           </TouchableOpacity>
-          <View style={[styles.borderMenu, { width: '95%' }]}></View>
+          <View style={[styles.borderMenu, {width: '95%'}]} />
           <TouchableOpacity
             style={[styles.itemMenu]}
             // onPress={() => {
@@ -560,10 +573,9 @@ class AccountScreen extends Component {
             //     "mailto:cskh@isofhcare.com?subject=Hỗ trợ sử dụng app ISofhCare&body="
             //   );
             // }}
-            onPress={this.openLinkHotline}
-
-          ><ScaledImage
-              source={require("@images/new/account/ic_support.png")}
+            onPress={this.openLinkHotline}>
+            <ScaledImage
+              source={require('@images/new/account/ic_support.png')}
               width={24}
               height={24}
             />
@@ -576,56 +588,86 @@ class AccountScreen extends Component {
               source={require('@images/new/booking/ic_next.png')}
             />
           </TouchableOpacity>
-          <View style={[styles.borderMenu, { width: '95%' }]}></View>
+          <View style={[styles.borderMenu, {width: '95%'}]} />
           <TouchableOpacity
             style={[styles.itemMenu]}
             onPress={() => {
               Linking.openURL(
-                "mailto:cskh@isofhcare.com?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+                'mailto:cskh@isofhcare.com?subject=Báo lỗi quá trình sử dụng app ISofhCare&body=',
               );
-            }}
-          ><ScaledImage
-              source={require("@images/new/account/ic_report.png")}
+            }}>
+            <ScaledImage
+              source={require('@images/new/account/ic_report.png')}
               width={24}
               height={24}
             />
             <Text style={styles.itemText}>Báo lỗi</Text>
-            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-          </TouchableOpacity>
-          <View style={[styles.borderMenu, { width: '95%' }]}></View>
-          <TouchableOpacity
-            style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-            onPress={() => {
-              this.props.navigation.navigate("terms");
-            }}
-          >
             <ScaledImage
-              source={require("@images/new/account/ic_rules.png")}
+              height={10}
+              source={require('@images/new/booking/ic_next.png')}
+            />
+          </TouchableOpacity>
+          <View style={[styles.borderMenu, {width: '95%'}]} />
+          <TouchableOpacity
+            style={[
+              styles.itemMenu,
+              {borderBottomColor: '#00000011', borderBottomWidth: 1},
+            ]}
+            onPress={() => {
+              this.props.navigation.navigate('terms');
+            }}>
+            <ScaledImage
+              source={require('@images/new/account/ic_rules.png')}
               width={26}
               height={26}
             />
             <Text style={styles.itemText}>Điều khoản sử dụng</Text>
-            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+            <ScaledImage
+              height={10}
+              source={require('@images/new/booking/ic_next.png')}
+            />
           </TouchableOpacity>
           {this.props.userApp.isLogin && (
             <TouchableOpacity
-              style={[styles.itemMenu, { marginTop: 10, marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-              onPress={this.onLogout}
-            >
+              style={[
+                styles.itemMenu,
+                {
+                  marginTop: 10,
+                  marginVertical: 20,
+                  borderTopColor: '#00000011',
+                  borderTopWidth: 1,
+                  borderBottomColor: '#00000011',
+                  borderBottomWidth: 1,
+                },
+              ]}
+              onPress={this.onLogout}>
               <ScaledImage
-                source={require("@images/new/account/ic_logout.png")}
+                source={require('@images/new/account/ic_logout.png')}
                 width={24}
                 height={24}
               />
               <Text style={styles.itemText}>Đăng xuất</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              <ScaledImage
+                height={10}
+                source={require('@images/new/booking/ic_next.png')}
+              />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', paddingTop: 10 }, this.props.userApp.isLogin ? {} : {}]} onPress={() => {
-            snackbar.show("Đang kiểm tra cập nhật", "success");
-            codePushUtils.checkupDate();
-          }}>
-            <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
+          <TouchableOpacity
+            style={[
+              {backgroundColor: '#f8f8f8', paddingTop: 10},
+              this.props.userApp.isLogin ? {} : {},
+            ]}
+            onPress={() => {
+              snackbar.show('Đang kiểm tra cập nhật', 'success');
+              codePushUtils.checkupDate();
+            }}>
+            <Text style={[styles.itemText, {color: '#00000080'}]}>
+              {'Phiên bản ' +
+                DeviceInfo.getVersion() +
+                '.' +
+                DeviceInfo.getBuildNumber()}
+            </Text>
           </TouchableOpacity>
           {/* <View style={styles.viewSpaceBottom}>
             <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
@@ -641,16 +683,15 @@ class AccountScreen extends Component {
         />
 
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
-      </ActivityPanel >
+      </ActivityPanel>
     );
   }
-
 }
-const width = Dimensions.get("window").width;
+const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   txtCoin: {
     color: '#FF8A00',
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   containerCoin: {
     flexDirection: 'row',
@@ -660,85 +701,114 @@ const styles = StyleSheet.create({
     padding: 3,
     paddingRight: 5,
     borderRadius: 15,
-    marginRight: 10
+    marginRight: 10,
   },
   bottomLine: {
-    borderTopColor: "#00000011",
+    borderTopColor: '#00000011',
     borderTopWidth: 1,
     borderBottomColor: '#00000011',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   icon: {},
-  btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
+  btnHotline: {
+    padding: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   popup: {
-    width: width * 0.8
+    width: width * 0.8,
   },
   subLabel: {
-    color: "#9B9B9B",
+    color: '#9B9B9B',
     fontSize: 12,
-    textAlign: "center",
-    marginTop: 5
+    textAlign: 'center',
+    marginTop: 5,
   },
   itemMenu: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 48,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 25,
     paddingRight: 15,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   itemText: {
     flex: 1,
     fontSize: 15,
     fontWeight: 'bold',
     color: '#000000',
-    marginLeft: 20
+    marginLeft: 20,
   },
-  viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomWidth: 1, borderBottomColor: '#00000011', paddingVertical: 20, paddingLeft: 25, paddingRight: 15, backgroundColor: '#fff' },
-  txUserName: { color: "#000000", fontSize: 18, fontWeight: 'bold' },
-  viewInfo: { flex: 1, marginLeft: 20 },
-  txViewProfile: { color: 'gray', marginTop: 5 },
-  btnImage: { position: "relative" },
-  imageStyle: { borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+  viewCurrentUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 30,
+    borderTopColor: '#00000011',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#00000011',
+    paddingVertical: 20,
+    paddingLeft: 25,
+    paddingRight: 15,
+    backgroundColor: '#fff',
+  },
+  txUserName: {color: '#000000', fontSize: 18, fontWeight: 'bold'},
+  viewInfo: {flex: 1, marginLeft: 20},
+  txViewProfile: {color: 'gray', marginTop: 5},
+  btnImage: {position: 'relative'},
+  imageStyle: {
+    borderRadius: 35,
+    borderWidth: 0.5,
+    borderColor: 'rgba(151, 151, 151, 0.29)',
+  },
   customImagePlace: {
     width: 70,
     height: 70,
-    alignSelf: "center"
+    alignSelf: 'center',
   },
-  styleImgLoad: { width: 70, height: 70, alignSelf: "center" },
-  scaledImage: { position: "absolute", bottom: 0, right: 0 },
-  viewUserNotLogin: { alignItems: "center", marginTop: 30 },
-  viewScaledImg: { marginBottom: 30 },
+  styleImgLoad: {width: 70, height: 70, alignSelf: 'center'},
+  scaledImage: {position: 'absolute', bottom: 0, right: 0},
+  viewUserNotLogin: {alignItems: 'center', marginTop: 30},
+  viewScaledImg: {marginBottom: 30},
   btnLogin: {
     padding: 18,
-    backgroundColor: "#02C39A",
+    backgroundColor: '#02C39A',
     borderRadius: 5,
     width: 270,
     marginBottom: 20,
-    marginTop: 20
+    marginTop: 20,
   },
   txLogin: {
-    color: "#FFF",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 17
+    color: '#FFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 17,
   },
   styleScrollView: {
     flex: 1,
     paddingTop: 0,
-    backgroundColor: '#F8F8F8'
+    backgroundColor: '#F8F8F8',
   },
-  txVersion: { marginLeft: 10, marginTop: 10 },
-  viewSpaceBottom: { height: 100, justifyContent: 'flex-end', alignItems: 'center' },
-  borderMenu: { width: '85%', height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
-
+  txVersion: {marginLeft: 10, marginTop: 10},
+  viewSpaceBottom: {
+    height: 100,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  borderMenu: {
+    width: '85%',
+    height: 1,
+    backgroundColor: '#00000011',
+    alignSelf: 'flex-end',
+  },
 });
 
 function mapStateToProps(state) {
   return {
     // navigation: state.navigation,
-    userApp: state.auth.userApp
+    userApp: state.auth.userApp,
   };
 }
 export default connect(mapStateToProps)(AccountScreen);

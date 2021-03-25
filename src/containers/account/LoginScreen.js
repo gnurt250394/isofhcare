@@ -251,7 +251,7 @@ class LoginScreen extends Component {
       >
         <KeyboardAwareScrollView
           style={{flex: 1}}
-          contentContainerStyle={{flexShrink: 1, paddingTop: 30}}>
+          contentContainerStyle={{paddingTop: '8%'}}>
           <TouchableOpacity
             onPress={this.goHome}
             hitSlop={styles.hislop}
@@ -629,14 +629,14 @@ const styles = StyleSheet.create({
   },
   labelStyle: {paddingTop: 10, color: '#53657B', fontSize: 16},
   imgBg: {flex: 1, backgroundColor: '#000'},
-  txLogin: {color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 50},
+  txLogin: {color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: '5%'},
   viewCard: {flex: 1, justifyContent: 'center'},
   viewLogin: {marginHorizontal: 22},
   cardLogin: {
     padding: 22,
     paddingTop: 10,
     borderRadius: 8,
-    marginTop: 50,
+    marginTop: '20%',
     borderColor: '#02C39A',
     borderWidth: 1,
   },

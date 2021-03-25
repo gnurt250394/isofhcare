@@ -88,26 +88,25 @@ class AddBookingScreen extends Component {
     }
   };
   getProfile = () => {
-    profileProvider.getListProfile().then(s => {
-      switch (s.code) {
-        case 0:
-          if (s.data && s.data.length != 0) {
-            let data = s.data;
-            let profile = data.find(item => {
-              return item.medicalRecords.status == 1;
-            });
-            if (profile) {
-              this.setState({profile: profile});
-              dataCacheProvider.save(
-                this.props.userApp.currentUser.id,
-                constants.key.storage.LASTEST_PROFILE,
-                profile,
-              );
-            }
+    profileProvider
+      .getListProfile()
+      .then(s => {
+        console.log('s: ', s);
+        if (s?.length != 0) {
+          let profile = s.find(item => item.defaultProfile);
+          if (profile) {
+            this.setState({profile: profile});
+            dataCacheProvider.save(
+              this.props.userApp.currentUser.id,
+              constants.key.storage.LASTEST_PROFILE,
+              profile,
+            );
           }
-          break;
-      }
-    });
+        }
+      })
+      .catch(err => {
+        console.log('err: ', err);
+      });
   };
   selectImage() {
     if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -140,7 +139,6 @@ class AddBookingScreen extends Component {
                 if (!temp) {
                   imageUris.push({uri: image.path, loading: true});
                   imageProvider.upload(image.path, image.mime, (s, e) => {
-                    console.log('s: ', s);
                     if (s.success) {
                       if (s?.data?.code == 0) {
                         let imageUris = this.state.imageUris;
@@ -192,7 +190,6 @@ class AddBookingScreen extends Component {
           hospital: this.state.hospital,
           isBooking: true,
           onSelected: hospital => {
-            console.log('hospital: ', hospital);
             let hospitalError = hospital ? '' : this.state.hospitalError;
 
             if (
@@ -401,17 +398,19 @@ class AddBookingScreen extends Component {
             });
             let bookingDate = this.state.bookingDate.format('yyyy-MM-dd');
             let idUser = this.props.userApp.currentUser.id;
+
             bookingProvider
               .createBooking(
                 bookingDate,
                 reason,
                 this.state.hospital,
                 services,
-                this.state.profile && this.state.profile.medicalRecords,
+                this.state.profile?.profileInfo?.personal,
                 this.state.schedule.time,
                 idUser,
                 img,
                 byHospital,
+                this.state.profile?.userProfileId
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {
@@ -460,7 +459,6 @@ class AddBookingScreen extends Component {
     });
   };
   renderBookingTime() {
-    console.log('this.state.schedule: ', this.state.schedule);
     if (this.state.bookingDate && this.state.schedule)
       return (
         <View>
@@ -569,8 +567,9 @@ class AddBookingScreen extends Component {
     this.setState({toggelDateTimePickerVisible: false});
   };
   render() {
-    let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
-    const source = avatar ? {uri: avatar} : require('@images/new/user.png');
+    let avatar = this.state.profile?.profileInfo?.personal?.avatar;
+    console.log('this.state.profile: ', this.state.profile);
+    const source = avatar ? {uri: avatar?.absoluteUrl()} : require('@images/new/user.png');
     let minDate = new Date();
     minDate.setDate(minDate.getDate() + 1);
     // minDate.setDate(minDate.getDate());
@@ -610,7 +609,7 @@ class AddBookingScreen extends Component {
                         defaultImage={this.defaultImage}
                       />
                       <Text style={styles.txtname}>
-                        {this.state.profile.medicalRecords.name}
+                        {this.state.profile?.profileInfo?.personal?.fullName}
                       </Text>
                     </View>
                   ) : (
