@@ -116,6 +116,9 @@ class ConfirmBookingDoctorScreen extends Component {
   };
   createBooking = ({phonenumber, momoToken, cardNumber}) => {
     const {bookingDate, booking, detailSchedule, disabled} = this.state;
+    function isNetworkError(err) {
+      return !!err.isAxiosError && !err.response;
+    }
     this.setState({isLoading: true}, async () => {
       if (this.state.voucher && this.state.voucher.code && !disabled) {
         let dataVoucher = await this.confirmVoucher(
@@ -193,6 +196,10 @@ class ConfirmBookingDoctorScreen extends Component {
           }
         })
         .catch(err => {
+          if (isNetworkError(err)) {
+            this.createBooking({momoToken, cardNumber, phonenumber});
+            return;
+          }
           this.setState({isLoading: false});
           if (err?.response?.status == 406) {
             setTimeout(() => {

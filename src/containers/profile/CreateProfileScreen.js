@@ -1,960 +1,1626 @@
-import React, { Component, } from "react";
+import React, {Component} from 'react';
 import {
-    View,
-    StyleSheet,
-    Keyboard,
-    Text,
-    TouchableOpacity,
-    Platform,
-} from "react-native";
-import { connect } from "react-redux";
-import ImagePicker from "mainam-react-native-select-image";
-import DateTimePicker from "mainam-react-native-date-picker";
-import connectionUtils from "@utils/connection-utils";
-import snackbar from "@utils/snackbar-utils";
-import Form from "mainam-react-native-form-validate/Form";
-import Field from "mainam-react-native-form-validate/Field";
-import TextField from "mainam-react-native-form-validate/TextField";
-import dateUtils from "mainam-react-native-date-utils";
-import constants from "@resources/strings";
-import KeyboardSpacer from "react-native-keyboard-spacer";
-import ActionSheet from 'react-native-actionsheet'
-import profileProvider from '@data-access/profile-provider'
-import Modal from "@components/modal";
-import NavigationService from "@navigators/NavigationService";
-import ActivityPanel from "@components/ActivityPanel";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  ActivityIndicator,
+} from 'react-native';
+import ActivityPanel from '@components/ActivityPanel';
+import {connect} from 'react-redux';
+import redux from '@redux-store';
+import ScaledImage from 'mainam-react-native-scaleimage';
+import ImageLoad from 'mainam-react-native-image-loader';
+import constants from '@resources/strings';
+import profileProvider from '@data-access/profile-provider';
+import DateTimePicker from 'mainam-react-native-date-picker';
+import Form from 'mainam-react-native-form-validate/Form';
+import Field from 'mainam-react-native-form-validate/Field';
+import TextField from 'mainam-react-native-form-validate/TextField';
+import ActionSheet from 'react-native-actionsheet';
+import snackbar from '@utils/snackbar-utils';
+import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
+import connectionUtils from '@utils/connection-utils';
+import dateUtils from 'mainam-react-native-date-utils';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Modal from '@components/modal';
+import NavigationService from '@navigators/NavigationService';
+import locationProvider from '@data-access/location-provider';
+import objectUtils from '@utils/object-utils';
+import SelectRelation from '@components/profile/SelectRelation';
 class CreateProfileScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isGender: false,
-            genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
-            toggelDateTimePickerVisible: false,
-            valueGender: null,
-            txGender: 'Chọn giới tính',
-            name: '',
-            email: "",
-            dob: "",
-            imgLocal: "",
-            date: "",
-            image: "",
-            imageUris: [],
-            valid: '',
-            isDataNull: '',
-            status: 2,
-            reset: 1,
-        };
-    }
-
-    onChangeText = type => text => {
-        this.setState({ [type]: text });
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReset: 1,
+      isLoading: false,
+      image: null,
+      isVisible: false,
+      isVisibleRelation: false,
+      email: '',
+      phone: '',
+      name: '',
+      disabled: false,
     };
-    setDate(newDate) {
-        this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
+  }
+  componentDidMount() {
+    // let dataOld = this.props.navigation.getParam('dataOld', null);
+    // if (dataOld) {
+    //   let dataProfile = dataOld.info || {};
+    //   let dataLocationOld = dataOld.info.address;
+    //   let country = dataLocationOld?.country || null;
+    //   let badInfo = this.props.navigation.getParam('badInfo', false);
+    //   let dataLocation = {
+    //     districts: dataLocationOld?.district || {},
+    //     provinces: dataLocationOld?.province || {},
+    //     zone: dataLocationOld?.city || {},
+    //     address: dataLocationOld?.village || '',
+    //   };
+    //   this.setState(
+    //     {
+    //       avatar: dataProfile && dataProfile.avatar ? dataProfile.avatar : null,
+    //       imagePath:
+    //         dataProfile && dataProfile.avatar ? dataProfile.avatar : '',
+    //       name: dataProfile && dataProfile.fullName ? dataProfile.fullName : '',
+    //       date:
+    //         dataProfile && dataProfile.dateOfBirth
+    //           ? dataProfile.dateOfBirth.toDateObject('-').format('dd/MM/yyyy')
+    //           : '',
+    //       txGender: dataProfile && dataProfile.gender == 'MALE' ? 'Nam' : 'Nữ',
+    //       valueGender: dataProfile.gender,
+    //       dobOld:
+    //         dataProfile && dataProfile.dateOfBirth
+    //           ? dataProfile.dateOfBirth
+    //           : '',
+    //       // height: dataProfile && dataProfile.height ? dataProfile.height.toString() : '',
+    //       // weight: dataProfile && dataProfile.weight ? dataProfile.weight.toString() : '',
+    //       // relationshipType: dataProfile && dataProfile.relationshipType ? dataProfile.relationshipType : '',
+    //       profileNo:
+    //         dataProfile && dataProfile.profileNo ? dataProfile.profileNo : '',
+    //       id: (dataOld && dataOld.id) || null,
+    //       dob:
+    //         dataProfile && dataProfile.dateOfBirth
+    //           ? dataProfile.dateOfBirth.toDateObject('-')
+    //           : '',
+    //       phone: dataProfile && dataProfile.mobileNumber,
+    //       guardianPassport: dataProfile?.guardian?.idNumber || '',
+    //       guardianName: dataProfile?.guardian?.fullName || '',
+    //       guardianPhone: dataProfile?.guardian?.mobileNumber || '',
+    //       userPassport: dataProfile?.idNumber || '',
+    //       nations: dataProfile?.nation || null,
+    //       jobs: dataProfile?.job || null,
+    //       status: dataProfile?.status || 0,
+    //       dataLocation,
+    //       isEdit: true,
+    //       badInfo,
+    //     },
+    //     () => {
+    //       this.renderAddress();
+    //       this.onLoadDefault(
+    //         dataProfile?.nation || null,
+    //         dataProfile?.job || null,
+    //         dataOld?.country || null,
+    //       );
+    //     },
+    //   );
+    // } else {
+    //   this.onLoadDefault(null, null, null);
+    // }
+  }
+  onLoadDefault = (nations, jobs, country) => {
+    if (!nations) {
+      locationProvider
+        .getAllNations()
+        .then(res => {
+          if (res && res.length) {
+            this.setState({
+              nations: res[0],
+            });
+          }
+        })
+        .catch(err => {});
+    }
+    if (!jobs) {
+      locationProvider
+        .getAllJobs()
+        .then(res => {
+          if (res && res.length) {
+            this.setState({
+              jobs: res[0],
+            });
+          }
+        })
+        .catch(err => {});
+    }
+    if (!country) {
+      locationProvider
+        .getAllCountry()
+        .then(s => {
+          if (s.code == 0 && s.data.countries.length) {
+            let dataDefault = s.data.countries.filter(obj => obj.code == 'Vi');
+
+            if (dataDefault.length) {
+              this.setState({
+                country: dataDefault[0],
+              });
+            }
+          }
+        })
+        .catch(e => {
+          this.setState({
+            data: [],
+          });
         });
     }
-    onShowGender = () => {
-        this.actionSheetGender.show();
-
-    };
-    showLoading(loading, callback) {
-        if (this.props.showLoading) {
-            this.props.showLoading(loading, callback);
-        } else {
-            callback;
-        }
-    }
-    onSetGender = index => {
-        try {
-            switch (index) {
-                case 0:
-                    this.setState(
-                        {
-                            valueGender: '1',
-                            txGender: 'Nam',
-                            relationShip: null
-                        });
-                    return;
-                case 1:
-                    this.setState(
-                        {
-                            valueGender: '0',
-                            txGender: 'Nữ',
-                            relationShip: null
-                        });
-                    return;
-            }
-        } catch (error) {
-
-        }
-
-    };
-    onCreateProfile = () => {
-        Keyboard.dismiss();
-        if (!this.form.isValid()) {
-            return;
-        }
-        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0) {
-            this.setState({
-                weightError: constants.msg.user.weight_invalid
-            })
-            return
-        }
-        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0) {
-            this.setState({
-                heightError: constants.msg.user.height_invalid
-            })
-            return
-        }
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                this.setState(
-                    {
-                        isLoading: true
-                    },
-                    () => {
-                        let name = this.state.name
-                        let dob = this.state.dob
-                        let gender = this.state.valueGender
-                        let height = this.state.height
-                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
-                        let phone = this.state.phone
-                        // let address = this.state.address
-                        let idProvince = this.state.provinces ? this.state.provinces.id : null
-                        let idDistrics = this.state.districts ? this.state.districts.id : null
-                        let idZone = this.state.zone ? this.state.zone.id : null
-                        let village = this.state.address ? this.state.address : null
-                        // parseFloat(item.distance).toFixed(1)
-                        let data = {
-                            "name": name,
-                            "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
-                            "gender": gender ? gender : null,
-                            "height": height ? Number(height) : 0,
-                            "weight": weight ? Number(weight) : 0,
-                            "phone": phone,
-                            "provinceId": idProvince,
-                            "districtId": idDistrics,
-                            "zoneId": idZone,
-                            "village": village,
-                            "relationshipType": null
-                        }
-                        profileProvider.createProfile(data).then(res => {
-                            console.log(res.code, 'dasdasd');
-                            let onCreate = this.props.navigation.state.params && this.props.navigation.state.params.onCreate ? this.props.navigation.state.params.onCreate : null
-                            switch (res.code) {
-                                case 0:
-                                    switch (res.data.TYPE) {
-                                        case 'PHONE_VALID':
-                                            if (onCreate) {
-                                                let callback = ((this.props.navigation.state || {}).params || {}).onCreate;
-                                                if (callback) {
-                                                    callback(false);
-                                                    this.props.navigation.pop();
-                                                }
-                                            } else {
-                                                NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
-                                            }
-                                            snackbar.show(constants.msg.user.add_member_success, 'success')
-                                            break
-                                        case 'NOT_EXIST_ACCOUNT':
-                                            NavigationService.navigate('verifyPhone', {
-                                                id: res.data.medicalRecords.id,
-                                                verify: 3,
-                                                phone: phone
-                                            })
-                                            break
-                                        case 'EXIST_ACCOUNT':
-                                            this.setState({
-                                                phone: phone,
-                                                id: res.data.medicalRecords.id,
-                                                isVisible: true
-                                            })
-                                            break
-                                    }
-                                    break
-                                case 1:
-                                    snackbar.show(constants.msg.user.not_permission_edit_file, "danger");
-                                    break
-                                case 2:
-                                    snackbar.show(constants.msg.user.not_login_with_app_patient, "danger");
-                                    break
-                                case 3:
-                                    snackbar.show(constants.msg.user.fullname_not_null, "danger");
-                                    break
-                                case 4:
-                                    snackbar.show(constants.msg.user.phone_not_null, "danger");
-                                    break
-                                case 5:
-                                    snackbar.show(constants.msg.user.phone_invalid, "danger");
-                                    break
-                                case 6:
-                                    snackbar.show(constants.msg.user.gender_not_null, "danger");
-                                    break
-                                case 7:
-                                    snackbar.show(constants.msg.user.relationShip_not_null, "danger");
-                                    break
-                                case 8:
-                                    snackbar.show(constants.msg.user.phone_exits_in_list_profile, "danger");
-                                    break
-                            }
-                        }).catch(err => {
-                            snackbar.show(constants.msg.user.add_member_fail, 'danger')
-                            console.log(err);
-                        })
-                    });
-            }
-            ).catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
-    }
-    selectDistrict = (districts) => {
-        let districtsError = districts ? "" : this.state.districtsError;
-        if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null }, () => {
-                this.onSelectZone()
-            })
-        } else {
-            this.setState({ districts, districtsError });
-        }
-    }
-    onSelectDistrict = () => {
-        if (this.state.provinces) {
-            this.props.navigation.navigate('selectDistrict', {
-                onSelected: this.selectDistrict.bind(this),
-                id: this.state.provinces.id
-            })
-        } else {
-            snackbar.show(constants.msg.user.please_select_address)
-        }
-    }
-    selectprovinces(provinces) {
-        let provincesError = provinces ? "" : this.state.provincesError;
-        if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null }, () => {
-                this.onSelectDistrict()
-            })
-
-        } else {
-            this.setState({ provinces, provincesError });
-        }
-    }
-    onSelectProvince = () => {
-        this.props.navigation.navigate("selectProvince", { onSelected: this.selectprovinces.bind(this) });
-    }
-    selectZone = (zone) => {
-        let zoneError = zone ? "" : this.state.zoneError;
-        if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
-            this.setState({ zone, zoneError }, () => {
-
-            })
-        } else {
-            this.setState({ zone, zoneError });
-        }
-    }
-    onSelectZone = () => {
-        if (!this.state.provinces) {
-            snackbar.show(constants.msg.user.please_select_address)
-            return
-        }
-        if (!this.state.districts) {
-            snackbar.show(constants.msg.user.please_select_district)
-            return
-        }
-        if (this.state.provinces.id && this.state.districts.id) {
-            this.props.navigation.navigate('selectZone', {
-                onSelected: this.selectZone.bind(this),
-                id: this.state.districts.id
-            })
-            return
-        }
-
-    }
-    // selectRelationShip = (relationShip) => {
-    //     let relationShipError = relationShip ? "" : this.state.relationShipError;
-    //     if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
-    //         this.setState({ relationShip, relationShipError, relationErr: '' })
-    //     } else {
-    //         this.setState({ relationShip, relationShipError, relationErr: '' });
-    //     }
-    // }
-    onCloseModal = () => {
+  };
+  defaultImage = () => {
+    return (
+      <ScaleImage
+        resizeMode="cover"
+        source={require('@images/new/user.png')}
+        width={40}
+        height={40}
+      />
+    );
+  };
+  onSendConfirm = () => {
+    profileProvider
+      .sendConfirmProfile(this.state.id)
+      .then(res => {
         this.setState({
-            isVisible: false
-        })
-    }
-    onSelectRelationShip = () => {
-        NavigationService.navigate('selectRelationship', {
-            onSelected: this.selectRelationShip.bind(this),
-            gender: this.state.valueGender
-            // id: this.state.relationShip.id
-        })
-
-    }
-    onSendConfirm = () => {
-        profileProvider.sendConfirmProfile(this.state.id).then(res => {
-            this.setState({
-                isVisible: false
-            })
-            if (res.code == 0) {
-                NavigationService.navigate('shareDataProfile', { id: res.data.shareRecord.id, shareId: res.data.record.id, })
-
-            } else {
-                snackbar.show(constants.msg.notification.error_retry, 'danger')
-
-            }
-        }).catch(err => {
-            this.setState({
-                isVisible: false
-            })
-            snackbar.show(constants.msg.notification.error_retry, 'danger')
-        })
-    }
-    renderItem = ({ item }) => {
-        return (
-            <View style={styles.containerItem}>
-                <Text style={styles.txtCountryCode}>{item.countryCode}</Text>
-            </View>
-        )
-    }
-    onValidateName = (valid, messages) => {
-        if (valid) {
-            this.setState({ nameError: "" });
+          isVisible: false,
+        });
+        if (res.code == 0) {
+          NavigationService.navigate('shareDataProfile', {
+            id: res.data.shareRecord.id,
+            shareId: res.data.record.id,
+          });
         } else {
-            this.setState({ nameError: messages });
+          this.setState({
+            isVisible: false,
+            id: null,
+          });
+          snackbar.show(constants.msg.notification.error_retry, 'danger');
         }
+      })
+      .catch(err => {
+        this.setState({
+          isVisible: false,
+          id: null,
+        });
+        snackbar.show(constants.msg.notification.error_retry, 'danger');
+      });
+  };
+  renderAddress = () => {
+    let dataLocation = this.state.dataLocation;
+
+    let district = dataLocation.districts ? dataLocation.districts.name : null;
+    let province = dataLocation.provinces
+      ? dataLocation.provinces.countryCode
+      : null;
+    let zone = dataLocation.zone ? dataLocation.zone.name : '';
+    let village = dataLocation.address ? dataLocation.address : null;
+
+    if (district && province && zone && village) {
+      this.setState(
+        {
+          location: `${village}\n${zone}\n${district}\n${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (district && province && zone) {
+      this.setState(
+        {
+          location: `${zone}\n${district}\n${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (district && province && village) {
+      this.setState(
+        {
+          location: `${village}\n${district}\n${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (district && province) {
+      this.setState(
+        {
+          location: `${district}\n${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (province && village) {
+      this.setState(
+        {
+          location: `${village}\n${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (province) {
+      this.setState(
+        {
+          location: `${province}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (village) {
+      this.setState(
+        {
+          location: `${village}`,
+        },
+        () => {
+          if (this.state.isSave) {
+            this.form.isValid();
+          }
+        },
+      );
+    } else if (!village && !district && !province && !zone) {
+      this.setState({
+        location: null,
+      });
     }
-    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
-    onConfirmDate = newDate => {
-        this.setState(
+  };
+  // componentDidMount = () => {
+  //     // this.renderRelation()
+  // };
+
+  onShowGender = () => {
+    Keyboard.dismiss();
+    setTimeout(() => {
+      this.actionSheetGender.show();
+    }, 250);
+  };
+  onSetGender = index => {
+    try {
+      switch (index) {
+        case 0:
+          this.setState(
             {
-                dob: newDate,
-                date: newDate.format("dd/MM/yyyy"),
-                toggelDateTimePickerVisible: false
+              valueGender: 'MALE',
+              txGender: 'Nam',
+              relationShip: null,
             },
             () => {
+              if (this.state.isSave) {
+                this.form.isValid();
+              }
+            },
+          );
+          return;
+        case 1:
+          this.setState(
+            {
+              valueGender: 'FEMALE',
+              txGender: 'Nữ',
+              relationShip: null,
+            },
+            () => {
+              if (this.state.isSave) {
+                this.form.isValid();
+              }
+            },
+          );
+          return;
+      }
+    } catch (error) {}
+  };
+  onSelectRelationShip = () => {
+    this.props.navigation.navigate('selectRelationship', {
+      onSelected: this.selectRelationShip.bind(this),
+      gender: this.state.valueGender,
+      // id: this.state.relationShip.id
+    });
+  };
+  onChangeText = type => text => {
+    this.setState({[type]: text}, () => {
+      if (this.state.isSave) {
+        this.form.isValid();
+      }
+    });
+  };
+  selectRelationShip = relationShip => {
+    let relationShipError = relationShip ? '' : this.state.relationShipError;
+    if (
+      !relationShip ||
+      !this.state.relationShip ||
+      relationShip.id != this.state.relationShip.id
+    ) {
+      this.setState({relationShip, relationShipError});
+    } else {
+      this.setState({relationShip, relationShipError});
+    }
+  };
+  onCloseModal = () => {
+    this.setState({
+      isVisible: false,
+      id: null,
+      isVisibleRelation: false,
+    });
+  };
+  onScanQrCode = () => {
+    this.props.navigation.navigate('qrcodeScanner', {
+      title: 'Quét mã iSofHcare',
+      textHelp: 'Di chuyển camera đến vùng chứa mã iSofHcare để quét',
+      onCheckData: data => {
+        return new Promise((resolve, reject) => {
+          this.setState({isofhcareCode: data}, () => {
+            resolve();
+            this.onScan(data);
+          });
+        });
+      },
+    });
+  };
+  onScan = async data => {
+    try {
+      let s = await profileProvider.getInfoProfilewithQrcode(data);
+      let dataProfile = s;
+      if (dataProfile) {
+        this.setState({
+          isFinding: false,
+          findFinish: true,
+          userDoesNotExist: 2,
+          dataProfile,
+          disabled: true,
+          phone: dataProfile?.personal?.mobileNumber,
+          name: dataProfile?.personal?.fullName
+            ? dataProfile?.personal.fullName
+            : '',
+          date: dataProfile?.personal?.dateOfBirth
+            ? dataProfile.personal.dateOfBirth
+                .toDateObject('-')
+                .format('dd/MM/yyyy')
+            : '',
+          dob: dataProfile?.personal?.dateOfBirth
+            ? dataProfile.personal.dateOfBirth.toDateObject('-')
+            : '',
+          valueGender: dataProfile?.personal?.gender,
+          userPassport: dataProfile?.personal?.idNumber || '',
+          guardianPassport: s?.guardian?.idNumber || '',
+          guardianName: s?.guardian?.fullName || '',
+          guardianPhone: s?.guardian?.mobileNumber || '',
+        });
+      }
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
+  selectImage = () => {
+    if (this.imagePicker) {
+      this.imagePicker.open(true, 200, 200, image => {
+        this.setState({isLoading: true}, () => {
+          imageProvider
+            .upload(image.path, image.mime)
+            .then(s => {
+              this.setState({
+                avatar: s.data.data.images[0].imageLink,
+                isLoading: false,
+                imagePath: s.data.data.images[0].image,
+              });
+              // if (s && s.data.code == 0) {
+              // let user = objectUtils.clone(this.props.userApp.currentUser);
+              // user.avatar = s.data.data.images[0].thumbnail;
+              // this.setState({ isLoading: true }, () => {
+              //     userProvider
+              //         .update(this.props.userApp.currentUser.id, user)
+              //         .then(s => {
+              //             this.setState({ isLoading: false }, () => { });
+              //             if (s.code == 0) {
+              //                 var user = s.data.user;
+              //                 let current = this.props.userApp.currentUser;
+              //                 user.bookingNumberHospital = current.bookingNumberHospital;
+              //                 user.bookingStatus = current.bookingStatus;
+              //                 this.props.dispatch(redux.userLogin(user));
+              //             } else {
+              //                 snackbar.show(
+              //                     "Cập nhật ảnh đại diện không thành công",
+              //                     "danger"
+              //                 );
+              //             }
+              //         })
+              //         .catch(e => {
+              //             this.setState({ isLoading: false }, () => { });
+              //             snackbar.show(
+              //                 "Cập nhật ảnh đại diện không thành công",
+              //                 "danger"
+              //             );
+              //         });
+              // });
+              // }
+            })
+            .catch(e => {
+              this.setState({isLoading: false}, () => {});
+              snackbar.show('Upload ảnh không thành công', 'danger');
+            });
+        });
+      });
+    }
+  };
+  onSelectProvince = () => {
+    const {dataLocation} = this.state;
+    this.props.navigation.navigate('selectAddress', {
+      onSelected: this.selectProvinces.bind(this),
+      dataLocation,
+    });
+  };
+  selectProvinces(dataLocation) {
+    this.setState({dataLocation}, () => {
+      this.renderAddress();
+    });
+  }
+  selectCountry(country) {
+    this.setState({country}, () => {
+      if (this.state.isSave) {
+        this.form.isValid();
+      }
+    });
+  }
+  selectNations(nations) {
+    this.setState({nations}, () => {
+      if (this.state.isSave) {
+        this.form.isValid();
+      }
+    });
+  }
+  selectJobs(jobs) {
+    this.setState({jobs}, () => {
+      if (this.state.isSave) {
+        this.form.isValid();
+      }
+    });
+  }
+  // renderAddress = () => {
+  //     const { provinces, districts, zone } = this.state
+  //     let value = ''
+  //     let address = this.state.address ? this.state.address + ' - ' : ''
+  //     if (provinces && districts && zone) {
+  //         value = address + ' ' + zone.name + ' - ' + districts.name + ' - ' + provinces.countryCode
+  //     }
+  //     return value
+  // }
+  onSelectCountry = () => {
+    this.props.navigation.navigate('selectCountry', {
+      onSelected: this.selectCountry.bind(this),
+      country: this.state.country,
+    });
+  };
+  fixedEncodeURIComponent = str => {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+      return '%' + c.charCodeAt(0).toString(16);
+    });
+  };
+  onCreateProfile = () => {
+    this.setState({isSave: true}, () => {
+      Keyboard.dismiss();
+      if (!this.form.isValid()) {
+        return;
+      }
+      if (!this.form2.isValid()) {
+        return;
+      }
+      connectionUtils
+        .isConnected()
+        .then(s => {
+          this.setState(
+            {
+              isLoading: true,
+            },
+            () => {
+              let id = this.state.id;
+              let dataLocation = this.state.dataLocation;
+
+              let age = this.state.dob
+                ? new Date().getFullYear() - this.state.dob.getFullYear()
+                : null;
+              let data = {};
+              if (age == 0 || age < 14) {
+                data = {
+                  relationshipType: this.state.relation,
+                  profileInfo: {
+                    personal: {
+                      avatar: this.state.imagePath,
+                      fullName: this.state.name.trim(),
+                      dob: this.state.dob
+                        ? this.state.dob.format('yyyy-MM-dd')
+                        : null,
+                      gender: this.state.valueGender,
+                      mobileNumber: this.state.phone,
+                      idNumber: this.state.userPassport,
+                      guardian: {
+                        fullName: this.state.guardianName
+                          ? this.state.guardianName
+                          : '',
+                        mobileNumber: this.state.guardianPhone
+                          ? this.state.guardianPhone
+                          : '',
+                        idNumber: this.state.guardianPassport
+                          ? this.state.guardianPassport
+                          : '',
+                      },
+                    },
+                  },
+                };
+              } else if (age >= 14) {
+                data = {
+                  relationshipType: this.state.relation,
+                  profileInfo: {
+                    personal: {
+                      avatar: this.state.imagePath,
+                      fullName: this.state.name.trim(),
+                      dateOfBirth: this.state.dob
+                        ? this.state.dob.format('yyyy-MM-dd')
+                        : null,
+                      gender: this.state.valueGender,
+                      mobileNumber: this.state.phone,
+                      idNumber: this.state.userPassport,
+                      relationshipType: this.state.relation,
+                    },
+                  },
+                };
+              }
+
+              profileProvider
+                .createProfile(data)
+                .then(res => {
+                  console.log('res: ', res);
+                  this.setState({
+                    isLoading: false,
+                  });
+
+                  if (res?.profileRegistryId) {
+                    NavigationService.navigate('verifyPhoneProfile', {
+                      profileRegistryId: res.profileRegistryId,
+                      phone: this.state.phone,
+                    });
+                  } else {
+                    snackbar.show(
+                      res?.defaultProfile
+                        ? 'Đã gửi lời mời tới thành viên'
+                        : 'Thêm thành viên thành công',
+                      'success',
+                    );
+                    NavigationService.navigate('listProfileUser', {
+                      reset: this.state.reset + 1,
+                    });
+                  }
+                })
+                .catch(err => {
+                  this.setState({
+                    isLoading: false,
+                  });
+                  if (err?.response?.status == 409) {
+                    snackbar.show(
+                      constants.msg.user.phone_exits_in_list_profile,
+                      'danger',
+                    );
+                    return;
+                  }
+                  snackbar.show(constants.msg.user.add_member_fail, 'danger');
+                });
+            },
+          );
+        })
+        .catch(e => {
+          snackbar.show(constants.msg.app.not_internet, 'danger');
+        });
+    });
+  };
+  renderDob = value => {
+    if (value) {
+      let dateParam = value.split(/[\s/:]/);
+      let date = new Date(dateParam[2], dateParam[1], dateParam[0]);
+      return value + `- ${date.getAge()} tuổi`;
+    } else {
+      return 'Chọn ngày sinh';
+    }
+  };
+  onSelectNations = () => {
+    this.props.navigation.navigate('selectNations', {
+      onSelected: this.selectNations.bind(this),
+      nations: this.state.nations,
+    });
+  };
+  onSelectJobs = () => {
+    this.props.navigation.navigate('getJobs', {
+      onSelected: this.selectJobs.bind(this),
+      jobs: this.state.jobs,
+    });
+  };
+  _replaceSpace(str) {
+    if (str) return str.replace(/\u0020/, '\u00a0');
+  }
+  onSelectRelation = () => {
+    Keyboard.dismiss();
+    this.setState({
+      isVisibleRelation: true,
+    });
+  };
+  onAddRelation = relation => {
+    this.setState({
+      relation,
+      isVisibleRelation: false,
+    });
+  };
+  onFinding = () => {
+    if (!this.form2.isValid()) {
+      return;
+    }
+    this.setState(
+      {
+        isFinding: true,
+      },
+      () => {
+        // let encode = encodeURI(this.state.name)
+        let data = {
+          mobileNumber: this.state.phone,
+          fullName: this.state.name.toString(),
+        };
+        profileProvider
+          .getInfoProfile(data)
+          .then(s => {
+            if (s.resultMessage == 'FRIEND_CREATED_ALREADY_EXISTS') {
+              this.setState({
+                isFinding: false,
+                findFinish: false,
+                // userDoesNotExist: 1,
+              });
+              snackbar.show(
+                'SĐT đã tồn tại trong danh sách hồ sơ của bạn',
+                'danger',
+              );
+              return;
             }
-        );
-    }
-    onCancelDate = () => {
-        this.setState({ toggelDateTimePickerVisible: false });
-    }
-    render() {
-        let maxDate = new Date();
-        maxDate = new Date(
-            maxDate.getFullYear(),
-            maxDate.getMonth(),
-            maxDate.getDate()
-        );
-        let minDate = new Date();
-        minDate = new Date(
-            maxDate.getFullYear() - 150,
-            maxDate.getMonth(),
-            maxDate.getDate()
-        );
-        const icSupport = require("@images/new/user.png");
-        const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal.absoluteUrl() }
-            : icSupport;
+            if (s?.resultMessage == 'PROFILE_INFO_ALREADY_EXISTS') {
+              this.setState({
+                isFinding: false,
+                findFinish: false,
+                // userDoesNotExist: 1,
+              });
+              snackbar.show(
+                'Đã tồn tại thông tin thành viên trong danh sách',
+                'danger',
+              );
+              return;
+            }
+            if (!s?.profileInfo?.guardian && !s?.profileInfo?.personal) {
+              this.setState({
+                isFinding: false,
+                findFinish: true,
+                userDoesNotExist: 1,
+                disabled: false,
+                dataProfile: {},
+                date: null,
+                dob: null,
+                valueGender: null,
+                userPassport: null,
+                guardianPassport: null,
+                guardianName: null,
+                guardianPhone: null,
+              });
+            } else {
+              let dataProfile = s.profileInfo || {};
 
-        return (
-            <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                title={constants.title.add_new_member}
-                iosBarStyle={'light-content'}
-                actionbarStyle={styles.actionbarStyle}
-                style={styles.activityPanel}
-                menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onCreateProfile}>
-                    <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
-                </TouchableOpacity>}
-                titleStyle={styles.txTitle}
-            >
-                <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' enableResetScrollToCoords={false} extraHeight={100}>
-                    <View style={styles.container}>
-                        <Form ref={ref => (this.form = ref)} style={[styles.flex]}>
-                            <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{constants.fullname} <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                <TextField
-                                    hideError={true}
-                                    onValidate={this.onValidateName}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                            minlength: 1,
-                                            maxlength: 255
-                                        },
-                                        messages: {
-                                            required: constants.msg.user.fullname_not_null,
-                                            maxlength: constants.msg.user.text_without_255,
-                                        }
-                                    }}
-                                    placeholder={constants.msg.user.input_name}
-                                    inputStyle={[
-                                        styles.ktq,
-                                    ]}
-                                    errorStyle={styles.errorStyle}
-                                    onChangeText={this.onChangeText("name")}
-                                    value={this.state.name}
-                                    autoCapitalize={"none"}
-                                    // underlineColorAndroid="transparent"
-                                    autoCorrect={false}
-                                />
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
-                            <Field
+              this.setState({
+                isFinding: false,
+                findFinish: true,
+                userDoesNotExist: 2,
+                dataProfile,
+                disabled: true,
+                name: dataProfile?.personal?.fullName
+                  ? dataProfile?.personal.fullName
+                  : '',
+                date: dataProfile?.personal?.dateOfBirth
+                  ? dataProfile.personal.dateOfBirth
+                      .toDateObject('-')
+                      .format('dd/MM/yyyy')
+                  : '',
+                dob: dataProfile?.personal?.dateOfBirth
+                  ? dataProfile.personal.dateOfBirth.toDateObject('-')
+                  : '',
+                valueGender: dataProfile?.personal?.gender,
+                userPassport: dataProfile?.personal?.idNumber || '',
+                guardianPassport: s.profileInfo?.guardian?.idNumber || '',
+                guardianName: s.profileInfo?.guardian?.fullName || '',
+                guardianPhone: s.profileInfo?.guardian?.mobileNumber || '',
+              });
+            }
+          })
+          .catch(err => {
+            this.setState({
+              isFinding: false,
+            });
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại.', 'danger');
+          });
+      },
+    );
+  };
+  render() {
+    const {avatar, isLoading} = this.state;
+    let age = this.state.dob
+      ? new Date().getFullYear() - this.state.dob.getFullYear()
+      : null;
+    let maxDate = new Date();
+    maxDate = new Date(
+      maxDate.getFullYear(),
+      maxDate.getMonth(),
+      maxDate.getDate(),
+    );
+    let minDate = new Date();
+    minDate = new Date(
+      maxDate.getFullYear() - 150,
+      maxDate.getMonth(),
+      maxDate.getDate(),
+    );
 
-                                style={[styles.mucdichkham, { flexDirection: 'row' }]}
-                            >
-                                <Field style={{ width: '60%' }}>
-                                    <Text style={styles.mdk}>{constants.dob}</Text>
-
-                                    <TextField
-                                        // value={this.state.date || ""}
-                                        onPress={this.onSelectDate}
-                                        dateFormat={"dd/MM/yyyy"}
-                                        splitDate={"/"}
-                                        editable={false}
-                                        getComponent={(
-                                            value,
-                                            onChangeText,
-                                            onFocus,
-                                            onBlur,
-                                            isError
-                                        ) => (
-                                                <Text style={[styles.ktq, { paddingVertical: 12 }, value ? { color: '#000' } : { color: '#808080' }]}>{value ? (value) : (constants.dob)}</Text>
-                                            )}
-                                        // onChangeText={s => {
-                                        //   this.setState({ date: s });
-                                        // }}
-                                        value={this.state.date}
-                                        errorStyle={styles.errorStyle}
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ nameError: "" });
-                                            } else {
-                                                messages ?
-                                                    (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
-                                            }
-                                        }}
-                                        validate={{
-                                            rules: {
-                                                max: maxDate,
-                                                min: minDate
-                                            },
-                                            messages: {
-                                                max: false,
-                                                min: true
-                                            }
-                                        }}
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ dateError: "", });
-                                            } else {
-                                                this.setState({ isMin: messages });
-                                            }
-                                        }}
-                                        autoCapitalize={"none"}
-                                        autoCorrect={false}
-                                        style={{
-                                            flex: 1
-                                        }}
-                                    />
-                                </Field>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.mucdichkham,
-                                    ]}
-                                    onPress={this.onShowGender}
-                                >
-                                    <Text style={styles.mdk}>{constants.gender} <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                    <Text style={[styles.ktq, { paddingVertical: 12 }, this.state.valueGender || this.state.valueGender == 0 ? { color: '#000' } : { color: '#808080' }]}>
-                                        {this.state.txGender}
-                                    </Text>
-                                </TouchableOpacity>
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
-                            <Field style={[styles.mucdichkham, { flexDirection: 'row' },]}>
-                                <Field style={{ width: '60%' }}>
-                                    <Field>
-                                        <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
-                                        <TextField
-                                            hideError={true}
-                                            onValidate={(valid, messages) => {
-                                                if (valid) {
-                                                    this.setState({ heightError: "" });
-                                                } else {
-                                                    this.setState({ heightError: messages });
-                                                }
-                                            }}
-                                            validate={{
-                                                rules: {
-                                                    number: true
-                                                },
-                                                messages: {
-                                                    number: constants.msg.user.height_invalid,
-                                                }
-                                            }}
-                                            placeholder={'Chiều cao'}
-                                            inputStyle={[
-                                                styles.ktq,
-                                            ]}
-                                            keyboardType="numeric"
-                                            errorStyle={styles.errorStyle}
-                                            onChangeText={this.onChangeText("height")}
-                                            value={this.state.height}
-                                            autoCapitalize={"none"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
-                                    <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
-                                </Field>
-                                <Field style={{ flex: 1 }}>
-                                    <Field>
-                                        <Text style={styles.mdk}>{'Cân nặng (kg)'}</Text>
-                                        <TextField
-                                            hideError={true}
-                                            placeholder={'Cân nặng'}
-                                            inputStyle={[
-                                                styles.ktq,
-                                            ]}
-                                            keyboardType="numeric"
-                                            errorStyle={styles.errorStyle}
-                                            onChangeText={this.onChangeText("weight")}
-                                            value={this.state.weight}
-                                            autoCapitalize={"none"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
-                                    <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
-                                </Field>
-                            </Field>
-                            <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{constants.phone}  <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                <TextField
-                                    hideError={true}
-                                    onValidate={(valid, messages) => {
-                                        if (valid) {
-                                            this.setState({ phoneError: "" });
-                                        } else {
-                                            this.setState({ phoneError: messages });
-                                        }
-                                    }}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                            phone: true
-                                        },
-                                        messages: {
-                                            required: constants.msg.user.phone_not_null,
-                                            phone: constants.msg.user.phone_invalid
-                                        }
-                                    }}
-                                    keyboardType="numeric"
-                                    placeholder={constants.phone}
-                                    inputStyle={[
-                                        styles.ktq,
-                                    ]}
-                                    errorStyle={styles.errorStyle}
-                                    onChangeText={this.onChangeText("phone")}
-                                    value={this.state.phone}
-                                    autoCapitalize={"none"}
-                                    // underlineColorAndroid="transparent"
-                                    autoCorrect={false}
-                                />
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text>
-                            {/* <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
-                                <TextField
-                                    hideError={true}
-                                    onValidate={(valid, messages) => {
-                                        if (valid) {
-                                            this.setState({ addressError: "" });
-                                        } else {
-                                            this.setState({ addressError: messages });
-                                        }
-                                    }}
-                                    validate={{
-                                        rules: {
-                                            maxlength: 255
-                                        },
-                                        messages: {
-                                            required: constants.msg.user.fullname_not_null,
-                                            maxlength: constants.msg.user.text_without_255,
-                                        }
-                                    }}
-                                    placeholder={'Địa chỉ'}
-                                    multiline={true}
-                                    inputStyle={[
-                                        styles.ktq,
-                                    ]}
-                                    errorStyle={styles.errorStyle}
-                                    onChangeText={this.onChangeText("address")}
-                                    value={this.state.address}
-                                    autoCapitalize={"none"}
-                                    // underlineColorAndroid="transparent"
-                                    autoCorrect={false}
-                                />
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
-                            <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{constants.province}</Text>
-                                <Field>
-                                    <TextField
-                                        hideError={true}
-                                        onPress={this.onSelectProvince}
-                                        editable={false}
-                                        inputStyle={[
-                                            styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : constants.province}
-                                        autoCapitalize={"none"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-
-                            </Field>
-
-                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>Quận/Huyện</Text>
-                                <Field>
-                                    <TextField
-                                        hideError={true}
-                                        // validate={{
-                                        //     rules: {
-                                        //         number: true,
-                                        //     },
-                                        //     messages: {
-                                        //         number: 'Cân nặng không hợp lệ',
-                                        //     }
-                                        // }}
-                                        inputStyle={[
-                                            styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
-                                        ]}
-                                        onPress={this.onSelectDistrict}
-                                        editable={false}
-                                        errorStyle={styles.errorStyle}
-                                        value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
-                                        autoCapitalize={"none"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-                            </Field>
-                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>{'Xã/Phường'}</Text>
-                                <Field>
-                                    <TextField
-                                        hideError={true}
-                                        onPress={this.onSelectZone}
-                                        editable={false}
-                                        inputStyle={[
-                                            styles.ktq, { minHeight: 41 }, this.state.zone && this.state.zone.name ? {} : { color: '#8d8d8d' }
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
-                                        autoCapitalize={"none"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-                            </Field>
-                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>Thôn/Xóm/Số nhà</Text>
-                                <TextField
-                                    hideError={true}
-                                    placeholder={'Thôn/Xóm/Số nhà'}
-                                    inputStyle={[
-                                        styles.ktq,
-                                    ]}
-                                    errorStyle={styles.errorStyle}
-                                    onChangeText={this.onChangeText("address")}
-                                    value={this.state.address}
-                                    autoCapitalize={"none"}
-                                    // underlineColorAndroid="transparent"
-                                    autoCorrect={false}
-                                />
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
-                            {/* <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                <Field>
-                                    <TextField
-                                        hideError={true}
-                                        multiline={true}
-                                        onPress={this.onSelectRelationShip}
-                                        editable={false}
-                                        inputStyle={[
-                                            styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
-                                        autoCapitalize={"none"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-                                <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
-                            </Field> */}
-                        </Form>
-                    </View>
-                </KeyboardAwareScrollView>
-                <ImagePicker ref={ref => (this.imagePicker = ref)} />
-                <DateTimePicker
-                    isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={this.onConfirmDate}
-                    onCancel={this.onCancelDate}
-                    date={new Date()}
-                    minimumDate={minDate}
-                    maximumDate={new Date()}
-                    cancelTextIOS={constants.actionSheet.cancel2}
-                    confirmTextIOS={constants.actionSheet.confirm}
-                    date={this.state.dob || new Date()}
+    return (
+      <ActivityPanel
+        title={
+          this.state.isEdit
+            ? this.state.badInfo
+              ? 'Hoàn thành hồ sơ'
+              : 'Chỉnh sửa hồ sơ'
+            : 'Thêm mới hồ sơ'
+        }
+        isLoading={isLoading}
+        menuButton={
+          !this.state.findFinish ? null : (
+            <TouchableOpacity
+              onPress={this.onCreateProfile}
+              style={styles.buttonSave}>
+              <Text style={styles.txtSave}>Lưu</Text>
+            </TouchableOpacity>
+          )
+        }
+        containerStyle={{backgroundColor: '#f8f8f8'}}
+        titleStyle={styles.titleStyle}>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+          <View style={styles.container}>
+            {this.state.badInfo ? (
+              <View style={styles.groupTitle}>
+                <Text style={[styles.txtTitle1, {fontSize: 14}]}>
+                  Hoàn thiện hồ sơ trước khi thêm thành viên !
+                </Text>
+                {/* <Text style={styles.txtTitle2}>Hồ sơ được sử dụng để đặt khám do đó chỉ có thể sửa hồ sơ tại nơi khám.</Text> */}
+              </View>
+            ) : (
+              <View />
+            )}
+            <View>
+              <Text style={styles.txScanCode}>
+                Quét Mã iSofHcare của thành viên để điền thông tin tự động
+              </Text>
+              <TouchableOpacity
+                onPress={this.onScanQrCode}
+                style={styles.btnQrCode}>
+                <ScaledImage
+                  source={require('@images/new/profile/ic_qr.png')}
+                  height={23}
                 />
-                <ActionSheet
-                    ref={o => this.actionSheetGender = o}
-                    options={[constants.actionSheet.male, constants.actionSheet.female, constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    // destructiveButtonIndex={1}
-                    onPress={this.onSetGender}
-                />
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={this.onCloseModal}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={styles.viewModal}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={styles.viewPopup}>
-                        <Text style={styles.txNumber}>ISOFHCARE đã tìm thấy tài khoản sở hữu số điện thoại {this.state.phone ? this.state.phone : ''} trên hệ thống.</Text>
-                        <Text style={styles.txDetails}>Vui lòng <Text style={styles.txSend}>GỬI</Text> và <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo tài khoản sẵn có.</Text>
-                        <TouchableOpacity onPress={this.onSendConfirm} style={styles.btnConfirm}><Text style={styles.txConfirm}>Gửi xác nhận</Text></TouchableOpacity>
-                    </View>
-                </Modal>
-                {Platform.OS == "ios" && <KeyboardSpacer />}
-            </ActivityPanel>
-        );
-    }
+                <Text style={styles.txScanQr}>QUÉT MÃ ISOFHCARE</Text>
+              </TouchableOpacity>
+              <Text style={styles.txOr}>Hoặc</Text>
+              <Text style={styles.inputInfo}>NHẬP THÔNG TIN THÀNH VIÊN</Text>
+            </View>
+            <Form ref={ref => (this.form2 = ref)}>
+              <Field style={styles.viewPhoneName}>
+                <Field style={styles.viewInfoName}>
+                  <Field
+                    style={[
+                      styles.containerField,
+                      {
+                        borderTopColor: '#00000011',
+                        borderTopWidth: 1,
+                      },
+                    ]}>
+                    <Text style={styles.txLabel}>Họ và tên</Text>
+                    <Field style={{flex: 1}}>
+                      <TextField
+                        errorStyle={[styles.err]}
+                        validate={{
+                          rules: {
+                            required: true,
+                          },
+                          messages: {
+                            required: 'Họ và tên không được để trống',
+                          },
+                        }}
+                        onBlur={this.onBlur}
+                        placeholder={'Nhập họ và tên'}
+                        multiline={true}
+                        inputStyle={[styles.input]}
+                        onChangeText={this.onChangeText('name')}
+                        value={this._replaceSpace(this.state.name)}
+                        autoCapitalize={'none'}
+                        editable={!this.state.disabled}
+                        autoCorrect={false}
+                      />
+                    </Field>
+                    <Field />
+                  </Field>
 
+                  <Field style={[styles.containerField]}>
+                    <Text style={styles.txLabel}>Số điện thoại</Text>
+                    <Field style={{flex: 1}}>
+                      <TextField
+                        multiline={true}
+                        onChangeText={this.onChangeText('phone')}
+                        inputStyle={[styles.input]}
+                        placeholder="Nhập số điện thoại"
+                        value={this.state.phone}
+                        errorStyle={styles.err}
+                        editable={!this.state.disabled}
+                        maxLength={10}
+                        autoCapitalize={'none'}
+                        onBlur={this.onBlur}
+                        validate={{
+                          rules: {
+                            required: true,
+                            phone: true,
+                          },
+                          messages: {
+                            required: 'Số điện thoại không được để trống',
+                          },
+                        }}
+                        // underlineColorAndroid="transparent"
+                        autoCorrect={false}
+                        keyboardType={'numeric'}
+                      />
+                    </Field>
+                    <Field />
+                  </Field>
+                </Field>
+                <View style={styles.viewBtnCheck}>
+                  {this.state.isFinding ? (
+                    <ActivityIndicator color={'#fff'} />
+                  ) : (
+                    <TouchableOpacity
+                      onPress={this.onFinding}
+                      style={styles.btnCheck}>
+                      <ScaledImage
+                        style={styles.imgCheck}
+                        source={require('@images/new/profile/ic_check_info.png')}
+                        height={23}
+                      />
+                      <Text style={styles.txFind}>Tìm</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </Field>
+            </Form>
+            <Form ref={ref => (this.form = ref)}>
+              {/** Văn bằng chuyên môn */}
+
+              {this.state.userDoesNotExist == 2 ? (
+                <Text style={styles.txResult}>
+                  Tìm thấy thông tin thành viên
+                </Text>
+              ) : this.state.userDoesNotExist == 1 ? (
+                <Text style={styles.txResult}>
+                  Thành viên không tồn tại, vui lòng nhập thông tin!
+                </Text>
+              ) : (
+                <Text style={styles.txResult} />
+              )}
+
+              {this.state.findFinish ? (
+                <Field>
+                  <Field style={[styles.containerField]}>
+                    <Text style={styles.txLabel}>Quan hệ</Text>
+                    <Field style={{flex: 1}}>
+                      <TextField
+                        multiline={true}
+                        onPress={this.onSelectRelation}
+                        editable={false}
+                        inputStyle={[styles.input, {textAlignVertical: 'top'}]}
+                        placeholder="Chọn quan hệ"
+                        value={objectUtils.renderTextRelations(
+                          this.state.relation,
+                        )}
+                        autoCapitalize={'none'}
+                        errorStyle={styles.err}
+                        // validate={{
+                        //     rules: {
+                        //         required: true,
+                        //     },
+                        //     messages: {
+                        //         required: "Dân tộc không được để trống",
+                        //     }
+                        // }}
+                        // underlineColorAndroid="transparent"
+                        autoCorrect={false}
+                      />
+                    </Field>
+                    <ScaledImage
+                      height={10}
+                      source={require('@images/new/account/ic_next.png')}
+                    />
+                  </Field>
+                  {/** Học vị */}
+                  <Field style={[styles.containerField]}>
+                    <Text style={styles.txLabel}>Ngày sinh</Text>
+                    <Field style={{flex: 1}}>
+                      <TextField
+                        multiline={true}
+                        dateFormat={'dd/MM/yyyy'}
+                        errorStyle={styles.err}
+                        splitDate={'/'}
+                        onPress={() => {
+                          Keyboard.dismiss();
+                          this.setState(
+                            {toggleDateTimePickerVisible: true},
+                            () => {},
+                          );
+                        }}
+                        validate={{
+                          rules: {
+                            required: true,
+                          },
+                          messages: {
+                            required: 'Ngày sinh không được để trống',
+                          },
+                        }}
+                        disabled={this.state.disabled}
+                        editable={false}
+                        inputStyle={[styles.input]}
+                        placeholder="Chọn ngày sinh"
+                        value={this.state.date}
+                        autoCapitalize={'none'}
+                        // underlineColorAndroid="transparent"
+                        autoCorrect={false}
+                      />
+                    </Field>
+                    <ScaledImage
+                      height={10}
+                      source={require('@images/new/account/ic_next.png')}
+                    />
+                  </Field>
+
+                  <Field style={[styles.containerField]}>
+                    <Text style={styles.txLabel}>Giới tính</Text>
+                    <Field style={{flex: 1}}>
+                      <TextField
+                        errorStyle={styles.err}
+                        multiline={true}
+                        onPress={this.onShowGender}
+                        disabled={this.state.disabled}
+                        editable={false}
+                        inputStyle={[styles.input]}
+                        placeholder="Chọn giới tính"
+                        value={
+                          this.state.valueGender == 'FEMALE'
+                            ? 'Nữ'
+                            : this.state.valueGender == 'MALE'
+                            ? 'Nam'
+                            : ''
+                        }
+                        autoCapitalize={'none'}
+                        validate={{
+                          rules: {
+                            required: true,
+                          },
+                          messages: {
+                            required: 'Giới tính không được để trống',
+                          },
+                        }}
+                        // underlineColorAndroid="transparent"
+                        autoCorrect={false}
+                      />
+                    </Field>
+                    <ScaledImage
+                      height={10}
+                      source={require('@images/new/account/ic_next.png')}
+                    />
+                  </Field>
+                  <Field>
+                    <Field style={[styles.containerField]}>
+                      <Text style={styles.txLabel}>Số CMND</Text>
+                      <Field style={{flex: 1}}>
+                        <TextField
+                          multiline={true}
+                          onChangeText={this.onChangeText('userPassport')}
+                          inputStyle={[styles.input]}
+                          placeholder="Nhập số CMND"
+                          value={this.state.userPassport}
+                          errorStyle={[styles.err, {flexWrap: 'nowrap'}]}
+                          autoCapitalize={'none'}
+                          validate={{
+                            rules: {
+                              maxlength: 13,
+                            },
+                            messages: {
+                              maxlength: 'Số CMND không được quá 13 ký tự',
+                            },
+                          }}
+                          // underlineColorAndroid="transparent"
+                          autoCorrect={false}
+                          keyboardType={'numeric'}
+                          editable={!this.state.disabled}
+                        />
+                      </Field>
+                      <ScaledImage
+                        height={10}
+                        source={require('@images/new/account/ic_next.png')}
+                      />
+                    </Field>
+                  </Field>
+                  {/** Địa chỉ */}
+                  {(age && age < 14) || age == 0 ? (
+                    <Field>
+                      <Field style={[styles.containerField, {marginTop: 10}]}>
+                        <Text style={styles.txLabel}>Người bảo lãnh</Text>
+                        <Field style={{flex: 1}}>
+                          <TextField
+                            multiline={true}
+                            onChangeText={this.onChangeText('guardianName')}
+                            inputStyle={[styles.input]}
+                            placeholder="Nhập người bảo lãnh"
+                            errorStyle={styles.err}
+                            editable={!this.state.disabled}
+                            value={this._replaceSpace(this.state.guardianName)}
+                            autoCapitalize={'none'}
+                            // underlineColorAndroid="transparent"
+                            autoCorrect={false}
+                            validate={{
+                              rules: {
+                                required: true,
+                              },
+                              messages: {
+                                required: 'Người bảo lãnh không được để trống',
+                              },
+                            }}
+                          />
+                        </Field>
+                        <ScaledImage
+                          height={10}
+                          source={require('@images/new/account/ic_next.png')}
+                        />
+                      </Field>
+                      <Field style={[styles.containerField]}>
+                        <Text style={styles.txLabel}>SĐT người bảo lãnh</Text>
+                        <Field style={{flex: 1}}>
+                          <TextField
+                            multiline={true}
+                            onChangeText={this.onChangeText('guardianPhone')}
+                            inputStyle={[styles.input]}
+                            placeholder="Nhập SĐT người bảo lãnh"
+                            value={this.state.guardianPhone}
+                            autoCapitalize={'none'}
+                            editable={!this.state.disabled}
+                            keyboardType={'numeric'}
+                            errorStyle={styles.err}
+                            maxLength={10}
+                            numberOfLines={1}
+                            validate={{
+                              rules: {
+                                required: true,
+                                phone: true,
+                              },
+                              messages: {
+                                required:
+                                  'SĐT người bảo lãnh không được để trống',
+                              },
+                            }}
+                            // underlineColorAndroid="transparent"
+                            autoCorrect={false}
+                          />
+                        </Field>
+                        <ScaledImage
+                          height={10}
+                          source={require('@images/new/account/ic_next.png')}
+                        />
+                      </Field>
+                      <Field style={[styles.containerField]}>
+                        <Text
+                          style={
+                            styles.txLabel
+                          }>{`CMTND/HC\nngười bảo lãnh`}</Text>
+                        <Field
+                          style={{
+                            flex: 1,
+                            alignItems: 'flex-end',
+                            flexWrap: 'nowrap',
+                          }}>
+                          <TextField
+                            multiline={true}
+                            onChangeText={this.onChangeText('guardianPassport')}
+                            inputStyle={[
+                              styles.input,
+                              {flexWrap: 'nowrap', minWidth: '120%'},
+                            ]}
+                            placeholder={`Nhập CMTND/HC người bảo lãnh`}
+                            value={this.state.guardianPassport}
+                            errorStyle={[styles.err]}
+                            autoCapitalize={'none'}
+                            editable={!this.state.disabled}
+                            validate={{
+                              rules: {
+                                required: true,
+                                maxlength: 13,
+                              },
+                              messages: {
+                                required:
+                                  'CMTND/HC người bảo lãnh không được để trống',
+                                maxlength: 'Số CMND không được quá 13 ký tự',
+                              },
+                            }}
+                            numberOfLines={1}
+                            // underlineColorAndroid="transparent"
+                            autoCorrect={false}
+                          />
+                        </Field>
+                        <ScaledImage
+                          height={10}
+                          source={require('@images/new/account/ic_next.png')}
+                        />
+                      </Field>
+                    </Field>
+                  ) : (
+                    <Field />
+                  )}
+                </Field>
+              ) : (
+                <Field />
+              )}
+            </Form>
+          </View>
+        </KeyboardAwareScrollView>
+        <DateTimePicker
+          isVisible={this.state.toggleDateTimePickerVisible}
+          onConfirm={newDate => {
+            this.setState(
+              {
+                dob: newDate,
+                date: newDate.format('dd/MM/yyyy'),
+                toggleDateTimePickerVisible: false,
+              },
+              () => {
+                if (this.state.isSave) {
+                  this.form.isValid();
+                }
+              },
+            );
+          }}
+          onCancel={() => {
+            this.setState({toggleDateTimePickerVisible: false});
+          }}
+          date={new Date()}
+          minimumDate={minDate}
+          maximumDate={new Date()}
+          cancelTextIOS={constants.actionSheet.cancel2}
+          confirmTextIOS={constants.actionSheet.confirm}
+          date={this.state.dob || new Date()}
+        />
+        <ActionSheet
+          ref={o => (this.actionSheetGender = o)}
+          options={[
+            constants.actionSheet.male,
+            constants.actionSheet.female,
+            constants.actionSheet.cancel,
+          ]}
+          cancelButtonIndex={2}
+          // destructiveButtonIndex={1}
+          onPress={this.onSetGender}
+        />
+        <Modal
+          isVisible={this.state.isVisible}
+          onBackdropPress={this.onCloseModal}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={styles.viewModal}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}>
+          <View style={styles.viewPopup}>
+            <Text style={styles.txNumber}>
+              HMUH Care đã tìm thấy tài khoản sở hữu số điện thoại{' '}
+              {this.state.phone ? this.state.phone : ''} trên hệ thống.
+            </Text>
+            <Text style={styles.txDetails}>
+              Vui lòng <Text style={styles.txSend}>GỬI</Text> và{' '}
+              <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với
+              chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo
+              tài khoản sẵn có.
+            </Text>
+            <TouchableOpacity
+              onPress={this.onSendConfirm}
+              style={styles.btnConfirm}>
+              <Text style={styles.txConfirm}>Gửi xác nhận</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={this.state.isVisibleRelation}
+          onBackdropPress={this.onCloseModal}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={styles.modalRelation}
+          avoidKeyboard={true}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}>
+          <SelectRelation
+            onSelectRelation={relation => this.onAddRelation(relation)}
+          />
+        </Modal>
+        <ImagePicker ref={ref => (this.imagePicker = ref)} />
+      </ActivityPanel>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-    flex: { flex: 1 },
-    scroll: {
-        flex: 1,
-        paddingVertical: 5
-    },
-    txtSave: {
-        color: '#fff',
-        marginRight: 25,
-        fontSize: 14,
-        fontWeight: '800'
-    },
-    activityPanel: {
-        flex: 1,
-        backgroundColor: '#fff'
-    },
-    txtCountryCode: {
-        color: '#02C39A',
-        textAlign: 'left'
-    },
-    containerItem: {
-        margin: 5,
-        borderRadius: 1,
-        borderColor: '#A4A4A4',
-        padding: 5
-    },
-    AcPanel: {
-        flex: 1,
-        backgroundColor: "rgb(247,249,251)"
-    },
-    imgIc: {
-        marginLeft: 10
-    },
-    imgmdk: {
-        marginRight: 5
-    },
-    txNumber: {
-        fontSize: 14,
-        fontStyle: 'italic',
-        color: '#000',
-        textAlign: 'center'
-    },
-    mucdichkham: {
-        flex: 1
-        // borderStyle: "solid",
-        // borderWidth: 1,
-        // borderColor: '#02C39A',
-        // borderRadius:5,
-
-    },
-    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal: 20, paddingVertical: 40, borderRadius: 5, alignItems: 'center' },
-    txSend: {
-        color: '#02C39A',
-        fontSize: 14,
-        fontWeight: 'bold'
-    },
-    txTitle: { color: '#fff', marginLeft: 50, fontSize: 16 },
-    mdk: {
-        marginLeft: 12,
-        flex: 1,
-        fontSize: 14,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#000000",
-
-    },
-    txDetails: {
-        fontSize: 14,
-        color: '#000',
-        textAlign: 'center'
-    },
-    ktq: {
-        fontSize: 14,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        textAlign: "left",
-        backgroundColor: '#F2F2F2',
-        borderColor: '#02C39A',
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-        marginHorizontal: 10,
-        minHeight: 41,
-        justifyContent: 'center',
-        color: '#000'
-    },
-    container: {
-        // borderStyle: "solid",
-        marginVertical: 20,
-        paddingHorizontal: 10,
-        flex: 1
-
-        // borderColor: "rgba(0, 0, 0, 0.07)"
-    },
-
-    btnhuy: {
-        fontSize: 18,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#8e8e93",
-        marginLeft: 10
-    },
-    header: { alignItems: "center" },
-    avatar: {
-        alignItems: "center",
-        paddingTop: 20,
-        width: 70
-    },
-    add: {
-        position: "absolute"
-    },
-    viewImgUpload: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    ViewRow: {},
-    textho1: {
-        fontSize: 17,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#000000"
-    },
-    txInput: {
-        alignItems: "flex-end",
-        width: "50%",
-        height: 41,
-        color: "#8e8e93"
-    },
-    view2: {
-        backgroundColor: "rgb(255,255,255)",
-        top: 40,
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 0.06)"
-    },
-    next: {
-        position: "absolute",
-        top: 17,
-        right: 25
-    },
-    view3: {
-        backgroundColor: "rgb(255,255,255)",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 0.06)",
-
-        top: 60
-    },
-
-    textbot: {
-        marginLeft: 15
-        // fontSize: 15,
-        // fontWeight: "normal",
-        // fontStyle: "normal",
-        // letterSpacing: 0.2,
-        // color: "#4a4a4a",
-        // position: "relative",
-        // top: 70,
-        // padding: 10
-    },
-    btnmenu: {
-        fontSize: 18,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#0a7ffe",
-        marginRight: 10
-    },
-    ic_icon: {
-        position: "absolute",
-        bottom: 0,
-        right: 8
-    },
-    errorStyle: {
-        color: "red",
-        marginLeft: 13
-    },
-    textInputStyle: {
-        color: "#53657B",
-        height: 45,
-    },
-    labelStyle: { color: '#53657B', fontSize: 16, marginBottom: 10, marginLeft: 50 },
-    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
-    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
-    viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
-    txDone: { color: '#fff' },
-    btnConfirm: {
-        padding: 5,
-        backgroundColor: '#359A60',
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20
-    },
-    txConfirm: {
-        color: '#fff',
-        fontSize: 14
-    }
-});
 function mapStateToProps(state) {
-    return {
-        userApp: state.auth.userApp
-    };
+  return {
+    userApp: state.auth.userApp,
+  };
 }
 export default connect(mapStateToProps)(CreateProfileScreen);
+
+const styles = StyleSheet.create({
+  errorStyle: {
+    color: 'red',
+    marginLeft: 13,
+  },
+  fixMargin: {
+    marginTop: -10,
+  },
+  containerFix: {
+    marginTop: 10,
+    borderTopColor: '#00000011',
+    borderTopWidth: 1,
+    paddingVertical: 10,
+  },
+  errFix: {
+    bottom: -10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  groupScan: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  containerScan: {
+    backgroundColor: '#FF8A00',
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtTitle2: {
+    textAlign: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    color: '#fff',
+  },
+  txtTitle1: {
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingHorizontal: 30,
+    paddingTop: 20,
+  },
+  groupTitle: {
+    width: '100%',
+    backgroundColor: '#2F61AD',
+    paddingVertical: 15,
+    // borderBottomWidth: 0.6,
+    // borderBottomColor:'#BBB',
+    // elevation: 1,
+    // shadowColor: '#BBB',
+    height: 124,
+    // shadowOffset: {
+    //     width: 1,
+    //     height: 1
+    // },
+    marginBottom: 50,
+    // shadowOpacity: 0.7,
+    zIndex: 0,
+  },
+  container: {
+    flex: 1,
+    paddingBottom: 40,
+    zIndex: 0,
+  },
+  containerAddress: {
+    marginTop: 15,
+    borderTopColor: '#BBB',
+    borderTopWidth: 0.7,
+  },
+  txtValue: {
+    paddingRight: 10,
+    paddingVertical: 13,
+    color: '#000',
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    textAlign: 'right',
+  },
+
+  txtLabel: {
+    paddingRight: 10,
+  },
+  containerInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderBottomWidth: 0.7,
+    borderBottomColor: '#BBB',
+    backgroundColor: '#FFF',
+  },
+  txtOr: {
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
+  txtScan: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    paddingVertical: 7,
+    textDecorationLine: 'underline',
+  },
+  icCamera: {
+    position: 'absolute',
+    bottom: 10,
+    right: -6,
+  },
+  buttonAvatar: {
+    // paddingVertical: 20,
+    width: 80,
+    alignSelf: 'center',
+    position: 'absolute',
+    top: 84,
+    zIndex: 1000,
+  },
+  buttonSave: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  txtSave: {
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
+  titleStyle: {
+    paddingLeft: 50,
+    fontSize: 16,
+  },
+  placeHolderImage: {width: 80, height: 80},
+  image: {
+    alignSelf: 'center',
+    borderRadius: 40,
+    width: 80,
+    height: 80,
+  },
+  borderImage: {
+    borderRadius: 40,
+    borderWidth: 0.5,
+    borderColor: 'rgba(151, 151, 151, 0.29)',
+  },
+  txtSave: {
+    color: '#FFF',
+  },
+  txLabel: {
+    left: 10,
+    fontSize: 14,
+  },
+  buttonSave: {
+    paddingVertical: 10,
+    paddingRight: 20,
+  },
+  err: {
+    fontSize: 12,
+    color: 'red',
+    fontStyle: 'italic',
+    flexWrap: 'nowrap',
+    textAlign: 'right',
+  },
+  txtError: {
+    color: 'red',
+    paddingLeft: 10,
+    paddingTop: 8,
+    fontStyle: 'italic',
+    flexWrap: 'nowrap',
+  },
+  scaledImage: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+  },
+  input: {
+    minHeight: 35,
+    textAlign: 'right',
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 10,
+    color: '#000',
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    flex: 1 / 2,
+    textAlignVertical: 'top',
+    marginTop: 20,
+    flexWrap: 'nowrap',
+  },
+  containerField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 3,
+    borderBottomColor: '#00000011',
+    borderBottomWidth: 1,
+    paddingHorizontal: 10,
+    flex: 1,
+    flexWrap: 'nowrap',
+    backgroundColor: '#fff',
+    // borderTopColor: '#00000011',
+    // borderTopWidth: 1
+  },
+  viewCurrentUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopColor: '#00000011',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#00000011',
+    paddingVertical: 20,
+    paddingLeft: 25,
+    paddingRight: 15,
+    backgroundColor: '#fff',
+  },
+  txUserName: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  viewInfo: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  txViewProfile: {
+    color: 'gray',
+    marginTop: 5,
+  },
+  btnImage: {
+    position: 'relative',
+  },
+  imageStyle: {
+    borderRadius: 35,
+    borderWidth: 0.5,
+    borderColor: 'rgba(151, 151, 151, 0.29)',
+  },
+  customImagePlace: {
+    width: 70,
+    height: 70,
+    alignSelf: 'center',
+  },
+  styleImgLoad: {
+    width: 70,
+    height: 70,
+    alignSelf: 'center',
+  },
+  viewPopup: {
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 40,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  txSend: {
+    color: '#3161ad',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  txTitle: {color: '#fff', marginLeft: 50, fontSize: 16},
+  btnConfirm: {
+    padding: 10,
+    backgroundColor: '#3161ad',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  txConfirm: {
+    color: '#fff',
+    fontSize: 14,
+  },
+  modalRelation: {
+    flex: 1,
+    margin: 0,
+    justifyContent: 'flex-end',
+  },
+  viewPhoneName: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#00CBA7',
+  },
+  btnCheck: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    alignSelf: 'center',
+  },
+  viewInfoName: {
+    width: '85%',
+  },
+  txResult: {
+    marginVertical: 10,
+    color: '#86899B',
+    textAlign: 'center',
+  },
+  txFind: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  imgCheck: {
+    alignSelf: 'center',
+  },
+  viewBtnCheck: {
+    width: '15%',
+    justifyContent: 'center',
+  },
+  btnQrCode: {
+    width: '70%',
+    backgroundColor: '#2f61ad',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 51,
+    borderRadius: 6,
+    marginVertical: 20,
+  },
+  txScanQr: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  txOr: {
+    color: '#808080',
+    textAlign: 'center',
+  },
+  inputInfo: {
+    fontSize: 16,
+    color: '#3161ad',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  txScanCode: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#808080',
+    width: '70%',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+});

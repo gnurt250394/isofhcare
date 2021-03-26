@@ -51,7 +51,7 @@ class SelectZoneScreen extends Component {
             () => {
               if (s) {
                 s.data.zones.forEach(zone => {
-                  if (zone.id == this.state.zone?.id) {
+                  if (zone.name == this.state.zone?.name) {
                     zone.selected = true;
                   }
                 });

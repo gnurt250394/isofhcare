@@ -218,6 +218,10 @@ class PushController extends Component {
             NavigationService.navigate('listOfServices', {item: {id}});
             break;
           }
+          case 'ACCEPT_FRIEND': {
+            NavigationService.navigate('listProfileUser', {isNoti: true});
+            break;
+          }
           case 'HOSPITAL': {
             NavigationService.navigate('profileHospital', {item: {id}});
             break;
@@ -427,6 +431,10 @@ class PushController extends Component {
           }
           case 'MEDICAL_SERVICE': {
             NavigationService.navigate('listOfServices', {item: {id}});
+            break;
+          }
+          case 'ACCEPT_FRIEND': {
+            NavigationService.navigate('listProfileUser', {isNoti: true});
             break;
           }
           case 'HOSPITAL': {

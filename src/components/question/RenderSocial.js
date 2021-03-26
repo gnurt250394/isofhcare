@@ -36,11 +36,22 @@ import ChatScreen from '@containers/chat/ChatScreen';
 import CustomMenu from '@components/CustomMenu';
 import SocialChatScreen from '@containers/chat/SocialChatScreen';
 import {withNavigation} from 'react-navigation';
+import ImageSensitive from './ImageSensitive';
 const {width, height} = Dimensions.get('window');
 const icSupport = require('@images/new/user.png');
 
 const RenderSocial = ({navigation, item, social}) => {
+  console.log('item: ', item);
   const [textShow, setTextShow] = useState(true);
+  const [listImage, setListImage] = useState(() => {
+    let data = [];
+    let length = item?.imageNo || item?.images.length;
+
+    for (let i = 0; i < length; i++) {
+      data.push(i);
+    }
+    return data;
+  });
 
   const onShowText = () => {
     setTextShow(pre => {
@@ -71,7 +82,17 @@ const RenderSocial = ({navigation, item, social}) => {
               alignItems: 'center',
               width: '100%',
             }}>
-            { item?.images?.length
+            {item?.sensitive
+              ? listImage.map((item, index) => {
+                  return (
+                    <Image
+                      key={index}
+                      source={require('@images/new/community/ic_sensitive.png')}
+                      style={styles.imgQuestion}
+                    />
+                  );
+                })
+              : item?.images?.length
               ? item.images.map((e, i) => {
                   return (
                     <TouchableOpacity key={i} onPress={showImage(i)}>
@@ -127,6 +148,7 @@ const RenderSocial = ({navigation, item, social}) => {
 const styles = StyleSheet.create({
   txtMessage: {
     color: '#000',
+    fontSize: 17,
   },
   txtHide: {
     color: '#00000070',

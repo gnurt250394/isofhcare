@@ -29,6 +29,7 @@ const DetailNewsScreen = ({navigation}) => {
 
   const [isLoading, setLoading] = useState(false);
   const [detail, setDetail] = useState(item);
+  console.log('detail: ', detail);
 
   const [content, setContent] = useState('');
   const [idCategories, setIdCategories] = useState(detail?.topic?.topicId);
@@ -37,7 +38,6 @@ const DetailNewsScreen = ({navigation}) => {
     getNews();
     getList();
   }, [detail.newsId]);
-  console.log('detail: ', detail);
   const getNews = () => {
     newsProvider
       .detailNews(detail?.newsId)
@@ -88,8 +88,8 @@ const DetailNewsScreen = ({navigation}) => {
   };
 
   const getTime = () => {
-    if (detail?.createdDate) {
-      let time = detail?.createdDate?.substring(0, 10);
+    if (detail?.createdAt) {
+      let time = detail?.createdAt?.substring(0, 10);
       return new Date(time).format('dd/MM/yyyy');
     } else {
       return '';
@@ -144,25 +144,47 @@ const DetailNewsScreen = ({navigation}) => {
     borderColor: 'orange',
   };
   const renderItem = ({item, index}) => {
+    let date = item?.alias?.createdAt
+      ? new Date(item?.alias?.createdAt.replace('+0000', ''))
+      : '';
+
+    let urlImage = item?.images[0].downloadUri;
+
     return (
-      <TouchableOpacity onPress={goToDetailService(item)} style={{flex: 1}}>
-        <View style={styles.cardView}>
-          <FastImage
-            source={{uri: item?.images?.[0]?.downloadUri?.absoluteUrl() || ''}}
-            style={{
-              borderRadius: 6,
-              resizeMode: 'cover',
-              width: 'auto',
-              height: 134,
-            }}
-          />
+      <TouchableOpacity
+        onPress={goToDetailService(item)}
+        style={styles.viewItem}>
+        <FastImage
+          style={{resizeMode: 'contain', height: 70, width: 133}}
+          source={{uri: `${urlImage}`}}
+        />
+        <View style={styles.viewTitle}>
+          <Text style={styles.txTitle} numberOfLines={2}>
+            {item?.shortTitle?.rawText}
+          </Text>
+          <View style={styles.readingTime}>
+            <View style={styles.viewTime}>
+              <ScaledImage
+                source={require('@images/new/news/ic_time.png')}
+                height={15}
+              />
+              <Text style={styles.txTime}>
+                {item?.createdAt
+                  ? moment(item?.createdAt)?.format('DD/MM/YYYY')
+                  : ''}
+              </Text>
+            </View>
+            <View style={styles.viewTime}>
+              <ScaledImage
+                source={require('@images/new/news/ic_time_reading.png')}
+                height={15}
+              />
+              <Text style={styles.txTime}>
+                {item?.estimatedReadingTime || 1} phút đọc
+              </Text>
+            </View>
+          </View>
         </View>
-        <Text
-          numberOfLines={2}
-          ellipsizeMode="tail"
-          style={styles.txContensHospital}>
-          {item?.shortTitle?.rawText}
-        </Text>
       </TouchableOpacity>
     );
   };
@@ -176,7 +198,6 @@ const DetailNewsScreen = ({navigation}) => {
   };
 
   const onShare = () => {
-    console.log('shareLinkContent: ', shareLinkContent);
     ShareDialog.canShow(shareLinkContent)
       .then(function(canShow) {
         if (canShow) {
@@ -186,15 +207,17 @@ const DetailNewsScreen = ({navigation}) => {
       .then(
         function(result) {
           if (result.isCancelled) {
-            console.log('Share cancelled');
           } else {
-            console.log('Share success with postId: ' + result.postId);
           }
         },
-        function(error) {
-          console.log('Share fail with error: ' + error);
-        },
+        function(error) {},
       );
+  };
+  const showImage = (urls, index) => () => {
+    navigation.navigate('photoViewer', {
+      index,
+      urls,
+    });
   };
   return (
     <ActivityPanel isLoading={isLoading} title="Nội dung chi tiết">
@@ -202,19 +225,26 @@ const DetailNewsScreen = ({navigation}) => {
         <View style={styles.flex}>
           <View style={styles.containerTitle}>
             <Text style={styles.txtTitle}>{detail?.title?.rawText}</Text>
-            <Text
-              style={{
-                color: '#00000070',
-                paddingBottom: 10,
-              }}>
-              {getTime()}
-            </Text>
-            <FastImage
-              source={{
-                uri: detail?.images?.[0]?.downloadUri?.absoluteUrl() || '',
-              }}
-              style={styles.imageNews}
-            />
+            <View style={styles.containerTime}>
+              <Text style={[styles.txtTime, {paddingRight: 20}]}>
+                {getTime()}
+              </Text>
+              <Text style={styles.txtTime}>
+                {detail?.estimatedReadingTime} phút đọc
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={showImage(
+                [{uri: detail?.images?.[0]?.downloadUri?.absoluteUrl()}],
+                0,
+              )}>
+              <FastImage
+                source={{
+                  uri: detail?.images?.[0]?.downloadUri?.absoluteUrl() || '',
+                }}
+                style={styles.imageNews}
+              />
+            </TouchableOpacity>
             {content ? (
               <HTML
                 html={'<div style="color: black">' + content + '</div>'}
@@ -228,15 +258,25 @@ const DetailNewsScreen = ({navigation}) => {
                     passProps,
                   ) => {
                     return (
-                      <FastImage
-                        resizeMode={'contain'}
-                        source={{uri: htmlAttribs.src}}
-                        style={{
-                          width: width - 30,
-                          height: parseInt(htmlAttribs.height) || 150,
-                          resizeMode: 'contain',
-                        }}
-                      />
+                      <TouchableOpacity
+                        onPress={showImage(
+                          [
+                            {
+                              uri: htmlAttribs.src,
+                            },
+                          ],
+                          0,
+                        )}>
+                        <FastImage
+                          resizeMode={'contain'}
+                          source={{uri: htmlAttribs.src}}
+                          style={{
+                            width: width - 30,
+                            height: parseInt(htmlAttribs.height) || 150,
+                            resizeMode: 'contain',
+                          }}
+                        />
+                      </TouchableOpacity>
                     );
                   },
                   table: (x, c) => <View style={tableColumnStyle}>{c}</View>,
@@ -273,17 +313,12 @@ const DetailNewsScreen = ({navigation}) => {
                 iSofHcare{' '}
               </Text>
               <Text>
-                | Ngày đăng{' '}
-                {detail?.createdAt
-                  ? moment(detail?.createdAt).format('DD/MM/YYYY')
-                  : null}
+                | Ngày đăng {moment(detail?.createdAt).format('DD/MM/YYYY')}
               </Text>
             </Text>
             <Text style={{paddingTop: 5}}>
               Cập nhật lần cuối:{' '}
-              {detail?.lastUpdated
-                ? moment(detail?.lastUpdated).format('DD/MM/yyyy')
-                : null}
+              {moment(detail?.lastUpdated).format('DD/MM/yyyy')}
             </Text>
             {detail?.authorRef?.fullName ? (
               <View>
@@ -314,14 +349,14 @@ const DetailNewsScreen = ({navigation}) => {
           {data.length ? (
             <View style={{backgroundColor: '#fff', marginTop: 10}}>
               <View style={styles.viewAds}>
-                <Text style={styles.txAds}>Bài viết liên quan</Text>
+                <Text style={styles.txAds}>Cùng chuyên mục</Text>
               </View>
               <FlatList
                 contentContainerStyle={styles.listAds}
-                horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => `${item.newsId || index}`}
                 data={data}
+                style={{paddingBottom: 30}}
                 ListFooterComponent={<View style={styles.viewFooter} />}
                 renderItem={renderItem}
               />
@@ -333,6 +368,47 @@ const DetailNewsScreen = ({navigation}) => {
   );
 };
 const styles = StyleSheet.create({
+  readingTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+    flexWrap: 'wrap',
+  },
+  viewItem: {
+    flexDirection: 'row',
+    marginTop: 10,
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  txTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    width: '95%',
+    textAlign: 'left',
+  },
+  viewTitle: {
+    paddingHorizontal: 10,
+    width: '70%',
+    justifyContent: 'space-between',
+  },
+  viewTime: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txTime: {
+    marginLeft: 5,
+    color: '#2F3035',
+    fontSize: 13,
+  },
+  containerTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txtTime: {
+    color: '#00000070',
+    paddingBottom: 10,
+  },
   txtNameConsultation: {
     fontWeight: 'bold',
     fontSize: 16,
