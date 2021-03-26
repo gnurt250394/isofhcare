@@ -227,6 +227,10 @@ class NotificationScreen extends Component {
             NavigationService.navigate('listOfServices', {item: data});
             break;
           }
+          case 'ACCEPT_FRIEND': {
+            NavigationService.navigate('listProfileUser', {isNoti: true});
+            break;
+          }
           case 'HOSPITAL': {
             NavigationService.navigate('profileHospital', {item: data});
             break;

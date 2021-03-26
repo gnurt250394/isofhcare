@@ -100,7 +100,6 @@ const ListCategories = (props) => {
             horizontal={true}
             ref={refContainer}
             onEndReachedThreshold={0.7}
-            extraData={listCategories}
             showsHorizontalScrollIndicator={false}
         >
 

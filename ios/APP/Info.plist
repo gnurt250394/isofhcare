@@ -44,6 +44,8 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>momocomu20200526</string>
+				<string>momohpoc20210312</string>
+				<string>momogit520200922</string>
 			</array>
 		</dict>
 		<dict>
@@ -117,6 +119,8 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Cho phép iSofH Care truy cập thư viện nhạc của thiết bị này để lưu hoặc tải nhạc.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Cho phép iSofH Care truy cập bluetooth của thiết bị này để kết nối với thiết bị khác.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Cho phép iSofH Care truy cập bluetooth của thiết bị này để kết nối với thiết bị khác.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Cho phép iSofH Care truy cập lịch của thiết bị này.</string>

@@ -289,14 +289,13 @@ const ChatScreen = ({
                     imageUris.push({uri: image.path, loading: true});
                     imageProvider.upload(image.path, image.mime, (s, e) => {
                       if (s.success) {
-                        if (s?.data?.data?.images?.length) {
+                        if (s.data.code == 0) {
                           let imageUris = listImage;
                           imageUris.forEach(item => {
                             if (item.uri == s.uri) {
                               item.loading = false;
-                              item.url = s?.data?.data?.images[0].imageLink;
-                              item.thumbnail =
-                                s?.data?.data?.images[0].imageLink;
+                              item.url = s.data.data.images[0].imageLink;
+                              item.thumbnail = s.data.data.images[0].imageLink;
                             }
                           });
                           setListImage(imageUris);
@@ -337,6 +336,7 @@ const ChatScreen = ({
     });
     setListImage([]);
 
+    // txtMessage.current.clear();
     // Keyboard.dismiss();
   };
   const onScrollToEnd = () => {
@@ -577,64 +577,21 @@ const ChatScreen = ({
           console.log('props: ', props);
           if (item.status == 'REPLY')
             return (
-              <View
-                style={[
-                  styles.containerSendMes,
+              <View  style={[
+                styles.containerSendMes,
+                {
+                  height:
+                    props.composerHeight < 50 ? 50 : props.composerHeight,
+                },
+              ]}>
+                <View
+                 style={[
+                  styles.containerInput,
                   {
                     height:
                       props.composerHeight < 50 ? 50 : props.composerHeight,
                   },
                 ]}>
-                <View
-                  style={[
-                    styles.containerInput,
-                    {
-                      height:
-                        props.composerHeight < 50 ? 50 : props.composerHeight,
-                    },
-                  ]}>
-                  {listImage.length ? (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                      }}>
-                      {listImage.map((item, index) => (
-                        <View key={index} style={styles.groupImagePicker}>
-                          <View style={styles.groupImage}>
-                            <Image
-                              source={{uri: item.url}}
-                              resizeMode="cover"
-                              style={styles.imagePicker}
-                            />
-                            {item.error ? (
-                              <View style={styles.imageError}>
-                                <ScaleImage
-                                  source={require('@images/ic_warning.png')}
-                                  width={40}
-                                />
-                              </View>
-                            ) : item.loading ? (
-                              <View style={styles.imageLoading}>
-                                <ScaleImage
-                                  source={require('@images/loading.gif')}
-                                  width={20}
-                                />
-                              </View>
-                            ) : null}
-                          </View>
-                          <TouchableOpacity
-                            onPress={removeImage(index)}
-                            style={styles.buttonClose}>
-                            <ScaleImage
-                              source={require('@images/new/ic_close.png')}
-                              width={15}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      ))}
-                    </View>
-                  ) : null}
                   {/* <TextInput
                     ref={txtMessage}
                     style={styles.inputMes}
@@ -649,7 +606,7 @@ const ChatScreen = ({
                       onScrollToEnd();
                     }}
                   /> */}
-                  <Composer
+                   <Composer
                     {...props}
                     ref={txtMessage}
                     textInputStyle={styles.inputMes}
@@ -686,12 +643,57 @@ const ChatScreen = ({
           _id: item.userInfo.id,
         }}
         renderChatFooter={() => (
-          <View style={styles.containerFooter}>
-            <ScaleImage
-              source={require('@images/new/ic_thanks.png')}
-              height={20}
-            />
-            <Text style={{paddingLeft: 5}}>{item?.thankNo}</Text>
+          <View style={{height: listImage.length ? 130 : undefined}}>
+            <View style={styles.containerFooter}>
+              <ScaleImage
+                source={require('@images/new/ic_thanks.png')}
+                height={20}
+              />
+              <Text style={{paddingLeft: 5}}>{item?.thankNo}</Text>
+            </View>
+            {listImage.length ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flex: 1,
+                  height: 100,
+                }}>
+                {listImage.map((item, index) => (
+                  <View key={index} style={styles.groupImagePicker}>
+                    <View style={styles.groupImage}>
+                      <Image
+                        source={{uri: item.url}}
+                        resizeMode="cover"
+                        style={styles.imagePicker}
+                      />
+                      {item.error ? (
+                        <View style={styles.imageError}>
+                          <ScaleImage
+                            source={require('@images/ic_warning.png')}
+                            width={40}
+                          />
+                        </View>
+                      ) : item.loading ? (
+                        <View style={styles.imageLoading}>
+                          <ScaleImage
+                            source={require('@images/loading.gif')}
+                            width={20}
+                          />
+                        </View>
+                      ) : null}
+                    </View>
+                    <TouchableOpacity
+                      onPress={removeImage(index)}
+                      style={styles.buttonClose}>
+                      <ScaleImage
+                        source={require('@images/new/ic_close.png')}
+                        width={15}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            ) : null}
           </View>
         )}
       />
@@ -708,7 +710,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,
-    paddingBottom:15
+    paddingBottom: 15,
   },
   txtLoading: {
     fontWeight: 'bold',

@@ -1,6 +1,7 @@
-let isofhcare_service = '';
-// let wallet_services = 'wallet-services-test/'; //test
-let wallet_services = 'wallet-services/'; //release
+let isofhcare_service = 'isofhcare/';
+let wallet_services = 'wallet-services-test/'; //test
+// let wallet_services = 'wallet-services-dev/'; //dev
+const profilePath = 'profile/v1/'
 module.exports = {
   route: '',
   package_name: 'com.isofh.appisofhcare',
@@ -166,12 +167,12 @@ module.exports = {
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?',
   },
   momo_config: {
-    enviroment: '0', //"0": SANBOX , "1": PRODUCTION
+    enviroment: '1', //"0": SANBOX , "1": PRODUCTION
     action: 'gettoken', // DO NOT EDIT
     partner: 'merchant', // DO NOT EDIT
-    app_scheme: 'momocomu20200526', // get from info account in web momo
+    app_scheme: 'momohpoc20210312', // get from info account in web momo
     partner_name: 'Bệnh viện Phổi TW',
-    partner_code: 'MOMOCOMU20200526',
+    partner_code: 'MOMOHPOC20210312',
     partner_label: 'Người nhận',
     order_label: 'Mã khám bệnh',
   },
@@ -1112,29 +1113,16 @@ module.exports = {
       get_list_payment: isofhcare_service + 'hospital/',
     },
     profile: {
-      get_by_user: isofhcare_service + 'profile/get-by-user',
-      get_details_user: isofhcare_service + '/user/get-detail',
-      get_profile_family:
-        isofhcare_service + 'booking/get-group-patient-history',
-      get_list_profile:
-        isofhcare_service + 'medical-records/get-list-medical-records',
-      delete_family_profile: isofhcare_service + 'medical-records/delete',
-      create_profile:
-        isofhcare_service + 'medical-records/create-medical-records',
-      update_profile:
-        isofhcare_service + 'medical-records/update-medical-records',
-      update_cover: isofhcare_service + 'user/update-cover',
-      update_avatar: isofhcare_service + 'medical-records/update-avatar',
-      send_confirm: isofhcare_service + 'medical-records/send-confirm',
-      share_permission: isofhcare_service + 'medical-records/update-permission',
-      check_otp: isofhcare_service + 'medical-records/check-otp',
-      resend_otp: isofhcare_service + 'medical-records/resend-otp',
-      confirm: isofhcare_service + 'medical-records/confirm',
-      get_details_medical:
-        isofhcare_service + 'medical-records/get-detail-medical-record',
+      profile: profilePath + 'profiles',
+      profile_member: profilePath + 'profile-registries',
+      list_relationship: profilePath + 'profiles/relationship-types',
+      check_info_profile: profilePath + 'profiles/pre-check',
+      info_profile: isofhcare_service + 'user/profiles/info?uid=',
+      list_waitting: profilePath + 'friends/requests',
+      default_profile: profilePath + 'profile',
+      verify_fill_phone_profile: profilePath + 'profiles',
       verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
       fill_phone: isofhcare_service + 'user/fill-phone',
-      get_detail_profile: isofhcare_service + 'medical-records/by-user/',
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',
@@ -1223,6 +1211,7 @@ module.exports = {
     payment: {
       get_list_card: 'payment/v1/alepay/profiles',
       create_new_card: 'payment/v1/alepay/request-profile',
+      get_payment_momo: 'payment/v1/hospitals/hospitalId/payment/momo',
     },
   },
 };

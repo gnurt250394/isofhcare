@@ -22,6 +22,7 @@ import snackbar from '@utils/snackbar-utils';
 import ListQuestion from '@components/question/ListQuestion';
 import {IndicatorViewPager} from 'mainam-react-native-viewpager';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider';
+import ImageSensitive from './ImageSensitive';
 const {width, height} = Dimensions.get('screen');
 class ItemQuestion extends Component {
   constructor(props) {
@@ -49,6 +50,7 @@ class ItemQuestion extends Component {
   };
   render() {
     let {item, onPress, social} = this.props;
+
     const icSupport = require('@images/new/user.png');
     const avatar = icSupport;
     return (
@@ -92,7 +94,11 @@ class ItemQuestion extends Component {
           numberOfLines={3}>
           {item.content}
         </Text>
-        {item?.images?.length ? (
+        {social &&
+        item?.sensitive &&
+        (item?.imageNo || item?.images?.length) ? (
+          <ImageSensitive style={styles.imgQuestion} />
+        ) : item?.images?.length ? (
           <Image source={{uri: item.images[0]}} style={styles.imgQuestion} />
         ) : null}
         <View style={styles.containerSpecialist}>
@@ -175,6 +181,7 @@ const styles = StyleSheet.create({
   txtComment: {
     paddingTop: 7.28,
     paddingBottom: 8,
+    fontSize: 17,
   },
   txtTime: {
     color: '#00000080',
@@ -182,7 +189,7 @@ const styles = StyleSheet.create({
   txtname: {
     color: '#000',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
     shadowColor: '#00000040',
     shadowOffset: {height: 1, width: 1},
     shadowOpacity: 0.3,

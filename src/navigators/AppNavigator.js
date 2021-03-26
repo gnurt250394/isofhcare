@@ -71,7 +71,7 @@ import CreateBookingWithPaymentScreen from '@containers/booking/CreateBookingWit
 
 import SelectNationsSceen from '@containers/profile/SelectNationsSceen';
 import SelectJobsSceen from '@containers/profile/GetJobsSceen';
-import CreateProfileScreen from '@containers/profile/CreateProfileScreen1';
+import CreateProfileScreen from '@containers/profile/CreateProfileScreen';
 import PaymentWithVNPayScreen from '@containers/payment/PaymentWithVNPayScreen';
 import SelectProfileScreen from '@containers/booking/SelectProfileScreen';
 // import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
@@ -98,6 +98,7 @@ import SendConfirmProfileScreen from '@containers/profile/SendConfirmProfileScre
 import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen';
 import EditProfileUsernameScreen from '@containers/profile/EditProfileUsernameScreen';
 import SelectCountrySceen from '@containers/profile/SelectCountrySceen';
+import CheckInfoScreen from '@containers/profile/CheckInfoScreen';
 
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen';
@@ -175,6 +176,7 @@ import ListNewsScreen from '@containers/news/ListNewsScreen';
 import DetailNewsScreen from '@containers/news/DetailNewsScreen';
 import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
 import ListPaymentCardScreen from '@containers/booking/ListPaymentCardScreen';
+import VerifyPhoneNumberProfileScreen from '@containers/profile/VerifyPhoneNumberProfileScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -532,6 +534,8 @@ const RootNavigator = (route = 'splash') =>
       listNews: { screen: ListNewsScreen },
       detailNews: { screen: DetailNewsScreen },
 
+      checkInfo: { screen: CheckInfoScreen },
+      verifyPhoneProfile: { screen: VerifyPhoneNumberProfileScreen },
 
     },
     {

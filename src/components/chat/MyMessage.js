@@ -44,12 +44,13 @@ class MyMessage extends React.Component {
         : false,
     };
   }
-  photoViewer = (urls, index) => () => {
+  photoViewer = (urls, index, item) => () => {
     try {
       if (!urls) {
         snackbar.show(constants.msg.message.none_image);
         return;
       }
+      if (item?.sensitive) return;
       this.props.navigation.navigate('photoViewer', {
         index,
         urls: urls.map(e => ({uri: e})),
@@ -57,7 +58,8 @@ class MyMessage extends React.Component {
     } catch (error) {}
   };
   render() {
-    let {message, loadingMessage} = this.props;
+    let {message, loadingMessage, item} = this.props;
+    console.log('item: ', item);
     if (!message)
       message = {
         message: '',
@@ -93,15 +95,19 @@ class MyMessage extends React.Component {
                   return (
                     <TouchableOpacity
                       key={i}
-                      onPress={this.photoViewer(message.images, i)}>
+                      onPress={this.photoViewer(message.images, i, item)}>
                       <ImageLoad
                         resizeMode="cover"
-                        placeholderSource={require('@images/noimage.png')}
+                        placeholderSource={require('@images/new/community/ic_sensitive.png')}
                         style={{width: 100, height: 100}}
                         loadingStyle={{size: 'small', color: 'gray'}}
-                        source={{
-                          uri: e,
-                        }}
+                        source={
+                          item?.sensitive
+                            ? require('@images/new/community/ic_sensitive.png')
+                            : {
+                                uri: e,
+                              }
+                        }
                         defaultImage={() => {
                           return (
                             <ScaleImage
@@ -117,7 +123,13 @@ class MyMessage extends React.Component {
                 })}
               </View>
             ) : null}
-            <Text style={{color: 'white', textAlign: 'right', paddingRight: 5}}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'right',
+                paddingRight: 5,
+                fontSize: 16,
+              }}>
               {message.content}
             </Text>
 

@@ -55,7 +55,7 @@ class SelectDistrictScreen extends Component {
             () => {
               if (s) {
                 s.data.district.forEach(e => {
-                  if (e.id == this.state.district?.id) {
+                  if (e.name == this.state.district?.name) {
                     e.selected = true;
                   }
                 });

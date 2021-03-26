@@ -75,6 +75,7 @@ module.exports = {
   serviceCovid: "https://api.produce.isofhcare.com/survey/",
   serviceNews: 'https://api.produce.isofhcare.com/news',
   requestPayment: 'https://api.produce.isofhcare.com/',
+  serviceProfile: 'https://api.produce.isofhcare.com/', //sever test
   response: {
     ok(data, message) {
       if (!message) message = '';

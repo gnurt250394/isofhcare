@@ -4,12 +4,12 @@ import NetInfo from "@react-native-community/netinfo";
 module.exports = {
     isConnected(time) {
         return new Promise((resolve, reject) => {
-            NetInfo.isConnected.fetch().then(connect => {
+            NetInfo.fetch().then(connect => {
                 if (connect)
                     resolve(true);
                 else {
                     setTimeout(() => {
-                        NetInfo.isConnected.fetch().then(connect => {
+                        NetInfo.fetch().then(connect => {
                             if (connect)
                                 resolve(true);
                             else
@@ -21,14 +21,14 @@ module.exports = {
         })
     },
     checkConnect(callback) {
-        NetInfo.isConnected.fetch().then(isConnected => {
+        NetInfo.fetch().then(isConnected => {
             if (callback)
                 callback(isConnected);
         });
     },
     addEventListener(listener) {
         if (listener)
-            NetInfo.isConnected.addEventListener(
+            NetInfo.addEventListener(
                 'connectionChange',
                 listener
             )
