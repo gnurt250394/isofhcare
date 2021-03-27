@@ -1,16 +1,19 @@
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import { Platform } from 'react-native';
-import constants from '@resources/strings'
-// const server_url = "http://123.24.206.9:8000"; //dev
+import {Platform} from 'react-native';
+import constants from '@resources/strings';
+const server_url = 'http://10.0.0.98:9451'; //dev
+
+// const server_url = "http://10.0.50.191:8080";//test local
 // const server_url = "http://123.24.206.9:8000"; //test
-const server_url = "https://api.produce.isofhcare.com/isofhcare/"; //release
+// const server_url = "https://api.produce.isofhcare.com"; //release
 // const server_url = "http://34.95.91.81"; //stable
 
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
-// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
+const resource_url =
+  'https://isofhcare-backup.s3-ap-southeast-1.amazonaws.com/'; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
-const resource_url = "https://isofhcare-backup.s3-ap-southeast-1.amazonaws.com/"; //release
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 50000;
@@ -19,7 +22,7 @@ let appVersion = DeviceInfo.getReadableVersion();
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
-  function (defaultValue) {
+  function(defaultValue) {
     var _this = this.toString();
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -50,12 +53,12 @@ String.prototype.absoluteUrl =
     // if(this.startsWith("user"))
 
     //     return
-    return server_url + _this + "";
+    return resource_url + _this + '';
   };
 
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
-  function (defaultValue) {
+  function(defaultValue) {
     let _this = this ? this.toString() : '';
     if (_this == '')
       if (defaultValue != undefined) return defaultValue;
@@ -67,15 +70,17 @@ String.prototype.getServiceUrl =
   };
 
 module.exports = {
-  auth: "",
-  serverApi: server_url + "/",
-  serviceSchedule: "https://api.produce.isofhcare.com/",
-  serviceBooking: "https://api.produce.isofhcare.com/",
-  serviceChats: "https://api.produce.isofhcare.com/",
-  serviceCovid: "https://api.produce.isofhcare.com/survey/",
-  serviceNews: 'https://api.produce.isofhcare.com/news',
-  requestPayment: 'https://api.produce.isofhcare.com/',
-  serviceProfile: 'https://api.produce.isofhcare.com/', //sever test
+  auth: '',
+  serverApi: server_url + '/',
+  serviceSchedule: 'http://10.0.0.98:8080/',
+  serviceBooking: 'http://10.0.0.98:8082/',
+  serviceImage: 'https://api.produce.isofhcare.com/isofhcare/',
+  serviceChats: 'http://10.0.0.98:8085/',
+  serviceCovid: 'http://10.0.0.88:49396/',
+  serviceNews: 'http://10.0.0.98:36545',
+  requestPayment: 'http://10.0.0.98:8083/',
+  serviceProfile: 'http://10.0.0.98:8000/', //sever test
+  // serviceProfile:'http://10.0.50.211:50771/',
   response: {
     ok(data, message) {
       if (!message) message = '';
@@ -96,7 +101,7 @@ module.exports = {
   uploadFile(url, uri, type, funRes) {
     console.log('uri: ', uri);
     const data = new FormData();
-    data.append("file", {
+    data.append('file', {
       uri: uri,
       type: type ? type : 'image/jpeg', // or photo.type
       name: uri
@@ -106,7 +111,7 @@ module.exports = {
 
     this.requestFetch(
       'post',
-      this.serverApi + url,
+      this.serviceImage + url,
       {
         Accept: 'application/json',
         'Content-Type': 'multipart/form-data',
