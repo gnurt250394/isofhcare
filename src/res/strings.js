@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare/';
+let isofhcare_service = '';
 let wallet_services = 'wallet-services-test/'; //test
 // let wallet_services = 'wallet-services-dev/'; //dev
 const profilePath = 'profile/v1/'
