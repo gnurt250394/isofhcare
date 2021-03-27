@@ -1,10 +1,10 @@
-let isofhcare_service = '';
+let isofhcare_service = 'isofhcare/';
 let wallet_services = 'wallet-services-test/'; //test
 // let wallet_services = 'wallet-services-dev/'; //dev
 const profilePath = 'profile/v1/'
 module.exports = {
   route: '',
-  package_name: 'com.isofh.isofhcare',
+  package_name: 'com.isofh.appisofhcarestable',
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",
@@ -1170,10 +1170,11 @@ module.exports = {
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
-      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate',
-      // get_list_doctor: isofhcare_service + 'catalog/v1/doctor/3/rank?page=0&size=50&sort=desc&properties=created',
-      get_list_doctor: isofhcare_service + 'catalog/v1/doctor/3/rank?page=0&size=50',
-      news_covid: isofhcare_service + 'news'
+      get_list_hospital_top_rate:
+        isofhcare_service + 'hospital/list-hospital-top-rate',
+      get_list_doctor:
+        isofhcare_service + 'catalog/v1/doctor/3/rank?page=0&size=10',
+      news_covid: isofhcare_service + 'news',
     },
     voucher: {
       get_voucher: isofhcare_service + 'voucher',
