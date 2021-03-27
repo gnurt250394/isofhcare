@@ -4,7 +4,7 @@ let wallet_services = 'wallet-services-test/'; //test
 const profilePath = 'profile/v1/'
 module.exports = {
   route: '',
-  package_name: 'com.isofh.appisofhcarestable',
+  package_name: 'com.isofh.appisofhcaretest',
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",
@@ -167,12 +167,12 @@ module.exports = {
     use_voucher: 'Bạn có muốn sử dụng mã ưu đãi này?',
   },
   momo_config: {
-    enviroment: '1', //"0": SANBOX , "1": PRODUCTION
+    enviroment: '0', //"0": SANBOX , "1": PRODUCTION
     action: 'gettoken', // DO NOT EDIT
     partner: 'merchant', // DO NOT EDIT
-    app_scheme: 'momohpoc20210312', // get from info account in web momo
+    app_scheme: 'momocomu20200526', // get from info account in web momo
     partner_name: 'Bệnh viện Phổi TW',
-    partner_code: 'MOMOHPOC20210312',
+    partner_code: 'MOMOCOMU20200526',
     partner_label: 'Người nhận',
     order_label: 'Mã khám bệnh',
   },
@@ -223,6 +223,7 @@ module.exports = {
     action_select_patient_group_ehealth: 'ACTION_SELECT_PATIENT_GROUP_EHEALTH',
     action_otp_phone: 'ACTION_OTP_PHONE',
     action_add_drug: 'ACTION_ADD_DRUG',
+    action_add_categories: 'ACTION_ADD_CATEGORIES',
     save_user_id: 'SAVE_USER_ID',
   },
   colors: {
@@ -1212,7 +1213,6 @@ module.exports = {
     payment: {
       get_list_card: 'payment/v1/alepay/profiles',
       create_new_card: 'payment/v1/alepay/request-profile',
-      get_payment_momo: 'payment/v1/hospitals/hospitalId/payment/momo',
     },
   },
 };
