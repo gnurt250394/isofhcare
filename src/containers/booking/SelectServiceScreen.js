@@ -22,6 +22,7 @@ class SelectServiceScreen extends Component {
     let serviceType = this.props.navigation.state.params.serviceType || {};
     this.listServicesSelected =
       this.props.navigation.getParam('listServicesSelected', []) || [];
+
     if (!hospital) {
       this.props.navigation.pop();
       snackbar.show(constants.msg.booking.please_select_location, 'danger');
@@ -46,6 +47,21 @@ class SelectServiceScreen extends Component {
     this.onRefresh();
   }
 
+  componentWillReceiveProps = nextProps => {
+    this.listServicesSelected = nextProps.navigation.getParam(
+      'listServicesSelected',
+    );
+    let data = [...this.state.listServiceSearch];
+    data = data.map(item => {
+      item.checked = this.listServicesSelected.find(
+        item2 => item2.id == item.id,
+      );
+      return item;
+    });
+    this.setState({
+      listServiceSearch: data,
+    });
+  };
   onRefresh = () => {
     let serviceType = this.state.serviceType
       ? this.state.serviceType.id || ''
@@ -257,6 +273,7 @@ class SelectServiceScreen extends Component {
   detalService = item => () => {
     this.props.navigation.navigate('detalService', {
       item,
+      hospital: this.state.hospital,
       onSelected: this.onSelected,
     });
   };
