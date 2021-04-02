@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>iSofHcare</string>
+	<string>USER TEST</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -82,7 +82,7 @@
 	<key>CFBundleVersion</key>
 	<string>106</string>
 	<key>CodePushDeploymentKey</key>
-	<string>d_e1VVGMtjxvsGkWkKShQsZLyChcSJOdItZ-r</string>
+	<string>FqWm2qyiPFklb-payLojC8vnDzM3r1BkLCS1H</string>
 	<key>FacebookAppID</key>
 	<string>666449667627403</string>
 	<key>FacebookCodelessDebugLogEnabled</key>

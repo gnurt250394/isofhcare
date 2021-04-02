@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">iSofHcare</string>
+    <string name="app_name">USER TEST</string>
     <string name="facebook_app_id">666449667627403</string> 
     <string name="fb_login_protocol_scheme">fb666449667627403</string>
 
@@ -8,5 +8,5 @@
 <string name="ak_client_token">a9ae7d8852eab508b86896d5cd375999</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
-	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">5S8rqWsMcayu6BhOTK0khto_0HIHSkD4wK--r</string>
+	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">o7R6YJyZSXhVtlPU7b5XBpn06ASlr1F4BOe1B</string>
 </resources>
