@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-  package="com.isofh.isofhcare">
+  package="com.isofh.appisofhcaretest">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,12 +21,12 @@ xmlns:tools="http://schemas.android.com/tools"
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <permission
-            android:name="com.isofh.isofhcare.permission.C2D_MESSAGE"
+            android:name="com.isofh.appisofhcaretest.permission.C2D_MESSAGE"
             android:protectionLevel="signature" />
 
 
 
-    <uses-permission android:name="com.isofh.isofhcare.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.isofh.appisofhcaretest.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
@@ -139,7 +139,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </service>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.isofh.isofhcare.provider"
+            android:authorities="com.isofh.appisofhcaretest.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

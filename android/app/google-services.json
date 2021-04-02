@@ -35,7 +35,7 @@
               "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctortest"
+                "bundle_id": "com.isofh.appisofhcaretestfordoctortest"
               }
             }
           ]
@@ -71,7 +71,7 @@
               "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctortest"
+                "bundle_id": "com.isofh.appisofhcaretestfordoctortest"
               }
             }
           ]
@@ -82,7 +82,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:553446981035:android:0d5303158b711b04",
         "android_client_info": {
-          "package_name": "com.isofh.isofhcare"
+          "package_name": "com.isofh.appisofhcaretest"
         }
       },
       "oauth_client": [
@@ -90,7 +90,7 @@
           "client_id": "553446981035-13crntjue56vmtueclp5q04uf695ll65.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.isofh.isofhcare",
+            "package_name": "com.isofh.appisofhcaretest",
             "certificate_hash": "9c56d44b5049b3c1edfb9553b7ce86d8a3f7c906"
           }
         },
@@ -115,7 +115,7 @@
               "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctortest"
+                "bundle_id": "com.isofh.appisofhcaretestfordoctortest"
               }
             }
           ]
@@ -126,7 +126,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:553446981035:android:2eec14d8586903b4",
         "android_client_info": {
-          "package_name": "com.isofh.isofhcarefordoctor"
+          "package_name": "com.isofh.appisofhcaretestfordoctor"
         }
       },
       "oauth_client": [
@@ -151,7 +151,7 @@
               "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctortest"
+                "bundle_id": "com.isofh.appisofhcaretestfordoctortest"
               }
             }
           ]
@@ -162,7 +162,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:553446981035:android:edd42dd361408c05",
         "android_client_info": {
-          "package_name": "com.isofh.isofhcarefordoctortest"
+          "package_name": "com.isofh.appisofhcaretestfordoctortest"
         }
       },
       "oauth_client": [
@@ -187,7 +187,7 @@
               "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctortest"
+                "bundle_id": "com.isofh.appisofhcaretestfordoctortest"
               }
             }
           ]

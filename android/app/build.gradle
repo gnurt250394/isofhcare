@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.isofh.isofhcare"
+        applicationId "com.isofh.appisofhcaretest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 103

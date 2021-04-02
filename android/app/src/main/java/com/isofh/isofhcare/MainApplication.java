@@ -1,4 +1,4 @@
-package com.isofh.isofhcare;
+package com.isofh.appisofhcaretest;
 import android.app.Application;
 
 
@@ -74,7 +74,7 @@ import com.facebook.appevents.AppEventsLogger;
 
  @Override
      public String getFileProviderAuthority() {
-            return "com.isofh.isofhcare.provider";
+            return "com.isofh.appisofhcaretest.provider";
      }
   // @Override
   // protected void attachBaseContext(Context base) {

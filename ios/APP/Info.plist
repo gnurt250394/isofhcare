@@ -62,7 +62,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.isofhcare</string>
+			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>payoo</string>
@@ -72,10 +72,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.isofhcare</string>
+			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.isofhcare</string>
+				<string>com.isofh.appisofhcaretest</string>
 			</array>
 		</dict>
 	</array>
