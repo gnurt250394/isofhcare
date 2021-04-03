@@ -160,8 +160,10 @@ class ProfileHospitalScreen extends Component {
       ...this.state.profileHospital,
     };
     if (this.props.userApp.isLogin) {
-      this.props.navigation.navigate('addBooking1', {
-        hospital,
+      this.props.navigation.navigate('selectService', {
+        hospital: hospital,
+        // serviceType: this.state.serviceType,
+        // onSelected: this.selectService.bind(this)
       });
     } else {
       this.props.navigation.navigate('login', {
@@ -278,13 +280,13 @@ class ProfileHospitalScreen extends Component {
     const item = this.props.navigation.getParam('item', {});
     const {profileHospital} = this.state;
     let images =
-    profileHospital &&
-    profileHospital.avatar &&
-    profileHospital.avatar.startsWith('/')
-    ? profileHospital.avatar.replace('/', '')
-    : profileHospital && profileHospital.avatar
-    ? profileHospital.avatar
-    : '';
+      profileHospital &&
+      profileHospital.avatar &&
+      profileHospital.avatar.startsWith('/')
+        ? profileHospital.avatar.replace('/', '')
+        : profileHospital && profileHospital.avatar
+        ? profileHospital.avatar
+        : '';
     console.log('images: ', images);
     const source =
       this.state.profileHospital && this.state.profileHospital.avatar
