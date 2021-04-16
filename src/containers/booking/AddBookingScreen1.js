@@ -410,7 +410,8 @@ class AddBookingScreen extends Component {
                 idUser,
                 img,
                 byHospital,
-                this.state.profile?.userProfileId
+                this.state.profile?.userProfileId,
+                this.state.profile?.defaultProfile
               )
               .then(s => {
                 this.setState({isLoading: false}, () => {

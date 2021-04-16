@@ -182,6 +182,7 @@ export default {
     images,
     byHospital,
     userProfileId,
+    owner,
   ) {
     return new Promise((resolve, reject) => {
       let hospital = {
@@ -237,7 +238,7 @@ export default {
           //giờ đặt khám
           time,
           //owner : true: đặt khám chính chủ, false: đặt khám hộ
-          owner: patientUser.status == 1 ? true : false,
+          owner,
           images,
           byHospital,
           userProfileId,

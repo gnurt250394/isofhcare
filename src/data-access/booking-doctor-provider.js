@@ -200,6 +200,7 @@ export default {
     images,
     blockTime,
     userProfileId,
+    owner
   ) {
     console.log('patients: ', patients);
     return new Promise((resolve, reject) => {
@@ -280,7 +281,7 @@ export default {
           //giờ đặt khám
           time,
           //owner : true: đặt khám chính chủ, false: đặt khám hộ
-          owner: patients.status == 1 ? true : false,
+          owner,
           images,
           blockTime,
           userProfileId,
