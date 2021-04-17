@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import constants from '@resources/strings';
 import stringUtils from 'mainam-react-native-string-utils';
 import { Table, Row } from 'react-native-table-component';
+import { Card } from 'native-base';
+import ScaledImage from 'mainam-react-native-scaleimage';
 
 
 class TotalMoney extends Component {
@@ -22,6 +24,7 @@ class TotalMoney extends Component {
         return null;
     }
     renderServiceItem(index, item, showMoney) {
+        debugger
         if (!showMoney) {
             var data = [index + 1, item.Name, 1];
             return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1]} />);
@@ -31,7 +34,9 @@ class TotalMoney extends Component {
             return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 2]} />);
         }
     }
-
+    onSetShow = () => {
+        this.setState({ isShow: !this.state.isShow })
+    }
 
     render() {
         let { resultDetail } = this.props;
@@ -44,44 +49,75 @@ class TotalMoney extends Component {
 
 
         return ((<View style={styles.container}>
-            {
-                (this.props.showTitle == true || this.props.showTitle == undefined) &&
-                <View style={[styles.item, { marginTop: 0 }]}>
-                    <View style={styles.round1}>
-                        <View style={styles.round2} />
-                    </View>
-                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{sum ? "TIỀN" : "DỊCH VỤ"}</Text>
-                    </View>
-                </View>
-            }
-            <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
-                <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={sum ? [1, 3, 1, 2] : [1, 3, 1]} />
-                {this.renderService(resultDetail.ListService, sum)}
-            </Table>
-            {
-                sum ?
-                    <View style={styles.viewListService}>
-                        <Text style={styles.txTotal}>Tổng:<Text style={styles.valueTotal}>{sum.formatPrice()}đ</Text>
-                        </Text>
-                    </View> : null
-            }
+            <Card>
+                <TouchableOpacity
+                    onPress={this.onSetShow}
+                    style={[styles.buttonShowInfo, this.state.isShow ? { backgroundColor: '#3161AD' } : {}]}>
+                    <ScaledImage source={require('@images/new/ehealth/ic_info.png')} height={19} style={{
+                        tintColor: this.state.isShow ? "#FFF" : '#3161AD'
+                    }} />
+                    <Text style={[styles.txtTitle, this.state.isShow ? { color: '#FFF' } : {}]}>{sum ? "TIỀN" : "DỊCH VỤ"}</Text>
+                    <ScaledImage source={require('@images/new/ehealth/ic_down2.png')} height={10} style={this.state.isShow ? {
+                        tintColor: "#FFF",
+                    } : {
+                            transform: [{ rotate: '-90deg' }],
+                            tintColor: '#3161AD'
+                        }} />
+                </TouchableOpacity>
+                {
+                    this.state.isShow ?
+                        <View style={{
+                            padding: 10
+                        }}>
+                            <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
+                                <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={sum ? [1, 3, 1, 2] : [1, 3, 1]} />
+                                {this.renderService(resultDetail.ListService, sum)}
+                            </Table>
+                            {
+                                sum ?
+                                    <View style={styles.viewListService}>
+                                        <Text style={styles.txTotal}>Tổng:<Text style={styles.valueTotal}>{sum.formatPrice()}đ</Text>
+                                        </Text>
+                                    </View> : null
+                            }
+                        </View>
+                        : null
+                }
+
+            </Card>
         </View>))
     }
 }
 
 function mapStateToProps(state) {
     return {
-        userApp: state.auth.userApp,
-        ehealth: state.auth.ehealth
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 const styles = StyleSheet.create({
+    txtTitle: {
+        flex: 1,
+        paddingHorizontal: 10,
+        color: '#3161AD',
+        fontWeight: 'bold'
+    },
+    buttonShowInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5
+    },
+    card: {
+        borderRadius: 5
+    },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
-    itemcontent: { color: '#0076ff' },
+    itemcontent: { color: '#0291E1' },
     item: { marginTop: 10, flexDirection: 'row' },
     slide: {
         flex: 1,
@@ -101,7 +137,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
     },
-    container: { flex: 1, padding: 10 },
+    container: { flex: 1, paddingHorizontal: 10 },
     txMoney: { fontWeight: 'bold', fontSize: 18 },
     borderStyle: { borderWidth: 0.5, borderColor: '#c8e1ff' },
     viewListService: { alignItems: 'flex-end', marginTop: 10 },

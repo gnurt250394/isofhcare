@@ -2,7 +2,7 @@ import client from '@utils/client-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 
-module.exports = {
+export default  {
     getAll() {
         return new Promise((resolve, reject) => {
             client.requestApi("post", `${constants.api.hospital.get_all}?type=-1`, {}, (s, e) => {

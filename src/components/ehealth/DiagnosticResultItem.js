@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import React, { Component, } from 'react';
+import { View, StyleSheet, Text, } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import constants from '@resources/strings';
+import constants, { key } from '@resources/strings';
 
 class DiagnosticResultItem extends Component {
     constructor(props) {
@@ -12,62 +12,69 @@ class DiagnosticResultItem extends Component {
         }
     }
     renderItem(text) {
+        //  => {
+        //     return <p>{paragraph}</p>;
+        // }) || "");
         // if (!text) {
         //     while (text.indexOf('\n') != -1) {
         //         text = text.replace("\n", "");
         //     }
         //     text = text.trim();
         // }
-        return <Text style={styles.txItem}>{text}</Text>
+        // return (text.split("\n")?.map((paragraph, i) => {
+        return <View style={{ flex: 1, }} ><Text style={styles.txItem}>{`${text}`}</Text></View>
+        // }))
     }
-    
+
     render() {
         let { item } = this.props;
-        return <View style={styles.container} key={this.props.key}>
+
+
+        return <View style={[styles.container,]} key={this.props.index}>
             <View style={styles.viewService}>
-                <Text style={styles.txSerivceName}>{item.ServiceName}</Text>
+                <Text style={styles.txSerivceName}>{item.serviceName}</Text>
                 {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                     <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
                 </TouchableOpacity> */}
             </View>
-            <View style={styles.viewItem}>
+            <View style={[styles.viewItem, this.props.length - 1 == this.props.index ? { borderBottomWidth: 0, } : {}]}>
                 {
-                    (item.Result || item.SummaryResult || item.Discussion) ?
-                        <View>
+                    (item.result || item.summaryResult || item.discussion) ?
+                        <View style={{ flex: 1, }}>
 
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
-                            {item.Result ?
+                            {item.result ?
                                 <View style={styles.viewList}>
                                     <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
-                                        this.renderItem(item.Result)
+                                        this.renderItem(item.result)
                                     }
                                 </View> : null}
-                            {item.SummaryResult ?
+                            {item.summaryResult ?
                                 <View style={styles.viewList}>
                                     <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
-                                        this.renderItem(item.SummaryResult)
+                                        this.renderItem(item.summaryResult)
                                     }
                                 </View> : null}
-                            {item.Discussion ?
+                            {item.discussion ?
                                 <View style={styles.viewList}>
                                     <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
-                                        this.renderItem(item.Discussion)
+                                        this.renderItem(item.discussion)
                                     }
                                 </View> : null}
                         </View> : null}
 
                 {
-                    (item.Conclusion) ?
+                    (item.conclusion) ?
                         <View>
 
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.conclude}</Text>
-                            {item.Conclusion ?
+                            {item.conclusion ?
                                 <View style={styles.viewList}>
                                     <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
-                                    <Text style={styles.txConclusion}>{item.Conclusion}</Text>
+                                    <Text style={styles.txConclusion}>{item.conclusion}</Text>
                                 </View> : null}
                         </View> : null}
             </View>
@@ -77,13 +84,13 @@ class DiagnosticResultItem extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.auth.userApp,
-        ehealth: state.auth.ehealth
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 const styles = StyleSheet.create({
-  
-    container: { flex: 1, marginBottom: 20 },
+
+    container: { flex: 1, },
     diagnosticLabel1:
     {
         color: constants.colors.primary_bold,
@@ -96,13 +103,13 @@ const styles = StyleSheet.create({
     },
     breakline: {
     },
-    txItem: { marginLeft: 10, marginBottom: 10 },
+    txItem: { marginLeft: 10, marginBottom: 10, width: '100%', },
     viewService: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    txSerivceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    txSerivceName: { flex: 1, fontWeight: 'bold', fontSize: 15, color: '#ED1846' },
     viewItem: {
-        
+        borderBottomColor: '#00000020', borderBottomWidth: 1, paddingBottom: 20, flex: 1,
     },
-    viewList: { flexDirection: 'row' },
+    viewList: { flexDirection: 'row', width: '100%', },
     imgList: { marginTop: 7 },
     txConclusion: { marginLeft: 10 }
 

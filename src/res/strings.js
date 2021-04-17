@@ -1,7 +1,7 @@
 let isofhcare_service = 'isofhcare/';
 let wallet_services = 'wallet-services-test/'; //test
 // let wallet_services = 'wallet-services-dev/'; //dev
-const profilePath = 'profile/v1/'
+const profilePath = 'profile/v1/';
 module.exports = {
   route: '',
   package_name: 'com.isofh.appisofhcaretest',
@@ -225,6 +225,7 @@ module.exports = {
     action_add_drug: 'ACTION_ADD_DRUG',
     action_add_categories: 'ACTION_ADD_CATEGORIES',
     save_user_id: 'SAVE_USER_ID',
+    action_profile_ehealth: 'ACTION_SELECT_PROFILE_EHEALTH',
   },
   colors: {
     breakline: '#c0c0c0',
@@ -805,7 +806,7 @@ module.exports = {
     modal_confirm: 'OK, XONG',
     suggestion: 'Suggestion',
     re_examination: 'Lịch tái khám',
-    share_ehealth: 'Chia sẻ hồ sơ',
+    share_ehealth: 'Chia sẻ hồ sơ sức khoẻ',
     note: 'Ghi chú',
     clock: 'Thời gian',
     redmine_drug: 'Nhắc uống thuốc',
@@ -834,9 +835,9 @@ module.exports = {
     get_ticket_other: 'Lấy số hộ',
     service_E_not_get_ticket:
       'Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón',
-    add_new_result_examination: 'Tra cứu kết quả khám',
+    add_new_result_examination: 'Tra cứu',
     ehealth_upload: 'Xem kết quả khám đã tải lên >>',
-    upload_new_result_examination: 'Tải lên kết quả khám đã có',
+    upload_new_result_examination: 'Tải lên',
     scan_code: 'QUÉT MÃ',
     input_code: 'NHẬP MÃ',
     input_or_scan_code: 'NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI',
@@ -1124,6 +1125,8 @@ module.exports = {
       verify_fill_phone_profile: profilePath + 'profiles',
       verify_fill_phone: isofhcare_service + 'user/verify-fill-phone',
       fill_phone: isofhcare_service + 'user/fill-phone',
+      get_list_profile:
+        isofhcare_service + 'medical-records/get-list-medical-records',
     },
     serviceType: {
       get_all: isofhcare_service + 'service-type/get-all',
@@ -1167,6 +1170,8 @@ module.exports = {
       add_ehealth_with_code:
         isofhcare_service + 'patient-history-booking/verify',
       upload_ehealth: isofhcare_service + 'patient-uploads',
+      get_list_ehealth_with_profile: isofhcare_service + 'medical/profiles',
+      get_detail_ehealth: isofhcare_service + 'medical/patient-histories',
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',

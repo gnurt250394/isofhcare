@@ -375,7 +375,7 @@ class AccountScreen extends Component {
                 style={[styles.itemMenu]}
                 onPress={() => {
                   firebaseUtils.sendEvent('healthrecord_screen_personal');
-                  this.props.navigation.navigate('ehealth');
+                  this.props.navigation.navigate('listEhealth');
                 }}>
                 <ScaledImage
                   source={require('@images/new/account/ic_ehealth.png')}

@@ -177,6 +177,7 @@ import DetailNewsScreen from '@containers/news/DetailNewsScreen';
 import PaymentWithAlePay from '@containers/payment/PaymentWithAlePay';
 import ListPaymentCardScreen from '@containers/booking/ListPaymentCardScreen';
 import VerifyPhoneNumberProfileScreen from '@containers/profile/VerifyPhoneNumberProfileScreen';
+import ListHistoryShareScreen from '@containers/ehealth/ListHistoryShareScreen';
 
 
 const ProfileNavigation = createStackNavigator(
@@ -536,6 +537,7 @@ const RootNavigator = (route = 'splash') =>
 
       checkInfo: { screen: CheckInfoScreen },
       verifyPhoneProfile: { screen: VerifyPhoneNumberProfileScreen },
+      listHistoryShare: { screen: ListHistoryShareScreen },
 
     },
     {

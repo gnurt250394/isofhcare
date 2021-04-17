@@ -1,19 +1,10 @@
-import React, { Component, PropTypes } from 'react';
-import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import React, { Component, } from 'react';
+import { View, StyleSheet, Text, } from 'react-native';
 import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
-import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
-import scheduleProvider from '@data-access/schedule-provider';
-import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
-import constants from '@resources/strings';
-const DEVICE_WIDTH = Dimensions.get('window').width;
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from "mainam-react-native-scaleimage";
+import QRCode from 'react-native-qrcode-svg';
 
 
 class ProfileInfomation extends Component {
@@ -23,6 +14,7 @@ class ProfileInfomation extends Component {
             listTime: []
         }
     }
+    onBackdropPress = () => this.setState({ isVisible: false })
 
     formatDate = (date) => {
         let dateFormat = date.substring(0, 10).split('-')
@@ -31,7 +23,12 @@ class ProfileInfomation extends Component {
         let yy = dateFormat[0]
         return `${dd}/${mm}/${yy}`
     }
-
+    onQrClick = () => {
+        this.setState({
+            isVisible: true,
+            value: 123456
+        })
+    }
     render() {
         let { resultDetail, data } = this.props;
         if (!resultDetail)
@@ -78,14 +75,40 @@ class ProfileInfomation extends Component {
                     );
                 }}
             />
+            <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10, alignItems: 'center' }}>
+                <QRCode
+                    value={this.state.booking.reference || 0}
+                    logo={require('@images/new/logo.png')}
+                    logoSize={20}
+                    size={80}
+                    logoBackgroundColor='transparent'
+                />
+                <Text>{this.state.booking.reference}</Text>
+            </TouchableOpacity>
+            <Modal
+                isVisible={this.state.isVisible}
+                onBackdropPress={this.onBackdropPress}
+                backdropOpacity={0.5}
+                animationInTiming={500}
+                animationOutTiming={500}
+                style={styles.modal}
+                backdropTransitionInTiming={1000}
+                backdropTransitionOutTiming={1000}
+            >
+                <QRCode
+                    value={this.state.value}
+                    size={250}
+                    fgColor='white' />
+            </Modal>
+
         </View>
     }
 }
 
 function mapStateToProps(state) {
     return {
-        userApp: state.auth.userApp,
-        ehealth: state.auth.ehealth
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 const styles = StyleSheet.create({
@@ -106,6 +129,10 @@ const styles = StyleSheet.create({
         alignSelf: "center"
     },
     imgLoad: { width: 70, height: 70 },
-
+    modal: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 })
 export default connect(mapStateToProps)(ProfileInfomation);

@@ -39,6 +39,8 @@ class CreateEhealthScreen extends Component {
   constructor(props) {
     super(props);
     let dataOld = this.props.navigation.getParam('data', null);
+    let profile = this.props.navigation.getParam('profile', {});
+
     this.state = {
       listHospital: [],
       isLongPress: false,
@@ -54,9 +56,13 @@ class CreateEhealthScreen extends Component {
           ? dataOld.images
           : [],
       medicalRecordId:
-        dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.id : '',
+        dataOld && dataOld.medicalRecord
+          ? dataOld.medicalRecord.id
+          : profile?.userProfileId,
       medicalRecordName:
-        dataOld && dataOld.medicalRecord ? dataOld.medicalRecord.name : '',
+        dataOld && dataOld.medicalRecord
+          ? dataOld.medicalRecord.name
+          : profile?.profileInfo?.personal?.fullName,
       medicalServiceName:
         dataOld && dataOld.medicalServiceName ? dataOld.medicalServiceName : '',
       result: dataOld && dataOld.result ? dataOld.result : '',
@@ -74,6 +80,7 @@ class CreateEhealthScreen extends Component {
     this.data = [];
   }
   componentDidMount() {
+    this.onRefresh();
     this.onLoadProfile();
   }
   componentWillMount() {
@@ -139,6 +146,7 @@ class CreateEhealthScreen extends Component {
     this.setState({toggelDateTimePickerVisible: false});
   };
   onSearch = s => {
+    console.log('s: ', s);
     if (s) {
       var listSearch = this.data.filter(item => {
         return (
@@ -280,32 +288,48 @@ class CreateEhealthScreen extends Component {
         onPress={() => this.onSelectHospital(item)}
         style={[styles.details, index == 0 ? {borderTopColor: '#fff'} : {}]}>
         <View style={styles.containerContent}>
-          <Text style={styles.bv} numberOfLines={1}>
-            {item.name}
-          </Text>
-          <Text style={styles.bv1} numberOfLines={2}>
-            {item.contact && item.contact.address}
-          </Text>
+          <View style={{flex: 1}}>
+            <Text style={styles.bv} numberOfLines={1}>
+              {item.name}
+            </Text>
+            <Text style={styles.bv1} numberOfLines={2}>
+              {item.contact && item.contact.address}
+            </Text>
+          </View>
+          {item?.id == this.state.hospitalId ? (
+            <ScaledImage
+              source={require('@images/new/profile/ic_tick.png')}
+              height={19}
+              width={19}
+            />
+          ) : null}
         </View>
       </TouchableOpacity>
     );
   };
   onSelectProfile = value => {
     this.setState({
-      medicalRecordId: value.id,
-      medicalRecordName: value.name,
+      medicalRecordId: value.userProfileId,
+      medicalRecordName: value.profileInfo?.personal?.fullName,
       isProfile: false,
     });
   };
   renderItemProfile = ({item, index}) => {
     return (
       <TouchableOpacity
-        onPress={() => this.onSelectProfile(item.medicalRecords)}
+        onPress={() => this.onSelectProfile(item)}
         style={[styles.details, index == 0 ? {borderTopColor: '#fff'} : {}]}>
         <View style={styles.containerContent}>
           <Text style={styles.bv} numberOfLines={1}>
-            {item.medicalRecords.name}
+            {item?.profileInfo?.personal?.fullName}
           </Text>
+          {item?.userProfileId == this.state.medicalRecordId ? (
+            <ScaledImage
+              source={require('@images/new/profile/ic_tick.png')}
+              height={19}
+              width={19}
+            />
+          ) : null}
         </View>
       </TouchableOpacity>
     );
@@ -320,16 +344,10 @@ class CreateEhealthScreen extends Component {
     profileProvider
       .getListProfile()
       .then(s => {
-        switch (s.code) {
-          case 0:
-            if (s.data && s.data.length) {
-              this.setState({
-                dataProfile: s.data,
-                medicalRecordId: s.data[0].medicalRecords.id,
-                medicalRecordName: s.data[0].medicalRecords.name,
-              });
-            }
-            break;
+        if (s?.length) {
+          this.setState({
+            dataProfile: s,
+          });
         }
       })
       .catch(e => {});
@@ -362,7 +380,6 @@ class CreateEhealthScreen extends Component {
               compressImageMaxHeight: 1500,
             })
             .then(images => {
-              console.log('images: ', images);
               let listImages = [];
               if (images.length) listImages = [...images];
               else listImages.push(images);
@@ -521,11 +538,10 @@ class CreateEhealthScreen extends Component {
       isSearch: true,
       isProfile: false,
     });
-    this.onRefresh();
   };
   getImage = link => {
     let ext = link ? /[^\.]*$/.exec(link)[0] : 'txt';
-    console.log('ext: ', ext);
+
     let source = '';
     switch (ext) {
       case 'jpg':
@@ -568,7 +584,6 @@ class CreateEhealthScreen extends Component {
       <View style={styles.list_image}>
         {this.state.imageUris && this.state.imageUris.length
           ? this.state.imageUris.map((item, index) => {
-              console.log('item: ', item);
               return (
                 <View key={index} style={styles.containerImagePicker}>
                   <View style={styles.groupImagePicker}>
@@ -1018,6 +1033,9 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   bv: {
     fontSize: 15,

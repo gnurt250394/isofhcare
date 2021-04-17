@@ -49,6 +49,12 @@ function _getDrug(data) {
         return Promise.resolve();
     }
 }
+function _profileEhealth(item) {
+    return (dispatch) => {
+        dispatch({ type: constants.action.action_profile_ehealth, value: item })
+        return Promise.resolve();
+    }
+}
 module.exports = {
     userLogin(user) {
         return function (dispatch, getState) {
@@ -64,6 +70,15 @@ module.exports = {
                 });
             }
         }
+    },
+    profileEhealth(item) {
+        return function (dispatch, getState) {
+            if (item != null) {
+                dispatch(_profileEhealth(item)).then(() => {
+                });
+            }
+        }
+
     },
     userLogout() {
         return (dispatch) => {
