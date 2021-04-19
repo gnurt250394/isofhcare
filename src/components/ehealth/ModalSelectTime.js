@@ -20,16 +20,23 @@ import snackbar from '@utils/snackbar-utils';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import Modal from '@components/modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
+import ehealthProvider from '@data-access/ehealth-provider';
 
-const ModalSelectTime = ({isVisible, onCloseModal}) => {
+const ModalSelectTime = ({isVisible, onCloseModal, item, itemEhealth}) => {
   const [indexSelect, setIndexSelect] = useState(0);
-  const [data, setData] = useState([
-    {date: 1},
-    {date: 7},
-    {date: 30},
-    {date: 180},
-    {date: 365},
-  ]);
+  const [data, setData] = useState([]);
+  const getTimeUnits = async () => {
+    try {
+      let res = await ehealthProvider.getTimeUnits();
+      console.log('res: ', res);
+      setData(res);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
+  useEffect(() => {
+    getTimeUnits();
+  }, []);
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.viewItem}>
@@ -47,12 +54,21 @@ const ModalSelectTime = ({isVisible, onCloseModal}) => {
               height={18}
             />
           )}
-          <Text style={styles.txRole}>{item.date} ngày</Text>
+          <Text style={styles.txRole}>{item.day} ngày</Text>
         </TouchableOpacity>
       </View>
     );
   };
-  const onAcepted = () => {};
+  const onAcepted = async () => {
+    try {
+      console.log('item: ', item);
+      let res = await ehealthProvider.createShare(
+        item.id,
+        itemEhealth?.patientHistoryId,
+        data[indexSelect].name,
+      );
+    } catch (error) {}
+  };
   return (
     <Modal
       isVisible={isVisible}

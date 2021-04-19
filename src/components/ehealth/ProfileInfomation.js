@@ -69,12 +69,27 @@ class ProfileInfomation extends Component {
               </Text>
             </View>
             {/* <Text style={[styles.itemlabel, { paddingTop: 5 }]}>{resultDetail?.Profile?.GenderId == "F" ? "Nữ," : resultDetail?.Profile?.GenderId == "M" ? "Nam," : ""} {resultDetail?.Profile?.Birthday ? resultDetail?.Profile?.Birthday.toDateObject().getAge() : ''} tuổi</Text> */}
-            <View style={styles.item}>
-              <Text style={[styles.itemlabel, {color: '#3161AD'}]}>
-                Mã NB:{' '}
-                <Text style={[styles.itemcontent, {fontWeight: 'bold'}]}>
-                  {data.patientId}
+            <View
+              style={[
+                styles.item,
+                {
+                  paddingTop: 5,
+                },
+              ]}>
+              <Text style={[styles.itemlabel]}>
+                GT, Tuổi:{' '}
+                <Text style={[styles.itemcontent]}>
+                  {data?.gender == 'MALE'
+                    ? 'Nam,'
+                    : data?.gender == 'FEMALE'
+                    ? 'Nữ,'
+                    : ''}{' '}
+                  {data.age}
                 </Text>
+              </Text>
+              <Text style={[styles.itemlabel]}>
+                Mã NB:{' '}
+                <Text style={[styles.itemcontent]}>{data.patientId}</Text>
               </Text>
               <Text style={styles.itemlabel}>
                 Mã HS:{' '}

@@ -20,6 +20,7 @@ class DiagnosticResult extends Component {
     }
     render() {
         let resultDiagnostic = this.props.diagnosticImage || [];
+        
         if (resultDiagnostic.length)
             return (<View style={styles.container}>
                 {/* {

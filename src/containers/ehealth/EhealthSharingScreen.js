@@ -34,43 +34,29 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
   let item = navigation.state?.params?.item;
   const [history, setHistory] = useState({});
   const [positionY, setPositionY] = useState(0);
-  const [data, setData] = useState([
-    {
-      avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-      name: 'Nguyễn Văn A',
-      phone: '0987654321',
-    },
-    {
-      avatar:
-        'https://nld.mediacdn.vn/thumb_w/540/2019/8/3/photo-1-15648212499661517922266.jpg',
-      name: 'Nguyễn Văn A',
-      phone: '0987654321',
-    },
-    {
-      avatar:
-        'https://duhocvietglobal.com/wp-content/uploads/2018/12/dat-nuoc-va-con-nguoi-anh-quoc.jpg',
-      name: 'Nguyễn Văn A',
-      phone: '0987654321',
-    },
-    {
-      avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-      name: 'Nguyễn Văn A',
-      phone: '0987654321',
-    },
-    {
-      avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-      name: 'Nguyễn Văn A',
-      phone: '0987654321',
-    },
-  ]);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [typeSearch, setTypeSearch] = useState('');
+
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    try {
+      let res = await ehealthProvider.getsuggestionShareEhealth(item.id);
+      console.log('res: ', res);
+      setData(res);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
   const onShare = () => {
     setIsVisible(true);
   };
   const _renderItem = ({item, index}) => {
-    return <ItemSharing item={item} />;
+    console.log('item: ', item);
+    return <ItemSharing item={item} itemEhealth={item} />;
   };
   const onSelected = (e, i) => {
     setTypeSearch(e.type);
@@ -169,6 +155,7 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
             onSelected={onSelected}
             hideSearch={hideSearch}
             positionY={positionY}
+            itemEhealth={item}
           />
         ) ||
           null)}

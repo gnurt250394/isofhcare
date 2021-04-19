@@ -26,7 +26,7 @@ import CustomMenu from '@components/CustomMenu';
 import {useDispatch} from 'react-redux';
 
 const ListEhealthUpload = ({navigation, profile}) => {
-  console.log('profile: ListEhealthUpload', profile);
+  
   const [listHospital, setListHospital] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const ListEhealthUpload = ({navigation, profile}) => {
   const onGetHospital = async () => {
     try {
       let res = await hospitalProvider.getHistoryHospital2();
-      console.log('res: ', res);
+      
       if (res.code == 0) {
         setListHospital(res.data);
       }
@@ -121,7 +121,7 @@ const ListEhealthUpload = ({navigation, profile}) => {
         refreshing={refreshing}
         onRefresh={onRefresh}
         keyExtractor={keyExtractor}
-        ListEmptyComponent={emptyComponent}
+        // ListEmptyComponent={emptyComponent}
       />
     </View>
   );
