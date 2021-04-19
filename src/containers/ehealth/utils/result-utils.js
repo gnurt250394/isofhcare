@@ -94,35 +94,35 @@ export default {
     if (
       this.checkHighlight(
         this.getResult(item),
-        item.LowerIndicator,
-        item.HigherIndicator,
+        item.lowerIndicator,
+        item.higherIndicator,
       )
     ) {
       return this.checkHighlight(
         this.getResult(item),
-        item.LowerIndicator,
-        item.HigherIndicator,
+        item.lowerIndicator,
+        item.higherIndicator,
       );
     }
-    if (item.NormalRange) {
-      if (!item.ResultState) return false;
+    if (item.normalRange) {
+      if (!item.resultState) return false;
       else {
-        if (item.ResultState != 'N') return true;
+        if (item.resultState != 'N') return true;
       }
       return false;
     }
   },
   getResult(item) {
-    return item.Result ? item.Result : item.Conclusion;
+    return item.result ? item.result : item.conclusion;
   },
   getRangeMedicalTest(item2) {
-    if (item2.NormalRange) return item2.NormalRange;
+    if (item2.normalRange) return item2.normalRange;
     var range = '';
-    if (item2.LowerIndicator && item2.HigherIndicator)
-      range = item2.LowerIndicator + ' - ' + item2.HigherIndicator;
+    if (item2.lowerIndicator && item2.higherIndicator)
+      range = item2.lowerIndicator + ' - ' + item2.higherIndicator;
     else {
-      range = item2.LowerIndicator;
-      if (item2.HigherIndicator) range = item2.HigherIndicator;
+      range = item2.lowerIndicator;
+      if (item2.higherIndicator) range = item2.higherIndicator;
     }
     return range;
   },

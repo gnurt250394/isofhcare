@@ -108,7 +108,10 @@ class ViewEhealthDetailScreen extends Component {
             isContract={this.state.isContract}
           />
           <MedicalTestResult medicalTest={this.state.result?.medicalTest} />
-          <DiagnosticResult result={this.state.result} />
+          <DiagnosticResult
+            result={this.state.result}
+            diagnosticImage={this.state.result?.diagnosticImage}
+          />
           <SurgeryResult result={this.state.result} />
           <Medicine result={this.state.result} data={this.state.data} />
           <TotalMoney
@@ -173,7 +176,10 @@ class ViewEhealthDetailScreen extends Component {
             isContract={this.state.isContract}
           />
           <MedicalTestResult medicalTest={this.state.result?.medicalTest} />
-          <DiagnosticResult result={this.state.result} />
+          <DiagnosticResult
+            result={this.state.result}
+            diagnosticImage={this.state.result?.diagnosticImage}
+          />
           <SurgeryResult result={this.state.result} />
           <Medicine
             listResult={this.state.listResult}

@@ -121,7 +121,7 @@ const ListEhealthUpload = ({navigation, profile}) => {
         refreshing={refreshing}
         onRefresh={onRefresh}
         keyExtractor={keyExtractor}
-        ListEmptyComponent={emptyComponent}
+        // ListEmptyComponent={emptyComponent}
       />
     </View>
   );
