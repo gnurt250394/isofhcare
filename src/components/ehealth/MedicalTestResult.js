@@ -10,6 +10,7 @@ import ImageEhealth from './ImageEhealth';
 import {Card} from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import {object} from 'prop-types';
+import CustomMenu from '@components/CustomMenu';
 
 class MedicalTestResult extends Component {
   constructor(props) {
@@ -19,11 +20,10 @@ class MedicalTestResult extends Component {
     };
   }
   componentDidMount() {
-    this.onGetData();
+    this.onGetData(this.props.medicalTest);
   }
 
-  onGetData = (medicalTest) => {
-    console.log('medicalTest: ', medicalTest);
+  onGetData = medicalTest => {
     if (!medicalTest) return null;
     var listHaveChild = [];
     for (var key in medicalTest) {
@@ -60,10 +60,7 @@ class MedicalTestResult extends Component {
 
     let firstKey = Object.keys(medicalTest)[0];
     let actions = this.renderKey(medicalTest);
-    let tableHead =
-      firstKey == 'microbiology'
-        ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ']
-        : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BT', 'ĐƠN VỊ'];
+    let tableHead = ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'];
     let keySelect = this.renderLabel(firstKey);
     let currentGroup =
       medicalTest[firstKey] && medicalTest[firstKey].filter(obj => obj);
@@ -79,7 +76,6 @@ class MedicalTestResult extends Component {
     });
   };
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps: ', nextProps);
     if (this.props.medicalTest != nextProps.medicalTest) {
       this.onGetData(nextProps.medicalTest);
     }
@@ -132,10 +128,7 @@ class MedicalTestResult extends Component {
   onSelect = (index, medicalTest) => {
     if (index <= Object.keys(medicalTest).length - 1) {
       let valueSelect = Object.keys(medicalTest)[index];
-      let tableHead =
-        valueSelect == 'microbiology'
-          ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ']
-          : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BT', 'ĐƠN VỊ'];
+      let tableHead = ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'];
       let textSelect = this.renderLabel(valueSelect);
       let currentGroup = medicalTest[valueSelect].filter(obj => obj);
       this.setState({
@@ -161,7 +154,7 @@ class MedicalTestResult extends Component {
           let borderBottomWidth =
             i == item.ServiceMedicTestLine.length - 1 ? 0.6 : 0;
 
-          return this.state.valueSelect == 'microbiology' ? (
+          return (
             <TableWrapper
               style={[
                 styles.tableWrapper,
@@ -177,50 +170,45 @@ class MedicalTestResult extends Component {
                 textStyle={[styles.textValue]}
               />
               <Cell
-                data={resultUtils.getResult(item2)}
-                style={[styles.flex, {borderBottomWidth}]}
+                data={
+                  <CustomMenu
+                    MenuSelectOption={
+                      <Text
+                        style={[
+                          {padding: 10},
+                          isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                        ]}>
+                        {resultUtils.getResult(item2)}
+                      </Text>
+                    }
+                    customOption={
+                      <View
+                        style={{
+                          padding: 10,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text style={{fontWeight: 'bold'}}>
+                          Giá trị bình thường
+                        </Text>
+                        <Text style={{color: '#86899B'}}>
+                          {item?.normalRange} {item?.unit}
+                        </Text>
+                      </View>
+                    }
+                    // onSelected={onSelected}
+                  />
+                }
+                style={[
+                  styles.flex,
+                  {borderBottomWidth},
+                  {alignItems: 'flex-end'},
+                ]}
                 borderStyle={{borderWidth: 0.6}}
                 textStyle={[
                   styles.textValue,
                   isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
                 ]}
-              />
-            </TableWrapper>
-          ) : (
-            <TableWrapper
-              style={[
-                styles.tableWrapper,
-                index % 2 == 0
-                  ? {backgroundColor: '#f5f5f5'}
-                  : {backgroundColor: '#fff'},
-              ]}
-              key={i}>
-              <Cell
-                style={[styles.LineCell, {borderBottomWidth}]}
-                data={item2?.nameLine?.trim()}
-                borderStyle={{borderWidth: 0.6}}
-                textStyle={[styles.textValue]}
-              />
-              <Cell
-                data={resultUtils.getResult(item2)}
-                style={[styles.flex, {borderBottomWidth}]}
-                borderStyle={{borderWidth: 0.6}}
-                textStyle={[
-                  styles.textValue,
-                  isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-                ]}
-              />
-              <Cell
-                data={range}
-                borderStyle={{borderWidth: 0.6}}
-                style={[styles.flex, {borderBottomWidth}]}
-                textStyle={[styles.textValue, {color: '#00000050'}]}
-              />
-              <Cell
-                data={item2.unit}
-                borderStyle={{borderWidth: 0.6}}
-                style={[styles.flex, {borderBottomWidth}]}
-                textStyle={[styles.textValue]}
               />
             </TableWrapper>
           );
@@ -232,6 +220,7 @@ class MedicalTestResult extends Component {
     this.setState({isShow: !this.state.isShow});
   };
   renderMedical(item, index) {
+    console.log('item: ', item);
     let borderBottomWidth = 0;
     if (
       item.serviceMedicTestLine &&
@@ -244,144 +233,115 @@ class MedicalTestResult extends Component {
       var range = resultUtils.getRangeMedicalTest(item.serviceMedicTestLine[0]);
       var isHighlight = resultUtils.showHighlight(item.serviceMedicTestLine[0]);
 
-      var data =
-        this.state.valueSelect == 'microbiology' ? (
-          <TableWrapper
-            style={[
-              styles.tableWrapper,
-              index % 2 == 0
-                ? {backgroundColor: '#f5f5f5'}
-                : {backgroundColor: '#fff'},
-            ]}
-            key={index}>
-            <Cell
-              data={item.nameLine.trim()}
-              borderStyle={{borderWidth: 0}}
-              style={[styles.LineCell, {borderBottomWidth}]}
-              textStyle={[styles.textValue]}
-            />
+      var data = (
+        <TableWrapper
+          style={[
+            styles.tableWrapper,
+            index % 2 == 0
+              ? {backgroundColor: '#f5f5f5'}
+              : {backgroundColor: '#fff'},
+          ]}
+          key={index}>
+          <Cell
+            data={item.nameLine.trim()}
+            borderStyle={{borderWidth: 0}}
+            style={[styles.LineCell, {borderBottomWidth}]}
+            textStyle={[styles.textValue]}
+          />
 
-            <Cell
-              data={resultUtils.getResult(item.ServiceMedicTestLine[0])}
-              style={[styles.flex, {borderBottomWidth}]}
-              borderStyle={{borderWidth: 0}}
-              textStyle={[
-                styles.textValue,
-                isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-              ]}
-            />
-          </TableWrapper>
-        ) : (
-          <TableWrapper
-            style={[
-              styles.tableWrapper,
-              index % 2 == 0
-                ? {backgroundColor: '#f5f5f5'}
-                : {backgroundColor: '#fff'},
-            ]}
-            key={index}>
-            <Cell
-              data={item?.nameLine?.trim() || ''}
-              borderStyle={{borderWidth: 0}}
-              style={{borderLeftWidth: 0, flex: 1}}
-              textStyle={[styles.textValue]}
-            />
-            <Cell
-              data={resultUtils.getResult(item.ServiceMedicTestLine[0])}
-              style={[styles.flex, {borderBottomWidth}]}
-              borderStyle={{borderWidth: 0}}
-              textStyle={[
-                styles.textValue,
-                isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-              ]}
-            />
-            <Cell
-              data={irange}
-              borderStyle={{borderWidth: 0}}
-              style={[styles.flex, {borderBottomWidth}]}
-              textStyle={[styles.textValue, {color: '#000000'}]}
-            />
-            <Cell
-              data={item.ServiceMedicTestLine[0].unit}
-              style={[styles.flex, {borderBottomWidth}]}
-              borderStyle={{borderWidth: 0}}
-              textStyle={[styles.textValue]}
-            />
-          </TableWrapper>
-        );
+          <Cell
+            data={
+              <CustomMenu
+                MenuSelectOption={
+                  <Text
+                    style={[
+                      {padding: 10},
+                      isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                    ]}>
+                    {resultUtils.getResult(item.ServiceMedicTestLine[0])}
+                  </Text>
+                }
+                customOption={
+                  <View
+                    style={{
+                      padding: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={{fontWeight: 'bold'}}>
+                      Giá trị bình thường
+                    </Text>
+                    <Text style={{color: '#86899B'}}>
+                      {item?.normalRange} {item?.unit}
+                    </Text>
+                  </View>
+                }
+                // onSelected={onSelected}
+              />
+            }
+            style={[styles.flex, {borderBottomWidth}, {alignItems: 'flex-end'}]}
+            borderStyle={{borderWidth: 0}}
+            textStyle={[styles.textValue]}
+          />
+        </TableWrapper>
+      );
       return data;
     }
     var range = resultUtils.getRangeMedicalTest(item);
     var isHighlight = resultUtils.showHighlight(item);
 
-    var data =
-      this.state.valueSelect == 'microbiology' ? (
-        <TableWrapper
-          style={[
-            styles.tableWrapper,
-            index % 2 == 0
-              ? {backgroundColor: '#f5f5f5'}
-              : {backgroundColor: '#fff'},
+    var data = (
+      <TableWrapper
+        style={[
+          styles.tableWrapper,
+          index % 2 == 0
+            ? {backgroundColor: '#f5f5f5'}
+            : {backgroundColor: '#fff'},
+        ]}
+        key={index}>
+        <Cell
+          data={item?.nameLine?.trim()}
+          style={[styles.LineCell, {borderBottomWidth}]}
+          borderStyle={{borderWidth: 0}}
+          textStyle={[styles.textValue, {fontWeight: 'bold'}]}
+        />
+        <Cell
+          data={
+            <CustomMenu
+              MenuSelectOption={
+                <Text
+                  style={[
+                    {padding: 10},
+                    isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                  ]}>
+                  {resultUtils.getResult(item)}
+                </Text>
+              }
+              customOption={
+                <View
+                  style={{
+                    padding: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{fontWeight: 'bold'}}>Giá trị bình thường</Text>
+                  <Text style={{color: '#86899B'}}>
+                    {item?.normalRange} {item?.unit}
+                  </Text>
+                </View>
+              }
+              // onSelected={onSelected}
+            />
+          }
+          borderStyle={{borderWidth: 0}}
+          style={[styles.flex, {borderBottomWidth}, {alignItems: 'flex-end'}]}
+          textStyle={[
+            styles.textValue,
+            isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
           ]}
-          key={index}>
-          <Cell
-            data={item?.nameLine?.trim()}
-            style={[styles.LineCell, {borderBottomWidth}, styles.center]}
-            borderStyle={{borderWidth: 0}}
-            textStyle={[styles.textValue, {fontWeight: 'bold'}]}
-          />
-          <Cell
-            data={resultUtils.getResult(item)}
-            borderStyle={{borderWidth: 0}}
-            style={[styles.flex, {borderBottomWidth}, styles.center]}
-            textStyle={[
-              styles.textValue,
-              isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-            ]}
-          />
-        </TableWrapper>
-      ) : (
-        <TableWrapper
-          style={[
-            styles.tableWrapper,
-            index % 2 == 0
-              ? {backgroundColor: '#f5f5f5'}
-              : {backgroundColor: '#fff'},
-          ]}
-          key={index}>
-          <Cell
-            data={item?.nameLine?.trim()}
-            style={[
-              styles.LineCell,
-              {borderBottomWidth, width: '100%', flex: 0.8},
-              styles.center,
-            ]}
-            borderStyle={{borderWidth: 0}}
-            textStyle={[styles.textValue, {fontWeight: 'bold'}]}
-          />
-          <Cell
-            data={resultUtils.getResult(item)}
-            borderStyle={{borderWidth: 0}}
-            style={[styles.flex, {borderBottomWidth}, styles.center]}
-            textStyle={[
-              styles.textValue,
-              isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-            ]}
-          />
-          <Cell
-            data={range}
-            borderStyle={{borderWidth: 0}}
-            style={[styles.flex, {borderBottomWidth}, styles.center]}
-            textStyle={[styles.textValue, {color: '#000000'}]}
-          />
-          <Cell
-            data={item.unit}
-            borderStyle={{borderWidth: 0}}
-            style={[styles.flex, {borderBottomWidth}, styles.center]}
-            textStyle={[styles.textValue]}
-          />
-        </TableWrapper>
-      );
+        />
+      </TableWrapper>
+    );
     return data;
   }
   renderAtomy(obj) {
@@ -444,62 +404,9 @@ class MedicalTestResult extends Component {
   }
 
   render() {
-    console.log('this.state.currentGroup: ', this.state.currentGroup);
     if (!this.state.currentGroup?.length) {
       return null;
     }
-    // if (!this.state.currentGroup || !this.state.hasResult) {
-    //     if (this.state?.medicalTestResult?.length && (this.state?.medicalTestResult[0]?.anatomy || this.state?.medicalTestResult[0]?.Image?.length != 0)) {
-
-    //         return this.state.medicalTestResult.map((e, i) => {
-    //             return (
-    //                 <View key={i} style={{
-    //                     flex: 1,
-    //                     paddingHorizontal: 10
-    //                 }}>
-    //                     <Card>
-    //                         <TouchableOpacity
-    //                             onPress={this.onSetShow}
-    //                             style={[styles.buttonShowInfo, this.state.isShow ? { backgroundColor: '#3161AD' } : {}]}>
-    //                             <ScaledImage source={require('@images/new/ehealth/ic_info.png')} height={19} style={{
-    //                                 tintColor: this.state.isShow ? "#FFF" : '#3161AD'
-    //                             }} />
-    //                             <Text style={[styles.txtTitle, this.state.isShow ? { color: '#FFF' } : {}]}>KẾT QUẢ XÉT NGHIỆM</Text>
-    //                             <ScaledImage source={require('@images/new/ehealth/ic_down2.png')} height={10} style={this.state.isShow ? {
-    //                                 tintColor: "#FFF",
-    //                             } : {
-    //                                     transform: [{ rotate: '-90deg' }],
-    //                                     tintColor: '#3161AD'
-    //                                 }} />
-    //                         </TouchableOpacity>
-    //                         {this.state.isShow ?
-    //                             <View style={{
-    //                                 padding: 10
-    //                             }}>
-    //                                 <View style={styles.containerDescription}>
-    //                                     {e?.SummaryResult ?
-    //                                         <View>
-    //                                             <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
-    //                                             <View style={styles.containerTitle}>
-    //                                                 <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginRight: 10 }} />
-    //                                                 <Text>{e.SummaryResult}</Text>
-    //                                             </View>
-    //                                         </View> : null
-    //                                     }
-
-    //                                     <ImageEhealth images={e.Image} />
-    //                                 </View>
-    //                             </View>
-    //                             : null
-    //                         }
-    //                     </Card>
-    //                 </View>
-    //             )
-    //         })
-    //     }
-    //     return null;
-
-    // }
 
     let medicalTest = this.state.medicalTest;
 
@@ -578,6 +485,7 @@ class MedicalTestResult extends Component {
                       data={this.state.tableHead}
                       style={styles.head}
                       textStyle={styles.text}
+                      flexArr={[4, 1]}
                     />
                     {this.state.currentGroup && this.state.currentGroup.length
                       ? this.state.currentGroup.map((obj, i) => {
@@ -686,8 +594,8 @@ const styles = StyleSheet.create({
   flex: {flex: 1},
   LineCell: {
     borderLeftWidth: 0,
-    flex: 1,
-    alignItems: 'center',
+    flex: 4,
+    alignItems: 'flex-start',
     padding: 5,
     width: '100%',
   },
@@ -708,21 +616,22 @@ const styles = StyleSheet.create({
   itemcontent: {color: '#0291E1'},
   item: {marginTop: 10, flexDirection: 'row'},
   head: {
-    backgroundColor: '#0291E120',
+    backgroundColor: '#166950',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     paddingVertical: 10,
   },
   text: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 14,
     width: '100%',
     flex: 1,
-    color: '#0291E1',
+    color: '#FFF',
     fontWeight: 'bold',
   },
   textValue: {
     fontSize: 14,
+    textAlign: 'left',
   },
   diagnosticLabel: {
     color: constants.colors.primary_bold,

@@ -29,6 +29,14 @@ import connectionUtils from '@utils/connection-utils';
 import ItemReBooking from '@components/booking/history/ItemReBooking';
 import CustomMenu from '@components/CustomMenu';
 import ehealthProvider from '@data-access/ehealth-provider';
+import ProfileInfomationV1 from '@components/ehealth/ProfileInfomationV1';
+import InfoHistoryBookingV1 from '@components/ehealth/InfoHistoryBookingV1';
+import CheckupResultItemV1 from '@components/ehealth/CheckupResultItemV1';
+import MedicalTestResultV1 from '@components/ehealth/MedicalTestResultV1';
+import DiagnosticResultV1 from '@components/ehealth/DiagnosticResultV1';
+import SurgeryResultV1 from '@components/ehealth/SurgeryResultV1';
+import MedicineV1 from '@components/ehealth/MedicineV1';
+import ReBooking from '@components/booking/history/ReBooking';
 
 class ViewEhealthDetailScreen extends Component {
   constructor(props) {
@@ -96,39 +104,20 @@ class ViewEhealthDetailScreen extends Component {
       }
     }
   }
-  renderDetails = () => {
-    if (this.state.user) {
-      return (
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-          <ProfileInfomation data={this.state.data} />
-          <View style={styles.lineHeader} />
-          <CheckupResult
-            medical={this.state.result?.medical}
-            result={this.state.result}
-            isContract={this.state.isContract}
-          />
-          <MedicalTestResult medicalTest={this.state.result?.medicalTest} />
-          <DiagnosticResult result={this.state.result} />
-          <SurgeryResult result={this.state.result} />
-          <Medicine result={this.state.result} data={this.state.data} />
-          <TotalMoney
-            result={this.state.result}
-            resultDetail={this.state.resultDetail}
-          />
-          <View style={styles.end} />
-        </ScrollView>
-      );
-    } else if (this.state.fromHistory) {
-      return (
+  renderDetailsV2 = () => {
+    let data = {
+      [false]: (
         <ScrollView
           ref={ref => (this.flListDate = ref)}
           showsVerticalScrollIndicator={false}
           style={{flex: 1}}>
           <ProfileInfomation data={this.state.data} />
           {/* <View style={styles.lineHeader} /> */}
-          <View style={styles.viewHistory}>
-            <ItemReBooking item={this.state.dataHistory} />
-          </View>
+          {this.state.dataHistory?.length ? (
+            <View style={styles.viewHistory}>
+              <ReBooking item={this.state.dataHistory[0]} />
+            </View>
+          ) : null}
           <InfoHistoryBooking
             result={this.state.result}
             resultDetail={this.state.resultDetail}
@@ -137,43 +126,13 @@ class ViewEhealthDetailScreen extends Component {
           <CheckupResult
             medical={this.state.result?.medical}
             result={this.state.result}
-            isContract={this.state.isContract}
+            isContract={this.state.data?.isContract}
           />
           <MedicalTestResult medicalTest={this.state.result?.medicalTest} />
           <DiagnosticResult
+            result={this.state.result}
             diagnosticImage={this.state.result?.diagnosticImage}
           />
-          <SurgeryResult result={this.state.result} />
-          <Medicine
-            result={this.state.result}
-            data={this.state.data}
-            medicine={this.state.result?.prescription}
-          />
-          {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
-          <View style={styles.end} />
-        </ScrollView>
-      );
-    } else {
-      console.log('this.state: ', this.state);
-      return (
-        <ScrollView
-          ref={ref => (this.flListDate = ref)}
-          showsVerticalScrollIndicator={false}
-          style={{flex: 1}}>
-          <ProfileInfomation data={this.state.data} />
-          {/* <View style={styles.lineHeader} /> */}
-          <InfoHistoryBooking
-            result={this.state.result}
-            resultDetail={this.state.resultDetail}
-            data={this.state.data}
-          />
-          <CheckupResult
-            medical={this.state.result?.medical}
-            result={this.state.result}
-            isContract={this.state.isContract}
-          />
-          <MedicalTestResult medicalTest={this.state.result?.medicalTest} />
-          <DiagnosticResult result={this.state.result} />
           <SurgeryResult result={this.state.result} />
           <Medicine
             listResult={this.state.listResult}
@@ -190,8 +149,111 @@ class ViewEhealthDetailScreen extends Component {
           {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
           <View style={styles.end} />
         </ScrollView>
-      );
-    }
+      ),
+      [true]: (
+        <ScrollView
+          ref={ref => (this.flListDate = ref)}
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}>
+          <ProfileInfomation data={this.state.data} />
+          {/* <View style={styles.lineHeader} /> */}
+
+          <AdministrationIsPatient
+            result={this.state.result}
+            resultDetail={this.state.resultDetail}
+            patientName={this.state.result?.Profile?.PatientName}
+          />
+          <PriceIsPatient
+            result={this.state.result}
+            resultDetail={this.state.resultDetail}
+            patientHistoryId={this.state.data?.patientHistoryId}
+          />
+          {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
+          <View style={styles.end} />
+        </ScrollView>
+      ),
+    };
+
+    return data[(this.state.data?.isInPatient)];
+  };
+  renderDetailsV1 = () => {
+    let data = {
+      [false]: (
+        <ScrollView
+          ref={ref => (this.flListDate = ref)}
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}>
+          <ProfileInfomationV1
+            resultDetail={this.state.resultDetail}
+            patientName={this.state.resultDetail?.Profile?.PatientName}
+          />
+          {this.state.dataHistory?.length ? (
+            <View style={styles.viewHistory}>
+              <ReBooking item={this.state.dataHistory[0]} />
+            </View>
+          ) : null}
+          {/* <View style={styles.lineHeader} /> */}
+          <InfoHistoryBookingV1
+            result={this.state.result}
+            resultDetail={this.state.resultDetail}
+            patientName={this.state.resultDetail?.Profile?.PatientName}
+          />
+          <CheckupResultItemV1 result={this.state.result} />
+          <MedicalTestResultV1 result={this.state.result} />
+          <DiagnosticResultV1 result={this.state.result} />
+          <SurgeryResultV1 result={this.state.result} />
+          <MedicineV1
+            listResult={this.state.listResult}
+            hospitalName={this.state.hospitalName}
+            currentIndex={this.state.currentIndex}
+            dataHistory={this.state.dataHistory}
+            user={this.state.user}
+            showDrug={this.state.showDrug}
+            resultDetail={this.state.resultDetail}
+            result={this.state.result}
+            data={this.state.data}
+          />
+          {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
+          <View style={styles.end} />
+        </ScrollView>
+      ),
+      [true]: (
+        <ScrollView
+          ref={ref => (this.flListDate = ref)}
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}>
+          <ProfileInfomation
+            resultDetail={this.state.result}
+            patientName={this.state.result?.Profile?.PatientName}
+          />
+          {/* <View style={styles.lineHeader} /> */}
+
+          <AdministrationIsPatient
+            result={this.state.result}
+            resultDetail={this.state.resultDetail}
+            patientName={this.state.result?.Profile?.PatientName}
+          />
+          <PriceIsPatient
+            result={this.state.result}
+            resultDetail={this.state.resultDetail}
+            patientHistoryId={this.state.data?.patientHistoryId}
+          />
+          {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
+          <View style={styles.end} />
+        </ScrollView>
+      ),
+    };
+
+    return data[(this.state.data?.isInPatient)];
+  };
+  getReCheckup = async item => {
+    try {
+      let res = await ehealthProvider.getRecheckups(item?.patientHistoryId);
+
+      if (res?.length) {
+        this.setState({dataHistory: res});
+      }
+    } catch (error) {}
   };
   componentDidMount() {
     this.viewResult(this.state.item);
@@ -264,6 +326,7 @@ class ViewEhealthDetailScreen extends Component {
     }
   };
   viewResult = item => {
+    this.getReCheckup(item);
     connectionUtils
       .isConnected()
       .then(s => {
@@ -276,7 +339,6 @@ class ViewEhealthDetailScreen extends Component {
               resultUtils
                 .getDetail(item.id)
                 .then(result => {
-                  console.log('result: ', result);
                   this.setState(
                     {
                       isLoading: false,
@@ -330,7 +392,11 @@ class ViewEhealthDetailScreen extends Component {
   onBack = () => {
     this.setState(
       pre => {
-        return {currentIndex: pre.currentIndex - 1, disabledNext: false};
+        return {
+          currentIndex: pre.currentIndex - 1,
+          disabledNext: false,
+          resultSelected: this.state.listResult[pre.currentIndex - 1],
+        };
       },
       () => {
         this.viewResult(this.state.listResult[this.state.currentIndex]);
@@ -361,35 +427,15 @@ class ViewEhealthDetailScreen extends Component {
   onNext = () => {
     this.setState(
       pre => {
-        return {currentIndex: pre.currentIndex + 1, disabledBack: false};
+        return {
+          currentIndex: pre.currentIndex + 1,
+          disabledBack: false,
+          resultSelected: this.state.listResult[pre.currentIndex + 1],
+        };
       },
       () => {
         this.viewResult(this.state.listResult[this.state.currentIndex]);
       },
-    );
-  };
-  renderInPatient = () => {
-    return (
-      <ScrollView
-        ref={ref => (this.flListDate = ref)}
-        showsVerticalScrollIndicator={false}
-        style={{flex: 1}}>
-        <ProfileInfomation data={this.state.data} />
-        {/* <View style={styles.lineHeader} /> */}
-
-        <AdministrationIsPatient
-          result={this.state.result}
-          resultDetail={this.state.resultDetail}
-          patientName={this.state.result?.Profile?.PatientName}
-        />
-        <PriceIsPatient
-          result={this.state.result}
-          resultDetail={this.state.resultDetail}
-          patientHistoryId={this.state.data?.patientHistoryId}
-        />
-        {/* <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} /> */}
-        <View style={styles.end} />
-      </ScrollView>
     );
   };
   onPrintAndShare = (options, index) => {
@@ -404,6 +450,18 @@ class ViewEhealthDetailScreen extends Component {
       default:
         break;
     }
+  };
+  renderWithVersion = () => {
+    // let data ={
+    //   1:
+    // }
+    let data = {
+      1: this.renderDetailsV1(),
+      2: this.renderDetailsV2(),
+    };
+
+    console.log('this.state.data?.version: ', this.state.data?.version);
+    return data[(this.state.data?.version)];
   };
   render() {
     return (
@@ -438,9 +496,7 @@ class ViewEhealthDetailScreen extends Component {
             />
           ) : null
         }>
-        {this.state.data?.isInPatient
-          ? this.renderInPatient()
-          : this.renderDetails()}
+        {this.renderWithVersion()}
         {!this.state.fromHistory && (
           <View style={styles.containerBackAndNext}>
             <TouchableOpacity
@@ -570,8 +626,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    userApp: state.userApp,
-    ehealth: state.ehealth,
+    userApp: state.auth.userApp,
+    ehealth: state.auth.ehealth,
   };
 }
 export default connect(mapStateToProps)(ViewEhealthDetailScreen);

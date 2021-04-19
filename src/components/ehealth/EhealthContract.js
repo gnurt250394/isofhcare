@@ -622,7 +622,7 @@ class EhealthItem extends Component {
     );
   }
   renderResult = conclusion => {
-    console.log('conclusion: ', conclusion);
+    
     return (
       <View>
         <View style={styles.viewServiceName}>
@@ -735,7 +735,7 @@ class EhealthItem extends Component {
     );
   };
   renderService = (label, list) => {
-    console.log('list: ', list);
+    
     if (!list?.length) return null;
     if (list.filter(e => e.result).length == 0) return null;
 
@@ -773,11 +773,11 @@ class EhealthItem extends Component {
 
     let { internalMedicine } = this.props;
     let { medical } = this.props;
-    console.log('medical: ', medical);
+    
     let listSpecialist = Object.keys(medical.specialists).map(key => {
       return medical.specialists[key];
     });
-    console.log('listSpecialist: ', listSpecialist);
+    
 
     return (
       <View style={styles.container} key={this.props.index}>

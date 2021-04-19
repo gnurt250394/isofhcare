@@ -13,7 +13,7 @@ const ItemEhealth = ({item, onPress, navigation, isShare, disabled}) => {
     <View style={styles.viewItem}>
       <Card style={styles.cardStyle}>
         <TouchableOpacity
-          onPress={onPress(item)}
+          onPress={onPress}
           disabled={disabled}
           style={styles.buttonViewResult}>
           <View style={styles.viewDetails}>

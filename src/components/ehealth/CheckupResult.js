@@ -34,10 +34,11 @@ class CheckupResult extends Component {
     //     return null
 
     const {medical, isContract} = this.state;
-    console.log('isContract: ', isContract);
     console.log('medical: ', medical);
+    
+    
 
-    if (!medical?.length) {
+    if (!medical) {
       return null;
     }
 
@@ -93,7 +94,7 @@ class CheckupResult extends Component {
               {isContract ? (
                 <EhealthContract medical={medical?.contract} />
               ) : (
-                medical?.map((item, index) => (
+                medical?.normal?.map((item, index) => (
                   <EhealthItem
                     key={index}
                     index={index}

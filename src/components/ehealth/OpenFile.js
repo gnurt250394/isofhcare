@@ -89,10 +89,10 @@ const OpenFile = url => {
       android
         .actionViewIntent(path, mimeType)
         .then(success => {
-          console.log('success: ', success);
+          
         })
         .catch(err => {
-          console.log('err:', err);
+          
         });
 
     }else{

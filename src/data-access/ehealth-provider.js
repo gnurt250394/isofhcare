@@ -170,4 +170,96 @@ export default {
       );
     });
   },
+  getRecheckups(patientHistoryId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.ehealth.recheckups +
+          `/${patientHistoryId}/patient-history`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getEhealthMyShare() {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.ehealth.get_ehealth_my_share,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getsuggestionShareEhealth(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.ehealth.get_ehealth_my_share + `/${id}/sharing-suggest`,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  searchUserShare(type, keyword) {
+    return new Promise((resolve, reject) => {
+      let params =
+        (type ? `?type=${type}` : '') + (keyword ? `&content=${keyword}` : '');
+      client.requestApi(
+        'get',
+        constants.api.ehealth.get_ehealth_my_share + params,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  createShare(patientHistoryId, userId, timeUnits) {
+    return new Promise((resolve, reject) => {
+      let params = {
+        timer: {
+          timeUnit: timeUnits,
+        },
+        target: {
+          id: userId,
+        },
+        patientHistory: {
+          id: patientHistoryId,
+        },
+      };
+      client.requestApi(
+        'post',
+        constants.api.ehealth.get_ehealth_my_share,
+        params,
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getTimeUnits() {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.ehealth.get_time_units,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
 };

@@ -21,7 +21,7 @@ class SurgeryResult extends Component {
     render() {
         let { result } = this.props;
         let resultSurgery = result?.surgery || [];
-        console.log('resultSurgery: ', resultSurgery);
+        
         if (!resultSurgery?.length) {
             return null
         }

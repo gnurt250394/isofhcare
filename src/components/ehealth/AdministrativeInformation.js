@@ -20,7 +20,7 @@ class AdministrativeInformation extends Component {
   };
   render() {
     let summary = this.props.summary;
-    console.log('summary: ', summary);
+    
 
 
     if (!summary) {
