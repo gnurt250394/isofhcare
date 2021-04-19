@@ -18,7 +18,7 @@ class Medicine extends Component {
             isShow: this.props.showDrug,
             listResult: this.props.listResult || {},
         };
-        console.log('this.props.resultSelected: ', this.props.resultSelected);
+        
     }
     componentWillReceiveProps(preProps) {
         if (preProps.resultSelected != this.props.resultSelected) {

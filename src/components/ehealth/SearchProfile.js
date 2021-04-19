@@ -13,8 +13,15 @@ import {
 import CustomMenu from '@components/CustomMenu';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ItemSharing from './ItemSharing';
+import ehealthProvider from '@data-access/ehealth-provider';
 const {width, height} = Dimensions.get('window');
-const SearchProfile = ({typeSearch, onSelected, hideSearch, positionY}) => {
+const SearchProfile = ({
+  typeSearch,
+  onSelected,
+  hideSearch,
+  positionY,
+  itemEhealth,
+}) => {
   const opacity = new Animated.Value(0);
   const translateY = new Animated.Value(positionY);
   const [isShow, setIsShow] = useState(false);
@@ -40,38 +47,26 @@ const SearchProfile = ({typeSearch, onSelected, hideSearch, positionY}) => {
       setIsShow(true);
     }); // start the sequence group
   }, []);
-  const [data, setData] = useState([
-    // {
-    //   avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-    //   name: 'Nguyễn Văn A',
-    //   phone: '0987654321',
-    // },
-    // {
-    //   avatar:
-    //     'https://nld.mediacdn.vn/thumb_w/540/2019/8/3/photo-1-15648212499661517922266.jpg',
-    //   name: 'Nguyễn Văn A',
-    //   phone: '0987654321',
-    // },
-    // {
-    //   avatar:
-    //     'https://duhocvietglobal.com/wp-content/uploads/2018/12/dat-nuoc-va-con-nguoi-anh-quoc.jpg',
-    //   name: 'Nguyễn Văn A',
-    //   phone: '0987654321',
-    // },
-    // {
-    //   avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-    //   name: 'Nguyễn Văn A',
-    //   phone: '0987654321',
-    // },
-    // {
-    //   avatar: 'https://media.vov.vn/uploaded/usobwtngx2k/2020_01_01/1_ljtd.jpg',
-    //   name: 'Nguyễn Văn A',
-    //   phone: '0987654321',
-    // },
-  ]);
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      onSearch();
+    }, 500);
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [typeSearch, keyword]);
+  const onSearch = async () => {
+    try {
+      let res = await ehealthProvider.searchUserShare(typeSearch, keyword);
+      console.log('res: ', res);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
+  const [data, setData] = useState([]);
   const _keyExtractor = (item, index) => index.toString();
   const _renderItem = ({item, index}) => {
-    return <ItemSharing item={item} />;
+    return <ItemSharing item={item} itemEhealth={itemEhealth} />;
   };
   const listEmpty = () => {
     if (keyword) {
@@ -93,18 +88,12 @@ const SearchProfile = ({typeSearch, onSelected, hideSearch, positionY}) => {
   return (
     <View style={styles.container}>
       <Animated.View
-        // easing={'ease-in-circ'}
-        // animation="fadeInUpBig"
-        // // delay={500}
-        // duration={800}
-
-        // useNativeDriver={true}
         style={[styles.containerSearch, {opacity, transform: [{translateY}]}]}>
         <CustomMenu
           MenuSelectOption={
             <View style={styles.buttonFilter}>
               <Text style={styles.txtLabelFilter}>
-                {typeSearch == 'user' ? 'Người dùng' : 'Bác sĩ'}
+                {typeSearch == 'USER' ? 'Người dùng' : 'Bác sĩ'}
               </Text>
               <ScaledImage
                 source={require('@images/new/ehealth/ic_down.png')}
@@ -114,9 +103,9 @@ const SearchProfile = ({typeSearch, onSelected, hideSearch, positionY}) => {
             </View>
           }
           options={
-            typeSearch == 'user'
-              ? [{value: 'Bác sĩ', id: 1, type: 'doctor'}]
-              : [{value: 'Người dùng', id: 1, type: 'user'}]
+            typeSearch == 'USER'
+              ? [{value: 'Bác sĩ', id: 1, type: 'DOCTOR'}]
+              : [{value: 'Người dùng', id: 1, type: 'USER'}]
           }
           onSelected={onSelected}
         />

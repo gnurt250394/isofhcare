@@ -4,6 +4,7 @@ import {Card} from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import {useSelector} from 'react-redux';
 const InfoHistoryBooking = ({resultDetail, patientName, result, data}) => {
+  
   const [state, setstate] = useState({
     isShow: false,
   });
@@ -45,7 +46,7 @@ const InfoHistoryBooking = ({resultDetail, patientName, result, data}) => {
     }
     return price.formatPrice();
   };
-  if (!serviceCheckup?.length) return null;
+  // if (!serviceCheckup?.length) return null;
   return (
     <View style={styles.container}>
       <Card style={styles.card}>

@@ -26,30 +26,6 @@ import ItemEhealth from './ItemEhealth';
 
 const ListEhealthOnline = ({navigation, profile}) => {
   const [listEhealth, setListEhealth] = useState([
-    {
-      timeGoIn: '2020-01-10',
-      serviceName: 'abc',
-      name: 'Nguyen Van A',
-      hospitalName: 'Benh vien phoi trung uong',
-      patientHistoryId: '12321324321',
-      expried: '2021-02-20',
-    },
-    {
-      timeGoIn: '2020-01-10',
-      serviceName: 'abc',
-      name: 'Nguyen Van A',
-      hospitalName: 'Benh vien phoi trung uong',
-      patientHistoryId: null,
-      expried: '2021-02-20',
-    },
-    {
-      timeGoIn: '2020-01-10',
-      serviceName: 'abc',
-      name: 'Nguyen Van A',
-      hospitalName: 'Benh vien phoi trung uong',
-      patientHistoryId: '12321324321',
-      expried: '2021-02-20',
-    },
   ]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -71,10 +47,11 @@ const ListEhealthOnline = ({navigation, profile}) => {
   };
   const goToDetail = item => () => {
     console.log('item: ', item);
+    
     navigation.navigate('viewDetailEhealth', {item, listResult: listEhealth});
   };
   const renderItem = ({item, index}) => {
-    return <ItemEhealth item={item} isShare={true} onPress={goToDetail} />;
+    return <ItemEhealth item={item} isShare={true} onPress={goToDetail(item)} />;
   };
   const onBackClick = () => {
     navigation.pop();
@@ -104,7 +81,7 @@ const ListEhealthOnline = ({navigation, profile}) => {
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         keyExtractor={keyExtractor}
-        ListEmptyComponent={emptyComponent}
+        // ListEmptyComponent={emptyComponent}
         ListFooterComponent={renderFooter}
       />
     </View>

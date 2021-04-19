@@ -48,7 +48,7 @@ class ListProfile extends Component {
                         }
                         break;
                     default:
-                        console.log('default');
+                        
                         this.setState({ refreshing: false })
                         break
                 }
