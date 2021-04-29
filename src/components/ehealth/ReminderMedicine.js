@@ -7,7 +7,7 @@ import constants from '@resources/strings';
 import AsyncStorage from '@react-native-community/async-storage';
 import snackbar from '@utils/snackbar-utils';
 const ReminderMedicine = ({ resultSelected, listResult }) => {
-  console.log('resultSelected: ', resultSelected);
+  
   const [isEnabled, setIsEnabled] = useState(false);
   const [listTime, setListTime] = useState([]);
   const [date, setDate] = useState('');
@@ -143,7 +143,7 @@ const ReminderMedicine = ({ resultSelected, listResult }) => {
         data = [];
       }
       data.push({ fireDate: newDate.toString(), resultSelected, isEnabled: true });
-      console.log('data: ', data);
+      
       onAlarm(newDate.toString().toDateObject().getTime())
       setListTime(data);
       AsyncStorage.setItem(

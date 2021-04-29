@@ -4,7 +4,7 @@ import ModalSelectTime from './ModalSelectTime';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from 'mainam-react-native-scaleimage';
 
-const ItemSharing = ({item}) => {
+const ItemSharing = ({item, itemEhealth}) => {
   const [isVisible, setIsVisible] = useState(false);
   const onCloseModal = () => setIsVisible(false);
   const source = item?.avatar
@@ -38,13 +38,18 @@ const ItemSharing = ({item}) => {
         }}
       />
       <View style={styles.containerName}>
-        <Text style={styles.txtName}>{item.name}</Text>
-        <Text style={styles.txtPhone}>{item.phone}</Text>
+        <Text style={styles.txtName}>{item?.fullName}</Text>
+        <Text style={styles.txtPhone}>{item?.mobileNumber}</Text>
       </View>
       <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
         <Text>Chia sẻ</Text>
       </TouchableOpacity>
-      <ModalSelectTime isVisible={isVisible} onCloseModal={onCloseModal} />
+      <ModalSelectTime
+        isVisible={isVisible}
+        onCloseModal={onCloseModal}
+        item={item}
+        itemEhealth={itemEhealth}
+      />
     </View>
   );
 };

@@ -85,8 +85,18 @@ const HistorySharingScreen = () => {
     });
   };
 
-  useEffect(() => {}, []);
-  const onLoad = () => {};
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    try {
+      let res = await ehealthProvider.getEhealthMyShare();
+      console.log('res: ', res);
+      setData(res?.content);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
 
   const renderItem = ({item}) => {
     return (

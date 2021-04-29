@@ -24,12 +24,8 @@ export default {
                 !result ||
                 (!(result.prescription && result.prescription.length) &&
                   !(result.diagnosticImage && result.diagnosticImage.length) &&
-                  !(
-                    result.medicalTest && result.medicalTest.length
-                  ) &&
-                  !(
-                    result.medical && result.medical.length
-                  ) &&
+                  !(result.medicalTest && result.medicalTest.length) &&
+                  !(result.medical && result.medical.length) &&
                   !(
                     result.ListResulHuyetHoc && result.ListResulHuyetHoc.length
                   ) &&
@@ -91,17 +87,17 @@ export default {
     }
   },
   showHighlight(item) {
+    let indicator = item.normalRange.split('-');
+    let lowerIndicator = indicator[0]?.trim();
+    let higherIndicator = indicator[1]?.trim();
+
     if (
-      this.checkHighlight(
-        this.getResult(item),
-        item.lowerIndicator,
-        item.higherIndicator,
-      )
+      this.checkHighlight(this.getResult(item), lowerIndicator, higherIndicator)
     ) {
       return this.checkHighlight(
         this.getResult(item),
-        item.lowerIndicator,
-        item.higherIndicator,
+        lowerIndicator,
+        higherIndicator,
       );
     }
     if (item.normalRange) {

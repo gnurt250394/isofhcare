@@ -47,10 +47,11 @@ const ListEhealthOnline = ({navigation, profile}) => {
   };
   const goToDetail = item => () => {
     console.log('item: ', item);
+    
     navigation.navigate('viewDetailEhealth', {item, listResult: listEhealth});
   };
   const renderItem = ({item, index}) => {
-    return <ItemEhealth item={item} isShare={true} onPress={goToDetail} />;
+    return <ItemEhealth item={item} isShare={true} onPress={goToDetail(item)} />;
   };
   const onBackClick = () => {
     navigation.pop();

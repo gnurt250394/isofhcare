@@ -27,7 +27,7 @@ class CheckupResult extends Component {
 
     render() {
         let { item } = this.props;
-        console.log('item: ', item);
+        
         let { length } = this.props
         let { index } = this.props
         return <View style={[styles.container, index == length - 1 ? { borderBottomColor: '#fff' } : {}]} key={index}>

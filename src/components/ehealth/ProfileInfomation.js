@@ -24,7 +24,7 @@ class ProfileInfomation extends Component {
 
   render() {
     let {resultDetail, data} = this.props;
-    console.log('data: ', data);
+    
 
     if (!data) return null;
     const icSupport = require('@images/new/user.png');

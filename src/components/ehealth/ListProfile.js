@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -7,28 +7,34 @@ import {
   Dimensions,
   FlatList,
   Text,
+  Image,
 } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import profileProvider from '@data-access/profile-provider';
 import NavigationService from '@navigators/NavigationService';
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import redux from '@redux-store';
 import snackbar from '@utils/snackbar-utils';
 
 const {width, height} = Dimensions.get('screen');
-class ListProfile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dataProfile: [],
-      index: this.props.index || 0,
-    };
-  }
-  componentDidMount() {
-    this.onLoad();
-  }
-  onLoad = async () => {
+const ListProfile = ({index, onSeletedProfile}) => {
+  const [dataProfile, setDataProfile] = useState([]);
+  const scroll = useRef();
+  const [currentIndex, setCurrentIndex] = useState(index || 0);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const dispatch = useDispatch();
+  const onViewRef = useRef(({viewableItems}) => {
+    setCurrentPage(viewableItems[0].index);
+    // Use viewable items in state or as intended
+  });
+  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+  const onLoad = async () => {
     let s = await profileProvider.getListProfile();
     if (s.length) {
       let defaultProfile = s.find(e => e.defaultProfile);
@@ -39,29 +45,24 @@ class ListProfile extends Component {
       });
       let index = s.findIndex(e => e.defaultProfile);
 
-      this.setState({
-        dataProfile: s,
-      });
-      if (!this.state.index) {
-        this.setState({
-          index,
-        });
-        await this.props.dispatch(redux.profileEhealth(defaultProfile));
-        this.props.onSeletedProfile(defaultProfile, index);
+      setDataProfile(s);
+      if (!currentIndex) {
+        setCurrentIndex(index);
+        await dispatch(redux.profileEhealth(defaultProfile));
+        onSeletedProfile(defaultProfile, index);
       }
     }
   };
-  onPressProfile = async (item, index) => {
-    if (this.state.index == index) {
+  const onPressProfile = async (item, index) => {
+    if (currentIndex == index) {
       return;
     }
-    this.setState({
-      index,
-    });
-    await this.props.dispatch(redux.profileEhealth(item));
-    this.props.onSeletedProfile && this.props.onSeletedProfile(item, index);
+    setCurrentIndex(index);
+    await dispatch(redux.profileEhealth(item));
+    onSeletedProfile && onSeletedProfile(item, index);
   };
-  renderProfile = (item, index) => {
+
+  const renderProfile = ({item, index}) => {
     const source =
       item.type == 'share'
         ? require('@images/new/homev2/ic_ehealth.png')
@@ -70,63 +71,21 @@ class ListProfile extends Component {
         : require('@images/new/user.png');
     return (
       <View style={styles.containerItem}>
-        {index == this.state.index ? (
+        {index == currentIndex ? (
           <View style={{flex: 1}}>
             <TouchableOpacity
-              disabled={this.state.disabled}
-              onPress={() => this.onPressProfile(item, index)}
-              style={styles.btnPress}
-              key={index}>
-              <ImageLoad
-                resizeMode="cover"
-                imageStyle={[styles.imageStyle, {borderRadius: 20}]}
-                borderRadius={10}
-                customImagePlaceholderDefaultStyle={styles.defaultImage}
-                placeholderSource={source}
-                resizeMode="cover"
-                loadingStyle={{size: 'small', color: 'gray'}}
-                source={source}
-                style={styles.img}
-                defaultImage={() => {
-                  return (
-                    <ScaleImage
-                      resizeMode="cover"
-                      source={source}
-                      width={70}
-                      height={70}
-                    />
-                  );
-                }}
-              />
+              onPress={() => onPressProfile(item, index)}
+              style={styles.btnPress}>
+              <Image resizeMode="cover" source={source} style={styles.img} />
             </TouchableOpacity>
             <View style={[styles.layoutTriangle]} />
           </View>
         ) : (
           <TouchableOpacity
-            onPress={() => this.onPressProfile(item, index)}
-            style={[styles.btnItem]}
-            key={index}>
-            <ImageLoad
-              resizeMode="cover"
-              imageStyle={[styles.imageStyle, {borderRadius: 20}]}
-              borderRadius={5}
-              customImagePlaceholderDefaultStyle={styles.defaultImage}
-              placeholderSource={source}
-              resizeMode="cover"
-              loadingStyle={{size: 'small', color: 'gray'}}
-              source={source}
-              style={styles.imgLoad}
-              defaultImage={() => {
-                return (
-                  <ScaleImage
-                    resizeMode="cover"
-                    source={source}
-                    width={60}
-                    height={60}
-                  />
-                );
-              }}
-            />
+            onPress={() => onPressProfile(item, index)}
+            style={[styles.btnItem]}>
+            <Image resizeMode="cover" source={source} style={styles.img} />
+
             <Text
               style={{
                 paddingTop: 6,
@@ -140,37 +99,76 @@ class ListProfile extends Component {
       </View>
     );
   };
-  onCreateProfile = () => {
-    snackbar.show('Tính năng đang phát triển');
-    return;
-    NavigationService.navigate('createProfile');
+  const onSelectProfile = isBack => () => {
+    if (currentPage <= 4 && currentPage == 0 && isBack) return;
+    if (currentPage >= dataProfile?.length - 4 && !isBack) return;
+    if (isBack) {
+      let page =
+        currentPage == 1
+          ? currentPage - 1
+          : currentPage == 2
+          ? currentPage - 2
+          : currentPage == 3
+          ? currentPage - 3
+          : currentPage - 4;
+      scroll.current.scrollToIndex({index: page});
+    } else {
+      let page = currentPage + 4;
+      scroll.current.scrollToIndex({index: page});
+    }
   };
-  render() {
-    return (
-      <ScrollView
-        pagingEnabled={true}
-        contentContainerStyle={styles.container}
-        scrollEventThrottle={16}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}>
-        <View style={styles.viewItem}>
-          {this.state.dataProfile.length
-            ? this.state.dataProfile.map((item, index) =>
-                this.renderProfile(item, index),
-              )
-            : null}
-        </View>
-      </ScrollView>
-    );
-  }
-}
+  const keyExtractor = (item, index) => index.toString();
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'space-between',
+      }}>
+      <TouchableOpacity onPress={onSelectProfile(true)} style={{padding: 10}}>
+        <ScaleImage
+          source={require('@images/new/account/ic_back.png')}
+          width={20}
+          height={20}
+          style={{tintColor: '#86899B'}}
+        />
+      </TouchableOpacity>
+      <View style={{flex: 1}}>
+        <FlatList
+          pagingEnabled={true}
+          ref={scroll}
+          contentContainerStyle={styles.container}
+          scrollEventThrottle={16}
+          renderItem={renderProfile}
+          data={dataProfile}
+          snapToAlignment={'start'}
+          snapToInterval={width + 10}
+          onViewableItemsChanged={onViewRef.current}
+          viewabilityConfig={viewConfigRef.current}
+          keyExtractor={keyExtractor}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+        />
+      </View>
+      <TouchableOpacity style={{padding: 10}} onPress={onSelectProfile()}>
+        <ScaleImage
+          source={require('@images/new/account/ic_back.png')}
+          width={20}
+          height={20}
+          style={{tintColor: '#86899B', transform: [{rotate: '180deg'}]}}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   containerItem: {
-    width: width / 4,
-    height: width / 4 + 10,
+    width: width / 5 + 5,
+    // height: width / 4 + 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 10,
+    alignSelf:'flex-start'
   },
   layoutTriangle: {
     width: 0,
@@ -183,10 +181,6 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderBottomColor: '#FFF',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
-    shadowOpacity: 0.6,
     bottom: -10,
     position: 'absolute',
     alignSelf: 'center',
@@ -219,28 +213,27 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: width / 6,
     height: width / 6,
-    borderWidth: 1,
-    borderColor: '#FFF',
-    shadowOpacity: 0.3,
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
+    // borderWidth: 1,
+    // borderColor: '#FFF',
+    // shadowOpacity: 0.3,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 2, height: 2},
     backgroundColor: '#FFF',
   },
   defaultImage: {
-    width: width / 6,
-    height: width / 6,
-    borderRadius: 20,
-    borderColor: '#FFF',
-    borderWidth: 1,
-    shadowOpacity: 0.6,
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
-    elevation: 2,
-    backgroundColor: '#FFF',
+    width: width / 7,
+    height: width / 7,
+    // borderRadius: 30,
+    // borderColor: '#FFF',
+    // borderWidth: 1,
+    // shadowOpacity: 0.6,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 2, height: 2},
+    // elevation: 2,
   },
   btnItem: {
-    width: width / 5,
-    height: '100%',
+    width: width / 6,
+    // height: '100%',
     marginRight: 5,
     transform: [{scale: 0.9}],
     justifyContent: 'flex-start',
@@ -248,19 +241,16 @@ const styles = StyleSheet.create({
   },
   img: {
     alignSelf: 'center',
-    borderRadius: 50,
-    width: width / 6,
-    height: width / 6,
-    borderWidth: 1,
+    borderRadius: 20,
+    width: width / 7,
+    height: width / 7,
+    borderWidth: 2,
     borderColor: '#FFF',
-    shadowOpacity: 0.3,
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
     backgroundColor: '#FFF',
   },
-  placeholderStyle: {width: 70, height: 70, borderRadius: 20},
+  placeholderStyle: {width: 70, height: 70, borderRadius: 30},
   btnPress: {
-    width: width / 5 + 10,
+    width: width / 6,
     marginRight: 5,
     alignItems: 'center',
     justifyContent: 'center',
