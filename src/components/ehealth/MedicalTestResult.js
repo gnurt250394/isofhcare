@@ -10,6 +10,7 @@ import ImageEhealth from './ImageEhealth';
 import {Card} from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import {object} from 'prop-types';
+import CustomMenu from '@components/CustomMenu';
 
 class MedicalTestResult extends Component {
   constructor(props) {
@@ -172,7 +173,31 @@ class MedicalTestResult extends Component {
                 textStyle={[styles.textValue]}
               />
               <Cell
-                data={resultUtils.getResult(item2)}
+                data={
+                  <CustomMenu
+                    MenuSelectOption={
+                      <Text style={{padding: 10}}>
+                        {resultUtils.getResult(item2)}
+                      </Text>
+                    }
+                    customOption={
+                      <View
+                        style={{
+                          padding: 10,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text style={{fontWeight: 'bold'}}>
+                          Giá trị bình thường
+                        </Text>
+                        <Text style={{color: '#86899B'}}>
+                          {item?.normalRange} {item?.unit}
+                        </Text>
+                      </View>
+                    }
+                    // onSelected={onSelected}
+                  />
+                }
                 style={[styles.flex, {borderBottomWidth}]}
                 borderStyle={{borderWidth: 0.6}}
                 textStyle={[
@@ -190,6 +215,7 @@ class MedicalTestResult extends Component {
     this.setState({isShow: !this.state.isShow});
   };
   renderMedical(item, index) {
+    console.log('item: ', item);
     let borderBottomWidth = 0;
     if (
       item.serviceMedicTestLine &&
@@ -219,7 +245,31 @@ class MedicalTestResult extends Component {
           />
 
           <Cell
-            data={resultUtils.getResult(item.ServiceMedicTestLine[0])}
+            data={
+              <CustomMenu
+                MenuSelectOption={
+                  <Text style={{padding: 10}}>
+                    {resultUtils.getResult(item.ServiceMedicTestLine[0])}
+                  </Text>
+                }
+                customOption={
+                  <View
+                    style={{
+                      padding: 10,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={{fontWeight: 'bold'}}>
+                      Giá trị bình thường
+                    </Text>
+                    <Text style={{color: '#86899B'}}>
+                      {item?.normalRange} {item?.unit}
+                    </Text>
+                  </View>
+                }
+                // onSelected={onSelected}
+              />
+            }
             style={[styles.flex, {borderBottomWidth}]}
             borderStyle={{borderWidth: 0}}
             textStyle={[
@@ -250,7 +300,27 @@ class MedicalTestResult extends Component {
           textStyle={[styles.textValue, {fontWeight: 'bold'}]}
         />
         <Cell
-          data={resultUtils.getResult(item)}
+          data={
+            <CustomMenu
+              MenuSelectOption={
+                <Text style={{padding: 10}}>{resultUtils.getResult(item)}</Text>
+              }
+              customOption={
+                <View
+                  style={{
+                    padding: 10,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{fontWeight: 'bold'}}>Giá trị bình thường</Text>
+                  <Text style={{color: '#86899B'}}>
+                    {item?.normalRange} {item?.unit}
+                  </Text>
+                </View>
+              }
+              // onSelected={onSelected}
+            />
+          }
           borderStyle={{borderWidth: 0}}
           style={[styles.flex, {borderBottomWidth}, styles.center]}
           textStyle={[
