@@ -1174,7 +1174,7 @@ module.exports = {
       get_detail_ehealth: isofhcare_service + 'medical/patient-histories',
       get_list_profile: isofhcare_service + 'medical/profiles',
       get_ehealth_my_share: isofhcare_service + 'medical/medical-record-shares',
-      search_user_share: isofhcare_service + 'search-user-share',
+      search_user_share: isofhcare_service + 'medical/search-user-share',
       get_time_units: isofhcare_service + 'medical/medical-record-share-time-units',
       recheckups: isofhcare_service + 'recheckups',
     },

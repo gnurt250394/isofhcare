@@ -31,37 +31,39 @@ import SearchProfile from '@components/ehealth/SearchProfile';
 import ItemSharing from '@components/ehealth/ItemSharing';
 
 const EhealthSharingScreen = ({navigation, ehealth}) => {
-  let item = navigation.state?.params?.item;
+  let itemEhealth = navigation.state?.params?.item;
   const [history, setHistory] = useState({});
   const [positionY, setPositionY] = useState(0);
+  const [isVisibleTime, setIsVisibleTime] = useState(false);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [typeSearch, setTypeSearch] = useState('');
-
+  const [typeSearch, setTypeSearch] = useState('DOCTOR');
+  const [itemProfile, setItemProfile] = useState('DOCTOR');
+  
+  const onCloseModal = () => setIsVisibleTime(false);
   useEffect(() => {
     getData();
   }, []);
   const getData = async () => {
     try {
-      let res = await ehealthProvider.getsuggestionShareEhealth(item.id);
-      console.log('res: ', res);
+      let res = await ehealthProvider.getsuggestionShareEhealth(itemEhealth.id);
+
       setData(res);
-    } catch (error) {
-      console.log('error: ', error);
-    }
+    } catch (error) {}
   };
-  const onShare = () => {
-    setIsVisible(true);
+  const onShare = (itemProfile) => {
+    setIsVisibleTime(true);
+    setItemProfile(itemProfile);
   };
   const _renderItem = ({item, index}) => {
-    console.log('item: ', item);
-    return <ItemSharing item={item} itemEhealth={item} />;
+    return <ItemSharing item={item} itemEhealth={itemEhealth} onShare={onShare}/>;
   };
   const onSelected = (e, i) => {
     setTypeSearch(e.type);
   };
-  const onHistory = () => navigation.navigate('listHistoryShare');
+  const onHistory = () =>
+    navigation.navigate('listHistoryShare', {itemEhealth});
   const _keyExtractor = (item, index) => index.toString();
   const hideSearch = () => {
     setIsVisible(false);
@@ -83,7 +85,7 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
       isLoading={isLoading}
       backButtonClick={onBack}
       title={constants.ehealth.share_ehealth}>
-      <ItemEhealth item={item} disabled={true} />
+      <ItemEhealth item={itemEhealth} disabled={true} />
       <View
         onLayout={event => {
           setPositionY(event.nativeEvent.layout.y);
@@ -97,7 +99,7 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
                 MenuSelectOption={
                   <View style={styles.buttonFilter}>
                     <Text style={styles.txtLabelFilter}>
-                      {typeSearch == 'user' ? 'Người dùng' : 'Bác sĩ'}
+                      {typeSearch == 'USER' ? 'Người dùng' : 'Bác sĩ'}
                     </Text>
                     <ScaledImage
                       source={require('@images/new/ehealth/ic_down.png')}
@@ -107,9 +109,9 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
                   </View>
                 }
                 options={
-                  typeSearch == 'user'
-                    ? [{value: 'Bác sĩ', id: 1, type: 'doctor'}]
-                    : [{value: 'Người dùng', id: 1, type: 'user'}]
+                  typeSearch == 'USER'
+                    ? [{value: 'Bác sĩ', id: 1, type: 'DOCTOR'}]
+                    : [{value: 'Người dùng', id: 1, type: 'USER'}]
                 }
                 onSelected={onSelected}
               />
@@ -137,6 +139,7 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
           data={data}
           renderItem={_renderItem}
           contentContainerStyle={{paddingTop: 15}}
+          style={{flex: 1}}
           keyExtractor={_keyExtractor}
         />
         <TouchableOpacity onPress={onHistory} style={styles.buttonHistoryShare}>
@@ -155,10 +158,17 @@ const EhealthSharingScreen = ({navigation, ehealth}) => {
             onSelected={onSelected}
             hideSearch={hideSearch}
             positionY={positionY}
-            itemEhealth={item}
+            itemEhealth={itemEhealth}
+            onShare={onShare}
           />
         ) ||
           null)}
+      <ModalSelectTime
+        isVisible={isVisibleTime}
+        onCloseModal={onCloseModal}
+        item={itemProfile}
+        itemEhealth={itemEhealth}
+      />
     </ActivityPanel>
   );
 };

@@ -1,17 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import ModalSelectTime from './ModalSelectTime';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from 'mainam-react-native-scaleimage';
 
-const ItemSharing = ({item, itemEhealth}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const onCloseModal = () => setIsVisible(false);
+const ItemSharing = ({item, itemEhealth, onShare}) => {
   const source = item?.avatar
     ? {uri: item?.avatar.absoluteUrl()}
     : require('@images/new/user.png');
-  const onShare = () => {
-    setIsVisible(true);
+  const onShareItem = () => {
+    onShare && onShare(item);
   };
   return (
     <View style={styles.containerItem}>
@@ -41,15 +38,9 @@ const ItemSharing = ({item, itemEhealth}) => {
         <Text style={styles.txtName}>{item?.fullName}</Text>
         <Text style={styles.txtPhone}>{item?.mobileNumber}</Text>
       </View>
-      <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
+      <TouchableOpacity onPress={onShareItem} style={styles.buttonShare}>
         <Text>Chia sẻ</Text>
       </TouchableOpacity>
-      <ModalSelectTime
-        isVisible={isVisible}
-        onCloseModal={onCloseModal}
-        item={item}
-        itemEhealth={itemEhealth}
-      />
     </View>
   );
 };

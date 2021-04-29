@@ -24,6 +24,7 @@ import ehealthProvider from '@data-access/ehealth-provider';
 
 const ModalSelectTime = ({isVisible, onCloseModal, item, itemEhealth}) => {
   const [indexSelect, setIndexSelect] = useState(0);
+  console.log('indexSelect: ', indexSelect);
   const [data, setData] = useState([]);
   const getTimeUnits = async () => {
     try {
@@ -62,12 +63,19 @@ const ModalSelectTime = ({isVisible, onCloseModal, item, itemEhealth}) => {
   const onAcepted = async () => {
     try {
       console.log('item: ', item);
+      console.log('itemEhealth: ', itemEhealth);
       let res = await ehealthProvider.createShare(
+        itemEhealth?.id,
         item.id,
-        itemEhealth?.patientHistoryId,
         data[indexSelect].name,
       );
-    } catch (error) {}
+      onCloseModal();
+      snackbar.show('Chia sẻ thành công', 'success');
+      console.log('res: ', res);
+    } catch (error) {
+      snackbar.show('Chia sẻ thất bại', 'success');
+
+    }
   };
   return (
     <Modal
@@ -101,7 +109,7 @@ const ModalSelectTime = ({isVisible, onCloseModal, item, itemEhealth}) => {
             paddingBottom: 20,
           }}>
           <TouchableOpacity
-            onPress={onAcepted}
+            onPress={onCloseModal}
             style={[
               styles.updatePass,
               {

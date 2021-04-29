@@ -3,15 +3,27 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from 'mainam-react-native-scaleimage';
+import ehealthProvider from '@data-access/ehealth-provider';
 
-const ListHistoryShareScreen = () => {
-  const [data, setData] = useState([
-    {name: 'Nguyen van a', startDate: '2020-01-20', endDate: '2020-02-20'},
-    {name: 'Nguyen van a', startDate: '2020-01-20', endDate: '2020-02-20'},
-  ]);
+const ListHistoryShareScreen = ({navigation}) => {
+  let item = navigation.state?.params?.itemEhealth;
+  console.log('item: ', item);
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    try {
+      let res = await ehealthProvider.getListHistoryShare(item.id);
+      console.log('res: ', res);
+      setData(res?.content);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   const _renderItem = ({item, index}) => {
-    const source = item?.avatar
-      ? {uri: item?.avatar.absoluteUrl()}
+    const source = item?.target?.avatar
+      ? {uri: item?.target?.avatar.absoluteUrl()}
       : require('@images/new/user.png');
     return (
       <View style={styles.containerItem}>
@@ -38,11 +50,11 @@ const ListHistoryShareScreen = () => {
           }}
         />
         <View style={styles.containerName}>
-          <Text style={styles.txtName}>{item.name}</Text>
+          <Text style={styles.txtName}>{item?.target?.fullName}</Text>
           <Text style={styles.txtPhone}>
             Hiệu lực:{' '}
-            {item?.startDate.toDateObject('-').format('HH:mm dd/MM/yyyy')} -{' '}
-            {item?.endDate.toDateObject('-').format('HH:mm dd/MM/yyyy')}
+            {item?.issuedOfDate.toDateObject('-').format('HH:mm dd/MM/yyyy')} -{' '}
+            {item?.expirationDate.toDateObject('-').format('HH:mm dd/MM/yyyy')}
           </Text>
         </View>
       </View>

@@ -8,10 +8,10 @@ const ItemEhealth = ({item, onPress, navigation, isShare, disabled}) => {
   const onShare = () => {
     navigation.navigate('ehealthSharing', {item});
   };
- 
+
   return (
     <View style={styles.viewItem}>
-      <Card style={styles.cardStyle}>
+      <View style={styles.cardStyle}>
         <TouchableOpacity
           onPress={onPress}
           disabled={disabled}
@@ -68,7 +68,7 @@ const ItemEhealth = ({item, onPress, navigation, isShare, disabled}) => {
             </View>
           </View>
         </TouchableOpacity>
-      </Card>
+      </View>
     </View>
   );
 };
@@ -123,6 +123,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
+    backgroundColor: '#FFF',
+    shadowOffset: {width: 2, height: 2},
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    marginVertical: 8,
+    borderColor: '#00000050',
+    borderWidth: 1,
   },
   viewItem: {
     padding: 2,

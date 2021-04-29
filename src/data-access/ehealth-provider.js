@@ -212,11 +212,10 @@ export default {
   },
   searchUserShare(type, keyword) {
     return new Promise((resolve, reject) => {
-      let params =
-        (type ? `?type=${type}` : '') + (keyword ? `&content=${keyword}` : '');
       client.requestApi(
         'get',
-        constants.api.ehealth.get_ehealth_my_share + params,
+        constants.api.ehealth.search_user_share +
+          `?type=${type}&content=${encodeURIComponent(keyword)}`,
         {},
         (s, e) => {
           if (s) resolve(s);
@@ -254,6 +253,20 @@ export default {
       client.requestApi(
         'get',
         constants.api.ehealth.get_time_units,
+        {},
+        (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        },
+      );
+    });
+  },
+  getListHistoryShare(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        'get',
+        constants.api.ehealth.get_detail_ehealth +
+          `/${id}/medical-record-shares`,
         {},
         (s, e) => {
           if (s) resolve(s);

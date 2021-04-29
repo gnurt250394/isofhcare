@@ -9,6 +9,7 @@ import {
   Animated,
   Easing,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import CustomMenu from '@components/CustomMenu';
 import ScaledImage from 'mainam-react-native-scaleimage';
@@ -21,11 +22,13 @@ const SearchProfile = ({
   hideSearch,
   positionY,
   itemEhealth,
+  onShare,
 }) => {
   const opacity = new Animated.Value(0);
   const translateY = new Animated.Value(positionY);
   const [isShow, setIsShow] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     const endValue = 1;
     const duration = 600;
@@ -57,16 +60,19 @@ const SearchProfile = ({
   }, [typeSearch, keyword]);
   const onSearch = async () => {
     try {
+      setRefreshing(true);
       let res = await ehealthProvider.searchUserShare(typeSearch, keyword);
-      console.log('res: ', res);
-    } catch (error) {
-      console.log('error: ', error);
-    }
+
+      setRefreshing(false);
+      setData(res?.content);
+    } catch (error) {}
   };
   const [data, setData] = useState([]);
   const _keyExtractor = (item, index) => index.toString();
   const _renderItem = ({item, index}) => {
-    return <ItemSharing item={item} itemEhealth={itemEhealth} />;
+    return (
+      <ItemSharing item={item} itemEhealth={itemEhealth} onShare={onShare} />
+    );
   };
   const listEmpty = () => {
     if (keyword) {
@@ -117,11 +123,13 @@ const SearchProfile = ({
             onChangeText={_onChangeText}
             value={keyword}
           />
-          <ScaledImage
-            source={require('@images/new/ic_search.png')}
-            height={18}
-            style={{tintColor: '#86899B'}}
-          />
+          <TouchableOpacity onPress={onSearch}>
+            <ScaledImage
+              source={require('@images/new/ic_search.png')}
+              height={18}
+              style={{tintColor: '#86899B'}}
+            />
+          </TouchableOpacity>
         </View>
       </Animated.View>
       {isShow ? (
@@ -129,15 +137,16 @@ const SearchProfile = ({
           data={data}
           contentContainerStyle={{backgroundColor: '#FFF'}}
           keyExtractor={_keyExtractor}
+          refreshing={refreshing}
           renderItem={_renderItem}
           ListEmptyComponent={listEmpty}
         />
       ) : null}
-      <TouchableWithoutFeedback
+      {/* <TouchableWithoutFeedback
         onPress={hideSearch}
         style={{flex: 1, backgroundColor: 'red'}}>
         <View style={{flex: 1}} />
-      </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback> */}
     </View>
   );
 };
@@ -154,6 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 20,
     paddingBottom: 10,
+    flex: 1,
   },
   container: {
     position: 'absolute',
@@ -177,11 +187,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    height: '100%',
     backgroundColor: '#16695020',
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     paddingHorizontal: 10,
+    height: 42,
   },
   buttonFilter: {
     flexDirection: 'row',
@@ -191,6 +201,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     paddingRight: 15,
+    height: 42,
   },
   containerSearch: {
     flexDirection: 'row',
