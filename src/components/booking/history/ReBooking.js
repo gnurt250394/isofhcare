@@ -74,7 +74,7 @@ class ReBooking extends PureComponent {
             <Text style={styles.txtLabel}>
               [Lịch hẹn tái khám]{' '}
               <Text style={styles.txtPatient}>
-                {item.note ? item.note : ''}
+                {item.speciality ? item.speciality : ''}
               </Text>
             </Text>
 
@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
   return {
-    userApp: state.userApp,
-    booking: state.booking,
+    userApp: state.auth.userApp,
+    booking: state.auth.booking,
   };
 }
 export default connect(mapStateToProps)(ReBooking);

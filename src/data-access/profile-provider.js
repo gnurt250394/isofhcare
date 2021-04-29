@@ -121,7 +121,7 @@ export default {
     return new Promise((resolve, reject) => {
       client.requestApi(
         'get',
-        client.serviceProfile + constants.api.profile.profile,
+        constants.api.ehealth.get_list_profile,
         {},
         (s, e) => {
           if (s) resolve(s);

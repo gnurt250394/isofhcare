@@ -441,13 +441,14 @@ class EhealthItem extends Component {
       obj => obj.result !== false && obj.result,
     ); // Thông tin khám
     let detail = item?.detail.filter(obj => obj.result !== false && obj.result); // chi tiết khám
+    console.log('item: ', item);
 
     return (
       <View style={{flex: 1}}>
         <ScrollView showsVerticalScrollIndicator={false} style={{padding: 10}}>
           <View style={styles.viewServiceName}>
             <Text style={styles.txServiceName}>
-              {'DỊCH VỤ KHÁM BỆNH THEO YÊU CẦU'}
+              {item?.serviceName}
             </Text>
             {/* <View style={styles.viewBorder}></View> */}
           </View>
@@ -719,6 +720,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#0291E1',
     flex: 1,
+    textTransform:'uppercase'
   },
   viewItem: {
     // backgroundColor: "#ffffff",

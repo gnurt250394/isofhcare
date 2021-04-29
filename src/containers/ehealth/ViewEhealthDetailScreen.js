@@ -105,7 +105,6 @@ class ViewEhealthDetailScreen extends Component {
     }
   }
   renderDetailsV2 = () => {
-    console.log('this.state.result?.medicalTest: ', this.state.data);
     let data = {
       [false]: (
         <ScrollView
@@ -188,9 +187,11 @@ class ViewEhealthDetailScreen extends Component {
             resultDetail={this.state.resultDetail}
             patientName={this.state.resultDetail?.Profile?.PatientName}
           />
-          <View style={styles.viewHistory}>
-            {/* <ItemReBooking item={this.state.dataHistory} /> */}
-          </View>
+          {this.state.dataHistory?.length ? (
+            <View style={styles.viewHistory}>
+              <ReBooking item={this.state.dataHistory[0]} />
+            </View>
+          ) : null}
           {/* <View style={styles.lineHeader} /> */}
           <InfoHistoryBookingV1
             result={this.state.result}

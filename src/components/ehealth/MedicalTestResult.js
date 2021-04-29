@@ -128,10 +128,7 @@ class MedicalTestResult extends Component {
   onSelect = (index, medicalTest) => {
     if (index <= Object.keys(medicalTest).length - 1) {
       let valueSelect = Object.keys(medicalTest)[index];
-      let tableHead =
-        valueSelect == 'microbiology'
-          ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ']
-          : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BT', 'ĐƠN VỊ'];
+      let tableHead = ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'];
       let textSelect = this.renderLabel(valueSelect);
       let currentGroup = medicalTest[valueSelect].filter(obj => obj);
       this.setState({
@@ -176,7 +173,11 @@ class MedicalTestResult extends Component {
                 data={
                   <CustomMenu
                     MenuSelectOption={
-                      <Text style={{padding: 10}}>
+                      <Text
+                        style={[
+                          {padding: 10},
+                          isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                        ]}>
                         {resultUtils.getResult(item2)}
                       </Text>
                     }
@@ -198,7 +199,11 @@ class MedicalTestResult extends Component {
                     // onSelected={onSelected}
                   />
                 }
-                style={[styles.flex, {borderBottomWidth}]}
+                style={[
+                  styles.flex,
+                  {borderBottomWidth},
+                  {alignItems: 'flex-end'},
+                ]}
                 borderStyle={{borderWidth: 0.6}}
                 textStyle={[
                   styles.textValue,
@@ -248,7 +253,11 @@ class MedicalTestResult extends Component {
             data={
               <CustomMenu
                 MenuSelectOption={
-                  <Text style={{padding: 10}}>
+                  <Text
+                    style={[
+                      {padding: 10},
+                      isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                    ]}>
                     {resultUtils.getResult(item.ServiceMedicTestLine[0])}
                   </Text>
                 }
@@ -270,12 +279,9 @@ class MedicalTestResult extends Component {
                 // onSelected={onSelected}
               />
             }
-            style={[styles.flex, {borderBottomWidth}]}
+            style={[styles.flex, {borderBottomWidth}, {alignItems: 'flex-end'}]}
             borderStyle={{borderWidth: 0}}
-            textStyle={[
-              styles.textValue,
-              isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
-            ]}
+            textStyle={[styles.textValue]}
           />
         </TableWrapper>
       );
@@ -295,7 +301,7 @@ class MedicalTestResult extends Component {
         key={index}>
         <Cell
           data={item?.nameLine?.trim()}
-          style={[styles.LineCell, {borderBottomWidth}, styles.center]}
+          style={[styles.LineCell, {borderBottomWidth}]}
           borderStyle={{borderWidth: 0}}
           textStyle={[styles.textValue, {fontWeight: 'bold'}]}
         />
@@ -303,7 +309,13 @@ class MedicalTestResult extends Component {
           data={
             <CustomMenu
               MenuSelectOption={
-                <Text style={{padding: 10}}>{resultUtils.getResult(item)}</Text>
+                <Text
+                  style={[
+                    {padding: 10},
+                    isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
+                  ]}>
+                  {resultUtils.getResult(item)}
+                </Text>
               }
               customOption={
                 <View
@@ -322,7 +334,7 @@ class MedicalTestResult extends Component {
             />
           }
           borderStyle={{borderWidth: 0}}
-          style={[styles.flex, {borderBottomWidth}, styles.center]}
+          style={[styles.flex, {borderBottomWidth}, {alignItems: 'flex-end'}]}
           textStyle={[
             styles.textValue,
             isHighlight ? {fontWeight: 'bold', color: 'red'} : {},
@@ -583,7 +595,7 @@ const styles = StyleSheet.create({
   LineCell: {
     borderLeftWidth: 0,
     flex: 4,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     padding: 5,
     width: '100%',
   },
@@ -610,7 +622,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 14,
     width: '100%',
     flex: 1,
@@ -619,6 +631,7 @@ const styles = StyleSheet.create({
   },
   textValue: {
     fontSize: 14,
+    textAlign: 'left',
   },
   diagnosticLabel: {
     color: constants.colors.primary_bold,

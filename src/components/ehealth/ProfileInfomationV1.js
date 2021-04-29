@@ -70,10 +70,10 @@ class ProfileInfomation extends Component {
 
                             <Text style={[styles.itemlabel, styles.txLabel]}>{this.props?.patientName ? this.props?.patientName : this.props?.ehealth?.patient?.patientName}</Text>
                         </View>
-                        <Text style={[styles.itemlabel, { paddingTop: 5 }]}>{resultDetail?.Profile?.GenderId == "F" ? "Nữ," : resultDetail?.Profile?.GenderId == "M" ? "Nam," : ""} {resultDetail?.Profile?.Birthday ? resultDetail?.Profile?.Birthday.toDateObject().getAge() : ''} tuổi</Text>
+                        <Text style={[styles.itemlabel, { paddingTop: 5 }]}>GT, Tuổi: {resultDetail?.Profile?.GenderId == "F" ? "Nữ," : resultDetail?.Profile?.GenderId == "M" ? "Nam," : ""} {resultDetail?.Profile?.Birthday ? resultDetail?.Profile?.Birthday.toDateObject().getAge() : ''} tuổi</Text>
                         <View style={styles.item}>
 
-                            <Text style={[styles.itemlabel, { color: '#075BB5' }]}>Mã NB: <Text style={[styles.itemcontent, { fontWeight: 'bold' }]}>{resultDetail?.Profile?.Value}</Text></Text>
+                            <Text style={[styles.itemlabel, ]}>Mã NB: <Text style={[styles.itemcontent, ]}>{resultDetail?.Profile?.Value}</Text></Text>
                             <Text style={styles.itemlabel}>Mã HS: <Text style={styles.itemcontent}>{resultDetail?.Profile?.PatientDocument}</Text></Text>
                         </View>
 
