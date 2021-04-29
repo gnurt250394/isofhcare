@@ -57,7 +57,7 @@ const InfoHistoryBooking = ({resultDetail, patientName, result, data}) => {
             state.isShow ? {backgroundColor: '#3161AD'} : {},
           ]}>
           <ScaledImage
-            source={require('@images/new/ehealth/ic_info.png')}
+            source={require('@images/new/ehealth/ic_list_service.png')}
             height={19}
             style={{
               tintColor: state.isShow ? '#FFF' : '#3161AD',

@@ -69,7 +69,7 @@ const InfoHistoryBooking = ({resultDetail, patientName, result}) => {
             state.isShow ? {backgroundColor: '#075BB5'} : {},
           ]}>
           <ScaledImage
-            source={require('@images/new/ehealth/ic_info.png')}
+            source={require('@images/new/ehealth/ic_list_service.png')}
             height={19}
             style={
               state.isShow && {
@@ -78,7 +78,7 @@ const InfoHistoryBooking = ({resultDetail, patientName, result}) => {
             }
           />
           <Text style={[styles.txtTitle, state.isShow ? {color: '#FFF'} : {}]}>
-            DANH MỤC KHÁM
+            DANH SÁCH DỊCH VỤ
           </Text>
           <ScaledImage
             source={require('@images/new/ehealth/ic_down2.png')}
